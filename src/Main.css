@@ -1,0 +1,24 @@
+.main {
+  background-color: bisque;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 20% 40% 30%;
+}
+
+.ctl {
+  background-color: aqua;
+  border: 1px solid cyan;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.media {
+  background-color: pink;
+  border: 1px solid green;
+}
+.content {
+  background-color: black;
+  border: 1px solid red;
+}
