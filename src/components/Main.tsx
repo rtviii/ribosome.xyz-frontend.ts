@@ -1,6 +1,6 @@
 import React from "react";
-import tegunov from "./static/tegunovM.gif";
-import Fetcher from "./components/Fetcher";
+import tegunov from "./../static/tegunovM.gif";
+import ControlPanel from "./ControlPanel";
 import "./Main.css";
 
 const Main = () => {
@@ -9,7 +9,7 @@ const Main = () => {
       <div className="main">
 
         <div className="ctl">
-          <Fetcher />
+          <ControlPanel />
         </div>
 
         <div className="media">

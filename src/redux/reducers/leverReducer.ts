@@ -1,4 +1,4 @@
-import { AppActions } from "../../types/actions";
+import AppActions from './../action-types/app.actions'
 import { Dispatch } from "redux";
 import { AppState } from "../store";
 

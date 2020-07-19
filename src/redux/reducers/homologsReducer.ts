@@ -1,5 +1,6 @@
-import { JsonData } from "./../../types/app.types";
-import { AppActions } from "./../../types/actions";
+import AppActions from './../action-types/app.actions'
+import JsonData from './../../app.types'
+
 const HomologsReducerDefaultState = {
   loading: false,
   error: false,

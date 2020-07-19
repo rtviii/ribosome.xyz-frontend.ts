@@ -1,5 +1,4 @@
-import { JsonObject, JsonData } from "./app.types";
-import { switchLever } from "../redux/reducers/leverReducer";
+import { JsonData } from './../../app.types'
 
 export const REQUEST_HOMOLOGS_ERR = "REQUEST_HOMOLOGS_ERR";
 export const REQUEST_HOMOLOGS_SUCCESS = "REQUEST_HOMOLOGS_SUCCESS";
@@ -21,7 +20,3 @@ export type HomologsActionTypes =
   | requestHomologsErr
   | requestHomologsGo
   | requestHomolohsSuccess;
-
-
-
-export type AppActions  = HomologsActionTypes | switchLever;
