@@ -17,6 +17,7 @@ a {
 }
 
 .toolbar {
+  padding: 10px;
   position: relative;
   z-index: 200;
   height: var(--nav-size);
@@ -31,8 +32,9 @@ a {
   cursor: pointer;
   font-size: large;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  font-size: medium;
 
   height: 60px;
   width: 100%;
@@ -48,7 +50,7 @@ a {
 }
 
 .dropout-menu {
-  background-color: slateblue;
+  background-color: black;
   position: absolute;
   width: 250px;
   height: 100px;

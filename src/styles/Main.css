@@ -1,29 +1,18 @@
 .main {
-  background-color: bisque;
+  background-color: black;
+  color: white;
   position: absolute;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 
   display: grid;
   grid-template-columns: 1fr 20fr;
   grid-template-rows: 100px auto;
   grid-template-areas:
-    "navbar navbar navbar"
-    "toolbar display display";
+    "nav nav "
+    "toolbar display ";
 }
 
-
-.toolbar{
+.toolbar {
   grid-area: toolbar;
-
-}
-
-.navbar{
-
-  grid-area: navbar;
-}
-
-.display{
-
-  grid-area: display;
 }

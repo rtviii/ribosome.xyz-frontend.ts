@@ -5,6 +5,7 @@ import { Dispatch, bindActionCreators } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../types/action.types";
 import { toggleToolgroupById } from "../redux/reducers/toolbarReducer";
+import "./../styles/Toolbar.css";
 
 interface ReduxProps {
   activeToolgroupId: number;
@@ -28,7 +29,7 @@ const ToolGroupTemplate: React.FC<ToolGroupProps> = pps => {
       }}
     >
       {pps.name}
-      {pps.activeToolgroupId === pps.id ? <DropoutMenu /> : null}
+      {pps.activeToolgroupId === pps.id ? pps.children : null}
     </div>
   );
 };
@@ -41,26 +42,27 @@ const mapDispatch = (
 ): ActionProps => ({
   toggleToolgroupById: bindActionCreators(toggleToolgroupById, dispatch),
 });
-const ToolGroup = connect(mapState, mapDispatch)(ToolGroupTemplate);
+const ToolGroup: React.FC<OwnProps> = connect(
+  mapState,
+  mapDispatch
+)(ToolGroupTemplate);
 
-const DropoutMenu = (props: any) => {
-  const Tool = (props: any) => {
-    return <button className="tool">{props.children}</button>;
-  };
-
-  return (
-    <div className="dropout-menu">
-      <Tool> Tool1</Tool>
-      <Tool> Tool2</Tool>
-    </div>
-  );
+const Tool = (props: any) => {
+  return <button className="tool">{props.children}</button>;
 };
-const ToolBar = () => {
+const DropoutMenu: React.FC = pps => {
+  return <div className="dropout-menu">{pps.children}</div>;
+};
+const ToolBar: React.FC = () => {
   return (
     <nav className="toolbar">
-      <ToolGroup id={3} name="Toolgroup3D" />
-      <ToolGroup id={2} name="Toolgroup2D" />
-      <ToolGroup id={1} name="Toolgroup1D" />
+      <ToolGroup id={3} name="Toolgroup3D">
+        <DropoutMenu>
+          <Tool />
+        </DropoutMenu>
+      </ToolGroup>
+      <ToolGroup id={2} name="Toolgroup2D"></ToolGroup>
+      <ToolGroup id={1} name="Toolgroup1D"></ToolGroup>
     </nav>
   );
 };
