@@ -1,11 +1,12 @@
-import React, { useState, ReactPropTypes } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { AppState } from "../redux/store";
-import { Dispatch, bindActionCreators } from "redux";
+import { bindActionCreators } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../types/action.types";
 import { toggleToolgroupById } from "../redux/reducers/toolbarReducer";
 import "./../styles/Toolbar.css";
+import { Link } from "react-router-dom";
 
 interface ReduxProps {
   activeToolgroupId: number;
@@ -63,6 +64,8 @@ const ToolBar: React.FC = () => {
       </ToolGroup>
       <ToolGroup id={2} name="Toolgroup2D"></ToolGroup>
       <ToolGroup id={1} name="Toolgroup1D"></ToolGroup>
+      <Link to='./display'>Display</Link>
+      <Link to='./data'>Data</Link>
     </nav>
   );
 };

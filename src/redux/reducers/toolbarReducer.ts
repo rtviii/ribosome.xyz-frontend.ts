@@ -1,6 +1,4 @@
 import { AppActions, UIActionTypes } from "./../../types/action.types";
-import { AppState } from "../store";
-import { stat } from "fs";
 
 export interface Toolbar {
   activeToolGroupId: number;

@@ -6,7 +6,7 @@ export const NavbarLogo = () => {
   return (
     <div className="navbar-logo">
       <img src={riblogo} alt="logo" />
-    Some name
+    A Better Logo
     </div>
   );
 };
