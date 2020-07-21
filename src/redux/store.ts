@@ -1,16 +1,19 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk, { ThunkMiddleware } from "redux-thunk";
 import { homologsReducer } from "./reducers/homologsReducer";
-import {leverReducer} from './reducers/leverReducer'
-import logger, { createLogger } from 'redux-logger'
-const custom_logger = createLogger({
-    // 
-})
+import logger from "redux-logger";
+import { toolbarReducer } from "./reducers/toolbarReducer";
 
+export const UIReducer = combineReducers({
+  toolbar: toolbarReducer,
+});
+export const DataReducer = combineReducers({
+  homologs: homologsReducer,
+});
 
 export const rootReducer = combineReducers({
-  homologs: homologsReducer,
-  leverstate: leverReducer
+  store_data: DataReducer,
+  store_ui: UIReducer,
 });
 
 export type AppState = ReturnType<typeof rootReducer>;
