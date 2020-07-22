@@ -1,0 +1,11 @@
+.db-query-panel{
+
+    /* background-color:papayawhip; */
+}
+
+.db-query-panel div:hover{
+    
+    cursor: auto;
+
+    outline: 1px dashed white;
+}

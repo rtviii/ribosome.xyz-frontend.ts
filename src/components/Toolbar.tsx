@@ -7,6 +7,7 @@ import { AppActions } from "../types/action.types";
 import { toggleToolgroupById } from "../redux/reducers/toolbarReducer";
 import "./../styles/Toolbar.css";
 import { Link } from "react-router-dom";
+import DbQueryPanel from "./DbQueryPanel";
 
 interface ReduxProps {
   activeToolgroupId: number;
@@ -52,20 +53,36 @@ const Tool = (props: any) => {
   return <button className="tool">{props.children}</button>;
 };
 const DropoutMenu: React.FC = pps => {
-  return <div className="dropout-menu">{pps.children}</div>;
+  return <div className="dropout-menu" onClick={e=>{e.stopPropagation()}}>{pps.children}</div>;
 };
 const ToolBar: React.FC = () => {
   return (
     <nav className="toolbar">
-      <ToolGroup id={3} name="Toolgroup3D">
-        <DropoutMenu>
-          <Tool />
-        </DropoutMenu>
-      </ToolGroup>
+      <ToolGroup id={3} name="Toolgroup3D"></ToolGroup>
       <ToolGroup id={2} name="Toolgroup2D"></ToolGroup>
       <ToolGroup id={1} name="Toolgroup1D"></ToolGroup>
-      <Link to='./display'>Display</Link>
-      <Link to='./data'>Data</Link>
+
+      <div style={{ width: "5%", height: "1px", backgroundColor: "white" }} />
+      <div style={{ width: "20%", height: "1px", backgroundColor: "white" }} />
+      <div style={{ width: "60%", height: "1px", backgroundColor: "white" }} />
+      <div style={{ width: "100%", height: "1px", backgroundColor: "white" }} />
+      <div style={{ width: "60%", height: "1px", backgroundColor: "white" }} />
+      <div style={{ width: "20%", height: "1px", backgroundColor: "white" }} />
+      <div style={{ width: "5%", height: "1px", backgroundColor: "white" }} />
+      <div>
+        <ToolGroup id={6} name="RequestData">
+          <DropoutMenu>
+            <DbQueryPanel />
+          </DropoutMenu>
+        </ToolGroup>
+        <Link to="./display">
+          <ToolGroup id={4} name="Visualization"></ToolGroup>
+        </Link>
+
+        <Link to="./data">
+          <ToolGroup id={5} name="Analytics"></ToolGroup>
+        </Link>
+      </div>
     </nav>
   );
 };

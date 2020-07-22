@@ -3,12 +3,14 @@ import thunk, { ThunkMiddleware } from "redux-thunk";
 import { homologsReducer } from "./reducers/homologsReducer";
 import logger from "redux-logger";
 import { toolbarReducer } from "./reducers/toolbarReducer";
+import { structReducer } from "./reducers/structReducer";
 
 export const UIReducer = combineReducers({
   toolbar: toolbarReducer,
 });
 export const DataReducer = combineReducers({
   homologs: homologsReducer,
+  struct: structReducer,
 });
 
 export const rootReducer = combineReducers({

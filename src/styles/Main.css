@@ -6,7 +6,7 @@
   height: 100%;
 
   display: grid;
-  grid-template-columns: 1fr 20fr;
+  grid-template-columns: 10vw auto;
   grid-template-rows: 100px auto;
   grid-template-areas:
     "nav nav "

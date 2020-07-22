@@ -1,4 +1,15 @@
+.navbar {
+
+  grid-area: nav;
+  color: white;
+  width: 100%;
+  outline: 1px solid blue;
+
+  display: flex;
+  justify-content: space-between;
+}
 .navbar-logo {
+  outline: 1px solid slateblue;
   margin-left: 40px;
   display: flex;
   justify-content: center;
@@ -12,17 +23,9 @@
   object-fit: contain;
 }
 
-.navbar {
-  grid-area: nav;
-  background-color: black;
-  color: white;
-  width: 100%;
-
-  display: flex;
-  justify-content: space-between;
-}
 
 .navbar-controls {
+  outline: 1px solid cyan;
     width:600px;
 
   display: flex;

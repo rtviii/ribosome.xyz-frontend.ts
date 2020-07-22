@@ -6,8 +6,6 @@ import "./../styles/Display.css";
 import { withRouter, Switch, Route } from "react-router";
 
 const Display = (props: any) => {
-  console.log(props);
-
   return (
     <Switch>
       <Route component={VisualDisplay} path="/display" />
