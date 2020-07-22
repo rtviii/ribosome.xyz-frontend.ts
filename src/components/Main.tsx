@@ -5,14 +5,13 @@ import Navbar from "./Navbar";
 import Display from "./Display";
 import {
   withRouter,
-  BrowserRouter as Router,
   useHistory,
 } from "react-router-dom";
 
 const Main = () => {
   const history = useHistory();
   useEffect(() => {
-    history.push("/display");
+    history.push("/data");
     return () => {};
   }, [history]);
 

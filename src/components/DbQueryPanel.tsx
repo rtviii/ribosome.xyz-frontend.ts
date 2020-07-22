@@ -2,10 +2,11 @@ import React from "react";
 import "./../styles/DbQueryPanel.css";
 import { AppState } from "../redux/store";
 import { connect } from "react-redux";
-import {  ThunkDispatch } from "redux-thunk";
+import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../types/action.types";
 import { toggleToolgroupById } from "../redux/reducers/toolbarReducer";
 import { requestStructDjango } from "../redux/reducers/structReducer";
+import { useHistory } from "react-router-dom";
 
 interface DbQueryProps {}
 
@@ -18,6 +19,7 @@ type Props = DbQueryProps & StateProps & DispatchProps;
 // type Props = DispatchProps & StateProps;
 
 const DbQueryPanel: React.FC<Props> = pps => {
+  var history = useHistory();
   return (
     <div className="db-query-panel">
       <div>
@@ -32,8 +34,9 @@ const DbQueryPanel: React.FC<Props> = pps => {
       </div>
       <button
         onClick={() => {
-        //   pps.toggleCurrentToolbar();
-          pps.submitRequest("3J7Z")
+          pps.submitRequest("3J7Z");
+          pps.toggleCurrentToolbar();
+          history.push("/data");
         }}
       >
         Fetch

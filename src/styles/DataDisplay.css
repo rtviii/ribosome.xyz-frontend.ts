@@ -1,0 +1,16 @@
+.data-display {
+  padding: 20px;
+  outline: 3px solid darkcyan;
+  display: grid;
+  grid-template-columns: repeat(10,1fr);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  gap: 20px;
+}
+
+.structhero {
+  /* width: ;
+  height: 10px; */
+
+  font-size: 12px;
+}

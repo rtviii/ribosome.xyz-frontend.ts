@@ -23,9 +23,7 @@ export const REQUEST_STRUCT_SUCCESS = "REQUEST_STRUCT_SUCCESS";
 export const REQUEST_STRUCT_ERR = "REQUEST_STRUCT_ERR";
 export interface requestStructSuccess {
   type: typeof REQUEST_STRUCT_SUCCESS;
-  payload: {
-    field?: any;
-  };
+  payload: []
 }
 export interface requestStructGo {
   type: typeof REQUEST_STRUCT_GO;

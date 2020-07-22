@@ -6,11 +6,11 @@ import { toolbarReducer } from "./reducers/toolbarReducer";
 import { structReducer } from "./reducers/structReducer";
 
 export const UIReducer = combineReducers({
-  toolbar: toolbarReducer,
+  state_Toolbar: toolbarReducer,
 });
 export const DataReducer = combineReducers({
-  homologs: homologsReducer,
-  struct: structReducer,
+  state_Homologs: homologsReducer,
+  state_Structs: structReducer,
 });
 
 export const rootReducer = combineReducers({
