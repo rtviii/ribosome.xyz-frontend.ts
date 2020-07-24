@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/circle.ico" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
@@ -11,10 +12,26 @@
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/circle.svg" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+          <script src="https://cdn.jsdelivr.net/npm/babel-polyfill/dist/polyfill.min.js"></script>
+        <!-- Web component polyfill (only loads what it needs) -->
+        <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/webcomponents-lite.js" charset="utf-8"></script>
+        <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+        <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js" charset="utf-8"></script>
+
+        <link rel="stylesheet" type="text/css" href="https://www.ebi.ac.uk/pdbe/pdb-component-library/css/pdbe-molstar-1.1.0-dev.4.css">
+        <script type="text/javascript" src="https://www.ebi.ac.uk/pdbe/pdb-component-library/js/pdbe-molstar-component-1.1.0-dev.4.js"></script>
+        <style>
+            #myViewer{
+              float:left;
+              width:400px;
+              height: 400px;
+              position:relative;
+            }
+        </style>
     <title>DEV-BUILD</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
   </body>
 </html>
