@@ -29,17 +29,20 @@ const useImportScript = (scriptParams: ScriptParameters) => {
 const VisualDisplay = (props: any) => {
   // pdbe-molstar-viewer
   useImportScript({
+    // defer:true,
     src:
       "https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/webcomponents-lite.js",
     charset: "utf-8",
   });
   useImportScript({
+    // defer:true,
     src:
       "https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js",
 
     charset: "utf-8",
   });
   useImportScript({
+    // defer:true,
     src:
       "https://www.ebi.ac.uk/pdbe/pdb-component-library/js/pdbe-molstar-component-1.1.0-dev.4.js",
     type: "text/javascript",
@@ -61,7 +64,7 @@ const VisualDisplay = (props: any) => {
   });
   useImportScript({
     src: "https://cdn.jsdelivr.net/npm/d3@5.9.2",
-    defer: true,
+    // defer: true,
   });
   useImportScript({
     src:
@@ -91,8 +94,8 @@ const VisualDisplay = (props: any) => {
       subscribEvents: true,
     });
 
-
-    var topviewer = document.getElementById('pdbTopologyViewer')
+    var topviewer = document.getElementById("pdbTopologyViewer");
+    console.log(topviewer);
 
     return () => {};
   }, []);
@@ -113,8 +116,15 @@ const VisualDisplay = (props: any) => {
         onChange={e => setviewpdbid(e.target.value)}
       />
       <div className="display">
-          <pdbe-molstar id="pdbeMolstarComponent" molecule-id="null" />
-          <pdb-topology-viewer id="pdbTopologyViewer" pdb-id="1cbs" entity-id="1"></pdb-topology-viewer>
+        <pdbe-molstar id="pdbeMolstarComponent" molecule-id="null" />
+
+        <div id="viewerSection">
+          <pdb-topology-viewer
+            display-style="width: 200px"
+            pdb-id="1cbs"
+            entity-id="1"
+          ></pdb-topology-viewer>
+        </div>
         {/* <div className="primary">
           <img src={seqalign} alt="meaningful text" hide-controls={true} />
         </div>

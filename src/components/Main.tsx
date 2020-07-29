@@ -3,10 +3,8 @@ import "./../styles/Main.css";
 import Toolbar from "./Toolbar";
 import Navbar from "./Navbar";
 import Display from "./Display";
-import {
-  withRouter,
-  useHistory,
-} from "react-router-dom";
+import { withRouter, useHistory } from "react-router-dom";
+import axios from "axios";
 
 const Main = () => {
   const history = useHistory();
@@ -15,8 +13,18 @@ const Main = () => {
     return () => {};
   }, [history]);
 
+  const baseapi = process.env.REACT_APP_DJANGO_URL;
   return (
     <div className="main">
+      {/* <button
+        onClick={() => {
+          console.log(baseapi);
+
+          axios.get(`${baseapi}/neo4j/test/`).then(r => {
+            console.log(r.data);
+          });
+        }}
+      ></button> */}
       <Navbar />
       <Toolbar />
       <Display />

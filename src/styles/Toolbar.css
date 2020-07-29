@@ -31,12 +31,11 @@ a {
 
 .toolgroup {
   cursor: pointer;
-  font-size: large;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: large;
 
+  font-size: 14px;
   height: 60px;
   width: 100%;
 

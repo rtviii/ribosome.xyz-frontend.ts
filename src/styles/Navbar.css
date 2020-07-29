@@ -1,5 +1,7 @@
 .navbar {
 
+
+  font-size: 20px;
   grid-area: nav;
   color: white;
   width: 100%;
@@ -35,7 +37,6 @@
     color:white;
   width: 120px;
   height: 100%;
-  font-size: large;
   cursor: pointer;
   border: none;
   background: none;

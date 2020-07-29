@@ -17,9 +17,9 @@ const structReducerDefaultState = {
 };
 
 export interface StructState {
-  structs: Objshape[],
-  loading: boolean,
-  error: null | Error,
+  structs: Objshape[];
+  loading: boolean;
+  error: null | Error;
 }
 
 export const requestStructDjango = (pdbid: string) => {
@@ -32,9 +32,6 @@ export const requestStructDjango = (pdbid: string) => {
     };
     try {
       const mydata = await axios.get(`${apibase}/get_struct/`, { params });
-
-      // console.log(`STRUCTS IS OF TYPE ${typeof response.data}`);
-      // console.log(`STRUCTS = ${response.data}`);
 
       dispatch({
         type: REQUEST_STRUCT_SUCCESS,

@@ -1,4 +1,10 @@
-.msp-plugin{
-    width:400px;
-    height:400px;
+.msp-plugin {
+  width: 400px;
+  height: 400px;
+}
+
+#viewerSection {
+  width: 450px;
+  height: 450px;
+  position: relative;
 }
