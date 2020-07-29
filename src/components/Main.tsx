@@ -9,22 +9,13 @@ import axios from "axios";
 const Main = () => {
   const history = useHistory();
   useEffect(() => {
-    history.push("/data");
+    history.push("/docs");
     return () => {};
   }, [history]);
 
   const baseapi = process.env.REACT_APP_DJANGO_URL;
   return (
     <div className="main">
-      {/* <button
-        onClick={() => {
-          console.log(baseapi);
-
-          axios.get(`${baseapi}/neo4j/test/`).then(r => {
-            console.log(r.data);
-          });
-        }}
-      ></button> */}
       <Navbar />
       <Toolbar />
       <Display />
@@ -33,3 +24,15 @@ const Main = () => {
 };
 
 export default withRouter(Main);
+
+{
+  /* <button
+        onClick={() => {
+          console.log(baseapi);
+
+          axios.get(`${baseapi}/neo4j/test/`).then(r => {
+            console.log(r.data);
+          });
+        }}
+      ></button> */
+}
