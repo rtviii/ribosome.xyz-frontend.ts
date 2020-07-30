@@ -3,8 +3,11 @@
   height: 400px;
 }
 
-#viewerSection {
-  width: 450px;
-  height: 450px;
-  position: relative;
+
+
+#pdbtop-viewer-frame{
+  display: block;
+  background-color: white;
+  width: 400px;
+  height: 400px;
 }
