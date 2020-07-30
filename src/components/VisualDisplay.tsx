@@ -92,11 +92,11 @@ const VisualDisplay = (props: any) => {
 
     interface PDBEvent extends Event {
       eventData: {
-        chainId      : string;
-        entityId     : string;
-        entryId      : string;
+        chainId: string;
+        entityId: string;
+        entryId: string;
         residueNumber: number;
-        type         : string;
+        type: string;
       };
     }
     document.addEventListener("PDB.topologyViewer.mouseover", e => {
@@ -119,26 +119,34 @@ const VisualDisplay = (props: any) => {
     });
 
     document.addEventListener("PDB.topologyViewer.click", e => {
-      // var {
-      //   entityId,
-      //   entryId,
-      //   chainId,
-      //   residueNumber,
-      // } = (e as PDBEvent).eventData;
+      var {
+        entityId,
+        entryId,
+        chainId,
+        residueNumber,
+      } = (e as PDBEvent).eventData;
 
-      console.log(e);
-      
-      // viewerInstance.visual.highlight({
-      //   data: [
-      //     {
-      //       start_residue_number: residueNumber,
-      //       end_residue_number: residueNumber,
-      //       entity_id: entityId,
-      //     },
-      //   ],
-      // });
+      // viewerInstance.visual.focus([
+      //   {
+      //     start_residue_number: residueNumber,
+      //     end_residue_number: residueNumber,
+      //     entity_id: entityId,
+      //   },
+      // ]);
+
+      viewerInstance.visual.select({
+        data: [
+          {
+            entity_id: entityId,
+            start_residue_number: residueNumber,
+            end_residue_number: residueNumber,
+            color: { r:20 , g: 100, b: 200 },
+            focus: true,
+          },
+        ],
+        // nonSelectedColor: { r: 255, g: 255, b: 255 },
+      });
     });
-
 
     return () => {};
   }, []);
@@ -146,14 +154,15 @@ const VisualDisplay = (props: any) => {
   const [viewerpdbid, setviewpdbid] = useState("");
   return (
     <div>
-      <button id="highLightBtn">highlight</button>
+
+      <button id="resetThemeBtn">Reset View</button>
 
       <button
         onClick={() => {
           addNewMolecule(viewerpdbid);
         }}
       >
-        ID
+        Struct.Load
       </button>
       <input
         type="text"
