@@ -1,10 +1,7 @@
-import React, { useState } from "react";
+import React, {  } from "react";
 import "./../styles/Navbar.css";
-import { Link, withRouter } from "react-router-dom";
+import { Link,  } from "react-router-dom";
 import riblogo from "./../static/3j9m.svg";
-import Select from "react-dropdown-select";
-import Docs from "./DocumentationPages/Docs";
-
 export const NavbarLogo = () => {
   return (
     <div className="navbar-logo">
@@ -13,7 +10,6 @@ export const NavbarLogo = () => {
   );
 };
 
-const DocsOptions = [{ id: "doc1" }, { id: "doc1" }];
 const Navbar = () => {
   return (
     <div className="navbar">

@@ -4,7 +4,7 @@ import Toolbar from "./Toolbar";
 import Navbar from "./Navbar";
 import Display from "./Display";
 import { withRouter, useHistory } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 
 const Main = () => {
   const history = useHistory();
@@ -13,7 +13,7 @@ const Main = () => {
     return () => {};
   }, [history]);
 
-  const baseapi = process.env.REACT_APP_DJANGO_URL;
+  // const baseapi = process.env.REACT_APP_DJANGO_URL;
   return (
     <div className="main">
       <Navbar />
@@ -25,7 +25,6 @@ const Main = () => {
 
 export default withRouter(Main);
 
-{
   /* <button
         onClick={() => {
           console.log(baseapi);
@@ -35,4 +34,3 @@ export default withRouter(Main);
           });
         }}
       ></button> */
-}

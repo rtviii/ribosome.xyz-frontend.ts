@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import tegunov from "./../static/tegunovM.gif";
-import seqalign from "./../static/imseqalign.png";
-import secondary from "./../static/secondary.jpg";
+// import tegunov from "./../static/tegunovM.gif";
+// import seqalign from "./../static/imseqalign.png";
+// import secondary from "./../static/secondary.jpg";
 import "./../styles/VisualDisplay.css";
-// import * from './../../node_modules/pdb-topology-viewer/src/app/index'
-
 
 type ScriptParameters = {
   src: string;
@@ -31,20 +29,17 @@ const useImportScript = (scriptParams: ScriptParameters) => {
 const VisualDisplay = (props: any) => {
   //molstar
   useImportScript({
-    // defer:true,
     src:
       "https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/webcomponents-lite.js",
     charset: "utf-8",
   });
   useImportScript({
-    // defer:true,
     src:
       "https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js",
 
     charset: "utf-8",
   });
   useImportScript({
-    // defer:true,
     src:
       "https://www.ebi.ac.uk/pdbe/pdb-component-library/js/pdbe-molstar-component-1.1.0-dev.4.js",
     type: "text/javascript",
@@ -61,17 +56,14 @@ const VisualDisplay = (props: any) => {
     src:
       "https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js",
     charset: "utf-8",
-    // defer: true,
   });
   useImportScript({
     src: "https://cdn.jsdelivr.net/npm/d3@5.9.2",
-    // defer: true,
   });
   useImportScript({
     src:
       "https://www.ebi.ac.uk/pdbe/pdb-component-library/js/pdb-topology-viewer-component-2.0.0.js",
     type: "text/javascript",
-    // defer: true,
   });
 
   const addNewMolecule = (pdbid: string) => {
@@ -83,7 +75,7 @@ const VisualDisplay = (props: any) => {
 
     var topviewer = document.getElementById("pdbTopologyViewer") as any;
     const pluginInstance = topviewer!.pluginInstance;
-    pluginInstance.render(topviewer, {entryId:pdbid, entityId:'1'})
+    pluginInstance.render(topviewer, { entryId: pdbid, entityId: "1" });
   };
 
   useEffect(() => {
@@ -92,13 +84,60 @@ const VisualDisplay = (props: any) => {
     ) as any;
     var viewerInstance = pdbeMolstarComponent!.viewerInstance;
     viewerInstance.visual.update({
-      moleculeId: "1bs5",
+      moleculeId: "1cbs",
       hideCanvasControls: ["expand", "selection", " animation"],
       hideControls: true,
       subscribEvents: true,
     });
-    
 
+    interface PDBEvent extends Event {
+      eventData: {
+        chainId      : string;
+        entityId     : string;
+        entryId      : string;
+        residueNumber: number;
+        type         : string;
+      };
+    }
+    document.addEventListener("PDB.topologyViewer.mouseover", e => {
+      var {
+        entityId,
+        entryId,
+        chainId,
+        residueNumber,
+      } = (e as PDBEvent).eventData;
+
+      viewerInstance.visual.highlight({
+        data: [
+          {
+            start_residue_number: residueNumber,
+            end_residue_number: residueNumber,
+            entity_id: entityId,
+          },
+        ],
+      });
+    });
+
+    document.addEventListener("PDB.topologyViewer.click", e => {
+      // var {
+      //   entityId,
+      //   entryId,
+      //   chainId,
+      //   residueNumber,
+      // } = (e as PDBEvent).eventData;
+
+      console.log(e);
+      
+      // viewerInstance.visual.highlight({
+      //   data: [
+      //     {
+      //       start_residue_number: residueNumber,
+      //       end_residue_number: residueNumber,
+      //       entity_id: entityId,
+      //     },
+      //   ],
+      // });
+    });
 
 
     return () => {};
@@ -107,13 +146,11 @@ const VisualDisplay = (props: any) => {
   const [viewerpdbid, setviewpdbid] = useState("");
   return (
     <div>
-
-<button id="highLightBtn">highlight</button>
+      <button id="highLightBtn">highlight</button>
 
       <button
         onClick={() => {
           addNewMolecule(viewerpdbid);
-
         }}
       >
         ID
@@ -124,10 +161,20 @@ const VisualDisplay = (props: any) => {
         onChange={e => setviewpdbid(e.target.value)}
       />
       <div className="display">
-        <pdbe-molstar id="pdbeMolstarComponent"  hide-controls="true" sub molecule-id="null" />
+        <pdbe-molstar
+          id="pdbeMolstarComponent"
+          hide-controls="true"
+          sub
+          molecule-id="null"
+        />
 
         <div id="pdbtop-viewer-frame">
-          <pdb-topology-viewer id="pdbTopologyViewer" entry-id="1cbs" entity-id="1" subscribe-events="true" />
+          <pdb-topology-viewer
+            id="pdbTopologyViewer"
+            entry-id="1cbs"
+            entity-id="1"
+            subscribe-events="true"
+          />
         </div>
       </div>
     </div>
