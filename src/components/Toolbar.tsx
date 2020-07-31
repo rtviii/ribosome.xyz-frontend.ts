@@ -70,14 +70,11 @@ const ToolBar: React.FC = () => {
       <ToolGroup id={3} name="Toolgroup3D"></ToolGroup>
       <ToolGroup id={2} name="Toolgroup2D"></ToolGroup>
       <ToolGroup id={1} name="Toolgroup1D"></ToolGroup>
-
-      <div style={{ width: "5%", height: "1px", backgroundColor: "white" }} />
-      <div style={{ width: "20%", height: "1px", backgroundColor: "white" }} />
-      <div style={{ width: "60%", height: "1px", backgroundColor: "white" }} />
       <div style={{ width: "100%", height: "1px", backgroundColor: "white" }} />
-      <div style={{ width: "60%", height: "1px", backgroundColor: "white" }} />
-      <div style={{ width: "20%", height: "1px", backgroundColor: "white" }} />
-      <div style={{ width: "5%", height: "1px", backgroundColor: "white" }} />
+      <ToolGroup id={7} name="Tunnels & Pores"></ToolGroup>
+      <ToolGroup id={8} name="Resn Conservation "></ToolGroup>
+      <ToolGroup id={9} name="Align"></ToolGroup>
+      <div style={{ width: "100%", height: "1px", backgroundColor: "white" }} />
       <div>
         <ToolGroup id={6} name="RequestData">
           <DropoutMenu>

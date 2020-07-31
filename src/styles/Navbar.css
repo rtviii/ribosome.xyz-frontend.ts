@@ -5,7 +5,6 @@
   grid-area: nav;
   color: white;
   width: 100%;
-  outline: 1px solid blue;
 
   display: flex;
   justify-content: space-between;
@@ -27,7 +26,6 @@
 
 
 .navbar-controls {
-  outline: 1px solid cyan;
     width:600px;
 
   display: flex;

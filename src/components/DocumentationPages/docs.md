@@ -22,6 +22,7 @@ This aims to illustrate the possible interactions between the present data sourc
 
 
 Can be used as a standalone CLI interface.
+
 |||
 |:---|:---|
 |__@flag__ --verbose|Enable logging.|
@@ -43,6 +44,7 @@ __get_adjacent_residues__(chain:Chain,hull, radius:int):
 
 
 __getAlphaCarbonResidue__(res:Residue): 
+
 |||
 |:---|:---|
 |*@param* res| A Biopython Residue object|

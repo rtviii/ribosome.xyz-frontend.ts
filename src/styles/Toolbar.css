@@ -18,10 +18,9 @@ a {
 
 .toolbar {
   padding: 10px;
-  outline: 2px solid rgb(77, 253, 77);
   position: relative;
   z-index: 200;
-  height: var(--nav-size);
+  height: 600px;
   /* padding: 0 1rem; */
   display: flex;
   flex-direction: column;
