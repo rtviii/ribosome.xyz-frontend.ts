@@ -15,7 +15,9 @@ const Navbar = () => {
     <div className="navbar">
       <NavbarLogo />
       <div className="navbar-controls">
+        <Link to="./api-shape">
         <button>API</button>
+        </Link>
         <Link to="./docs">
           <button>Docs</button>
         </Link>

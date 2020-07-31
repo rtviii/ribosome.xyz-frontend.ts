@@ -9,7 +9,7 @@ import { withRouter, useHistory } from "react-router-dom";
 const Main = () => {
   const history = useHistory();
   useEffect(() => {
-    history.push("/docs");
+    // history.push("");
     return () => {};
   }, [history]);
 

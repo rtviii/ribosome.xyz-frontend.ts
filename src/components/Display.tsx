@@ -12,6 +12,7 @@ const Display = (props: any) => {
       <Route  path="/display"component={VisualDisplay} />
       <Route path="/data" component={DataDisplay} />
       <Route path="/docs" component={Docs}/>
+      <Route path="/api-shape" component={Docs}/>
     </Switch>
   );
 };

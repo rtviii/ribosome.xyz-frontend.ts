@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
-import template from "./APIs-Outline.md";
+import { withRouter } from "react-router-dom";
 import marked from "marked";
-import './Docs.css'
+import "./Docs.css";
 
-const Docs = () => {
+const Docs = (props: any) => {
   const [document, setdocument] = useState("Fetching document.");
   useEffect(() => {
+    var { match } = props;
+    var docurl: string = match!.path;
+    var template = require(`./${docurl.substr(1)}.md`)
+
     fetch(template)
       .then(template => template.text())
-      .then(text => setdocument(marked(text)));
+      .then(text => { 
+        
+        console.log(text)
+        
+        setdocument(marked(text)) });
   });
   return (
     <div>
@@ -20,4 +28,4 @@ const Docs = () => {
   );
 };
 
-export default Docs;
+export default withRouter(Docs);
