@@ -6,7 +6,7 @@ import {
 } from "./../../types/action.types";
 import axios from "axios";
 import { Dispatch } from "redux";
-import { Objshape } from "../../components/DataDisplay";
+import { Objshape } from './../../components/Workspace/DataDisplay'
 
 const apibase = process.env.REACT_APP_DJANGO_URL;
 

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import "./../styles/Main.css";
-import Toolbar from "./Toolbar";
-import Navbar from "./Navbar";
-import Display from "./Display";
+import Toolbar from "./ToolbarLeft/Toolbar";
+import Navbar from "./NavbarTop/Navbar";
+import Display from "./Workspace/Display";
 import { withRouter, useHistory } from "react-router-dom";
 // import axios from "axios";
 
@@ -25,12 +25,3 @@ const Main = () => {
 
 export default withRouter(Main);
 
-  /* <button
-        onClick={() => {
-          console.log(baseapi);
-
-          axios.get(`${baseapi}/neo4j/test/`).then(r => {
-            console.log(r.data);
-          });
-        }}
-      ></button> */
