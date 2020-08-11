@@ -1,26 +1,26 @@
-import React, {  } from "react";
+import React from "react";
 import "./../../styles/Navbar.css";
-import { Link,  } from "react-router-dom";
 import riblogo from "./../../static/3j9m.svg";
-export const NavbarLogo = () => {
-  return (
-    <div className="navbar-logo">
-      <img src={riblogo} alt="logo" />A Better Logo
-    </div>
-  );
-};
+// export const NavbarLogo = () => {
+//   return (
+//     <div className="navbar-logo">
+//       <img src={riblogo} alt="logo" />A Better Logo
+//     </div>
+//   );
+// };
 
 const Navbar = () => {
   return (
     <div className="navbar">
-      <NavbarLogo />
+      {/* <NavbarLogo /> */}
       <div className="navbar-controls">
-        <Link to="./api-shape">
-        <button>API</button>
-        </Link>
-        <Link to="./docs">
+        <form action="https://rtviii.github.io/ribosome.xyz-backend/APISHAPE.html">
+          <button>API</button>
+        </form>
+
+        <form action="https://rtviii.github.io/ribosome.xyz-backend/">
           <button>Docs</button>
-        </Link>
+        </form>
         <button>Database</button>
         <button>Resources</button>
       </div>

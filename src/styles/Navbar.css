@@ -1,6 +1,4 @@
 .navbar {
-
-
   font-size: 20px;
   grid-area: nav;
   color: white;
@@ -9,14 +7,13 @@
   display: flex;
   justify-content: space-between;
 }
-.navbar-logo {
-  outline: 1px solid slateblue;
+/* .navbar-logo {
   margin-left: 40px;
   display: flex;
   justify-content: center;
   white-space: nowrap;
   align-items: center;
-}
+} */
 
 
 .navbar-logo img {

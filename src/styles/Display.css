@@ -11,7 +11,7 @@
   grid-template-areas:
     "oned oned"
     "threed twod";
-  outline: 1px solid crimson;
+  background-color: blueviolet;
 }
 
 img {
