@@ -3,10 +3,12 @@ import thunk, { ThunkMiddleware } from "redux-thunk";
 import { homologsReducer } from "./reducers/homologsReducer";
 import logger from "redux-logger";
 import { toolbarReducer } from "./reducers/toolbarReducer";
+import { workspaceCatalogueReducer } from "./reducers/workspaceCatalogueReducer";
 import { structReducer } from "./reducers/structReducer";
 
 export const UIReducer = combineReducers({
   state_Toolbar: toolbarReducer,
+  state_WorkspaceCatalogue: workspaceCatalogueReducer,
 });
 export const DataReducer = combineReducers({
   state_Homologs: homologsReducer,

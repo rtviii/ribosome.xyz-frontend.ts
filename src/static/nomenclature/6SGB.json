@@ -1,0 +1,2326 @@
+{
+    "metadata": {
+        "pdbid": "6SGB",
+        "rnacount": 1,
+        "proteincount": 115,
+        "rnanames": [
+            "CA"
+        ],
+        "noaccession_proteins": [
+            "CE",
+            "Cb",
+            "Ui",
+            "Uj",
+            "Ul",
+            "Ux",
+            null,
+            null,
+            null,
+            null,
+            "DD",
+            "DI",
+            "DL",
+            null,
+            "DP",
+            null,
+            "DR",
+            "DU",
+            null,
+            "F2",
+            null,
+            "F5",
+            null,
+            null,
+            "F8",
+            "F9",
+            "CH",
+            null,
+            "FB",
+            "FC",
+            "FE",
+            "FJ",
+            "FM",
+            "FN",
+            null,
+            "FP",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "FY",
+            "FZ",
+            null,
+            null,
+            null,
+            null,
+            "UA",
+            "UB",
+            "Uk",
+            "UC",
+            "UD",
+            "UM",
+            "UQ",
+            "Uf",
+            null,
+            "UE",
+            "UP",
+            "UF",
+            "Um",
+            "UG",
+            "UH",
+            "UI",
+            "UN",
+            "UJ",
+            "UK",
+            "UL",
+            "UO",
+            "UY",
+            null,
+            "CC",
+            null,
+            "CJ",
+            null,
+            "CS",
+            null,
+            null,
+            null,
+            "DB",
+            "CQ",
+            "DC",
+            null,
+            "DF",
+            "DG",
+            "DH",
+            null,
+            "DK",
+            null,
+            null,
+            "DW",
+            "CR",
+            null,
+            null,
+            null,
+            "F4",
+            null,
+            null,
+            "FG",
+            "FH",
+            "FI",
+            null,
+            null,
+            "FL",
+            null,
+            null,
+            "Ua",
+            "Ub",
+            "Uc",
+            "Ud",
+            "Ue",
+            "Ug",
+            "Uh"
+        ],
+        "accession_proteins": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "Cd",
+            "Cj",
+            "Cn",
+            "Cp",
+            null,
+            null,
+            null,
+            "DO",
+            null,
+            "CF",
+            null,
+            null,
+            "DZ",
+            null,
+            "F3",
+            null,
+            "F6",
+            "F7",
+            null,
+            null,
+            null,
+            "FA",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "FO",
+            null,
+            "FQ",
+            "FR",
+            "FS",
+            "FT",
+            "FU",
+            "FW",
+            "FX",
+            "CK",
+            null,
+            null,
+            "Fa",
+            "Fb",
+            "Fc",
+            "Fd",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "CO",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "CP",
+            null,
+            "CI",
+            null,
+            "CN",
+            null,
+            "Cg",
+            "Ci",
+            "Ck",
+            null,
+            null,
+            null,
+            "DE",
+            null,
+            null,
+            null,
+            "DJ",
+            null,
+            "DT",
+            "DV",
+            null,
+            null,
+            "DX",
+            "DY",
+            "F1",
+            null,
+            "FD",
+            "FF",
+            null,
+            null,
+            null,
+            "FK",
+            "Ca",
+            null,
+            "FV",
+            "Fe",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "nomenclatureCoverage": 0.008695652173913044
+    },
+    "polymers": [
+        {
+            "chainid": "CA",
+            "RNA": true,
+            "entityNr": "60",
+            "length": "620",
+            "type": "rna",
+            "weight": "198215.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "9S rRNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CE",
+            "entityNr": "1",
+            "length": "435",
+            "type": "protein",
+            "weight": "50147.4",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "uS5m"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cb",
+            "entityNr": "10",
+            "length": "311",
+            "type": "protein",
+            "weight": "35358.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS23"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ui",
+            "entityNr": "100",
+            "length": "32",
+            "type": "protein",
+            "weight": "2741.37",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-i"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Uj",
+            "entityNr": "101",
+            "length": "19",
+            "type": "protein",
+            "weight": "1635.01",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-j"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ul",
+            "entityNr": "102",
+            "length": "14",
+            "type": "protein",
+            "weight": "1209.48",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-l"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ux",
+            "entityNr": "103",
+            "length": "110",
+            "type": "protein",
+            "weight": "9379.55",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-x"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cd",
+            "name": "Uncharacterized protein",
+            "entityNr": "11",
+            "length": "440",
+            "type": "protein",
+            "weight": "51136.7",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS26"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "accession": "Q38DK6",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cj",
+            "name": "Uncharacterized protein",
+            "entityNr": "12",
+            "length": "257",
+            "type": "protein",
+            "weight": "28728.2",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS34"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "accession": "Q57UK0",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cn",
+            "name": "Uncharacterized protein",
+            "entityNr": "13",
+            "length": "250",
+            "type": "protein",
+            "weight": "28240.6",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS38"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "accession": "Q57VQ9",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cp",
+            "name": "Uncharacterized protein",
+            "entityNr": "14",
+            "length": "187",
+            "type": "protein",
+            "weight": "22421.5",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS41"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "accession": "Q389L3",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DD",
+            "entityNr": "15",
+            "length": "812",
+            "type": "protein",
+            "weight": "95081.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS51 (KRIPP1)"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DI",
+            "entityNr": "16",
+            "length": "407",
+            "type": "protein",
+            "weight": "47306.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS56"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DL",
+            "entityNr": "17",
+            "length": "307",
+            "type": "protein",
+            "weight": "35395.7",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS59"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DO",
+            "name": "Uncharacterized protein",
+            "entityNr": "18",
+            "length": "282",
+            "type": "protein",
+            "weight": "32068.1",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS62 (KRIPP14)"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "accession": "Q383D1",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DP",
+            "entityNr": "19",
+            "length": "274",
+            "type": "protein",
+            "weight": "31922.2",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS63 (KRIPP16)"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CF",
+            "name": "Uncharacterized protein",
+            "entityNr": "2",
+            "length": "160",
+            "type": "protein",
+            "weight": "18861.5",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "bS6m"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "accession": "Q38BW5",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DR",
+            "entityNr": "20",
+            "length": "270",
+            "type": "protein",
+            "weight": "30617.4",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS65"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DU",
+            "entityNr": "21",
+            "length": "228",
+            "type": "protein",
+            "weight": "26472.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS68"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DZ",
+            "name": "Uncharacterized protein",
+            "entityNr": "22",
+            "length": "94",
+            "type": "protein",
+            "weight": "11360.9",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS73"
+            },
+            "accession": "Q587C4",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "F2",
+            "entityNr": "23",
+            "length": "1024",
+            "type": "protein",
+            "weight": "116190.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF2 (KRIPP2)"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "F3",
+            "name": "Uncharacterized protein",
+            "entityNr": "24",
+            "length": "966",
+            "type": "protein",
+            "weight": "106622.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF3"
+            },
+            "mutation": {
+                "desc": "A44T, I190V, S303A, N418D"
+            },
+            "accession": "Q38E61",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "F5",
+            "entityNr": "25",
+            "length": "754",
+            "type": "protein",
+            "weight": "86949.4",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF5"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "F6",
+            "name": "DUF4460 domain-containing protein",
+            "entityNr": "26",
+            "length": "676",
+            "type": "protein",
+            "weight": "76781.4",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF6"
+            },
+            "mutation": {
+                "desc": "H285R, T291I, V602A, F676C"
+            },
+            "accession": "Q38FQ8",
+            "pfamGroups": [
+                "PF14687"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "F7",
+            "name": "Uncharacterized protein",
+            "entityNr": "27",
+            "length": "679",
+            "type": "protein",
+            "weight": "76675.2",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF7 (KRIPP10)"
+            },
+            "mutation": {
+                "desc": "T36I, K470E, A474V"
+            },
+            "accession": "Q57UW6",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "F8",
+            "entityNr": "28",
+            "length": "726",
+            "type": "protein",
+            "weight": "76725.2",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF8"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "F9",
+            "entityNr": "29",
+            "length": "608",
+            "type": "protein",
+            "weight": "69781.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF9"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CH",
+            "entityNr": "3",
+            "length": "282",
+            "type": "protein",
+            "weight": "32766.5",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "uS8m"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FA",
+            "name": "Uncharacterized protein",
+            "entityNr": "30",
+            "length": "642",
+            "type": "protein",
+            "weight": "69306.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF10"
+            },
+            "mutation": {
+                "desc": "T173A, H352Y"
+            },
+            "accession": "Q386U1",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FB",
+            "entityNr": "31",
+            "length": "579",
+            "type": "protein",
+            "weight": "64917.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF11"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FC",
+            "entityNr": "31",
+            "length": "579",
+            "type": "protein",
+            "weight": "64917.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF11"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FE",
+            "entityNr": "32",
+            "length": "553",
+            "type": "protein",
+            "weight": "63690.7",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF13"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FJ",
+            "entityNr": "33",
+            "length": "362",
+            "type": "protein",
+            "weight": "42508.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF18"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FM",
+            "entityNr": "34",
+            "length": "370",
+            "type": "protein",
+            "weight": "39610.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF21"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FN",
+            "entityNr": "34",
+            "length": "370",
+            "type": "protein",
+            "weight": "39610.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF21"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FO",
+            "name": "Uncharacterized protein",
+            "entityNr": "35",
+            "length": "334",
+            "type": "protein",
+            "weight": "39132.6",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF22 (KRIPP17)"
+            },
+            "accession": "Q389F9",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FP",
+            "entityNr": "36",
+            "length": "349",
+            "type": "protein",
+            "weight": "38240.2",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF23"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FQ",
+            "name": "Potassium voltage-gated channel, putative",
+            "entityNr": "37",
+            "length": "307",
+            "type": "protein",
+            "weight": "34648.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF24"
+            },
+            "accession": "Q387P8",
+            "pfamGroups": [
+                "PF02214"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FR",
+            "name": "Potassium voltage-gated channel, putative",
+            "entityNr": "37",
+            "length": "307",
+            "type": "protein",
+            "weight": "34648.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF24"
+            },
+            "accession": "Q387P8",
+            "pfamGroups": [
+                "PF02214"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FS",
+            "name": "Potassium voltage-gated channel, putative",
+            "entityNr": "37",
+            "length": "307",
+            "type": "protein",
+            "weight": "34648.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF24"
+            },
+            "accession": "Q387P8",
+            "pfamGroups": [
+                "PF02214"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FT",
+            "name": "Potassium voltage-gated channel, putative",
+            "entityNr": "37",
+            "length": "307",
+            "type": "protein",
+            "weight": "34648.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF24"
+            },
+            "accession": "Q387P8",
+            "pfamGroups": [
+                "PF02214"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FU",
+            "name": "Potassium voltage-gated channel, putative",
+            "entityNr": "37",
+            "length": "307",
+            "type": "protein",
+            "weight": "34648.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF24"
+            },
+            "accession": "Q387P8",
+            "pfamGroups": [
+                "PF02214"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FW",
+            "name": "LMWPc domain-containing protein",
+            "entityNr": "38",
+            "length": "263",
+            "type": "protein",
+            "weight": "30538.6",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF26"
+            },
+            "accession": "Q38FI3",
+            "pfamGroups": [
+                "PF01451"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FX",
+            "name": "Uncharacterized protein",
+            "entityNr": "39",
+            "length": "239",
+            "type": "protein",
+            "weight": "26936.7",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF27 (KRIPP11)"
+            },
+            "accession": "Q57YK5",
+            "pfamGroups": [
+                "PF13812"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CK",
+            "name": "Uncharacterized protein",
+            "entityNr": "4",
+            "length": "326",
+            "type": "protein",
+            "weight": "37954.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "uS11m"
+            },
+            "mutation": {
+                "desc": "Q3R"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "accession": "Q389T7",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FY",
+            "entityNr": "40",
+            "length": "188",
+            "type": "protein",
+            "weight": "21468.7",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF28"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FZ",
+            "entityNr": "41",
+            "length": "178",
+            "type": "protein",
+            "weight": "20048.5",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF29"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Fa",
+            "name": "Uncharacterized protein",
+            "entityNr": "42",
+            "length": "171",
+            "type": "protein",
+            "weight": "19659.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF30"
+            },
+            "mutation": {
+                "desc": "V73A"
+            },
+            "accession": "Q57VU7",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Fb",
+            "name": "Uncharacterized protein",
+            "entityNr": "43",
+            "length": "151",
+            "type": "protein",
+            "weight": "17673.5",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF31"
+            },
+            "accession": "Q581U4",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Fc",
+            "name": "Acyl carrier protein",
+            "entityNr": "44",
+            "length": "148",
+            "type": "protein",
+            "weight": "16550.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF32"
+            },
+            "accession": "Q57WW9",
+            "pfamGroups": [
+                "PF00550"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Fd",
+            "name": "DUF4379 domain-containing protein",
+            "entityNr": "45",
+            "length": "143",
+            "type": "protein",
+            "weight": "16291.1",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF33"
+            },
+            "accession": "Q581T4",
+            "pfamGroups": [
+                "PF14311"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UA",
+            "entityNr": "46",
+            "length": "21",
+            "type": "protein",
+            "weight": "1805.22",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-A"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UB",
+            "entityNr": "47",
+            "length": "27",
+            "type": "protein",
+            "weight": "2315.85",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-B, UNK-k"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Uk",
+            "entityNr": "47",
+            "length": "27",
+            "type": "protein",
+            "weight": "2315.85",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-B, UNK-k"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UC",
+            "entityNr": "48",
+            "length": "10",
+            "type": "protein",
+            "weight": "869.063",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-C"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UD",
+            "entityNr": "49",
+            "length": "9",
+            "type": "protein",
+            "weight": "783.958",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-D, UNK-M, UNK-Q, UNK-f"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UM",
+            "entityNr": "49",
+            "length": "9",
+            "type": "protein",
+            "weight": "783.958",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-D, UNK-M, UNK-Q, UNK-f"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UQ",
+            "entityNr": "49",
+            "length": "9",
+            "type": "protein",
+            "weight": "783.958",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-D, UNK-M, UNK-Q, UNK-f"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Uf",
+            "entityNr": "49",
+            "length": "9",
+            "type": "protein",
+            "weight": "783.958",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-D, UNK-M, UNK-Q, UNK-f"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CO",
+            "name": "Uncharacterized protein",
+            "entityNr": "5",
+            "length": "429",
+            "type": "protein",
+            "weight": "50401.2",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "uS15m"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "accession": "Q4GZ99",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UE",
+            "entityNr": "50",
+            "length": "45",
+            "type": "protein",
+            "weight": "3847.73",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-E, UNK-P"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UP",
+            "entityNr": "50",
+            "length": "45",
+            "type": "protein",
+            "weight": "3847.73",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-E, UNK-P"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UF",
+            "entityNr": "51",
+            "length": "11",
+            "type": "protein",
+            "weight": "954.168",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-F, UNK-m"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Um",
+            "entityNr": "51",
+            "length": "11",
+            "type": "protein",
+            "weight": "954.168",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-F, UNK-m"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UG",
+            "entityNr": "52",
+            "length": "17",
+            "type": "protein",
+            "weight": "1464.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-G"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UH",
+            "entityNr": "53",
+            "length": "5",
+            "type": "protein",
+            "weight": "443.539",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-H"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UI",
+            "entityNr": "54",
+            "length": "8",
+            "type": "protein",
+            "weight": "698.854",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-I, UNK-N"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UN",
+            "entityNr": "54",
+            "length": "8",
+            "type": "protein",
+            "weight": "698.854",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-I, UNK-N"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UJ",
+            "entityNr": "55",
+            "length": "16",
+            "type": "protein",
+            "weight": "1379.69",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-J"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UK",
+            "entityNr": "56",
+            "length": "24",
+            "type": "protein",
+            "weight": "2060.53",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-K"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UL",
+            "entityNr": "57",
+            "length": "22",
+            "type": "protein",
+            "weight": "1890.32",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-L"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UO",
+            "entityNr": "58",
+            "length": "30",
+            "type": "protein",
+            "weight": "2571.16",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-O"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "UY",
+            "entityNr": "59",
+            "length": "468",
+            "type": "protein",
+            "weight": "39847.1",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-Y"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CP",
+            "name": "Uncharacterized protein",
+            "entityNr": "6",
+            "length": "188",
+            "type": "protein",
+            "weight": "22077.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "bS16m"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "accession": "Q384N9",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CC",
+            "entityNr": "61",
+            "length": "74",
+            "type": "protein",
+            "weight": "9070.94",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS3m"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CI",
+            "name": "Uncharacterized protein",
+            "entityNr": "62",
+            "length": "443",
+            "type": "protein",
+            "weight": "50201.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "uS9m"
+            },
+            "mutation": {
+                "desc": "V370A"
+            },
+            "accession": "Q57W62",
+            "pfamGroups": [
+                "PF00380"
+            ],
+            "nomenclature": [
+                "uS9"
+            ]
+        },
+        {
+            "chainid": "CJ",
+            "entityNr": "63",
+            "length": "817",
+            "type": "protein",
+            "weight": "94321.1",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "uS10m"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CN",
+            "name": "Uncharacterized protein",
+            "entityNr": "64",
+            "length": "166",
+            "type": "protein",
+            "weight": "19900.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "uS14m"
+            },
+            "accession": "Q580I0",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CS",
+            "entityNr": "65",
+            "length": "244",
+            "type": "protein",
+            "weight": "28364.6",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "uS19m"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cg",
+            "name": "Uncharacterized protein",
+            "entityNr": "66",
+            "length": "498",
+            "type": "protein",
+            "weight": "57048.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS29"
+            },
+            "mutation": {
+                "desc": "A181V, M498R"
+            },
+            "accession": "Q585C2",
+            "pfamGroups": [
+                "PF10236"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ci",
+            "name": "Uncharacterized protein",
+            "entityNr": "67",
+            "length": "181",
+            "type": "protein",
+            "weight": "21244.1",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS33"
+            },
+            "accession": "Q57WW0",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ck",
+            "name": "Uncharacterized protein",
+            "entityNr": "68",
+            "length": "874",
+            "type": "protein",
+            "weight": "98377.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS35"
+            },
+            "mutation": {
+                "desc": "L107S, L144F, F253Y, V339E, E871G"
+            },
+            "accession": "Q387C7",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DB",
+            "entityNr": "69",
+            "length": "1181",
+            "type": "protein",
+            "weight": "137234.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS49"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CQ",
+            "entityNr": "7",
+            "length": "336",
+            "type": "protein",
+            "weight": "39012.4",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "uS17m"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence; C-terminal PTP-tag"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DC",
+            "entityNr": "70",
+            "length": "1165",
+            "type": "protein",
+            "weight": "131719.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS50"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DE",
+            "name": "Uncharacterized protein",
+            "entityNr": "71",
+            "length": "747",
+            "type": "protein",
+            "weight": "84998.2",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS52"
+            },
+            "accession": "Q386Q7",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DF",
+            "entityNr": "72",
+            "length": "666",
+            "type": "protein",
+            "weight": "75310.9",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS53"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DG",
+            "entityNr": "73",
+            "length": "631",
+            "type": "protein",
+            "weight": "72046.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS54"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DH",
+            "entityNr": "74",
+            "length": "581",
+            "type": "protein",
+            "weight": "66676.7",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS55 (KRIPP8)"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DJ",
+            "name": "Uncharacterized protein",
+            "entityNr": "75",
+            "length": "396",
+            "type": "protein",
+            "weight": "45956.3",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS57"
+            },
+            "accession": "Q584U8",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DK",
+            "entityNr": "76",
+            "length": "324",
+            "type": "protein",
+            "weight": "35623.9",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS58"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DT",
+            "name": "Uncharacterized protein",
+            "entityNr": "77",
+            "length": "247",
+            "type": "protein",
+            "weight": "30096.1",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS67"
+            },
+            "accession": "Q586G5",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DV",
+            "name": "Uncharacterized protein",
+            "entityNr": "78",
+            "length": "183",
+            "type": "protein",
+            "weight": "21589.7",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS69"
+            },
+            "mutation": {
+                "desc": "T163A"
+            },
+            "accession": "Q57UZ6",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DW",
+            "entityNr": "79",
+            "length": "179",
+            "type": "protein",
+            "weight": "21247.4",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS70"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CR",
+            "entityNr": "8",
+            "length": "320",
+            "type": "protein",
+            "weight": "36988.7",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "bS18m"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DX",
+            "name": "Uncharacterized protein",
+            "entityNr": "80",
+            "length": "169",
+            "type": "protein",
+            "weight": "20093.2",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS71"
+            },
+            "accession": "Q383G5",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "DY",
+            "name": "Uncharacterized protein",
+            "entityNr": "81",
+            "length": "163",
+            "type": "protein",
+            "weight": "19340.4",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS72"
+            },
+            "mutation": {
+                "desc": "D34H"
+            },
+            "accession": "Q57YD4",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "F1",
+            "name": "Uncharacterized protein",
+            "entityNr": "82",
+            "length": "1041",
+            "type": "protein",
+            "weight": "119799.0",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF1 (RSM22)"
+            },
+            "mutation": {
+                "desc": "G707S, M973T"
+            },
+            "accession": "Q385R2",
+            "pfamGroups": [
+                "PF09243"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "F4",
+            "entityNr": "83",
+            "length": "811",
+            "type": "protein",
+            "weight": "91549.3",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF4"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FD",
+            "name": "Uncharacterized protein",
+            "entityNr": "84",
+            "length": "579",
+            "type": "protein",
+            "weight": "65049.2",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF12 (KRIPP18)"
+            },
+            "accession": "Q583U2",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FF",
+            "name": "S-adenosyl-methyltransferase mraW-like protein, putative",
+            "entityNr": "85",
+            "length": "474",
+            "type": "protein",
+            "weight": "53320.8",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF14"
+            },
+            "mutation": {
+                "desc": "P70A, L179F"
+            },
+            "accession": "Q57W60",
+            "pfamGroups": [
+                "PF01795"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FG",
+            "entityNr": "86",
+            "length": "463",
+            "type": "protein",
+            "weight": "53273.9",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF15"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FH",
+            "entityNr": "87",
+            "length": "457",
+            "type": "protein",
+            "weight": "50911.4",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF16"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FI",
+            "entityNr": "88",
+            "length": "445",
+            "type": "protein",
+            "weight": "50147.6",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF17"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FK",
+            "name": "Uncharacterized protein",
+            "entityNr": "89",
+            "length": "372",
+            "type": "protein",
+            "weight": "41236.4",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF19"
+            },
+            "mutation": {
+                "desc": "R38H"
+            },
+            "accession": "Q57XS8",
+            "pfamGroups": [
+                "PF02330"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ca",
+            "name": "Uncharacterized protein",
+            "entityNr": "9",
+            "length": "602",
+            "type": "protein",
+            "weight": "73064.1",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mS22"
+            },
+            "details": {
+                "desc": "Protein of Trypanosoma brucei brucei Lister strain 427; sequence accessible on TriTrypDB; where necessary, the reference strain TREU927 was used to complete the sequence"
+            },
+            "accession": "Q38DR3",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FL",
+            "entityNr": "90",
+            "length": "353",
+            "type": "protein",
+            "weight": "40293.9",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF20"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "FV",
+            "name": "Uncharacterized protein",
+            "entityNr": "91",
+            "length": "264",
+            "type": "protein",
+            "weight": "29470.5",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF25"
+            },
+            "accession": "Q38C60",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Fe",
+            "name": "Uncharacterized protein",
+            "entityNr": "92",
+            "length": "123",
+            "type": "protein",
+            "weight": "14862.9",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "mt-SAF34"
+            },
+            "accession": "Q387L0",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ua",
+            "entityNr": "93",
+            "length": "47",
+            "type": "protein",
+            "weight": "4017.94",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-a"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ub",
+            "entityNr": "94",
+            "length": "42",
+            "type": "protein",
+            "weight": "3592.42",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-b"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Uc",
+            "entityNr": "95",
+            "length": "12",
+            "type": "protein",
+            "weight": "1039.27",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-c"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ud",
+            "entityNr": "96",
+            "length": "59",
+            "type": "protein",
+            "weight": "5039.2",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-d"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ue",
+            "entityNr": "97",
+            "length": "29",
+            "type": "protein",
+            "weight": "2486.06",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-e"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ug",
+            "entityNr": "98",
+            "length": "167",
+            "type": "protein",
+            "weight": "14230.5",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-g"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Uh",
+            "entityNr": "99",
+            "length": "255",
+            "type": "protein",
+            "weight": "21719.7",
+            "Taxonomy": {
+                "name": "Trypanosoma brucei",
+                "id": "5691"
+            },
+            "polymerDescription": {
+                "description": "UNK-h"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        }
+    ]
+}

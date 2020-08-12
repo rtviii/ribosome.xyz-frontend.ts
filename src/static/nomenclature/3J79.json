@@ -1,0 +1,1083 @@
+{
+    "metadata": {
+        "pdbid": "3J79",
+        "rnacount": 3,
+        "proteincount": 42,
+        "rnanames": [
+            "A",
+            "B",
+            "C"
+        ],
+        "noaccession_proteins": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "I"
+        ],
+        "accession_proteins": [
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "a",
+            "b",
+            "c",
+            "D",
+            "d",
+            "e",
+            "f",
+            "g",
+            "h",
+            "i",
+            "E",
+            "F",
+            "G",
+            "H",
+            null
+        ],
+        "nomenclatureCoverage": 0.9047619047619048
+    },
+    "polymers": [
+        {
+            "chainid": "A",
+            "RNA": true,
+            "entityNr": "1",
+            "length": "3788",
+            "type": "rna",
+            "weight": "1216210.0",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "28S ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "B",
+            "RNA": true,
+            "entityNr": "2",
+            "length": "119",
+            "type": "rna",
+            "weight": "38410.9",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "5S ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "C",
+            "RNA": true,
+            "entityNr": "3",
+            "length": "159",
+            "type": "rna",
+            "weight": "51206.5",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "5.8S ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "J",
+            "name": "60S ribosomal protein L7-3, putative",
+            "entityNr": "10",
+            "length": "283",
+            "type": "protein",
+            "weight": "32760.5",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL8"
+            },
+            "accession": "Q8ILL2",
+            "pfamGroups": [
+                "PF01248"
+            ],
+            "nomenclature": [
+                "eL30",
+                "eS12"
+            ]
+        },
+        {
+            "chainid": "K",
+            "name": "60S ribosomal protein L13, putative",
+            "entityNr": "11",
+            "length": "202",
+            "type": "protein",
+            "weight": "23805.3",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL13"
+            },
+            "accession": "Q8IJZ7",
+            "pfamGroups": [
+                "PF00572"
+            ],
+            "nomenclature": [
+                "uL13"
+            ]
+        },
+        {
+            "chainid": "L",
+            "name": "60S ribosomal protein L13",
+            "entityNr": "12",
+            "length": "215",
+            "type": "protein",
+            "weight": "25508.2",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL13"
+            },
+            "accession": "Q8IAX6",
+            "pfamGroups": [
+                "PF01294"
+            ],
+            "nomenclature": [
+                "eL13"
+            ]
+        },
+        {
+            "chainid": "M",
+            "name": "60S ribosomal protein L23, putative",
+            "entityNr": "13",
+            "length": "139",
+            "type": "protein",
+            "weight": "15015.7",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL14"
+            },
+            "accession": "Q8IE09",
+            "pfamGroups": [
+                "PF00238"
+            ],
+            "nomenclature": [
+                "uL14"
+            ]
+        },
+        {
+            "chainid": "N",
+            "name": "60S ribosomal protein L14, putative",
+            "entityNr": "14",
+            "length": "165",
+            "type": "protein",
+            "weight": "19340.4",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL14"
+            },
+            "accession": "Q8ILE8",
+            "pfamGroups": [
+                "PF01929"
+            ],
+            "nomenclature": [
+                "eL14"
+            ]
+        },
+        {
+            "chainid": "O",
+            "name": "60S ribosomal protein L27a, putative",
+            "entityNr": "15",
+            "length": "148",
+            "type": "protein",
+            "weight": "16765.8",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL15"
+            },
+            "accession": "C6KT23",
+            "pfamGroups": [
+                "PF00828"
+            ],
+            "nomenclature": [
+                "uL15"
+            ]
+        },
+        {
+            "chainid": "P",
+            "name": "Ribosomal protein L15",
+            "entityNr": "16",
+            "length": "205",
+            "type": "protein",
+            "weight": "24197.7",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL15"
+            },
+            "accession": "C0H4A6",
+            "pfamGroups": [
+                "PF00827"
+            ],
+            "nomenclature": [
+                "eL15"
+            ]
+        },
+        {
+            "chainid": "Q",
+            "name": "60S ribosomal protein L10, putative",
+            "entityNr": "17",
+            "length": "219",
+            "type": "protein",
+            "weight": "25265.5",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL16"
+            },
+            "accession": "Q8ILV2",
+            "pfamGroups": [
+                "PF00252"
+            ],
+            "nomenclature": [
+                "uL16"
+            ]
+        },
+        {
+            "chainid": "R",
+            "name": "60S ribosomal protein L5, putative",
+            "entityNr": "18",
+            "length": "294",
+            "type": "protein",
+            "weight": "34067.4",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL18"
+            },
+            "accession": "Q8ILL3",
+            "pfamGroups": [
+                "PF17144",
+                "PF14204"
+            ],
+            "nomenclature": [
+                "uL18"
+            ]
+        },
+        {
+            "chainid": "S",
+            "name": "60S ribosomal protein L18-2, putative",
+            "entityNr": "19",
+            "length": "187",
+            "type": "protein",
+            "weight": "21508.8",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL18"
+            },
+            "accession": "C0H5G3",
+            "pfamGroups": [
+                "PF17135"
+            ],
+            "nomenclature": [
+                "eL18"
+            ]
+        },
+        {
+            "chainid": "T",
+            "name": "60S ribosomal protein L19",
+            "entityNr": "20",
+            "length": "182",
+            "type": "protein",
+            "weight": "21641.1",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL19"
+            },
+            "accession": "C6KSY6",
+            "pfamGroups": [
+                "PF01280"
+            ],
+            "nomenclature": [
+                "eL19"
+            ]
+        },
+        {
+            "chainid": "U",
+            "name": "60S ribosomal protein L18a",
+            "entityNr": "21",
+            "length": "184",
+            "type": "protein",
+            "weight": "21793.6",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL20"
+            },
+            "accession": "Q8IDS6",
+            "pfamGroups": [
+                "PF01775"
+            ],
+            "nomenclature": [
+                "eL20"
+            ]
+        },
+        {
+            "chainid": "V",
+            "name": "60S ribosomal protein L21",
+            "entityNr": "22",
+            "length": "161",
+            "type": "protein",
+            "weight": "18840.2",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL21"
+            },
+            "accession": "Q8ILK3",
+            "pfamGroups": [
+                "PF01157"
+            ],
+            "nomenclature": [
+                "eL21"
+            ]
+        },
+        {
+            "chainid": "W",
+            "name": "60S ribosomal protein L17, putative",
+            "entityNr": "23",
+            "length": "203",
+            "type": "protein",
+            "weight": "23469.9",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL22"
+            },
+            "accession": "Q8IDI5",
+            "pfamGroups": [
+                "PF00237"
+            ],
+            "nomenclature": [
+                "uL22"
+            ]
+        },
+        {
+            "chainid": "X",
+            "name": "60S ribosomal protein L22, putative",
+            "entityNr": "24",
+            "length": "139",
+            "type": "protein",
+            "weight": "16422.9",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL22"
+            },
+            "accession": "Q8IB51",
+            "pfamGroups": [
+                "PF01776"
+            ],
+            "nomenclature": [
+                "eL22"
+            ]
+        },
+        {
+            "chainid": "Y",
+            "name": "60S ribosomal protein L23",
+            "entityNr": "25",
+            "length": "190",
+            "type": "protein",
+            "weight": "22152.7",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL23"
+            },
+            "accession": "Q8IE82",
+            "pfamGroups": [
+                "PF03939",
+                "PF00276"
+            ],
+            "nomenclature": [
+                "uL23"
+            ]
+        },
+        {
+            "chainid": "Z",
+            "name": "60S ribosomal protein L26, putative",
+            "entityNr": "26",
+            "length": "126",
+            "type": "protein",
+            "weight": "14855.7",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL24"
+            },
+            "accession": "O77364",
+            "pfamGroups": [
+                "PF16906",
+                "PF00467"
+            ],
+            "nomenclature": [
+                "uL24",
+                "eS4"
+            ]
+        },
+        {
+            "chainid": "0",
+            "name": "60S ribosomal protein L24, putative",
+            "entityNr": "27",
+            "length": "162",
+            "type": "protein",
+            "weight": "19295.9",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL24"
+            },
+            "accession": "Q8IEM3",
+            "pfamGroups": [
+                "PF01246"
+            ],
+            "nomenclature": [
+                "eL24"
+            ]
+        },
+        {
+            "chainid": "1",
+            "name": "60S ribosomal protein L27",
+            "entityNr": "28",
+            "length": "146",
+            "type": "protein",
+            "weight": "16785.2",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL27"
+            },
+            "accession": "Q8IKM5",
+            "pfamGroups": [
+                "PF01777"
+            ],
+            "nomenclature": [
+                "eL27"
+            ]
+        },
+        {
+            "chainid": "2",
+            "name": "60S ribosomal protein L28",
+            "entityNr": "29",
+            "length": "127",
+            "type": "protein",
+            "weight": "14437.8",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL28"
+            },
+            "accession": "Q8IHU0",
+            "pfamGroups": [
+                "PF01778"
+            ],
+            "nomenclature": [
+                "eL28"
+            ]
+        },
+        {
+            "chainid": "3",
+            "name": "60S ribosomal protein L35, putative",
+            "entityNr": "30",
+            "length": "124",
+            "type": "protein",
+            "weight": "14787.8",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL29"
+            },
+            "accession": "Q8IIB4",
+            "pfamGroups": [
+                "PF00831"
+            ],
+            "nomenclature": [
+                "uL29"
+            ]
+        },
+        {
+            "chainid": "4",
+            "name": "60S ribosomal protein L29",
+            "entityNr": "31",
+            "length": "67",
+            "type": "protein",
+            "weight": "8041.59",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL29"
+            },
+            "accession": "C6S3J6",
+            "pfamGroups": [
+                "PF01779"
+            ],
+            "nomenclature": [
+                "eL29"
+            ]
+        },
+        {
+            "chainid": "5",
+            "name": "60S ribosomal protein L7, putative",
+            "entityNr": "32",
+            "length": "257",
+            "type": "protein",
+            "weight": "30593.2",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL30"
+            },
+            "accession": "O97250",
+            "pfamGroups": [
+                "PF08079",
+                "PF00327"
+            ],
+            "nomenclature": [
+                "uL30"
+            ]
+        },
+        {
+            "chainid": "6",
+            "name": "60S ribosomal protein L30e, putative",
+            "entityNr": "33",
+            "length": "108",
+            "type": "protein",
+            "weight": "11794.8",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL30"
+            },
+            "accession": "Q8IJK8",
+            "pfamGroups": [
+                "PF01248"
+            ],
+            "nomenclature": [
+                "eL30",
+                "eS12"
+            ]
+        },
+        {
+            "chainid": "7",
+            "name": "60S ribosomal protein L31",
+            "entityNr": "34",
+            "length": "120",
+            "type": "protein",
+            "weight": "14099.9",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL31"
+            },
+            "accession": "Q8I463",
+            "pfamGroups": [
+                "PF01198"
+            ],
+            "nomenclature": [
+                "eL31"
+            ]
+        },
+        {
+            "chainid": "8",
+            "name": "60S ribosomal protein L32",
+            "entityNr": "35",
+            "length": "131",
+            "type": "protein",
+            "weight": "15565.8",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL32"
+            },
+            "accession": "Q8I3B0",
+            "pfamGroups": [
+                "PF01655"
+            ],
+            "nomenclature": [
+                "eL32"
+            ]
+        },
+        {
+            "chainid": "9",
+            "name": "60S ribosomal protein L35ae, putative",
+            "entityNr": "36",
+            "length": "140",
+            "type": "protein",
+            "weight": "16306.4",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL33"
+            },
+            "accession": "Q8IHT9",
+            "pfamGroups": [
+                "PF01247"
+            ],
+            "nomenclature": [
+                "eL33"
+            ]
+        },
+        {
+            "chainid": "a",
+            "name": "60S ribosomal protein L34",
+            "entityNr": "37",
+            "length": "150",
+            "type": "protein",
+            "weight": "17407.0",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL34"
+            },
+            "accession": "Q8IBY4",
+            "pfamGroups": [
+                "PF01199"
+            ],
+            "nomenclature": [
+                "eL34"
+            ]
+        },
+        {
+            "chainid": "b",
+            "name": "60S ribosomal protein L36",
+            "entityNr": "38",
+            "length": "112",
+            "type": "protein",
+            "weight": "12825.4",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL36"
+            },
+            "accession": "Q8I713",
+            "pfamGroups": [
+                "PF01158"
+            ],
+            "nomenclature": [
+                "eL36"
+            ]
+        },
+        {
+            "chainid": "c",
+            "name": "Ribosomal protein L37",
+            "entityNr": "39",
+            "length": "92",
+            "type": "protein",
+            "weight": "10571.6",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL37"
+            },
+            "accession": "C0H4L5",
+            "pfamGroups": [
+                "PF01907"
+            ],
+            "nomenclature": [
+                "eL37"
+            ]
+        },
+        {
+            "chainid": "D",
+            "name": "60S ribosomal protein L2",
+            "entityNr": "4",
+            "length": "260",
+            "type": "protein",
+            "weight": "28065.0",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL2"
+            },
+            "accession": "Q8I3T9",
+            "pfamGroups": [
+                "PF03947",
+                "PF00181"
+            ],
+            "nomenclature": [
+                "uL2"
+            ]
+        },
+        {
+            "chainid": "d",
+            "name": "60S ribosomal protein L38",
+            "entityNr": "40",
+            "length": "87",
+            "type": "protein",
+            "weight": "10341.7",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL38"
+            },
+            "accession": "Q8II62",
+            "pfamGroups": [
+                "PF01781"
+            ],
+            "nomenclature": [
+                "eL38"
+            ]
+        },
+        {
+            "chainid": "e",
+            "name": "60S ribosomal protein L39",
+            "entityNr": "41",
+            "length": "51",
+            "type": "protein",
+            "weight": "6540.91",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL39"
+            },
+            "accession": "C0H4H3",
+            "pfamGroups": [
+                "PF00832"
+            ],
+            "nomenclature": [
+                "eL39"
+            ]
+        },
+        {
+            "chainid": "f",
+            "name": "Ubiquitin-60S ribosomal protein L40",
+            "entityNr": "42",
+            "length": "128",
+            "type": "protein",
+            "weight": "14645.2",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL40"
+            },
+            "accession": "Q8ID50",
+            "pfamGroups": [
+                "PF01020",
+                "PF00240"
+            ],
+            "nomenclature": [
+                "eL40"
+            ]
+        },
+        {
+            "chainid": "g",
+            "name": "60S ribosomal protein L41",
+            "entityNr": "43",
+            "length": "39",
+            "type": "protein",
+            "weight": "5108.31",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL41"
+            },
+            "accession": "C6S3G4",
+            "pfamGroups": [
+                "PF05162"
+            ],
+            "nomenclature": [
+                "eL41"
+            ]
+        },
+        {
+            "chainid": "h",
+            "name": "60S ribosomal protein L37a",
+            "entityNr": "44",
+            "length": "96",
+            "type": "protein",
+            "weight": "10826.1",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL43"
+            },
+            "accession": "O96184",
+            "pfamGroups": [
+                "PF01780"
+            ],
+            "nomenclature": [
+                "eL43"
+            ]
+        },
+        {
+            "chainid": "i",
+            "name": "60S ribosomal protein L44",
+            "entityNr": "45",
+            "length": "104",
+            "type": "protein",
+            "weight": "12194.9",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL44"
+            },
+            "accession": "O97231",
+            "pfamGroups": [
+                "PF00935"
+            ],
+            "nomenclature": [
+                "eL42"
+            ]
+        },
+        {
+            "chainid": "E",
+            "name": "60S ribosomal protein L3",
+            "entityNr": "5",
+            "length": "386",
+            "type": "protein",
+            "weight": "44318.2",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL3"
+            },
+            "accession": "Q8IJC6",
+            "pfamGroups": [
+                "PF00297"
+            ],
+            "nomenclature": [
+                "uL3"
+            ]
+        },
+        {
+            "chainid": "F",
+            "name": "60S ribosomal protein L4",
+            "entityNr": "6",
+            "length": "411",
+            "type": "protein",
+            "weight": "46311.7",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL4"
+            },
+            "accession": "Q8I431",
+            "pfamGroups": [
+                "PF14374",
+                "PF00573"
+            ],
+            "nomenclature": [
+                "uL4"
+            ]
+        },
+        {
+            "chainid": "G",
+            "name": "60S ribosomal protein L11a, putative",
+            "entityNr": "7",
+            "length": "173",
+            "type": "protein",
+            "weight": "20268.7",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL5"
+            },
+            "accession": "Q8IBQ6",
+            "pfamGroups": [
+                "PF00673",
+                "PF00281"
+            ],
+            "nomenclature": [
+                "uL5"
+            ]
+        },
+        {
+            "chainid": "H",
+            "name": "60S ribosomal protein L6, putative",
+            "entityNr": "8",
+            "length": "190",
+            "type": "protein",
+            "weight": "21638.6",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein uL6"
+            },
+            "accession": "Q8IE85",
+            "pfamGroups": [
+                "PF00347"
+            ],
+            "nomenclature": [
+                "uL6"
+            ]
+        },
+        {
+            "chainid": "I",
+            "entityNr": "9",
+            "length": "221",
+            "type": "protein",
+            "weight": "25587.6",
+            "Taxonomy": {
+                "name": "Plasmodium falciparum",
+                "id": "5833"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein eL6"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        }
+    ]
+}

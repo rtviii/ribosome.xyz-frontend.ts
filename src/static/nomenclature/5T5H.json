@@ -1,0 +1,1099 @@
+{
+    "metadata": {
+        "pdbid": "5T5H",
+        "rnacount": 8,
+        "proteincount": 38,
+        "rnanames": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+        ],
+        "noaccession_proteins": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "accession_proteins": [
+            "L",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z",
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+            "g",
+            "h",
+            "i",
+            "j",
+            "k",
+            "l",
+            "m",
+            "n",
+            "o",
+            "p",
+            "q",
+            "r",
+            "t",
+            "u",
+            "v",
+            "w",
+            "x",
+            "I"
+        ],
+        "nomenclatureCoverage": 0.8947368421052632
+    },
+    "polymers": [
+        {
+            "chainid": "A",
+            "RNA": true,
+            "entityNr": "1",
+            "length": "1278",
+            "type": "rna",
+            "weight": "414400.0",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "RNA LARGE SUBUNIT ALPHA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "B",
+            "RNA": true,
+            "entityNr": "2",
+            "length": "941",
+            "type": "rna",
+            "weight": "303900.0",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "synonym": {
+                "name": "Trypanosoma cruzi 5.8S ribosomal RNA, internal transcribed spacers 1-7 (ITS1-ITS7), and 28S ribosomal RNA,Trypanosoma cruzi 5.8S ribosomal RNA, internal transcribed spacers 1-7 (ITS1-ITS7), and 28S ribosomal RNA,Trypanosoma cruzi 5.8S ribosomal RNA, internal transcribed spacers 1-7 (ITS1-ITS7), and 28S ribosomal RNA,Trypanosoma cruzi 5.8S ribosomal RNA, internal transcribed spacers 1-7 (ITS1-ITS7), and 28S ribosomal RNA"
+            },
+            "polymerDescription": {
+                "description": "RNA LARGE SUBUNIT BETA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "C",
+            "RNA": true,
+            "entityNr": "3",
+            "length": "169",
+            "type": "rna",
+            "weight": "54425.4",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "5.8S rRNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "D",
+            "RNA": true,
+            "entityNr": "4",
+            "length": "118",
+            "type": "rna",
+            "weight": "38047.6",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "5S rRNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "E",
+            "RNA": true,
+            "entityNr": "5",
+            "length": "146",
+            "type": "rna",
+            "weight": "46982.8",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "srRNA1"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "F",
+            "RNA": true,
+            "entityNr": "6",
+            "length": "46",
+            "type": "rna",
+            "weight": "14572.7",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "srRNA3"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "G",
+            "RNA": true,
+            "entityNr": "7",
+            "length": "123",
+            "type": "rna",
+            "weight": "39608.4",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "srRNA2"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "H",
+            "RNA": true,
+            "entityNr": "8",
+            "length": "91",
+            "type": "rna",
+            "weight": "29374.5",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "srRNA4"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "L",
+            "name": "60S ribosomal protein L11, putative",
+            "entityNr": "10",
+            "length": "65",
+            "type": "protein",
+            "weight": "7672.06",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L11"
+            },
+            "accession": "Q4CNF4",
+            "pfamGroups": [
+                "PF00281",
+                "PF00673"
+            ],
+            "nomenclature": [
+                "uL5"
+            ]
+        },
+        {
+            "chainid": "N",
+            "name": "60S ribosomal protein L13",
+            "entityNr": "11",
+            "length": "205",
+            "type": "protein",
+            "weight": "23690.8",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L13"
+            },
+            "accession": "Q4E661",
+            "pfamGroups": [
+                "PF01294"
+            ],
+            "nomenclature": [
+                "eL13"
+            ]
+        },
+        {
+            "chainid": "O",
+            "name": "60S ribosomal protein L13a",
+            "entityNr": "12",
+            "length": "203",
+            "type": "protein",
+            "weight": "23412.8",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L13a"
+            },
+            "accession": "V5DCT1",
+            "pfamGroups": [
+                "PF00572"
+            ],
+            "nomenclature": [
+                "uL13"
+            ]
+        },
+        {
+            "chainid": "P",
+            "name": "40S ribosomal protein L14, putative",
+            "entityNr": "13",
+            "length": "149",
+            "type": "protein",
+            "weight": "17483.6",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein L14"
+            },
+            "mutation": {
+                "desc": "R72K"
+            },
+            "accession": "Q4DQ35",
+            "pfamGroups": [
+                "PF01929"
+            ],
+            "nomenclature": [
+                "eL14"
+            ]
+        },
+        {
+            "chainid": "Q",
+            "name": "Ribosomal protein L15",
+            "entityNr": "14",
+            "length": "203",
+            "type": "protein",
+            "weight": "24154.5",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L15"
+            },
+            "accession": "Q4CTG9",
+            "pfamGroups": [
+                "PF00827"
+            ],
+            "nomenclature": [
+                "eL15"
+            ]
+        },
+        {
+            "chainid": "R",
+            "name": "60S ribosomal protein L17, putative",
+            "entityNr": "15",
+            "length": "152",
+            "type": "protein",
+            "weight": "17545.6",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L17"
+            },
+            "accession": "Q4DC23",
+            "pfamGroups": [
+                "PF00237"
+            ],
+            "nomenclature": [
+                "uL22"
+            ]
+        },
+        {
+            "chainid": "S",
+            "name": "60S ribosomal protein L18a",
+            "entityNr": "16",
+            "length": "177",
+            "type": "protein",
+            "weight": "20595.0",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L18a"
+            },
+            "accession": "Q4DZ31",
+            "pfamGroups": [
+                "PF01775"
+            ],
+            "nomenclature": [
+                "eL20"
+            ]
+        },
+        {
+            "chainid": "T",
+            "name": "Ribosomal protein L19-like protein",
+            "entityNr": "17",
+            "length": "150",
+            "type": "protein",
+            "weight": "18187.6",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L19-like protein"
+            },
+            "accession": "Q9BMP1",
+            "pfamGroups": [
+                "PF01280"
+            ],
+            "nomenclature": [
+                "eL19"
+            ]
+        },
+        {
+            "chainid": "U",
+            "name": "Ribosomal protein L21E (60S), putative",
+            "entityNr": "18",
+            "length": "146",
+            "type": "protein",
+            "weight": "16584.5",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L21E (60S)"
+            },
+            "accession": "Q4DED2",
+            "pfamGroups": [
+                "PF01157"
+            ],
+            "nomenclature": [
+                "eL21"
+            ]
+        },
+        {
+            "chainid": "V",
+            "name": "60S ribosomal protein L22, putative",
+            "entityNr": "19",
+            "length": "99",
+            "type": "protein",
+            "weight": "11873.0",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L22"
+            },
+            "accession": "Q4DZN3",
+            "pfamGroups": [
+                "PF01776"
+            ],
+            "nomenclature": [
+                "eL22"
+            ]
+        },
+        {
+            "chainid": "W",
+            "name": "60S ribosomal protein L23, putative",
+            "entityNr": "20",
+            "length": "127",
+            "type": "protein",
+            "weight": "13651.0",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L23"
+            },
+            "accession": "Q4E4R0",
+            "pfamGroups": [
+                "PF00238"
+            ],
+            "nomenclature": [
+                "uL14"
+            ]
+        },
+        {
+            "chainid": "X",
+            "name": "60S ribosomal protein L23a, putative",
+            "entityNr": "21",
+            "length": "116",
+            "type": "protein",
+            "weight": "13444.7",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L23a"
+            },
+            "accession": "Q4E2Y1",
+            "pfamGroups": [
+                "PF00276"
+            ],
+            "nomenclature": [
+                "uL23"
+            ]
+        },
+        {
+            "chainid": "Y",
+            "name": "Ribosomal protein L24, putative",
+            "entityNr": "22",
+            "length": "61",
+            "type": "protein",
+            "weight": "7363.69",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L24"
+            },
+            "accession": "Q4E078",
+            "pfamGroups": [
+                "PF01246"
+            ],
+            "nomenclature": [
+                "eL24"
+            ]
+        },
+        {
+            "chainid": "Z",
+            "name": "60S ribosomal protein L26, putative",
+            "entityNr": "23",
+            "length": "113",
+            "type": "protein",
+            "weight": "13107.4",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L26"
+            },
+            "accession": "Q4DG45",
+            "pfamGroups": [
+                "PF00467",
+                "PF16906"
+            ],
+            "nomenclature": [
+                "uL24",
+                "eS4"
+            ]
+        },
+        {
+            "chainid": "a",
+            "name": "Ribosomal protein L27",
+            "entityNr": "24",
+            "length": "132",
+            "type": "protein",
+            "weight": "15419.3",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L27"
+            },
+            "accession": "Q9U4H7",
+            "pfamGroups": [
+                "PF01777",
+                "PF00467"
+            ],
+            "nomenclature": [
+                "eL27",
+                "uL24",
+                "eS4"
+            ]
+        },
+        {
+            "chainid": "b",
+            "name": "60S ribosomal protein L27A/L29, putative",
+            "entityNr": "25",
+            "length": "144",
+            "type": "protein",
+            "weight": "16103.8",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L27A/L29"
+            },
+            "accession": "Q4E4Q8",
+            "pfamGroups": [
+                "PF00828"
+            ],
+            "nomenclature": [
+                "uL15"
+            ]
+        },
+        {
+            "chainid": "c",
+            "name": "60S ribosomal protein L28",
+            "entityNr": "26",
+            "length": "125",
+            "type": "protein",
+            "weight": "13836.2",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L28"
+            },
+            "accession": "O00822",
+            "pfamGroups": [
+                "PF01778"
+            ],
+            "nomenclature": [
+                "eL28"
+            ]
+        },
+        {
+            "chainid": "d",
+            "name": "60S ribosomal protein L29",
+            "entityNr": "27",
+            "length": "63",
+            "type": "protein",
+            "weight": "7378.56",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L29"
+            },
+            "accession": "Q4CPD8",
+            "pfamGroups": [
+                "PF01779"
+            ],
+            "nomenclature": [
+                "eL29"
+            ]
+        },
+        {
+            "chainid": "e",
+            "name": "60S ribosomal protein L2, putative",
+            "entityNr": "28",
+            "length": "245",
+            "type": "protein",
+            "weight": "26737.2",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L2"
+            },
+            "accession": "Q4DPQ8",
+            "pfamGroups": [
+                "PF03947",
+                "PF00181"
+            ],
+            "nomenclature": [
+                "uL2"
+            ]
+        },
+        {
+            "chainid": "f",
+            "name": "Ribosomal protein L13",
+            "entityNr": "29",
+            "length": "397",
+            "type": "protein",
+            "weight": "45360.0",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L13"
+            },
+            "accession": "V5B599",
+            "pfamGroups": [
+                "PF00297"
+            ],
+            "nomenclature": [
+                "uL3"
+            ]
+        },
+        {
+            "chainid": "g",
+            "name": "60S ribosomal protein L30, putative",
+            "entityNr": "30",
+            "length": "66",
+            "type": "protein",
+            "weight": "7508.95",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L30"
+            },
+            "mutation": {
+                "desc": "A91V, G92L, N93S, N94I, L95T, L97V"
+            },
+            "accession": "Q4DIC9",
+            "pfamGroups": [
+                "PF01248"
+            ],
+            "nomenclature": [
+                "eL30",
+                "eS12"
+            ]
+        },
+        {
+            "chainid": "h",
+            "name": "60S ribosomal subunit protein L31",
+            "entityNr": "31",
+            "length": "169",
+            "type": "protein",
+            "weight": "19483.1",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal subunit protein L31"
+            },
+            "accession": "V5C333",
+            "pfamGroups": [
+                "PF01198"
+            ],
+            "nomenclature": [
+                "eL31"
+            ]
+        },
+        {
+            "chainid": "i",
+            "name": "60S ribosomal protein L32, putative",
+            "entityNr": "32",
+            "length": "113",
+            "type": "protein",
+            "weight": "13218.5",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L32"
+            },
+            "accession": "Q4D1H8",
+            "pfamGroups": [
+                "PF01655"
+            ],
+            "nomenclature": [
+                "eL32"
+            ]
+        },
+        {
+            "chainid": "j",
+            "name": "60S ribosomal protein L34, putative",
+            "entityNr": "33",
+            "length": "104",
+            "type": "protein",
+            "weight": "12302.4",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L34"
+            },
+            "accession": "Q4DB26",
+            "pfamGroups": [
+                "PF01199"
+            ],
+            "nomenclature": [
+                "eL34"
+            ]
+        },
+        {
+            "chainid": "k",
+            "name": "60S ribosomal protein L35, putative",
+            "entityNr": "34",
+            "length": "120",
+            "type": "protein",
+            "weight": "14526.5",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L35"
+            },
+            "accession": "Q4E2E0",
+            "pfamGroups": [
+                "PF00831"
+            ],
+            "nomenclature": [
+                "uL29"
+            ]
+        },
+        {
+            "chainid": "l",
+            "name": "Ribosomal protein L35A, putative",
+            "entityNr": "35",
+            "length": "136",
+            "type": "protein",
+            "weight": "15513.2",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L35A"
+            },
+            "accession": "Q4E581",
+            "pfamGroups": [
+                "PF01247"
+            ],
+            "nomenclature": [
+                "eL33"
+            ]
+        },
+        {
+            "chainid": "m",
+            "name": "Ribosomal protein L36",
+            "entityNr": "36",
+            "length": "95",
+            "type": "protein",
+            "weight": "10820.0",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L36"
+            },
+            "accession": "V5BDJ2",
+            "pfamGroups": [
+                "PF01158"
+            ],
+            "nomenclature": [
+                "eL36"
+            ]
+        },
+        {
+            "chainid": "n",
+            "name": "Ribosomal protein L37",
+            "entityNr": "37",
+            "length": "81",
+            "type": "protein",
+            "weight": "9734.39",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L37"
+            },
+            "mutation": {
+                "desc": "C64M"
+            },
+            "accession": "Q4DXW6",
+            "pfamGroups": [
+                "PF01907"
+            ],
+            "nomenclature": [
+                "eL37"
+            ]
+        },
+        {
+            "chainid": "o",
+            "name": "Ribosomal proteins L37, putative",
+            "entityNr": "38",
+            "length": "85",
+            "type": "protein",
+            "weight": "9609.32",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "synonym": {
+                "name": "Ribosomal proteins L37,putative"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L37a"
+            },
+            "accession": "Q4DAV9",
+            "pfamGroups": [
+                "PF01780"
+            ],
+            "nomenclature": [
+                "eL43"
+            ]
+        },
+        {
+            "chainid": "p",
+            "name": "Ribosomal protein L38, putative",
+            "entityNr": "39",
+            "length": "58",
+            "type": "protein",
+            "weight": "6840.18",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L38"
+            },
+            "accession": "Q4DQ60",
+            "pfamGroups": [
+                "PF01781"
+            ],
+            "nomenclature": [
+                "eL38"
+            ]
+        },
+        {
+            "chainid": "q",
+            "name": "Ribosomal protein L39, putative",
+            "entityNr": "40",
+            "length": "50",
+            "type": "protein",
+            "weight": "6436.77",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L39"
+            },
+            "accession": "Q4DVC6",
+            "pfamGroups": [
+                "PF00832"
+            ],
+            "nomenclature": [
+                "eL39"
+            ]
+        },
+        {
+            "chainid": "r",
+            "name": "60S ribosomal protein L4, putative",
+            "entityNr": "41",
+            "length": "337",
+            "type": "protein",
+            "weight": "37228.4",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L4"
+            },
+            "accession": "Q4CQW2",
+            "pfamGroups": [
+                "PF00573",
+                "PF14374"
+            ],
+            "nomenclature": [
+                "uL4"
+            ]
+        },
+        {
+            "chainid": "t",
+            "name": "60S ribosomal protein L44, putative",
+            "entityNr": "42",
+            "length": "93",
+            "type": "protein",
+            "weight": "10908.1",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L44"
+            },
+            "accession": "Q4CV79",
+            "pfamGroups": [
+                "PF00935"
+            ],
+            "nomenclature": [
+                "eL42"
+            ]
+        },
+        {
+            "chainid": "u",
+            "name": "60S ribosomal protein L5, putative",
+            "entityNr": "43",
+            "length": "254",
+            "type": "protein",
+            "weight": "28665.9",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L5"
+            },
+            "accession": "Q4CU61",
+            "pfamGroups": [
+                "PF17144",
+                "PF14204"
+            ],
+            "nomenclature": [
+                "uL18"
+            ]
+        },
+        {
+            "chainid": "v",
+            "name": "60S ribosomal protein L6, putative",
+            "entityNr": "44",
+            "length": "171",
+            "type": "protein",
+            "weight": "19042.5",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L6"
+            },
+            "accession": "Q4DIV9",
+            "pfamGroups": [
+                "PF01159"
+            ],
+            "nomenclature": [
+                "eL6"
+            ]
+        },
+        {
+            "chainid": "w",
+            "name": "60S ribosomal protein L7, putative",
+            "entityNr": "45",
+            "length": "215",
+            "type": "protein",
+            "weight": "24898.4",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L7"
+            },
+            "accession": "Q4DNZ7",
+            "pfamGroups": [
+                "PF00327",
+                "PF08079"
+            ],
+            "nomenclature": [
+                "uL30"
+            ]
+        },
+        {
+            "chainid": "x",
+            "name": "Ribosomal protein L7a-like protein",
+            "entityNr": "46",
+            "length": "223",
+            "type": "protein",
+            "weight": "25701.3",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L7a-like protein"
+            },
+            "accession": "Q9BMP0",
+            "pfamGroups": [
+                "PF01248"
+            ],
+            "nomenclature": [
+                "eL30",
+                "eS12"
+            ]
+        },
+        {
+            "chainid": "I",
+            "name": "60S ribosomal protein L18",
+            "entityNr": "9",
+            "length": "192",
+            "type": "protein",
+            "weight": "21595.5",
+            "Taxonomy": {
+                "name": "Trypanosoma cruzi",
+                "id": "5693"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L18"
+            },
+            "accession": "Q4DZP2",
+            "pfamGroups": [
+                "PF17135"
+            ],
+            "nomenclature": [
+                "eL18"
+            ]
+        }
+    ]
+}

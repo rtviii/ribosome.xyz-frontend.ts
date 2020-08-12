@@ -1,0 +1,727 @@
+{
+    "metadata": {
+        "pdbid": "6V3D",
+        "rnacount": 2,
+        "proteincount": 28,
+        "rnanames": [
+            "AN1",
+            "B"
+        ],
+        "noaccession_proteins": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "accession_proteins": [
+            "0",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "1",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "2",
+            "Z",
+            "3",
+            "C",
+            "D",
+            "E"
+        ],
+        "nomenclatureCoverage": 0.9285714285714286
+    },
+    "polymers": [
+        {
+            "chainid": "AN1",
+            "RNA": true,
+            "entityNr": "5",
+            "length": "2918",
+            "type": "rna",
+            "weight": "945299.0",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "23s ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "B",
+            "RNA": true,
+            "entityNr": "6",
+            "length": "115",
+            "type": "rna",
+            "weight": "36997.0",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "5s ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "0",
+            "name": "50S ribosomal protein L33",
+            "entityNr": "1",
+            "length": "51",
+            "type": "protein",
+            "weight": "6105.31",
+            "Taxonomy": {
+                "name": "Acinetobacter sp. CIP 51.11",
+                "id": "1144670"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L33"
+            },
+            "accession": "N9PPR9",
+            "pfamGroups": [
+                "PF00471"
+            ],
+            "nomenclature": [
+                "bL33"
+            ]
+        },
+        {
+            "chainid": "F",
+            "name": "50S ribosomal protein L5",
+            "entityNr": "10",
+            "length": "178",
+            "type": "protein",
+            "weight": "20051.5",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L5"
+            },
+            "accession": "B7IA27",
+            "pfamGroups": [
+                "PF00281",
+                "PF00673"
+            ],
+            "nomenclature": [
+                "uL5"
+            ]
+        },
+        {
+            "chainid": "G",
+            "name": "50S ribosomal protein L6",
+            "entityNr": "11",
+            "length": "177",
+            "type": "protein",
+            "weight": "19126.0",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L6"
+            },
+            "accession": "B7IA24",
+            "pfamGroups": [
+                "PF00347"
+            ],
+            "nomenclature": [
+                "uL6"
+            ]
+        },
+        {
+            "chainid": "H",
+            "name": "50S ribosomal protein L9",
+            "entityNr": "12",
+            "length": "148",
+            "type": "protein",
+            "weight": "15801.0",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L9"
+            },
+            "accession": "B7IBC3",
+            "pfamGroups": [
+                "PF01281",
+                "PF03948"
+            ],
+            "nomenclature": [
+                "bL9"
+            ]
+        },
+        {
+            "chainid": "I",
+            "name": "50S ribosomal protein L13",
+            "entityNr": "13",
+            "length": "142",
+            "type": "protein",
+            "weight": "15981.5",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L13"
+            },
+            "accession": "B7I9B0",
+            "pfamGroups": [
+                "PF00572"
+            ],
+            "nomenclature": [
+                "uL13"
+            ]
+        },
+        {
+            "chainid": "J",
+            "name": "50S ribosomal protein L14",
+            "entityNr": "14",
+            "length": "122",
+            "type": "protein",
+            "weight": "13523.9",
+            "Taxonomy": {
+                "name": "Acinetobacter sp. NIPH 899",
+                "id": "1217710"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L14"
+            },
+            "accession": "N8WQT6",
+            "pfamGroups": [
+                "PF00238"
+            ],
+            "nomenclature": [
+                "uL14"
+            ]
+        },
+        {
+            "chainid": "K",
+            "name": "50S ribosomal protein L15",
+            "entityNr": "15",
+            "length": "146",
+            "type": "protein",
+            "weight": "15509.9",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L15"
+            },
+            "accession": "B7IA20",
+            "pfamGroups": [
+                "PF00828"
+            ],
+            "nomenclature": [
+                "uL15"
+            ]
+        },
+        {
+            "chainid": "L",
+            "name": "50S ribosomal protein L16",
+            "entityNr": "16",
+            "length": "137",
+            "type": "protein",
+            "weight": "15498.3",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L16"
+            },
+            "accession": "B7IA32",
+            "pfamGroups": [
+                "PF00252"
+            ],
+            "nomenclature": [
+                "uL16"
+            ]
+        },
+        {
+            "chainid": "M",
+            "name": "50S ribosomal protein L17",
+            "entityNr": "17",
+            "length": "125",
+            "type": "protein",
+            "weight": "14022.2",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L17"
+            },
+            "accession": "B7IA13",
+            "pfamGroups": [
+                "PF01196"
+            ],
+            "nomenclature": [
+                "bL17"
+            ]
+        },
+        {
+            "chainid": "N",
+            "name": "50S ribosomal protein L18",
+            "entityNr": "18",
+            "length": "116",
+            "type": "protein",
+            "weight": "12443.3",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "23s ribosomal RNA"
+            },
+            "accession": "B7IA23",
+            "pfamGroups": [
+                "PF00861"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "O",
+            "name": "50S ribosomal protein L19",
+            "entityNr": "19",
+            "length": "122",
+            "type": "protein",
+            "weight": "13619.9",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L19"
+            },
+            "accession": "B7IAS9",
+            "pfamGroups": [
+                "PF01245"
+            ],
+            "nomenclature": [
+                "bL19"
+            ]
+        },
+        {
+            "chainid": "1",
+            "name": "50S ribosomal protein L34",
+            "entityNr": "2",
+            "length": "44",
+            "type": "protein",
+            "weight": "5192.25",
+            "Taxonomy": {
+                "name": "Acinetobacter beijerinckii",
+                "id": "262668"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L34"
+            },
+            "accession": "N9DYI8",
+            "pfamGroups": [
+                "PF00468"
+            ],
+            "nomenclature": [
+                "bL34"
+            ]
+        },
+        {
+            "chainid": "P",
+            "name": "50S ribosomal protein L20",
+            "entityNr": "20",
+            "length": "119",
+            "type": "protein",
+            "weight": "13468.9",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L20"
+            },
+            "accession": "V5VGC9",
+            "pfamGroups": [
+                "PF00453"
+            ],
+            "nomenclature": [
+                "bL20"
+            ]
+        },
+        {
+            "chainid": "Q",
+            "name": "50S ribosomal protein L21",
+            "entityNr": "21",
+            "length": "103",
+            "type": "protein",
+            "weight": "11496.4",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L21"
+            },
+            "accession": "B7I6V9",
+            "pfamGroups": [
+                "PF00829"
+            ],
+            "nomenclature": [
+                "bL21"
+            ]
+        },
+        {
+            "chainid": "R",
+            "name": "50S ribosomal protein L22",
+            "entityNr": "22",
+            "length": "109",
+            "type": "protein",
+            "weight": "11828.9",
+            "Taxonomy": {
+                "name": "Acinetobacter sp. 809848",
+                "id": "1310637"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L22"
+            },
+            "accession": "A0A009QSN8",
+            "pfamGroups": [
+                "PF00237"
+            ],
+            "nomenclature": [
+                "uL22"
+            ]
+        },
+        {
+            "chainid": "S",
+            "name": "50S ribosomal protein L23",
+            "entityNr": "23",
+            "length": "106",
+            "type": "protein",
+            "weight": "11607.4",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L23"
+            },
+            "accession": "B7IA37",
+            "pfamGroups": [
+                "PF00276"
+            ],
+            "nomenclature": [
+                "uL23"
+            ]
+        },
+        {
+            "chainid": "T",
+            "name": "50S ribosomal protein L24",
+            "entityNr": "24",
+            "length": "105",
+            "type": "protein",
+            "weight": "11187.9",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L24"
+            },
+            "accession": "B7IA28",
+            "pfamGroups": [
+                "PF17136",
+                "PF00467"
+            ],
+            "nomenclature": [
+                "uL24",
+                "eS4"
+            ]
+        },
+        {
+            "chainid": "U",
+            "name": "50S ribosomal protein L25",
+            "entityNr": "25",
+            "length": "98",
+            "type": "protein",
+            "weight": "10942.6",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L25"
+            },
+            "accession": "B7I7B6",
+            "pfamGroups": [
+                "PF01386"
+            ],
+            "nomenclature": [
+                "bL25"
+            ]
+        },
+        {
+            "chainid": "V",
+            "name": "50S ribosomal protein L27",
+            "entityNr": "26",
+            "length": "85",
+            "type": "protein",
+            "weight": "9072.39",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L27"
+            },
+            "accession": "B7I6V8",
+            "pfamGroups": [
+                "PF01016"
+            ],
+            "nomenclature": [
+                "bL27"
+            ]
+        },
+        {
+            "chainid": "W",
+            "name": "50S ribosomal protein L28",
+            "entityNr": "27",
+            "length": "78",
+            "type": "protein",
+            "weight": "9125.76",
+            "Taxonomy": {
+                "name": "Acinetobacter rudis",
+                "id": "632955"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L28"
+            },
+            "accession": "S3NQR5",
+            "pfamGroups": [
+                "PF00830"
+            ],
+            "nomenclature": [
+                "bL28"
+            ]
+        },
+        {
+            "chainid": "X",
+            "name": "50S ribosomal protein L29",
+            "entityNr": "28",
+            "length": "65",
+            "type": "protein",
+            "weight": "7449.68",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L29"
+            },
+            "accession": "B7IA31",
+            "pfamGroups": [
+                "PF00831"
+            ],
+            "nomenclature": [
+                "uL29"
+            ]
+        },
+        {
+            "chainid": "Y",
+            "name": "50S ribosomal protein L30",
+            "entityNr": "29",
+            "length": "58",
+            "type": "protein",
+            "weight": "6654.79",
+            "Taxonomy": {
+                "name": "Acinetobacter sp. CIP 102082",
+                "id": "1144663"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L30"
+            },
+            "accession": "N8V730",
+            "pfamGroups": [
+                "PF00327"
+            ],
+            "nomenclature": [
+                "uL30"
+            ]
+        },
+        {
+            "chainid": "2",
+            "name": "50S ribosomal protein L35",
+            "entityNr": "3",
+            "length": "64",
+            "type": "protein",
+            "weight": "7424.1",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L35"
+            },
+            "accession": "B7I693",
+            "pfamGroups": [
+                "PF01632"
+            ],
+            "nomenclature": [
+                "bL35"
+            ]
+        },
+        {
+            "chainid": "Z",
+            "name": "50S ribosomal protein L32",
+            "entityNr": "30",
+            "length": "61",
+            "type": "protein",
+            "weight": "7096.89",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L32"
+            },
+            "accession": "B7I7A4",
+            "pfamGroups": [
+                "PF01783"
+            ],
+            "nomenclature": [
+                "bL32"
+            ]
+        },
+        {
+            "chainid": "3",
+            "name": "50S ribosomal protein L36",
+            "entityNr": "4",
+            "length": "38",
+            "type": "protein",
+            "weight": "4276.2",
+            "Taxonomy": {
+                "name": "Acinetobacter sp. ANC 4470",
+                "id": "1977881"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L36"
+            },
+            "accession": "A0A1Y3CHB1",
+            "pfamGroups": [
+                "PF00444"
+            ],
+            "nomenclature": [
+                "bL36"
+            ]
+        },
+        {
+            "chainid": "C",
+            "name": "50S ribosomal protein L2",
+            "entityNr": "7",
+            "length": "274",
+            "type": "protein",
+            "weight": "30346.1",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L2"
+            },
+            "accession": "B7IA36",
+            "pfamGroups": [
+                "PF00181",
+                "PF03947"
+            ],
+            "nomenclature": [
+                "uL2"
+            ]
+        },
+        {
+            "chainid": "D",
+            "name": "50S ribosomal protein L3",
+            "entityNr": "8",
+            "length": "212",
+            "type": "protein",
+            "weight": "22512.6",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L3"
+            },
+            "accession": "B7IA39",
+            "pfamGroups": [
+                "PF00297"
+            ],
+            "nomenclature": [
+                "uL3"
+            ]
+        },
+        {
+            "chainid": "E",
+            "name": "50S ribosomal protein L4",
+            "entityNr": "9",
+            "length": "200",
+            "type": "protein",
+            "weight": "21583.9",
+            "Taxonomy": {
+                "name": "Acinetobacter baumannii",
+                "id": "470"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L4"
+            },
+            "accession": "B7IA38",
+            "pfamGroups": [
+                "PF00573"
+            ],
+            "nomenclature": [
+                "uL4"
+            ]
+        }
+    ]
+}

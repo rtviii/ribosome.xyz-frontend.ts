@@ -1,0 +1,1918 @@
+{
+    "metadata": {
+        "pdbid": "5T2A",
+        "rnacount": 9,
+        "proteincount": 71,
+        "rnanames": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "2",
+            "F",
+            "G",
+            "H"
+        ],
+        "noaccession_proteins": [
+            null,
+            null,
+            "L",
+            "M",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "W",
+            "X",
+            null,
+            null,
+            null,
+            "b",
+            "c",
+            "d",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "t",
+            null,
+            null,
+            null,
+            null,
+            null,
+            "3",
+            "4",
+            null,
+            null,
+            null,
+            null,
+            "AC",
+            null,
+            "AE",
+            "AG",
+            "AH",
+            "AI",
+            null,
+            null,
+            "AL",
+            null,
+            null,
+            null,
+            "AP",
+            null,
+            "AR",
+            "AS",
+            "AT",
+            "AV",
+            "AW",
+            "AX",
+            null,
+            "AZ",
+            null
+        ],
+        "accession_proteins": [
+            "J",
+            "K",
+            null,
+            null,
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            null,
+            null,
+            "Y",
+            "Z",
+            "a",
+            null,
+            null,
+            null,
+            "e",
+            "f",
+            "g",
+            "h",
+            "i",
+            "j",
+            "k",
+            "l",
+            "m",
+            "n",
+            "o",
+            "p",
+            "q",
+            "r",
+            "s",
+            null,
+            "u",
+            "v",
+            "w",
+            "0",
+            "1",
+            null,
+            null,
+            "5",
+            "6",
+            "7",
+            "8",
+            null,
+            "AD",
+            null,
+            null,
+            null,
+            null,
+            "AJ",
+            "AK",
+            null,
+            "AM",
+            "AN",
+            "AO",
+            null,
+            "AQ",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "AY",
+            null,
+            "I"
+        ],
+        "nomenclatureCoverage": 0.6056338028169014
+    },
+    "polymers": [
+        {
+            "chainid": "A",
+            "RNA": true,
+            "entityNr": "1",
+            "length": "1781",
+            "type": "rna",
+            "weight": "576314.0",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "LSU-alpha"
+            },
+            "mutation": {
+                "desc": "A761U, A1393G, &Delta;A1017504"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "B",
+            "RNA": true,
+            "entityNr": "2",
+            "length": "1465",
+            "type": "rna",
+            "weight": "471465.0",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "LSU-beta"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "C",
+            "RNA": true,
+            "entityNr": "3",
+            "length": "262",
+            "type": "rna",
+            "weight": "84351.8",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "5.8S rRNA"
+            },
+            "mutation": {
+                "desc": "U141C, A182G, G185C, U226A, U228C, U246C"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "D",
+            "RNA": true,
+            "entityNr": "4",
+            "length": "120",
+            "type": "rna",
+            "weight": "38532.9",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "5S rRNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "E",
+            "RNA": true,
+            "entityNr": "5",
+            "length": "213",
+            "type": "rna",
+            "weight": "68191.1",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "srRNA1"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "2",
+            "RNA": true,
+            "entityNr": "52",
+            "length": "2205",
+            "type": "rna",
+            "weight": "710272.0",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "18S rRNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "F",
+            "RNA": true,
+            "entityNr": "6",
+            "length": "73",
+            "type": "rna",
+            "weight": "23361.0",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "srRNA3"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "G",
+            "RNA": true,
+            "entityNr": "7",
+            "length": "183",
+            "type": "rna",
+            "weight": "59084.0",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "srRNA2"
+            },
+            "mutation": {
+                "desc": "A169U, A171U"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "H",
+            "RNA": true,
+            "entityNr": "8",
+            "length": "127",
+            "type": "rna",
+            "weight": "40965.3",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "srRNA4"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "J",
+            "name": "60S ribosomal protein L10, putative",
+            "entityNr": "10",
+            "length": "213",
+            "type": "protein",
+            "weight": "24607.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L10"
+            },
+            "polymerDescription": {
+                "description": "uL16"
+            },
+            "accession": "E9B840",
+            "pfamGroups": [
+                "PF00252"
+            ],
+            "nomenclature": [
+                "uL16"
+            ]
+        },
+        {
+            "chainid": "K",
+            "name": "60S ribosomal protein L11 (L5, L16)",
+            "entityNr": "11",
+            "length": "188",
+            "type": "protein",
+            "weight": "21710.5",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L11 (L5, L16)"
+            },
+            "polymerDescription": {
+                "description": "uL5"
+            },
+            "accession": "E9BFL1",
+            "pfamGroups": [
+                "PF00673",
+                "PF00281"
+            ],
+            "nomenclature": [
+                "uL5"
+            ]
+        },
+        {
+            "chainid": "L",
+            "entityNr": "12",
+            "length": "220",
+            "type": "protein",
+            "weight": "24831.0",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "eL13"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "M",
+            "entityNr": "13",
+            "length": "222",
+            "type": "protein",
+            "weight": "25479.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "uL13"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "N",
+            "name": "Probable 60S ribosomal protein L14",
+            "entityNr": "14",
+            "length": "175",
+            "type": "protein",
+            "weight": "19935.5",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L14, 23 kDa cell surface protein,LDP 23"
+            },
+            "polymerDescription": {
+                "description": "eL14"
+            },
+            "accession": "Q25278",
+            "pfamGroups": [
+                "PF01929"
+            ],
+            "nomenclature": [
+                "eL14"
+            ]
+        },
+        {
+            "chainid": "O",
+            "name": "Ribosomal protein L15",
+            "entityNr": "15",
+            "length": "204",
+            "type": "protein",
+            "weight": "24498.0",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "Ribosomal protein L15"
+            },
+            "polymerDescription": {
+                "description": "eL15"
+            },
+            "accession": "E9BMB4",
+            "pfamGroups": [
+                "PF00827"
+            ],
+            "nomenclature": [
+                "eL15"
+            ]
+        },
+        {
+            "chainid": "P",
+            "name": "60S ribosomal protein L17, putative",
+            "entityNr": "16",
+            "length": "166",
+            "type": "protein",
+            "weight": "19154.6",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L17"
+            },
+            "polymerDescription": {
+                "description": "uL22"
+            },
+            "accession": "E9BGL6",
+            "pfamGroups": [
+                "PF00237"
+            ],
+            "nomenclature": [
+                "uL22"
+            ]
+        },
+        {
+            "chainid": "Q",
+            "name": "60S ribosomal protein L18a",
+            "entityNr": "17",
+            "length": "179",
+            "type": "protein",
+            "weight": "20834.4",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L18a"
+            },
+            "polymerDescription": {
+                "description": "eL20"
+            },
+            "accession": "E9BRT7",
+            "pfamGroups": [
+                "PF01775"
+            ],
+            "nomenclature": [
+                "eL20"
+            ]
+        },
+        {
+            "chainid": "R",
+            "name": "60S ribosomal protein L19, putative",
+            "entityNr": "18",
+            "length": "245",
+            "type": "protein",
+            "weight": "28142.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L19"
+            },
+            "polymerDescription": {
+                "description": "eL19"
+            },
+            "accession": "E9B8Q2",
+            "pfamGroups": [
+                "PF01280"
+            ],
+            "nomenclature": [
+                "eL19"
+            ]
+        },
+        {
+            "chainid": "S",
+            "name": "60S ribosomal protein L21, putative",
+            "entityNr": "19",
+            "length": "159",
+            "type": "protein",
+            "weight": "18059.3",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L21"
+            },
+            "polymerDescription": {
+                "description": "eL21"
+            },
+            "accession": "E9BRE2",
+            "pfamGroups": [
+                "PF01157"
+            ],
+            "nomenclature": [
+                "eL21"
+            ]
+        },
+        {
+            "chainid": "T",
+            "name": "60S ribosomal protein L22, putative",
+            "entityNr": "20",
+            "length": "129",
+            "type": "protein",
+            "weight": "15030.5",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L22"
+            },
+            "polymerDescription": {
+                "description": "eL22"
+            },
+            "accession": "E9BU52",
+            "pfamGroups": [
+                "PF01776"
+            ],
+            "nomenclature": [
+                "eL22"
+            ]
+        },
+        {
+            "chainid": "U",
+            "name": "60S ribosomal protein L23, putative",
+            "entityNr": "21",
+            "length": "139",
+            "type": "protein",
+            "weight": "14982.6",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L23"
+            },
+            "polymerDescription": {
+                "description": "uL14"
+            },
+            "accession": "E9BSQ4",
+            "pfamGroups": [
+                "PF00238"
+            ],
+            "nomenclature": [
+                "uL14"
+            ]
+        },
+        {
+            "chainid": "V",
+            "name": "60S ribosomal protein L23a",
+            "entityNr": "22",
+            "length": "145",
+            "type": "protein",
+            "weight": "16306.3",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L23a"
+            },
+            "polymerDescription": {
+                "description": "uL23"
+            },
+            "accession": "D1M863",
+            "pfamGroups": [
+                "PF00276"
+            ],
+            "nomenclature": [
+                "uL23"
+            ]
+        },
+        {
+            "chainid": "W",
+            "entityNr": "23",
+            "length": "124",
+            "type": "protein",
+            "weight": "14608.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "eL24"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "X",
+            "entityNr": "24",
+            "length": "143",
+            "type": "protein",
+            "weight": "16224.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "uL24"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Y",
+            "name": "Ribosomal protein L27, putative",
+            "entityNr": "25",
+            "length": "134",
+            "type": "protein",
+            "weight": "15455.3",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "Ribosomal protein L27"
+            },
+            "polymerDescription": {
+                "description": "eL27"
+            },
+            "accession": "E9BP34",
+            "pfamGroups": [
+                "PF01777",
+                "PF00467"
+            ],
+            "nomenclature": [
+                "eL27",
+                "uL24",
+                "eS4"
+            ]
+        },
+        {
+            "chainid": "Z",
+            "name": "60S ribosomal protein L27A/L29, putative",
+            "entityNr": "26",
+            "length": "145",
+            "type": "protein",
+            "weight": "16165.9",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L27A/L29"
+            },
+            "polymerDescription": {
+                "description": "uL15"
+            },
+            "accession": "E9BSQ2",
+            "pfamGroups": [
+                "PF00828"
+            ],
+            "nomenclature": [
+                "uL15"
+            ]
+        },
+        {
+            "chainid": "a",
+            "name": "60S ribosomal protein L28, putative",
+            "entityNr": "27",
+            "length": "147",
+            "type": "protein",
+            "weight": "16409.0",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L28"
+            },
+            "polymerDescription": {
+                "description": "eL28"
+            },
+            "accession": "E9BAU9",
+            "pfamGroups": [
+                "PF01778"
+            ],
+            "nomenclature": [
+                "eL28"
+            ]
+        },
+        {
+            "chainid": "b",
+            "entityNr": "28",
+            "length": "70",
+            "type": "protein",
+            "weight": "8001.31",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "Ribosomal protein L29"
+            },
+            "polymerDescription": {
+                "description": "eL29"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "c",
+            "entityNr": "29",
+            "length": "260",
+            "type": "protein",
+            "weight": "28321.9",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "uL2"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "d",
+            "entityNr": "30",
+            "length": "419",
+            "type": "protein",
+            "weight": "47593.7",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "uL3"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "e",
+            "name": "60S ribosomal protein L30",
+            "entityNr": "31",
+            "length": "104",
+            "type": "protein",
+            "weight": "11400.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L30"
+            },
+            "polymerDescription": {
+                "description": "eL30"
+            },
+            "accession": "E9BRQ6",
+            "pfamGroups": [
+                "PF01248"
+            ],
+            "nomenclature": [
+                "eL30",
+                "eS12"
+            ]
+        },
+        {
+            "chainid": "f",
+            "name": "60S ribosomal subunit protein L31, putative",
+            "entityNr": "32",
+            "length": "183",
+            "type": "protein",
+            "weight": "20886.7",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal subunit protein L31"
+            },
+            "polymerDescription": {
+                "description": "eL31"
+            },
+            "accession": "E9BSK4",
+            "pfamGroups": [
+                "PF01198"
+            ],
+            "nomenclature": [
+                "eL31"
+            ]
+        },
+        {
+            "chainid": "g",
+            "name": "60S ribosomal protein L32",
+            "entityNr": "33",
+            "length": "133",
+            "type": "protein",
+            "weight": "15397.0",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L32"
+            },
+            "polymerDescription": {
+                "description": "eL32"
+            },
+            "accession": "E9BS76",
+            "pfamGroups": [
+                "PF01655"
+            ],
+            "nomenclature": [
+                "eL32"
+            ]
+        },
+        {
+            "chainid": "h",
+            "name": "60S ribosomal protein L34, putative",
+            "entityNr": "34",
+            "length": "168",
+            "type": "protein",
+            "weight": "19307.1",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L34"
+            },
+            "polymerDescription": {
+                "description": "eL34"
+            },
+            "accession": "E9BUA1",
+            "pfamGroups": [
+                "PF01199"
+            ],
+            "nomenclature": [
+                "eL34"
+            ]
+        },
+        {
+            "chainid": "i",
+            "name": "60S ribosomal protein L35, putative",
+            "entityNr": "35",
+            "length": "127",
+            "type": "protein",
+            "weight": "15232.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L35"
+            },
+            "polymerDescription": {
+                "description": "uL29"
+            },
+            "accession": "E9BIP6",
+            "pfamGroups": [
+                "PF00831"
+            ],
+            "nomenclature": [
+                "uL29"
+            ]
+        },
+        {
+            "chainid": "j",
+            "name": "Ribosomal protein l35a, putative",
+            "entityNr": "36",
+            "length": "144",
+            "type": "protein",
+            "weight": "16492.3",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "Ribosomal protein l35a"
+            },
+            "polymerDescription": {
+                "description": "eL33"
+            },
+            "accession": "E9BR22",
+            "pfamGroups": [
+                "PF01247"
+            ],
+            "nomenclature": [
+                "eL33"
+            ]
+        },
+        {
+            "chainid": "k",
+            "name": "60S Ribosomal protein L36, putative",
+            "entityNr": "37",
+            "length": "105",
+            "type": "protein",
+            "weight": "11959.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S Ribosomal protein L36"
+            },
+            "polymerDescription": {
+                "description": "eL36"
+            },
+            "accession": "E9BS63",
+            "pfamGroups": [
+                "PF01158"
+            ],
+            "nomenclature": [
+                "eL36"
+            ]
+        },
+        {
+            "chainid": "l",
+            "name": "60S ribosomal protein L37",
+            "entityNr": "38",
+            "length": "83",
+            "type": "protein",
+            "weight": "9862.59",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L37"
+            },
+            "polymerDescription": {
+                "description": "eL37"
+            },
+            "accession": "P62885",
+            "pfamGroups": [
+                "PF01907"
+            ],
+            "nomenclature": [
+                "eL37"
+            ]
+        },
+        {
+            "chainid": "m",
+            "name": "60S ribosomal protein L37a, putative",
+            "entityNr": "39",
+            "length": "92",
+            "type": "protein",
+            "weight": "10337.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L37a"
+            },
+            "polymerDescription": {
+                "description": "eL43"
+            },
+            "accession": "E9BFK4",
+            "pfamGroups": [
+                "PF01780"
+            ],
+            "nomenclature": [
+                "eL43"
+            ]
+        },
+        {
+            "chainid": "n",
+            "name": "Ribosomal protein L38, putative",
+            "entityNr": "40",
+            "length": "83",
+            "type": "protein",
+            "weight": "9479.29",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "Ribosomal protein L38"
+            },
+            "polymerDescription": {
+                "description": "eL38"
+            },
+            "accession": "E9B7P2",
+            "pfamGroups": [
+                "PF01781"
+            ],
+            "nomenclature": [
+                "eL38"
+            ]
+        },
+        {
+            "chainid": "o",
+            "name": "60S ribosomal protein L39, putative",
+            "entityNr": "41",
+            "length": "51",
+            "type": "protein",
+            "weight": "6504.85",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L39"
+            },
+            "polymerDescription": {
+                "description": "eL39"
+            },
+            "accession": "E9BCX6",
+            "pfamGroups": [
+                "PF00832"
+            ],
+            "nomenclature": [
+                "eL39"
+            ]
+        },
+        {
+            "chainid": "p",
+            "name": "Ribosomal protein L1a, putative",
+            "entityNr": "42",
+            "length": "373",
+            "type": "protein",
+            "weight": "41228.0",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "Ribosomal protein L1a"
+            },
+            "polymerDescription": {
+                "description": "uL4"
+            },
+            "accession": "E9BKR3",
+            "pfamGroups": [
+                "PF14374",
+                "PF00573"
+            ],
+            "nomenclature": [
+                "uL4"
+            ]
+        },
+        {
+            "chainid": "q",
+            "name": "Ubiquitin-fusion protein",
+            "entityNr": "43",
+            "length": "128",
+            "type": "protein",
+            "weight": "14711.4",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "eL40"
+            },
+            "accession": "E9BMW6",
+            "pfamGroups": [
+                "PF01020",
+                "PF00240"
+            ],
+            "nomenclature": [
+                "eL40"
+            ]
+        },
+        {
+            "chainid": "r",
+            "name": "60S ribosomal protein L44, putative",
+            "entityNr": "44",
+            "length": "106",
+            "type": "protein",
+            "weight": "12302.7",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L44"
+            },
+            "polymerDescription": {
+                "description": "eL42"
+            },
+            "accession": "E9BBL5",
+            "pfamGroups": [
+                "PF00935"
+            ],
+            "nomenclature": [
+                "eL42"
+            ]
+        },
+        {
+            "chainid": "s",
+            "name": "60S ribosomal protein L5, putative",
+            "entityNr": "45",
+            "length": "305",
+            "type": "protein",
+            "weight": "34100.6",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L5"
+            },
+            "polymerDescription": {
+                "description": "uL18"
+            },
+            "accession": "E9BS61",
+            "pfamGroups": [
+                "PF17144",
+                "PF14204"
+            ],
+            "nomenclature": [
+                "uL18"
+            ]
+        },
+        {
+            "chainid": "t",
+            "entityNr": "46",
+            "length": "195",
+            "type": "protein",
+            "weight": "21088.7",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "eL6"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "u",
+            "name": "60S ribosomal protein L7, putative",
+            "entityNr": "47",
+            "length": "252",
+            "type": "protein",
+            "weight": "28915.0",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L7"
+            },
+            "polymerDescription": {
+                "description": "uL30"
+            },
+            "accession": "E9BI29",
+            "pfamGroups": [
+                "PF08079",
+                "PF00327"
+            ],
+            "nomenclature": [
+                "uL30"
+            ]
+        },
+        {
+            "chainid": "v",
+            "name": "60S ribosomal protein L7a, putative",
+            "entityNr": "48",
+            "length": "348",
+            "type": "protein",
+            "weight": "39175.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L7a"
+            },
+            "polymerDescription": {
+                "description": "eL8"
+            },
+            "accession": "E9B949",
+            "pfamGroups": [
+                "PF01248"
+            ],
+            "nomenclature": [
+                "eL30",
+                "eS12"
+            ]
+        },
+        {
+            "chainid": "w",
+            "name": "60S ribosomal protein L9, putative",
+            "entityNr": "49",
+            "length": "190",
+            "type": "protein",
+            "weight": "21567.3",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L9"
+            },
+            "polymerDescription": {
+                "description": "uL6"
+            },
+            "accession": "E9BFB5",
+            "pfamGroups": [
+                "PF00347"
+            ],
+            "nomenclature": [
+                "uL6"
+            ]
+        },
+        {
+            "chainid": "0",
+            "name": "40S ribosomal protein S3a",
+            "entityNr": "50",
+            "length": "264",
+            "type": "protein",
+            "weight": "30062.0",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S3a"
+            },
+            "polymerDescription": {
+                "description": "eS1"
+            },
+            "accession": "E9BRS2",
+            "pfamGroups": [
+                "PF01015"
+            ],
+            "nomenclature": [
+                "eS1"
+            ]
+        },
+        {
+            "chainid": "1",
+            "name": "40S ribosomal protein S4",
+            "entityNr": "51",
+            "length": "273",
+            "type": "protein",
+            "weight": "30711.1",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S4"
+            },
+            "polymerDescription": {
+                "description": "eS4"
+            },
+            "accession": "E9BBI6",
+            "pfamGroups": [
+                "PF08071",
+                "PF01479",
+                "PF16121",
+                "PF00900"
+            ],
+            "nomenclature": [
+                "eS4",
+                "uS4"
+            ]
+        },
+        {
+            "chainid": "3",
+            "entityNr": "53",
+            "length": "249",
+            "type": "protein",
+            "weight": "28370.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "eS6"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "4",
+            "entityNr": "54",
+            "length": "200",
+            "type": "protein",
+            "weight": "23765.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "eS7"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "5",
+            "name": "40S ribosomal protein S8",
+            "entityNr": "55",
+            "length": "220",
+            "type": "protein",
+            "weight": "25066.4",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S8"
+            },
+            "polymerDescription": {
+                "description": "eS8"
+            },
+            "mutation": {
+                "desc": "K220R"
+            },
+            "accession": "E9BH78",
+            "pfamGroups": [
+                "PF01201"
+            ],
+            "nomenclature": [
+                "eS8"
+            ]
+        },
+        {
+            "chainid": "6",
+            "name": "40S ribosomal protein S9, putative",
+            "entityNr": "56",
+            "length": "190",
+            "type": "protein",
+            "weight": "22184.9",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S9"
+            },
+            "polymerDescription": {
+                "description": "uS4"
+            },
+            "accession": "E9BTJ0",
+            "pfamGroups": [
+                "PF01479",
+                "PF00163"
+            ],
+            "nomenclature": [
+                "uS4"
+            ]
+        },
+        {
+            "chainid": "7",
+            "name": "LACK protective antigen",
+            "entityNr": "57",
+            "length": "312",
+            "type": "protein",
+            "weight": "34459.5",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "LACK protective antigen"
+            },
+            "polymerDescription": {
+                "description": "RACK1"
+            },
+            "accession": "Q9BIJ5",
+            "pfamGroups": [
+                "PF00400"
+            ],
+            "nomenclature": [
+                "RACK1"
+            ]
+        },
+        {
+            "chainid": "8",
+            "name": "Ribosomal protein S29, putative",
+            "entityNr": "58",
+            "length": "57",
+            "type": "protein",
+            "weight": "6696.93",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "Ribosomal protein S29"
+            },
+            "polymerDescription": {
+                "description": "uS14"
+            },
+            "accession": "E9BJV7",
+            "pfamGroups": [
+                "PF00253"
+            ],
+            "nomenclature": [
+                "uS14"
+            ]
+        },
+        {
+            "chainid": "AC",
+            "entityNr": "59",
+            "length": "246",
+            "type": "protein",
+            "weight": "27536.6",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "uS2"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AD",
+            "name": "40S ribosomal protein S10, putative",
+            "entityNr": "60",
+            "length": "153",
+            "type": "protein",
+            "weight": "17432.9",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S10"
+            },
+            "polymerDescription": {
+                "description": "eS10"
+            },
+            "accession": "E9BTG4",
+            "pfamGroups": [
+                "PF03501"
+            ],
+            "nomenclature": [
+                "eS10"
+            ]
+        },
+        {
+            "chainid": "AE",
+            "entityNr": "61",
+            "length": "173",
+            "type": "protein",
+            "weight": "19981.4",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "uS17"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AG",
+            "entityNr": "62",
+            "length": "151",
+            "type": "protein",
+            "weight": "17482.8",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S13"
+            },
+            "polymerDescription": {
+                "description": "uS15"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AH",
+            "entityNr": "63",
+            "length": "144",
+            "type": "protein",
+            "weight": "15623.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S14"
+            },
+            "polymerDescription": {
+                "description": "uS11"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AI",
+            "entityNr": "64",
+            "length": "152",
+            "type": "protein",
+            "weight": "17472.4",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "uS19"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AJ",
+            "name": "40S ribosomal protein S15A, putative",
+            "entityNr": "65",
+            "length": "130",
+            "type": "protein",
+            "weight": "14719.3",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S15A"
+            },
+            "polymerDescription": {
+                "description": "uS8"
+            },
+            "accession": "E9BAV6",
+            "pfamGroups": [
+                "PF00410"
+            ],
+            "nomenclature": [
+                "uS8"
+            ]
+        },
+        {
+            "chainid": "AK",
+            "name": "40S ribosomal protein S16, putative",
+            "entityNr": "66",
+            "length": "149",
+            "type": "protein",
+            "weight": "16718.6",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S16"
+            },
+            "polymerDescription": {
+                "description": "uS9"
+            },
+            "accession": "E9BI96",
+            "pfamGroups": [
+                "PF00380"
+            ],
+            "nomenclature": [
+                "uS9"
+            ]
+        },
+        {
+            "chainid": "AL",
+            "entityNr": "67",
+            "length": "143",
+            "type": "protein",
+            "weight": "16447.4",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "eS17"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AM",
+            "name": "40S ribosomal protein S18, putative",
+            "entityNr": "68",
+            "length": "153",
+            "type": "protein",
+            "weight": "17443.4",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S18"
+            },
+            "polymerDescription": {
+                "description": "uS13"
+            },
+            "accession": "E9BTF9",
+            "pfamGroups": [
+                "PF00416"
+            ],
+            "nomenclature": [
+                "uS13"
+            ]
+        },
+        {
+            "chainid": "AN",
+            "name": "40S ribosomal protein S5B",
+            "entityNr": "69",
+            "length": "190",
+            "type": "protein",
+            "weight": "21336.6",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "uS7"
+            },
+            "accession": "Q868B1",
+            "pfamGroups": [
+                "PF00177"
+            ],
+            "nomenclature": [
+                "uS7"
+            ]
+        },
+        {
+            "chainid": "AO",
+            "name": "40S ribosomal protein S19 protein, putative",
+            "entityNr": "70",
+            "length": "179",
+            "type": "protein",
+            "weight": "20188.6",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S19 protein"
+            },
+            "polymerDescription": {
+                "description": "eS19"
+            },
+            "accession": "E9BR60",
+            "pfamGroups": [
+                "PF01090"
+            ],
+            "nomenclature": [
+                "eS19"
+            ]
+        },
+        {
+            "chainid": "AP",
+            "entityNr": "71",
+            "length": "265",
+            "type": "protein",
+            "weight": "28851.3",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "uS5"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AQ",
+            "name": "Ribosomal protein S20, putative",
+            "entityNr": "72",
+            "length": "116",
+            "type": "protein",
+            "weight": "13032.0",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "Ribosomal protein S20"
+            },
+            "polymerDescription": {
+                "description": "uS10"
+            },
+            "accession": "E9BJI2",
+            "pfamGroups": [
+                "PF00338"
+            ],
+            "nomenclature": [
+                "uS10"
+            ]
+        },
+        {
+            "chainid": "AR",
+            "entityNr": "73",
+            "length": "164",
+            "type": "protein",
+            "weight": "17102.6",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "eS21"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AS",
+            "entityNr": "74",
+            "length": "143",
+            "type": "protein",
+            "weight": "15952.7",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "uS12"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AT",
+            "entityNr": "75",
+            "length": "137",
+            "type": "protein",
+            "weight": "15910.8",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "eS24"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AV",
+            "entityNr": "76",
+            "length": "112",
+            "type": "protein",
+            "weight": "12752.2",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "Ribosomal protein S26"
+            },
+            "polymerDescription": {
+                "description": "eS26"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AW",
+            "entityNr": "77",
+            "length": "86",
+            "type": "protein",
+            "weight": "9803.46",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S27-1"
+            },
+            "polymerDescription": {
+                "description": "eS27"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AX",
+            "entityNr": "78",
+            "length": "219",
+            "type": "protein",
+            "weight": "24541.8",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "polymerDescription": {
+                "description": "uS3"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AY",
+            "name": "40S ribosomal protein S30",
+            "entityNr": "79",
+            "length": "66",
+            "type": "protein",
+            "weight": "7394.89",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S30"
+            },
+            "polymerDescription": {
+                "description": "eS30"
+            },
+            "accession": "E9BLG3",
+            "pfamGroups": [
+                "PF04758"
+            ],
+            "nomenclature": [
+                "eS30"
+            ]
+        },
+        {
+            "chainid": "AZ",
+            "entityNr": "80",
+            "length": "87",
+            "type": "protein",
+            "weight": "9705.15",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "40S ribosomal protein S33"
+            },
+            "polymerDescription": {
+                "description": "eS28"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "I",
+            "name": "60S ribosomal protein L18, putative",
+            "entityNr": "9",
+            "length": "198",
+            "type": "protein",
+            "weight": "22071.1",
+            "Taxonomy": {
+                "name": "Leishmania donovani",
+                "id": "5661"
+            },
+            "synonym": {
+                "name": "60S ribosomal protein L18"
+            },
+            "polymerDescription": {
+                "description": "eL18"
+            },
+            "accession": "E9BUI1",
+            "pfamGroups": [
+                "PF17135"
+            ],
+            "nomenclature": [
+                "eL18"
+            ]
+        }
+    ]
+}

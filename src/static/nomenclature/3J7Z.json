@@ -1,0 +1,844 @@
+{
+    "metadata": {
+        "pdbid": "3J7Z",
+        "rnacount": 3,
+        "proteincount": 32,
+        "rnanames": [
+            "B",
+            "7",
+            "A"
+        ],
+        "noaccession_proteins": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "accession_proteins": [
+            "0",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "1",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "2",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z",
+            "a",
+            "3",
+            "4",
+            "5",
+            "6"
+        ],
+        "nomenclatureCoverage": 0.90625
+    },
+    "polymers": [
+        {
+            "chainid": "B",
+            "RNA": true,
+            "entityNr": "10",
+            "length": "118",
+            "type": "rna",
+            "weight": "38177.8",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "5S rRNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "7",
+            "RNA": true,
+            "entityNr": "8",
+            "length": "3",
+            "type": "rna",
+            "weight": "894.612",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "P-tRNA CCA-end"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "A",
+            "RNA": true,
+            "entityNr": "9",
+            "length": "2903",
+            "type": "rna",
+            "weight": "941306.0",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "23S rRNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "0",
+            "name": "50S ribosomal protein L32",
+            "entityNr": "1",
+            "length": "57",
+            "type": "protein",
+            "weight": "6463.44",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L32"
+            },
+            "accession": "P0A7N4",
+            "pfamGroups": [
+                "PF01783"
+            ],
+            "nomenclature": [
+                "bL32"
+            ]
+        },
+        {
+            "chainid": "C",
+            "name": "50S ribosomal protein L2",
+            "entityNr": "11",
+            "length": "273",
+            "type": "protein",
+            "weight": "29923.6",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L2"
+            },
+            "accession": "P60422",
+            "pfamGroups": [
+                "PF03947",
+                "PF00181"
+            ],
+            "nomenclature": [
+                "uL2"
+            ]
+        },
+        {
+            "chainid": "D",
+            "name": "50S ribosomal protein L3",
+            "entityNr": "12",
+            "length": "209",
+            "type": "protein",
+            "weight": "22277.5",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L3"
+            },
+            "accession": "P60438",
+            "pfamGroups": [
+                "PF00297"
+            ],
+            "nomenclature": [
+                "uL3"
+            ]
+        },
+        {
+            "chainid": "E",
+            "name": "50S ribosomal protein L4",
+            "entityNr": "13",
+            "length": "201",
+            "type": "protein",
+            "weight": "22121.6",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L4"
+            },
+            "accession": "P60723",
+            "pfamGroups": [
+                "PF00573"
+            ],
+            "nomenclature": [
+                "uL4"
+            ]
+        },
+        {
+            "chainid": "F",
+            "name": "50S ribosomal protein L5",
+            "entityNr": "14",
+            "length": "179",
+            "type": "protein",
+            "weight": "20333.6",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L5"
+            },
+            "accession": "P62399",
+            "pfamGroups": [
+                "PF00673",
+                "PF00281"
+            ],
+            "nomenclature": [
+                "uL5"
+            ]
+        },
+        {
+            "chainid": "G",
+            "name": "50S ribosomal protein L6",
+            "entityNr": "15",
+            "length": "177",
+            "type": "protein",
+            "weight": "18932.8",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L6"
+            },
+            "accession": "P0AG55",
+            "pfamGroups": [
+                "PF00347"
+            ],
+            "nomenclature": [
+                "uL6"
+            ]
+        },
+        {
+            "chainid": "H",
+            "name": "50S ribosomal protein L9",
+            "entityNr": "16",
+            "length": "149",
+            "type": "protein",
+            "weight": "15789.0",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L9"
+            },
+            "accession": "P0A7R1",
+            "pfamGroups": [
+                "PF03948",
+                "PF01281"
+            ],
+            "nomenclature": [
+                "bL9"
+            ]
+        },
+        {
+            "chainid": "I",
+            "name": "50S ribosomal protein L11",
+            "entityNr": "17",
+            "length": "142",
+            "type": "protein",
+            "weight": "14894.4",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L11"
+            },
+            "accession": "P0A7J7",
+            "pfamGroups": [
+                "PF03946",
+                "PF00298"
+            ],
+            "nomenclature": [
+                "uL11"
+            ]
+        },
+        {
+            "chainid": "J",
+            "name": "50S ribosomal protein L13",
+            "entityNr": "18",
+            "length": "142",
+            "type": "protein",
+            "weight": "16050.6",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L13"
+            },
+            "accession": "P0AA10",
+            "pfamGroups": [
+                "PF00572"
+            ],
+            "nomenclature": [
+                "uL13"
+            ]
+        },
+        {
+            "chainid": "K",
+            "name": "50S ribosomal protein L14",
+            "entityNr": "19",
+            "length": "123",
+            "type": "protein",
+            "weight": "13565.1",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L14"
+            },
+            "accession": "P0ADY3",
+            "pfamGroups": [
+                "PF00238"
+            ],
+            "nomenclature": [
+                "uL14"
+            ]
+        },
+        {
+            "chainid": "1",
+            "name": "50S ribosomal protein L33",
+            "entityNr": "2",
+            "length": "55",
+            "type": "protein",
+            "weight": "6388.63",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L33"
+            },
+            "accession": "P0A7N9",
+            "pfamGroups": [
+                "PF00471"
+            ],
+            "nomenclature": [
+                "bL33"
+            ]
+        },
+        {
+            "chainid": "L",
+            "name": "50S ribosomal protein L15",
+            "entityNr": "20",
+            "length": "144",
+            "type": "protein",
+            "weight": "15008.5",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L15"
+            },
+            "accession": "P02413",
+            "pfamGroups": [
+                "PF00828"
+            ],
+            "nomenclature": [
+                "uL15"
+            ]
+        },
+        {
+            "chainid": "M",
+            "name": "50S ribosomal protein L16",
+            "entityNr": "21",
+            "length": "136",
+            "type": "protein",
+            "weight": "15312.3",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L16"
+            },
+            "accession": "P0ADY7",
+            "pfamGroups": [
+                "PF00252"
+            ],
+            "nomenclature": [
+                "uL16"
+            ]
+        },
+        {
+            "chainid": "N",
+            "name": "50S ribosomal protein L17",
+            "entityNr": "22",
+            "length": "127",
+            "type": "protein",
+            "weight": "14393.7",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L17"
+            },
+            "accession": "P0AG44",
+            "pfamGroups": [
+                "PF01196"
+            ],
+            "nomenclature": [
+                "bL17"
+            ]
+        },
+        {
+            "chainid": "O",
+            "name": "50S ribosomal protein L18",
+            "entityNr": "23",
+            "length": "117",
+            "type": "protein",
+            "weight": "12794.7",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L18"
+            },
+            "accession": "P0C018",
+            "pfamGroups": [
+                "PF00861"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "P",
+            "name": "50S ribosomal protein L19",
+            "entityNr": "24",
+            "length": "115",
+            "type": "protein",
+            "weight": "13159.3",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L19"
+            },
+            "enzClass": {
+                "ec": "2.1.2"
+            },
+            "accession": "P0A7K6",
+            "pfamGroups": [
+                "PF01245"
+            ],
+            "nomenclature": [
+                "bL19"
+            ]
+        },
+        {
+            "chainid": "Q",
+            "name": "50S ribosomal protein L20",
+            "entityNr": "25",
+            "length": "118",
+            "type": "protein",
+            "weight": "13528.0",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L20"
+            },
+            "accession": "P0A7L3",
+            "pfamGroups": [
+                "PF00453"
+            ],
+            "nomenclature": [
+                "bL20"
+            ]
+        },
+        {
+            "chainid": "R",
+            "name": "50S ribosomal protein L21",
+            "entityNr": "26",
+            "length": "103",
+            "type": "protein",
+            "weight": "11586.4",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L21"
+            },
+            "accession": "P0AG48",
+            "pfamGroups": [
+                "PF00829"
+            ],
+            "nomenclature": [
+                "bL21"
+            ]
+        },
+        {
+            "chainid": "S",
+            "name": "50S ribosomal protein L22",
+            "entityNr": "27",
+            "length": "110",
+            "type": "protein",
+            "weight": "12253.4",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L22"
+            },
+            "accession": "P61175",
+            "pfamGroups": [
+                "PF00237"
+            ],
+            "nomenclature": [
+                "uL22"
+            ]
+        },
+        {
+            "chainid": "T",
+            "name": "50S ribosomal protein L23",
+            "entityNr": "28",
+            "length": "100",
+            "type": "protein",
+            "weight": "11222.2",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L23"
+            },
+            "accession": "P0ADZ0",
+            "pfamGroups": [
+                "PF00276"
+            ],
+            "nomenclature": [
+                "uL23"
+            ]
+        },
+        {
+            "chainid": "U",
+            "name": "50S ribosomal protein L24",
+            "entityNr": "29",
+            "length": "104",
+            "type": "protein",
+            "weight": "11339.2",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L24"
+            },
+            "accession": "P60624",
+            "pfamGroups": [
+                "PF17136",
+                "PF00467"
+            ],
+            "nomenclature": [
+                "uL24",
+                "eS4"
+            ]
+        },
+        {
+            "chainid": "2",
+            "name": "50S ribosomal protein L34",
+            "entityNr": "3",
+            "length": "46",
+            "type": "protein",
+            "weight": "5397.46",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L34"
+            },
+            "accession": "P0A7P5",
+            "pfamGroups": [
+                "PF00468"
+            ],
+            "nomenclature": [
+                "bL34"
+            ]
+        },
+        {
+            "chainid": "V",
+            "name": "50S ribosomal protein L25",
+            "entityNr": "30",
+            "length": "94",
+            "type": "protein",
+            "weight": "10713.5",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L25"
+            },
+            "accession": "P68919",
+            "pfamGroups": [
+                "PF01386"
+            ],
+            "nomenclature": [
+                "bL25"
+            ]
+        },
+        {
+            "chainid": "W",
+            "name": "50S ribosomal protein L27",
+            "entityNr": "31",
+            "length": "85",
+            "type": "protein",
+            "weight": "9146.54",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L27"
+            },
+            "accession": "P0A7L8",
+            "pfamGroups": [
+                "PF01016"
+            ],
+            "nomenclature": [
+                "bL27"
+            ]
+        },
+        {
+            "chainid": "X",
+            "name": "50S ribosomal protein L28",
+            "entityNr": "32",
+            "length": "78",
+            "type": "protein",
+            "weight": "9027.55",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L28"
+            },
+            "accession": "P0A7M2",
+            "pfamGroups": [
+                "PF00830"
+            ],
+            "nomenclature": [
+                "bL28"
+            ]
+        },
+        {
+            "chainid": "Y",
+            "name": "50S ribosomal protein L29",
+            "entityNr": "33",
+            "length": "63",
+            "type": "protein",
+            "weight": "7286.46",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L29"
+            },
+            "accession": "P0A7M6",
+            "pfamGroups": [
+                "PF00831"
+            ],
+            "nomenclature": [
+                "uL29"
+            ]
+        },
+        {
+            "chainid": "Z",
+            "name": "50S ribosomal protein L30",
+            "entityNr": "34",
+            "length": "59",
+            "type": "protein",
+            "weight": "6554.82",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L30"
+            },
+            "accession": "P0AG51",
+            "pfamGroups": [
+                "PF00327"
+            ],
+            "nomenclature": [
+                "uL30"
+            ]
+        },
+        {
+            "chainid": "a",
+            "name": "23S rRNA methylase leader peptide",
+            "entityNr": "35",
+            "length": "19",
+            "type": "protein",
+            "weight": "2212.63",
+            "Taxonomy": {
+                "name": "Staphylococcus aureus",
+                "id": "1280"
+            },
+            "polymerDescription": {
+                "description": "ErmCL nascent chain"
+            },
+            "accession": "P03063",
+            "pfamGroups": [
+                "PF08253"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "3",
+            "name": "50S ribosomal protein L35",
+            "entityNr": "4",
+            "length": "65",
+            "type": "protein",
+            "weight": "7313.03",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L35"
+            },
+            "accession": "P0A7Q1",
+            "pfamGroups": [
+                "PF01632"
+            ],
+            "nomenclature": [
+                "bL35"
+            ]
+        },
+        {
+            "chainid": "4",
+            "name": "50S ribosomal protein L36",
+            "entityNr": "5",
+            "length": "38",
+            "type": "protein",
+            "weight": "4377.39",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L36"
+            },
+            "accession": "P0A7Q6",
+            "pfamGroups": [
+                "PF00444"
+            ],
+            "nomenclature": [
+                "bL36"
+            ]
+        },
+        {
+            "chainid": "5",
+            "name": "50S ribosomal protein L10",
+            "entityNr": "6",
+            "length": "165",
+            "type": "protein",
+            "weight": "17736.6",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L10"
+            },
+            "accession": "P0A7J3",
+            "pfamGroups": [
+                "PF00466"
+            ],
+            "nomenclature": [
+                "uL10"
+            ]
+        },
+        {
+            "chainid": "6",
+            "name": "50S ribosomal protein L7/L12",
+            "entityNr": "7",
+            "length": "121",
+            "type": "protein",
+            "weight": "12309.2",
+            "Taxonomy": {
+                "name": "Escherichia coli",
+                "id": "562"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L7/L12"
+            },
+            "accession": "P0A7K2",
+            "pfamGroups": [
+                "PF16320",
+                "PF00542"
+            ],
+            "nomenclature": [
+                "bL12"
+            ]
+        }
+    ]
+}

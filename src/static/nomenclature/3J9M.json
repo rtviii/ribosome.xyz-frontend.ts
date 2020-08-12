@@ -1,0 +1,1960 @@
+{
+    "metadata": {
+        "pdbid": "3J9M",
+        "rnacount": 4,
+        "proteincount": 81,
+        "rnanames": [
+            "A",
+            "B",
+            "u",
+            "AA"
+        ],
+        "noaccession_proteins": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "X",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "t",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "accession_proteins": [
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            null,
+            "Y",
+            "Z",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "D",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "E",
+            "f",
+            "g",
+            "h",
+            "i",
+            "j",
+            "k",
+            "l",
+            "m",
+            "o",
+            "p",
+            "F",
+            "q",
+            "r",
+            "s",
+            null,
+            "AB",
+            "AC",
+            "AD",
+            "AE",
+            "H",
+            "AF",
+            "AG",
+            "AH",
+            "AI",
+            "AJ",
+            "AK",
+            "AL",
+            "AM",
+            "AN",
+            "AO",
+            "I",
+            "AP",
+            "AQ",
+            "AR",
+            "AS",
+            "AT",
+            "AU",
+            "AV",
+            "AW",
+            "AX",
+            "AY",
+            "J",
+            "AZ",
+            "A0",
+            "A1",
+            "A2",
+            "A3",
+            "A4",
+            "K"
+        ],
+        "nomenclatureCoverage": 0.5432098765432098
+    },
+    "polymers": [
+        {
+            "chainid": "A",
+            "RNA": true,
+            "entityNr": "1",
+            "length": "1559",
+            "type": "rna",
+            "weight": "500020.0",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "16S rRNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "B",
+            "RNA": true,
+            "entityNr": "2",
+            "length": "73",
+            "type": "rna",
+            "weight": "23266.9",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mt-tRNAVal"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "u",
+            "RNA": true,
+            "entityNr": "54",
+            "length": "2",
+            "type": "rna",
+            "weight": "589.43",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "E-site tRNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AA",
+            "RNA": true,
+            "entityNr": "55",
+            "length": "954",
+            "type": "rna",
+            "weight": "306112.0",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "12S rRNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "L",
+            "name": "39S ribosomal protein L14, mitochondrial",
+            "entityNr": "10",
+            "length": "145",
+            "type": "protein",
+            "weight": "15973.7",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL14m"
+            },
+            "accession": "Q6P1L8",
+            "pfamGroups": [
+                "PF00238"
+            ],
+            "nomenclature": [
+                "uL14"
+            ]
+        },
+        {
+            "chainid": "M",
+            "name": "39S ribosomal protein L15, mitochondrial",
+            "entityNr": "11",
+            "length": "296",
+            "type": "protein",
+            "weight": "33473.8",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL15m"
+            },
+            "accession": "Q9P015",
+            "pfamGroups": [
+                "PF00828"
+            ],
+            "nomenclature": [
+                "uL15"
+            ]
+        },
+        {
+            "chainid": "N",
+            "name": "39S ribosomal protein L16, mitochondrial",
+            "entityNr": "12",
+            "length": "251",
+            "type": "protein",
+            "weight": "28496.3",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL16m"
+            },
+            "accession": "Q9NX20",
+            "pfamGroups": [
+                "PF00252"
+            ],
+            "nomenclature": [
+                "uL16"
+            ]
+        },
+        {
+            "chainid": "O",
+            "name": "39S ribosomal protein L17, mitochondrial",
+            "entityNr": "13",
+            "length": "175",
+            "type": "protein",
+            "weight": "20083.3",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bL17m"
+            },
+            "accession": "Q9NRX2",
+            "pfamGroups": [
+                "PF01196"
+            ],
+            "nomenclature": [
+                "bL17"
+            ]
+        },
+        {
+            "chainid": "P",
+            "name": "Mitochondrial ribosomal protein L18, isoform CRA_b",
+            "entityNr": "14",
+            "length": "179",
+            "type": "protein",
+            "weight": "20465.3",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL18m"
+            },
+            "accession": "A8K9D2",
+            "pfamGroups": [
+                "PF00861"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Q",
+            "name": "39S ribosomal protein L19, mitochondrial",
+            "entityNr": "15",
+            "length": "292",
+            "type": "protein",
+            "weight": "33585.0",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bL19m"
+            },
+            "accession": "P49406",
+            "pfamGroups": [
+                "PF01245"
+            ],
+            "nomenclature": [
+                "bL19"
+            ]
+        },
+        {
+            "chainid": "R",
+            "name": "39S ribosomal protein L20, mitochondrial",
+            "entityNr": "16",
+            "length": "149",
+            "type": "protein",
+            "weight": "17479.7",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bL20m"
+            },
+            "accession": "Q9BYC9",
+            "pfamGroups": [
+                "PF00453"
+            ],
+            "nomenclature": [
+                "bL20"
+            ]
+        },
+        {
+            "chainid": "S",
+            "name": "39S ribosomal protein L21, mitochondrial",
+            "entityNr": "17",
+            "length": "205",
+            "type": "protein",
+            "weight": "22847.7",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bL21m"
+            },
+            "accession": "Q7Z2W9",
+            "pfamGroups": [
+                "PF00829"
+            ],
+            "nomenclature": [
+                "bL21"
+            ]
+        },
+        {
+            "chainid": "T",
+            "name": "39S ribosomal protein L22, mitochondrial",
+            "entityNr": "18",
+            "length": "212",
+            "type": "protein",
+            "weight": "24369.5",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL22m"
+            },
+            "accession": "E7ESL0",
+            "pfamGroups": [
+                "PF00237"
+            ],
+            "nomenclature": [
+                "uL22"
+            ]
+        },
+        {
+            "chainid": "U",
+            "name": "39S ribosomal protein L23, mitochondrial",
+            "entityNr": "19",
+            "length": "153",
+            "type": "protein",
+            "weight": "17807.2",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL23m"
+            },
+            "accession": "Q16540",
+            "pfamGroups": [
+                "PF00276"
+            ],
+            "nomenclature": [
+                "uL23"
+            ]
+        },
+        {
+            "chainid": "V",
+            "name": "39S ribosomal protein L24, mitochondrial",
+            "entityNr": "20",
+            "length": "216",
+            "type": "protein",
+            "weight": "24953.9",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL24m"
+            },
+            "accession": "Q96A35",
+            "pfamGroups": [
+                "PF17136",
+                "PF00467"
+            ],
+            "nomenclature": [
+                "uL24",
+                "eS4"
+            ]
+        },
+        {
+            "chainid": "W",
+            "name": "39S ribosomal protein L27, mitochondrial",
+            "entityNr": "21",
+            "length": "148",
+            "type": "protein",
+            "weight": "16102.9",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bL27m"
+            },
+            "accession": "Q9P0M9",
+            "pfamGroups": [
+                "PF01016"
+            ],
+            "nomenclature": [
+                "bL27"
+            ]
+        },
+        {
+            "chainid": "X",
+            "entityNr": "22",
+            "length": "256",
+            "type": "protein",
+            "weight": "30090.7",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bL28m"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Y",
+            "name": "39S ribosomal protein L47, mitochondrial",
+            "entityNr": "23",
+            "length": "250",
+            "type": "protein",
+            "weight": "29508.5",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL29m"
+            },
+            "accession": "Q9HD33",
+            "pfamGroups": [
+                "PF06984"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Z",
+            "name": "39S ribosomal protein L30, mitochondrial",
+            "entityNr": "24",
+            "length": "161",
+            "type": "protein",
+            "weight": "18582.8",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL30m"
+            },
+            "accession": "Q8TCC3",
+            "pfamGroups": [
+                "PF00327"
+            ],
+            "nomenclature": [
+                "uL30"
+            ]
+        },
+        {
+            "chainid": "0",
+            "name": "39S ribosomal protein L32, mitochondrial",
+            "entityNr": "25",
+            "length": "188",
+            "type": "protein",
+            "weight": "21437.8",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bL32m"
+            },
+            "accession": "Q9BYC8",
+            "pfamGroups": [
+                "PF01783"
+            ],
+            "nomenclature": [
+                "bL32"
+            ]
+        },
+        {
+            "chainid": "1",
+            "name": "39S ribosomal protein L33, mitochondrial",
+            "entityNr": "26",
+            "length": "65",
+            "type": "protein",
+            "weight": "7635.2",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bL33m"
+            },
+            "accession": "O75394",
+            "pfamGroups": [
+                "PF00471"
+            ],
+            "nomenclature": [
+                "bL33"
+            ]
+        },
+        {
+            "chainid": "2",
+            "name": "39S ribosomal protein L34, mitochondrial",
+            "entityNr": "27",
+            "length": "92",
+            "type": "protein",
+            "weight": "10183.9",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bL34m"
+            },
+            "accession": "Q9BQ48",
+            "pfamGroups": [
+                "PF00468"
+            ],
+            "nomenclature": [
+                "bL34"
+            ]
+        },
+        {
+            "chainid": "3",
+            "name": "39S ribosomal protein L35, mitochondrial",
+            "entityNr": "28",
+            "length": "188",
+            "type": "protein",
+            "weight": "21558.5",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bL35m"
+            },
+            "accession": "Q9NZE8",
+            "pfamGroups": [
+                "PF01632"
+            ],
+            "nomenclature": [
+                "bL35"
+            ]
+        },
+        {
+            "chainid": "4",
+            "name": "39S ribosomal protein L36, mitochondrial",
+            "entityNr": "29",
+            "length": "103",
+            "type": "protein",
+            "weight": "11809.3",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bL36m"
+            },
+            "accession": "Q9P0J6",
+            "pfamGroups": [
+                "PF00444"
+            ],
+            "nomenclature": [
+                "bL36"
+            ]
+        },
+        {
+            "chainid": "D",
+            "name": "39S ribosomal protein L2, mitochondrial",
+            "entityNr": "3",
+            "length": "305",
+            "type": "protein",
+            "weight": "33355.9",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL2m"
+            },
+            "accession": "Q5T653",
+            "pfamGroups": [
+                "PF03947",
+                "PF00181"
+            ],
+            "nomenclature": [
+                "uL2"
+            ]
+        },
+        {
+            "chainid": "5",
+            "name": "39S ribosomal protein L37, mitochondrial",
+            "entityNr": "30",
+            "length": "423",
+            "type": "protein",
+            "weight": "48183.3",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL37"
+            },
+            "accession": "Q9BZE1",
+            "pfamGroups": [
+                "PF07147"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "6",
+            "name": "39S ribosomal protein L38, mitochondrial",
+            "entityNr": "31",
+            "length": "380",
+            "type": "protein",
+            "weight": "44659.4",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL38"
+            },
+            "accession": "Q96DV4",
+            "pfamGroups": [
+                "PF01161"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "7",
+            "name": "39S ribosomal protein L39, mitochondrial",
+            "entityNr": "32",
+            "length": "338",
+            "type": "protein",
+            "weight": "38764.8",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL39"
+            },
+            "accession": "Q9NYK5",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "8",
+            "name": "39S ribosomal protein L40, mitochondrial",
+            "entityNr": "33",
+            "length": "206",
+            "type": "protein",
+            "weight": "24534.4",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL40"
+            },
+            "accession": "Q9NQ50",
+            "pfamGroups": [
+                "PF09812"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "9",
+            "name": "39S ribosomal protein L41, mitochondrial",
+            "entityNr": "34",
+            "length": "137",
+            "type": "protein",
+            "weight": "15404.7",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL41"
+            },
+            "accession": "Q8IXM3",
+            "pfamGroups": [
+                "PF09809"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "a",
+            "name": "39S ribosomal protein L42, mitochondrial",
+            "entityNr": "35",
+            "length": "142",
+            "type": "protein",
+            "weight": "16691.2",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL42"
+            },
+            "accession": "Q9Y6G3",
+            "pfamGroups": [
+                "PF10210"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "b",
+            "name": "39S ribosomal protein L43, mitochondrial",
+            "entityNr": "36",
+            "length": "155",
+            "type": "protein",
+            "weight": "17452.8",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL43"
+            },
+            "accession": "Q8N983",
+            "pfamGroups": [
+                "PF05047"
+            ],
+            "nomenclature": [
+                "eS25"
+            ]
+        },
+        {
+            "chainid": "c",
+            "name": "39S ribosomal protein L44, mitochondrial",
+            "entityNr": "37",
+            "length": "332",
+            "type": "protein",
+            "weight": "37583.3",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL44"
+            },
+            "enzClass": {
+                "ec": "3.1.26"
+            },
+            "accession": "Q9H9J2",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "d",
+            "name": "39S ribosomal protein L45, mitochondrial",
+            "entityNr": "38",
+            "length": "306",
+            "type": "protein",
+            "weight": "35402.9",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL45"
+            },
+            "accession": "Q9BRJ2",
+            "pfamGroups": [
+                "PF04280"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "e",
+            "name": "39S ribosomal protein L46, mitochondrial",
+            "entityNr": "39",
+            "length": "279",
+            "type": "protein",
+            "weight": "31748.1",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL46"
+            },
+            "accession": "Q9H2W6",
+            "pfamGroups": [
+                "PF11788"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "E",
+            "name": "39S ribosomal protein L3, mitochondrial",
+            "entityNr": "4",
+            "length": "348",
+            "type": "protein",
+            "weight": "38689.6",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL3m"
+            },
+            "accession": "P09001",
+            "pfamGroups": [
+                "PF00297"
+            ],
+            "nomenclature": [
+                "uL3"
+            ]
+        },
+        {
+            "chainid": "f",
+            "name": "39S ribosomal protein L48, mitochondrial",
+            "entityNr": "40",
+            "length": "194",
+            "type": "protein",
+            "weight": "21856.2",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL48"
+            },
+            "accession": "Q96GC5",
+            "pfamGroups": [
+                "PF00338"
+            ],
+            "nomenclature": [
+                "uS10"
+            ]
+        },
+        {
+            "chainid": "g",
+            "name": "39S ribosomal protein L49, mitochondrial",
+            "entityNr": "41",
+            "length": "166",
+            "type": "protein",
+            "weight": "19225.0",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL49"
+            },
+            "accession": "Q13405",
+            "pfamGroups": [
+                "PF05046"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "h",
+            "name": "39S ribosomal protein L50, mitochondrial",
+            "entityNr": "42",
+            "length": "158",
+            "type": "protein",
+            "weight": "18349.9",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL50"
+            },
+            "accession": "Q8N5N7",
+            "pfamGroups": [
+                "PF10501"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "i",
+            "name": "39S ribosomal protein L51, mitochondrial",
+            "entityNr": "43",
+            "length": "128",
+            "type": "protein",
+            "weight": "15125.9",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL51"
+            },
+            "accession": "Q4U2R6",
+            "pfamGroups": [
+                "PF10244"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "j",
+            "name": "cDNA FLJ76418, highly similar to Homo sapiens mitochondrial ribosomal protein L52 (MRPL52), transcript variant 1, mRNA",
+            "entityNr": "44",
+            "length": "123",
+            "type": "protein",
+            "weight": "13696.7",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL52"
+            },
+            "accession": "A8K7J6",
+            "pfamGroups": [
+                "PF18699"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "k",
+            "name": "39S ribosomal protein L53, mitochondrial",
+            "entityNr": "45",
+            "length": "112",
+            "type": "protein",
+            "weight": "12125.9",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL53"
+            },
+            "accession": "Q96EL3",
+            "pfamGroups": [
+                "PF10780"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "l",
+            "name": "39S ribosomal protein L54, mitochondrial",
+            "entityNr": "46",
+            "length": "138",
+            "type": "protein",
+            "weight": "15844.2",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL54"
+            },
+            "accession": "Q6P161",
+            "pfamGroups": [
+                "PF08561"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "m",
+            "name": "39S ribosomal protein L55, mitochondrial",
+            "entityNr": "47",
+            "length": "128",
+            "type": "protein",
+            "weight": "15160.4",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bL31m"
+            },
+            "accession": "Q7Z7F7",
+            "pfamGroups": [
+                "PF09776"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "o",
+            "name": "Ribosomal protein 63, mitochondrial",
+            "entityNr": "48",
+            "length": "102",
+            "type": "protein",
+            "weight": "12292.3",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL63"
+            },
+            "accession": "Q9BQC6",
+            "pfamGroups": [
+                "PF14978"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "p",
+            "name": "Peptidyl-tRNA hydrolase ICT1, mitochondrial",
+            "entityNr": "49",
+            "length": "206",
+            "type": "protein",
+            "weight": "23674.2",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL62 (ICT1)"
+            },
+            "enzClass": {
+                "ec": "3.1.1.29"
+            },
+            "accession": "Q14197",
+            "pfamGroups": [
+                "PF00472"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "F",
+            "name": "39S ribosomal protein L4, mitochondrial",
+            "entityNr": "5",
+            "length": "311",
+            "type": "protein",
+            "weight": "34970.2",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL4m"
+            },
+            "accession": "Q9BYD3",
+            "pfamGroups": [
+                "PF00573"
+            ],
+            "nomenclature": [
+                "uL4"
+            ]
+        },
+        {
+            "chainid": "q",
+            "name": "Growth arrest and DNA damage-inducible proteins-interacting protein 1",
+            "entityNr": "50",
+            "length": "222",
+            "type": "protein",
+            "weight": "25426.9",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL64 (CRIF1)"
+            },
+            "accession": "Q8TAE8",
+            "pfamGroups": [
+                "PF10147"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "r",
+            "name": "39S ribosomal protein S18a, mitochondrial",
+            "entityNr": "51",
+            "length": "196",
+            "type": "protein",
+            "weight": "22224.1",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL66 (bS18a)"
+            },
+            "accession": "Q9NVS2",
+            "pfamGroups": [
+                "PF01084"
+            ],
+            "nomenclature": [
+                "bS18"
+            ]
+        },
+        {
+            "chainid": "s",
+            "name": "39S ribosomal protein S30, mitochondrial",
+            "entityNr": "52",
+            "length": "439",
+            "type": "protein",
+            "weight": "50429.6",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mL65 (mS30)"
+            },
+            "accession": "Q9NP92",
+            "pfamGroups": [
+                "PF07147"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "t",
+            "entityNr": "53",
+            "length": "28",
+            "type": "protein",
+            "weight": "2400.95",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "Unknown protein/protein extension"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AB",
+            "name": "28S ribosomal protein S2, mitochondrial",
+            "entityNr": "56",
+            "length": "296",
+            "type": "protein",
+            "weight": "33298.2",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uS2m"
+            },
+            "accession": "Q9Y399",
+            "pfamGroups": [
+                "PF00318"
+            ],
+            "nomenclature": [
+                "uS2"
+            ]
+        },
+        {
+            "chainid": "AC",
+            "name": "28S ribosomal protein S24, mitochondrial",
+            "entityNr": "57",
+            "length": "167",
+            "type": "protein",
+            "weight": "19046.2",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uS3m"
+            },
+            "accession": "Q96EL2",
+            "pfamGroups": [
+                "PF14955"
+            ],
+            "nomenclature": [
+                "es24"
+            ]
+        },
+        {
+            "chainid": "AD",
+            "name": "28S ribosomal protein S5, mitochondrial",
+            "entityNr": "58",
+            "length": "430",
+            "type": "protein",
+            "weight": "48094.6",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uS5m"
+            },
+            "accession": "P82675",
+            "pfamGroups": [
+                "PF03719",
+                "PF00333"
+            ],
+            "nomenclature": [
+                "uS5"
+            ]
+        },
+        {
+            "chainid": "AE",
+            "name": "28S ribosomal protein S6, mitochondrial",
+            "entityNr": "59",
+            "length": "125",
+            "type": "protein",
+            "weight": "14250.6",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bS6m"
+            },
+            "accession": "P82932",
+            "pfamGroups": [
+                "PF01250"
+            ],
+            "nomenclature": [
+                "bS6"
+            ]
+        },
+        {
+            "chainid": "H",
+            "name": "39S ribosomal protein L9, mitochondrial",
+            "entityNr": "6",
+            "length": "267",
+            "type": "protein",
+            "weight": "30296.4",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bL9m"
+            },
+            "accession": "Q9BYD2",
+            "pfamGroups": [
+                "PF01281"
+            ],
+            "nomenclature": [
+                "bL9"
+            ]
+        },
+        {
+            "chainid": "AF",
+            "name": "28S ribosomal protein S7, mitochondrial",
+            "entityNr": "60",
+            "length": "242",
+            "type": "protein",
+            "weight": "28186.2",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uS7m"
+            },
+            "accession": "Q9Y2R9",
+            "pfamGroups": [
+                "PF00177"
+            ],
+            "nomenclature": [
+                "uS7"
+            ]
+        },
+        {
+            "chainid": "AG",
+            "name": "28S ribosomal protein S9, mitochondrial",
+            "entityNr": "61",
+            "length": "396",
+            "type": "protein",
+            "weight": "45909.9",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uS9m"
+            },
+            "accession": "P82933",
+            "pfamGroups": [
+                "PF00380"
+            ],
+            "nomenclature": [
+                "uS9"
+            ]
+        },
+        {
+            "chainid": "AH",
+            "name": "28S ribosomal protein S10, mitochondrial",
+            "entityNr": "62",
+            "length": "201",
+            "type": "protein",
+            "weight": "23033.5",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uS10m"
+            },
+            "accession": "P82664",
+            "pfamGroups": [
+                "PF00338"
+            ],
+            "nomenclature": [
+                "uS10"
+            ]
+        },
+        {
+            "chainid": "AI",
+            "name": "28S ribosomal protein S11, mitochondrial",
+            "entityNr": "63",
+            "length": "194",
+            "type": "protein",
+            "weight": "20648.8",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uS11m"
+            },
+            "accession": "P82912",
+            "pfamGroups": [
+                "PF00411"
+            ],
+            "nomenclature": [
+                "uS11"
+            ]
+        },
+        {
+            "chainid": "AJ",
+            "name": "28S ribosomal protein S12, mitochondrial",
+            "entityNr": "64",
+            "length": "138",
+            "type": "protein",
+            "weight": "15200.9",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uS12m"
+            },
+            "accession": "O15235",
+            "pfamGroups": [
+                "PF00164"
+            ],
+            "nomenclature": [
+                "uS12"
+            ]
+        },
+        {
+            "chainid": "AK",
+            "name": "28S ribosomal protein S14, mitochondrial",
+            "entityNr": "65",
+            "length": "128",
+            "type": "protein",
+            "weight": "15168.8",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uS14m"
+            },
+            "accession": "O60783",
+            "pfamGroups": [
+                "PF00253"
+            ],
+            "nomenclature": [
+                "uS14"
+            ]
+        },
+        {
+            "chainid": "AL",
+            "name": "28S ribosomal protein S15, mitochondrial",
+            "entityNr": "66",
+            "length": "257",
+            "type": "protein",
+            "weight": "29903.3",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uS15m"
+            },
+            "accession": "P82914",
+            "pfamGroups": [
+                "PF00312"
+            ],
+            "nomenclature": [
+                "uS15"
+            ]
+        },
+        {
+            "chainid": "AM",
+            "name": "28S ribosomal protein S16, mitochondrial",
+            "entityNr": "67",
+            "length": "137",
+            "type": "protein",
+            "weight": "15371.9",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bS16m"
+            },
+            "accession": "Q9Y3D3",
+            "pfamGroups": [
+                "PF00886"
+            ],
+            "nomenclature": [
+                "bS16"
+            ]
+        },
+        {
+            "chainid": "AN",
+            "name": "28S ribosomal protein S17, mitochondrial",
+            "entityNr": "68",
+            "length": "130",
+            "type": "protein",
+            "weight": "14526.1",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uS17m"
+            },
+            "accession": "Q9Y2R5",
+            "pfamGroups": [
+                "PF00366"
+            ],
+            "nomenclature": [
+                "uS17"
+            ]
+        },
+        {
+            "chainid": "AO",
+            "name": "28S ribosomal protein S18b, mitochondrial",
+            "entityNr": "69",
+            "length": "258",
+            "type": "protein",
+            "weight": "29440.6",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS40 (bS18b)"
+            },
+            "accession": "Q9Y676",
+            "pfamGroups": [
+                "PF01084"
+            ],
+            "nomenclature": [
+                "bS18"
+            ]
+        },
+        {
+            "chainid": "I",
+            "name": "39S ribosomal protein L10, mitochondrial",
+            "entityNr": "7",
+            "length": "261",
+            "type": "protein",
+            "weight": "29322.5",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL10m"
+            },
+            "accession": "Q7Z7H8",
+            "pfamGroups": [
+                "PF00466"
+            ],
+            "nomenclature": [
+                "uL10"
+            ]
+        },
+        {
+            "chainid": "AP",
+            "name": "28S ribosomal protein S18c, mitochondrial",
+            "entityNr": "70",
+            "length": "142",
+            "type": "protein",
+            "weight": "15876.8",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bS18m (bS18c)"
+            },
+            "accession": "Q9Y3D5",
+            "pfamGroups": [
+                "PF01084"
+            ],
+            "nomenclature": [
+                "bS18"
+            ]
+        },
+        {
+            "chainid": "AQ",
+            "name": "28S ribosomal protein S21, mitochondrial",
+            "entityNr": "71",
+            "length": "87",
+            "type": "protein",
+            "weight": "10764.7",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bS21m"
+            },
+            "accession": "P82921",
+            "pfamGroups": [
+                "PF01165"
+            ],
+            "nomenclature": [
+                "bS21"
+            ]
+        },
+        {
+            "chainid": "AR",
+            "name": "28S ribosomal protein S22, mitochondrial",
+            "entityNr": "72",
+            "length": "360",
+            "type": "protein",
+            "weight": "41337.3",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS22"
+            },
+            "accession": "P82650",
+            "pfamGroups": [
+                "PF10245"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AS",
+            "name": "28S ribosomal protein S23, mitochondrial",
+            "entityNr": "73",
+            "length": "190",
+            "type": "protein",
+            "weight": "21805.7",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS23"
+            },
+            "accession": "Q9Y3D9",
+            "pfamGroups": [
+                "PF10484"
+            ],
+            "nomenclature": [
+                "uS12"
+            ]
+        },
+        {
+            "chainid": "AT",
+            "name": "28S ribosomal protein S25, mitochondrial",
+            "entityNr": "74",
+            "length": "173",
+            "type": "protein",
+            "weight": "20146.4",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS25"
+            },
+            "accession": "P82663",
+            "pfamGroups": [
+                "PF05047"
+            ],
+            "nomenclature": [
+                "eS25"
+            ]
+        },
+        {
+            "chainid": "AU",
+            "name": "28S ribosomal protein S26, mitochondrial",
+            "entityNr": "75",
+            "length": "205",
+            "type": "protein",
+            "weight": "24259.8",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS26"
+            },
+            "accession": "Q9BYN8",
+            "pfamGroups": [
+                "PF14943"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AV",
+            "name": "28S ribosomal protein S27, mitochondrial",
+            "entityNr": "76",
+            "length": "414",
+            "type": "protein",
+            "weight": "47669.3",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS27"
+            },
+            "accession": "Q92552",
+            "pfamGroups": [
+                "PF10037"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AW",
+            "name": "28S ribosomal protein S28, mitochondrial",
+            "entityNr": "77",
+            "length": "187",
+            "type": "protein",
+            "weight": "20878.8",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "bS1m"
+            },
+            "accession": "Q9Y2Q9",
+            "pfamGroups": [
+                "PF10246"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AX",
+            "name": "28S ribosomal protein S29, mitochondrial",
+            "entityNr": "78",
+            "length": "398",
+            "type": "protein",
+            "weight": "45634.4",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS29"
+            },
+            "accession": "P51398",
+            "pfamGroups": [
+                "PF10236"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AY",
+            "name": "28S ribosomal protein S31, mitochondrial",
+            "entityNr": "79",
+            "length": "395",
+            "type": "protein",
+            "weight": "45391.5",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS31"
+            },
+            "accession": "Q92665",
+            "pfamGroups": [
+                "PF15433"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "J",
+            "name": "39S ribosomal protein L11, mitochondrial",
+            "entityNr": "8",
+            "length": "192",
+            "type": "protein",
+            "weight": "20716.2",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL11m"
+            },
+            "accession": "Q9Y3B7",
+            "pfamGroups": [
+                "PF03946",
+                "PF00298"
+            ],
+            "nomenclature": [
+                "uL11"
+            ]
+        },
+        {
+            "chainid": "AZ",
+            "name": "28S ribosomal protein S33, mitochondrial",
+            "entityNr": "80",
+            "length": "106",
+            "type": "protein",
+            "weight": "12657.8",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS33"
+            },
+            "accession": "Q9Y291",
+            "pfamGroups": [
+                "PF08293"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "A0",
+            "name": "28S ribosomal protein S34, mitochondrial",
+            "entityNr": "81",
+            "length": "218",
+            "type": "protein",
+            "weight": "25695.5",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS34"
+            },
+            "accession": "P82930",
+            "pfamGroups": [
+                "PF16053"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "A1",
+            "name": "28S ribosomal protein S35, mitochondrial",
+            "entityNr": "82",
+            "length": "323",
+            "type": "protein",
+            "weight": "36898.3",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS35"
+            },
+            "accession": "P82673",
+            "pfamGroups": [
+                "PF10213"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "A2",
+            "name": "Coiled-coil-helix-coiled-coil-helix domain-containing protein 1",
+            "entityNr": "83",
+            "length": "118",
+            "type": "protein",
+            "weight": "13498.8",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS37"
+            },
+            "accession": "Q96BP2",
+            "pfamGroups": [
+                "PF06747"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "A3",
+            "name": "Aurora kinase A-interacting protein",
+            "entityNr": "84",
+            "length": "199",
+            "type": "protein",
+            "weight": "22395.3",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS38"
+            },
+            "accession": "Q9NWT8",
+            "pfamGroups": [
+                "PF08213"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "A4",
+            "name": "Pentatricopeptide repeat domain-containing protein 3, mitochondrial",
+            "entityNr": "85",
+            "length": "579",
+            "type": "protein",
+            "weight": "61294.8",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "mS39"
+            },
+            "accession": "Q96EY7",
+            "pfamGroups": [
+                "PF13812",
+                "PF13041"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "K",
+            "name": "39S ribosomal protein L13, mitochondrial",
+            "entityNr": "9",
+            "length": "178",
+            "type": "protein",
+            "weight": "20723.0",
+            "Taxonomy": {
+                "name": "Homo sapiens",
+                "id": "9606"
+            },
+            "polymerDescription": {
+                "description": "uL13m"
+            },
+            "accession": "Q9BYD1",
+            "pfamGroups": [
+                "PF00572"
+            ],
+            "nomenclature": [
+                "uL13"
+            ]
+        }
+    ]
+}

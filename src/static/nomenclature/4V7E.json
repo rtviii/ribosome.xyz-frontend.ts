@@ -1,0 +1,1747 @@
+{
+    "metadata": {
+        "pdbid": "4V7E",
+        "rnacount": 6,
+        "proteincount": 82,
+        "rnanames": [
+            "Ad",
+            "Ae",
+            "Af",
+            "Aa",
+            "Ac",
+            "Ab"
+        ],
+        "noaccession_proteins": [
+            null,
+            null,
+            "BE",
+            "BF",
+            "BQ",
+            "BU",
+            "BO",
+            null,
+            "BN",
+            "BL",
+            "BT",
+            "BP",
+            "BZ",
+            null,
+            "BW",
+            null,
+            "Bb",
+            "Be",
+            "BA",
+            "BR",
+            "BB",
+            "BV",
+            "Ba",
+            "BJ",
+            "BC",
+            "BG",
+            null,
+            "CG",
+            null,
+            "CZ",
+            "BY",
+            null,
+            "CA",
+            null,
+            "CH",
+            null,
+            "CN",
+            "Ca",
+            null,
+            "CD",
+            null,
+            "BI",
+            "CP",
+            "CX",
+            "CW",
+            "CY",
+            "Cr",
+            null,
+            "Cd",
+            "Ce",
+            "Cj",
+            null,
+            "BK",
+            "Co",
+            "CM",
+            "CS",
+            "CU",
+            null,
+            "CK",
+            null,
+            null,
+            "Cs",
+            "Ct",
+            null,
+            null,
+            "BM",
+            "Cq",
+            null,
+            "CC",
+            null,
+            null,
+            "CI",
+            "Cn",
+            "Cm",
+            "CL",
+            null,
+            "Bf",
+            "Cf",
+            "Ck",
+            "Cb",
+            null,
+            "BX"
+        ],
+        "accession_proteins": [
+            "Bg",
+            "BD",
+            null,
+            null,
+            null,
+            null,
+            null,
+            "BS",
+            null,
+            null,
+            null,
+            null,
+            null,
+            "Bc",
+            null,
+            "Bd",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "BH",
+            null,
+            "CT",
+            null,
+            null,
+            "Cz",
+            null,
+            "CJ",
+            null,
+            "CV",
+            null,
+            null,
+            "CQ",
+            null,
+            "CR",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "Cc",
+            null,
+            null,
+            null,
+            "Cl",
+            null,
+            null,
+            null,
+            null,
+            null,
+            "Ci",
+            null,
+            "Cu",
+            "Cv",
+            null,
+            null,
+            "Ch",
+            "CF",
+            null,
+            null,
+            "CB",
+            null,
+            "CO",
+            "Cp",
+            null,
+            null,
+            null,
+            null,
+            "CE",
+            null,
+            null,
+            null,
+            null,
+            "Cg",
+            null
+        ],
+        "nomenclatureCoverage": 0.25609756097560976
+    },
+    "polymers": [
+        {
+            "chainid": "Ad",
+            "RNA": true,
+            "entityNr": "1",
+            "length": "1810",
+            "type": "rna",
+            "weight": "583614.0",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "18S ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ae",
+            "RNA": true,
+            "entityNr": "2",
+            "length": "75",
+            "type": "rna",
+            "weight": "24135.3",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "P-site tRNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Af",
+            "RNA": true,
+            "entityNr": "3",
+            "length": "11",
+            "type": "rna",
+            "weight": "3498.18",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "5'-R(*AP*AP*AP*AP*GP*AP*CP*UP*UP*CP*A)-3'"
+            },
+            "details": {
+                "desc": "messenger RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Aa",
+            "RNA": true,
+            "entityNr": "84",
+            "length": "3391",
+            "type": "rna",
+            "weight": "1097290.0",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ac",
+            "RNA": true,
+            "entityNr": "85",
+            "length": "160",
+            "type": "rna",
+            "weight": "51535.6",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "5.8S ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ab",
+            "RNA": true,
+            "entityNr": "86",
+            "length": "120",
+            "type": "rna",
+            "weight": "38717.0",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "5S ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Bg",
+            "name": "G protein beta subunit",
+            "entityNr": "10",
+            "length": "380",
+            "type": "protein",
+            "weight": "41794.8",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "RACK1"
+            },
+            "accession": "Q8LNY6",
+            "pfamGroups": [
+                "PF00400"
+            ],
+            "nomenclature": [
+                "RACK1"
+            ]
+        },
+        {
+            "chainid": "BD",
+            "name": "Putative 40S ribosomal protein S3",
+            "entityNr": "11",
+            "length": "208",
+            "type": "protein",
+            "weight": "23255.1",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S3"
+            },
+            "accession": "Q8L804",
+            "pfamGroups": [
+                "PF07650",
+                "PF00189"
+            ],
+            "nomenclature": [
+                "uS3"
+            ]
+        },
+        {
+            "chainid": "BE",
+            "entityNr": "12",
+            "length": "265",
+            "type": "protein",
+            "weight": "29922.0",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S4E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BF",
+            "entityNr": "13",
+            "length": "191",
+            "type": "protein",
+            "weight": "21249.5",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S7"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BQ",
+            "entityNr": "14",
+            "length": "149",
+            "type": "protein",
+            "weight": "16853.0",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S9"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BU",
+            "entityNr": "15",
+            "length": "128",
+            "type": "protein",
+            "weight": "14070.3",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S10"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BO",
+            "entityNr": "16",
+            "length": "151",
+            "type": "protein",
+            "weight": "16351.8",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S11"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BS",
+            "name": "Putative ribosomal protein S18",
+            "entityNr": "17",
+            "length": "152",
+            "type": "protein",
+            "weight": "17702.7",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S13"
+            },
+            "accession": "Q8L806",
+            "pfamGroups": [
+                "PF00416"
+            ],
+            "nomenclature": [
+                "uS13"
+            ]
+        },
+        {
+            "chainid": "BN",
+            "entityNr": "18",
+            "length": "151",
+            "type": "protein",
+            "weight": "17152.4",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S15"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BL",
+            "entityNr": "19",
+            "length": "160",
+            "type": "protein",
+            "weight": "18027.4",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S17"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BT",
+            "entityNr": "20",
+            "length": "146",
+            "type": "protein",
+            "weight": "16414.8",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S19E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BP",
+            "entityNr": "21",
+            "length": "154",
+            "type": "protein",
+            "weight": "17449.5",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S19"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BZ",
+            "entityNr": "22",
+            "length": "108",
+            "type": "protein",
+            "weight": "11944.9",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S25E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Bc",
+            "name": "S28 ribosomal protein",
+            "entityNr": "23",
+            "length": "65",
+            "type": "protein",
+            "weight": "7477.79",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S28E"
+            },
+            "accession": "Q7X9K4",
+            "pfamGroups": [
+                "PF01200"
+            ],
+            "nomenclature": [
+                "eS28"
+            ]
+        },
+        {
+            "chainid": "BW",
+            "entityNr": "24",
+            "length": "130",
+            "type": "protein",
+            "weight": "14825.4",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S8"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Bd",
+            "name": "40S ribosomal protein S29",
+            "entityNr": "25",
+            "length": "56",
+            "type": "protein",
+            "weight": "6392.44",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S14"
+            },
+            "accession": "Q5I7K3",
+            "pfamGroups": [
+                "PF00253"
+            ],
+            "nomenclature": [
+                "uS14"
+            ]
+        },
+        {
+            "chainid": "Bb",
+            "entityNr": "26",
+            "length": "86",
+            "type": "protein",
+            "weight": "9542.14",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S27E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Be",
+            "entityNr": "27",
+            "length": "62",
+            "type": "protein",
+            "weight": "6953.25",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S30E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BA",
+            "entityNr": "28",
+            "length": "260",
+            "type": "protein",
+            "weight": "28723.6",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S2"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BR",
+            "entityNr": "29",
+            "length": "141",
+            "type": "protein",
+            "weight": "16461.1",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S17E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BB",
+            "entityNr": "30",
+            "length": "262",
+            "type": "protein",
+            "weight": "29781.7",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S1E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BV",
+            "entityNr": "31",
+            "length": "82",
+            "type": "protein",
+            "weight": "9266.37",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S21E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ba",
+            "entityNr": "32",
+            "length": "133",
+            "type": "protein",
+            "weight": "15029.4",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S26E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BJ",
+            "entityNr": "33",
+            "length": "195",
+            "type": "protein",
+            "weight": "22629.2",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S4"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BC",
+            "entityNr": "34",
+            "length": "263",
+            "type": "protein",
+            "weight": "28859.6",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S5"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BG",
+            "entityNr": "35",
+            "length": "245",
+            "type": "protein",
+            "weight": "28107.0",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S6"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BH",
+            "name": "40S ribosomal protein S7",
+            "entityNr": "36",
+            "length": "189",
+            "type": "protein",
+            "weight": "21902.4",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S7E"
+            },
+            "accession": "Q5I7K2",
+            "pfamGroups": [
+                "PF01251"
+            ],
+            "nomenclature": [
+                "eS7"
+            ]
+        },
+        {
+            "chainid": "CG",
+            "entityNr": "37",
+            "length": "257",
+            "type": "protein",
+            "weight": "29236.9",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L8E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CT",
+            "name": "60S ribosomal protein L21",
+            "entityNr": "38",
+            "length": "164",
+            "type": "protein",
+            "weight": "18719.8",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L21E"
+            },
+            "accession": "F4YWL9",
+            "pfamGroups": [
+                "PF01157"
+            ],
+            "nomenclature": [
+                "eL21"
+            ]
+        },
+        {
+            "chainid": "CZ",
+            "entityNr": "39",
+            "length": "136",
+            "type": "protein",
+            "weight": "15508.6",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L27E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BY",
+            "entityNr": "4",
+            "length": "138",
+            "type": "protein",
+            "weight": "15788.7",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S24E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cz",
+            "name": "Ribosomal protein",
+            "entityNr": "40",
+            "length": "216",
+            "type": "protein",
+            "weight": "24604.2",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L1"
+            },
+            "accession": "Q5I7L3",
+            "pfamGroups": [
+                "PF00687"
+            ],
+            "nomenclature": [
+                "uL1"
+            ]
+        },
+        {
+            "chainid": "CA",
+            "entityNr": "41",
+            "length": "261",
+            "type": "protein",
+            "weight": "28309.7",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L2"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CJ",
+            "name": "Ribosomal protein L11",
+            "entityNr": "42",
+            "length": "180",
+            "type": "protein",
+            "weight": "20727.1",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L5"
+            },
+            "accession": "Q5I7L2",
+            "pfamGroups": [
+                "PF00673",
+                "PF00281"
+            ],
+            "nomenclature": [
+                "uL5"
+            ]
+        },
+        {
+            "chainid": "CH",
+            "entityNr": "43",
+            "length": "190",
+            "type": "protein",
+            "weight": "21382.8",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L6"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CV",
+            "name": "Ribosomal protein L17",
+            "entityNr": "44",
+            "length": "140",
+            "type": "protein",
+            "weight": "15040.9",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L14"
+            },
+            "accession": "Q5I7K4",
+            "pfamGroups": [
+                "PF00238"
+            ],
+            "nomenclature": [
+                "uL14"
+            ]
+        },
+        {
+            "chainid": "CN",
+            "entityNr": "45",
+            "length": "200",
+            "type": "protein",
+            "weight": "23760.8",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L15E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ca",
+            "entityNr": "46",
+            "length": "144",
+            "type": "protein",
+            "weight": "15834.8",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L15"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CQ",
+            "name": "Ribosomal protein L18",
+            "entityNr": "47",
+            "length": "188",
+            "type": "protein",
+            "weight": "21379.3",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L18E"
+            },
+            "accession": "Q5I7L0",
+            "pfamGroups": [
+                "PF17135"
+            ],
+            "nomenclature": [
+                "eL18"
+            ]
+        },
+        {
+            "chainid": "CD",
+            "entityNr": "48",
+            "length": "304",
+            "type": "protein",
+            "weight": "34723.2",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L18"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CR",
+            "name": "Ribosomal protein L19",
+            "entityNr": "49",
+            "length": "209",
+            "type": "protein",
+            "weight": "24485.9",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L19E"
+            },
+            "accession": "Q7XY20",
+            "pfamGroups": [
+                "PF01280"
+            ],
+            "nomenclature": [
+                "eL19"
+            ]
+        },
+        {
+            "chainid": "BI",
+            "entityNr": "5",
+            "length": "220",
+            "type": "protein",
+            "weight": "24883.6",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S8E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CP",
+            "entityNr": "50",
+            "length": "171",
+            "type": "protein",
+            "weight": "19536.5",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L22"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CX",
+            "entityNr": "51",
+            "length": "152",
+            "type": "protein",
+            "weight": "17091.4",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L23"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CW",
+            "entityNr": "52",
+            "length": "162",
+            "type": "protein",
+            "weight": "18504.9",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L24E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CY",
+            "entityNr": "53",
+            "length": "150",
+            "type": "protein",
+            "weight": "16971.8",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L24"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cr",
+            "entityNr": "54",
+            "length": "147",
+            "type": "protein",
+            "weight": "16639.4",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L28E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cc",
+            "name": "60S ribosomal protein L30",
+            "entityNr": "55",
+            "length": "112",
+            "type": "protein",
+            "weight": "12294.4",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L30E"
+            },
+            "accession": "Q5I7K9",
+            "pfamGroups": [
+                "PF01248"
+            ],
+            "nomenclature": [
+                "eL30",
+                "eS12"
+            ]
+        },
+        {
+            "chainid": "Cd",
+            "entityNr": "56",
+            "length": "123",
+            "type": "protein",
+            "weight": "14092.3",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L31E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ce",
+            "entityNr": "57",
+            "length": "133",
+            "type": "protein",
+            "weight": "15740.7",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L32E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cj",
+            "entityNr": "58",
+            "length": "94",
+            "type": "protein",
+            "weight": "10823.7",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L37E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cl",
+            "name": "Ribosomal protein L39",
+            "entityNr": "59",
+            "length": "51",
+            "type": "protein",
+            "weight": "6528.79",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L39E"
+            },
+            "accession": "Q5I7K7",
+            "pfamGroups": [
+                "PF00832"
+            ],
+            "nomenclature": [
+                "eL39"
+            ]
+        },
+        {
+            "chainid": "BK",
+            "entityNr": "6",
+            "length": "183",
+            "type": "protein",
+            "weight": "20292.8",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S10E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Co",
+            "entityNr": "60",
+            "length": "105",
+            "type": "protein",
+            "weight": "12174.4",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L44E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CM",
+            "entityNr": "61",
+            "length": "134",
+            "type": "protein",
+            "weight": "15418.4",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L14E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CS",
+            "entityNr": "62",
+            "length": "178",
+            "type": "protein",
+            "weight": "21444.2",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L20"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CU",
+            "entityNr": "63",
+            "length": "130",
+            "type": "protein",
+            "weight": "14443.6",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L22E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ci",
+            "name": "60S ribosomal protein L36",
+            "entityNr": "64",
+            "length": "112",
+            "type": "protein",
+            "weight": "12563.0",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L36E"
+            },
+            "accession": "Q5I7L5",
+            "pfamGroups": [
+                "PF01158"
+            ],
+            "nomenclature": [
+                "eL36"
+            ]
+        },
+        {
+            "chainid": "CK",
+            "entityNr": "65",
+            "length": "166",
+            "type": "protein",
+            "weight": "17775.7",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L11"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cu",
+            "name": "Ribosomal protein P1",
+            "entityNr": "66",
+            "length": "110",
+            "type": "protein",
+            "weight": "11204.6",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein P1"
+            },
+            "accession": "Q5I7K5",
+            "pfamGroups": [
+                "PF00428"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cv",
+            "name": "Ribosomal protein P1",
+            "entityNr": "66",
+            "length": "110",
+            "type": "protein",
+            "weight": "11204.6",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein P1"
+            },
+            "accession": "Q5I7K5",
+            "pfamGroups": [
+                "PF00428"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cs",
+            "entityNr": "67",
+            "length": "113",
+            "type": "protein",
+            "weight": "11597.0",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "Acidic ribosomal protein P2"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ct",
+            "entityNr": "67",
+            "length": "113",
+            "type": "protein",
+            "weight": "11597.0",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "Acidic ribosomal protein P2"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ch",
+            "name": "60S ribosomal protein L35",
+            "entityNr": "68",
+            "length": "124",
+            "type": "protein",
+            "weight": "14401.0",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L29"
+            },
+            "accession": "Q8L805",
+            "pfamGroups": [
+                "PF00831"
+            ],
+            "nomenclature": [
+                "uL29"
+            ]
+        },
+        {
+            "chainid": "CF",
+            "name": "Ribosomal protein L7",
+            "entityNr": "69",
+            "length": "244",
+            "type": "protein",
+            "weight": "28175.1",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L30"
+            },
+            "accession": "Q5I7K6",
+            "pfamGroups": [
+                "PF08079",
+                "PF00327"
+            ],
+            "nomenclature": [
+                "uL30"
+            ]
+        },
+        {
+            "chainid": "BM",
+            "entityNr": "7",
+            "length": "171",
+            "type": "protein",
+            "weight": "18404.4",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S12E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cq",
+            "entityNr": "70",
+            "length": "319",
+            "type": "protein",
+            "weight": "34418.6",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S acidic ribosomal protein P0"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CB",
+            "name": "Ribosomal protein L3A-1",
+            "entityNr": "71",
+            "length": "389",
+            "type": "protein",
+            "weight": "44720.4",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L3"
+            },
+            "accession": "Q7X744",
+            "pfamGroups": [
+                "PF00297"
+            ],
+            "nomenclature": [
+                "uL3"
+            ]
+        },
+        {
+            "chainid": "CC",
+            "entityNr": "72",
+            "length": "405",
+            "type": "protein",
+            "weight": "44822.0",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L4"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CO",
+            "name": "Ribosomal protein L13a",
+            "entityNr": "73",
+            "length": "206",
+            "type": "protein",
+            "weight": "23581.2",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L13"
+            },
+            "accession": "Q5I7L1",
+            "pfamGroups": [
+                "PF00572"
+            ],
+            "nomenclature": [
+                "uL13"
+            ]
+        },
+        {
+            "chainid": "Cp",
+            "name": "60S ribosomal protein L37a, expressed",
+            "entityNr": "74",
+            "length": "92",
+            "type": "protein",
+            "weight": "10266.1",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L43E"
+            },
+            "accession": "D8L9P6",
+            "pfamGroups": [
+                "PF01780"
+            ],
+            "nomenclature": [
+                "eL43"
+            ]
+        },
+        {
+            "chainid": "CI",
+            "entityNr": "75",
+            "length": "224",
+            "type": "protein",
+            "weight": "25400.8",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L16"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cn",
+            "entityNr": "76",
+            "length": "25",
+            "type": "protein",
+            "weight": "3445.44",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L41E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cm",
+            "entityNr": "77",
+            "length": "53",
+            "type": "protein",
+            "weight": "6295.64",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L40E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CL",
+            "entityNr": "78",
+            "length": "208",
+            "type": "protein",
+            "weight": "24070.2",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L13E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "CE",
+            "name": "60S ribosomal protein L6",
+            "entityNr": "79",
+            "length": "219",
+            "type": "protein",
+            "weight": "24589.8",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L6E"
+            },
+            "accession": "Q5I7L4",
+            "pfamGroups": [
+                "PF01159"
+            ],
+            "nomenclature": [
+                "eL6"
+            ]
+        },
+        {
+            "chainid": "Bf",
+            "entityNr": "8",
+            "length": "155",
+            "type": "protein",
+            "weight": "17720.7",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S31e"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cf",
+            "entityNr": "80",
+            "length": "111",
+            "type": "protein",
+            "weight": "12684.7",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L33E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Ck",
+            "entityNr": "81",
+            "length": "69",
+            "type": "protein",
+            "weight": "8053.6",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L38E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cb",
+            "entityNr": "82",
+            "length": "60",
+            "type": "protein",
+            "weight": "7069.02",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L29E"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "Cg",
+            "name": "Ribosomal protein l34",
+            "entityNr": "83",
+            "length": "119",
+            "type": "protein",
+            "weight": "13808.4",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L34E"
+            },
+            "accession": "Q5I7K8",
+            "pfamGroups": [
+                "PF01199"
+            ],
+            "nomenclature": [
+                "eL34"
+            ]
+        },
+        {
+            "chainid": "BX",
+            "entityNr": "9",
+            "length": "142",
+            "type": "protein",
+            "weight": "15696.5",
+            "Taxonomy": {
+                "name": "Triticum aestivum",
+                "id": "4565"
+            },
+            "polymerDescription": {
+                "description": "40S ribosomal protein S12"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        }
+    ]
+}

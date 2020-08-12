@@ -1,0 +1,1232 @@
+{
+    "metadata": {
+        "pdbid": "5MYJ",
+        "rnacount": 3,
+        "proteincount": 48,
+        "rnanames": [
+            "AA",
+            "BA",
+            "BB"
+        ],
+        "noaccession_proteins": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "accession_proteins": [
+            "AJ",
+            "AK",
+            "AL",
+            "AM",
+            "AN",
+            "AO",
+            "AP",
+            "AQ",
+            "AR",
+            "AS",
+            "AB",
+            "AT",
+            "AU",
+            "B0",
+            "B1",
+            "B2",
+            "B3",
+            "B4",
+            "B5",
+            "B6",
+            "B7",
+            "AC",
+            "B8",
+            "BD",
+            "BE",
+            "BF",
+            "BG",
+            "BH",
+            "BM",
+            "BN",
+            "AD",
+            "BO",
+            "BP",
+            "BQ",
+            "BR",
+            "BS",
+            "BT",
+            "BU",
+            "BV",
+            "BW",
+            "BX",
+            "AE",
+            "BZ",
+            "A",
+            "AF",
+            "AG",
+            "AH",
+            "AI"
+        ],
+        "nomenclatureCoverage": 0.9375
+    },
+    "polymers": [
+        {
+            "chainid": "AA",
+            "RNA": true,
+            "entityNr": "1",
+            "length": "1535",
+            "type": "rna",
+            "weight": "497142.0",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "16S ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BA",
+            "RNA": true,
+            "entityNr": "31",
+            "length": "2897",
+            "type": "rna",
+            "weight": "938591.0",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "23S ribosomal RNA"
+            },
+            "mutation": {
+                "desc": "C135U, G376A, G1239A, U1489C"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BB",
+            "RNA": true,
+            "entityNr": "32",
+            "length": "115",
+            "type": "rna",
+            "weight": "37066.0",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "5S ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AJ",
+            "name": "30S ribosomal protein S10",
+            "entityNr": "10",
+            "length": "102",
+            "type": "protein",
+            "weight": "11764.8",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S10"
+            },
+            "accession": "A2RNQ6",
+            "pfamGroups": [
+                "PF00338"
+            ],
+            "nomenclature": [
+                "uS10"
+            ]
+        },
+        {
+            "chainid": "AK",
+            "name": "30S ribosomal protein S11",
+            "entityNr": "11",
+            "length": "127",
+            "type": "protein",
+            "weight": "13310.4",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S11"
+            },
+            "accession": "A2RNM8",
+            "pfamGroups": [
+                "PF00411"
+            ],
+            "nomenclature": [
+                "uS11"
+            ]
+        },
+        {
+            "chainid": "AL",
+            "name": "30S ribosomal protein S12",
+            "entityNr": "12",
+            "length": "137",
+            "type": "protein",
+            "weight": "15157.9",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S12"
+            },
+            "accession": "A2RP74",
+            "pfamGroups": [
+                "PF00164"
+            ],
+            "nomenclature": [
+                "uS12"
+            ]
+        },
+        {
+            "chainid": "AM",
+            "name": "30S ribosomal protein S13",
+            "entityNr": "13",
+            "length": "121",
+            "type": "protein",
+            "weight": "13519.7",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S13"
+            },
+            "accession": "A2RNM9",
+            "pfamGroups": [
+                "PF00416"
+            ],
+            "nomenclature": [
+                "uS13"
+            ]
+        },
+        {
+            "chainid": "AN",
+            "name": "30S ribosomal protein S14 type Z",
+            "entityNr": "14",
+            "length": "61",
+            "type": "protein",
+            "weight": "7151.61",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S14 type Z"
+            },
+            "accession": "A2RNP2",
+            "pfamGroups": [
+                "PF00253"
+            ],
+            "nomenclature": [
+                "uS14"
+            ]
+        },
+        {
+            "chainid": "AO",
+            "name": "30S ribosomal protein S15",
+            "entityNr": "15",
+            "length": "89",
+            "type": "protein",
+            "weight": "10367.0",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S15"
+            },
+            "accession": "A2RMV9",
+            "pfamGroups": [
+                "PF00312"
+            ],
+            "nomenclature": [
+                "uS15"
+            ]
+        },
+        {
+            "chainid": "AP",
+            "name": "30S ribosomal protein S16",
+            "entityNr": "16",
+            "length": "90",
+            "type": "protein",
+            "weight": "10270.9",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S16"
+            },
+            "accession": "A2RJS1",
+            "pfamGroups": [
+                "PF00886"
+            ],
+            "nomenclature": [
+                "bS16"
+            ]
+        },
+        {
+            "chainid": "AQ",
+            "name": "30S ribosomal protein S17",
+            "entityNr": "17",
+            "length": "86",
+            "type": "protein",
+            "weight": "10166.8",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S17"
+            },
+            "accession": "A2RNP6",
+            "pfamGroups": [
+                "PF00366"
+            ],
+            "nomenclature": [
+                "uS17"
+            ]
+        },
+        {
+            "chainid": "AR",
+            "name": "30S ribosomal protein S18",
+            "entityNr": "18",
+            "length": "81",
+            "type": "protein",
+            "weight": "9392.09",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S18"
+            },
+            "accession": "A2RNZ2",
+            "pfamGroups": [
+                "PF01084"
+            ],
+            "nomenclature": [
+                "bS18"
+            ]
+        },
+        {
+            "chainid": "AS",
+            "name": "30S ribosomal protein S19",
+            "entityNr": "19",
+            "length": "92",
+            "type": "protein",
+            "weight": "10595.2",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S19"
+            },
+            "accession": "A2RNQ1",
+            "pfamGroups": [
+                "PF00203"
+            ],
+            "nomenclature": [
+                "uS19"
+            ]
+        },
+        {
+            "chainid": "AB",
+            "name": "30S ribosomal protein S2",
+            "entityNr": "2",
+            "length": "255",
+            "type": "protein",
+            "weight": "28589.8",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S2"
+            },
+            "accession": "A2RNV0",
+            "pfamGroups": [
+                "PF00318"
+            ],
+            "nomenclature": [
+                "uS2"
+            ]
+        },
+        {
+            "chainid": "AT",
+            "name": "30S ribosomal protein S20",
+            "entityNr": "20",
+            "length": "77",
+            "type": "protein",
+            "weight": "8384.74",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S20"
+            },
+            "accession": "A2RMG0",
+            "pfamGroups": [
+                "PF01649"
+            ],
+            "nomenclature": [
+                "bS20"
+            ]
+        },
+        {
+            "chainid": "AU",
+            "name": "30S ribosomal protein S21",
+            "entityNr": "21",
+            "length": "58",
+            "type": "protein",
+            "weight": "7041.31",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S21"
+            },
+            "accession": "A2RHW9",
+            "pfamGroups": [
+                "PF01165"
+            ],
+            "nomenclature": [
+                "bS21"
+            ]
+        },
+        {
+            "chainid": "B0",
+            "name": "50S ribosomal protein L28",
+            "entityNr": "22",
+            "length": "64",
+            "type": "protein",
+            "weight": "7187.42",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L28"
+            },
+            "accession": "A2RHS3",
+            "pfamGroups": [
+                "PF00830"
+            ],
+            "nomenclature": [
+                "bL28"
+            ]
+        },
+        {
+            "chainid": "B1",
+            "name": "50S ribosomal protein L29",
+            "entityNr": "23",
+            "length": "69",
+            "type": "protein",
+            "weight": "7874.18",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L29"
+            },
+            "accession": "A2RNP7",
+            "pfamGroups": [
+                "PF00831"
+            ],
+            "nomenclature": [
+                "uL29"
+            ]
+        },
+        {
+            "chainid": "B2",
+            "name": "50S ribosomal protein L30",
+            "entityNr": "24",
+            "length": "59",
+            "type": "protein",
+            "weight": "6202.4",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L30"
+            },
+            "accession": "A2RNN5",
+            "pfamGroups": [
+                "PF00327"
+            ],
+            "nomenclature": [
+                "uL30"
+            ]
+        },
+        {
+            "chainid": "B3",
+            "name": "50S ribosomal protein L31 type B",
+            "entityNr": "25",
+            "length": "81",
+            "type": "protein",
+            "weight": "9366.48",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L31 type B"
+            },
+            "accession": "A2RJP7",
+            "pfamGroups": [
+                "PF01197"
+            ],
+            "nomenclature": [
+                "bL31"
+            ]
+        },
+        {
+            "chainid": "B4",
+            "name": "50S ribosomal protein L32",
+            "entityNr": "26",
+            "length": "57",
+            "type": "protein",
+            "weight": "6681.63",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L32"
+            },
+            "accession": "A2RHH0",
+            "pfamGroups": [
+                "PF01783"
+            ],
+            "nomenclature": [
+                "bL32"
+            ]
+        },
+        {
+            "chainid": "B5",
+            "name": "50S ribosomal protein L33 3",
+            "entityNr": "27",
+            "length": "49",
+            "type": "protein",
+            "weight": "5567.65",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L33 3"
+            },
+            "accession": "A2RNR2",
+            "pfamGroups": [
+                "PF00471"
+            ],
+            "nomenclature": [
+                "bL33"
+            ]
+        },
+        {
+            "chainid": "B6",
+            "name": "50S ribosomal protein L34",
+            "entityNr": "28",
+            "length": "44",
+            "type": "protein",
+            "weight": "5200.21",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L34"
+            },
+            "accession": "A2RHL6",
+            "pfamGroups": [
+                "PF00468"
+            ],
+            "nomenclature": [
+                "bL34"
+            ]
+        },
+        {
+            "chainid": "B7",
+            "name": "50S ribosomal protein L35",
+            "entityNr": "29",
+            "length": "66",
+            "type": "protein",
+            "weight": "7844.42",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L35"
+            },
+            "accession": "A2RMR2",
+            "pfamGroups": [
+                "PF01632"
+            ],
+            "nomenclature": [
+                "bL35"
+            ]
+        },
+        {
+            "chainid": "AC",
+            "name": "30S ribosomal protein S3",
+            "entityNr": "3",
+            "length": "217",
+            "type": "protein",
+            "weight": "24058.8",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S3"
+            },
+            "accession": "A2RNP9",
+            "pfamGroups": [
+                "PF07650",
+                "PF00189"
+            ],
+            "nomenclature": [
+                "uS3"
+            ]
+        },
+        {
+            "chainid": "B8",
+            "name": "50S ribosomal protein L36",
+            "entityNr": "30",
+            "length": "38",
+            "type": "protein",
+            "weight": "4432.45",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L36"
+            },
+            "accession": "A2RNN0",
+            "pfamGroups": [
+                "PF00444"
+            ],
+            "nomenclature": [
+                "bL36"
+            ]
+        },
+        {
+            "chainid": "BD",
+            "name": "50S ribosomal protein L2",
+            "entityNr": "33",
+            "length": "276",
+            "type": "protein",
+            "weight": "29641.3",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L2"
+            },
+            "accession": "A2RNQ2",
+            "pfamGroups": [
+                "PF03947",
+                "PF00181"
+            ],
+            "nomenclature": [
+                "uL2"
+            ]
+        },
+        {
+            "chainid": "BE",
+            "name": "50S ribosomal protein L3",
+            "entityNr": "34",
+            "length": "207",
+            "type": "protein",
+            "weight": "21956.6",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L3"
+            },
+            "accession": "A2RNQ5",
+            "pfamGroups": [
+                "PF00297"
+            ],
+            "nomenclature": [
+                "uL3"
+            ]
+        },
+        {
+            "chainid": "BF",
+            "name": "50S ribosomal protein L4",
+            "entityNr": "35",
+            "length": "208",
+            "type": "protein",
+            "weight": "22393.5",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L4"
+            },
+            "accession": "A2RNQ4",
+            "pfamGroups": [
+                "PF00573"
+            ],
+            "nomenclature": [
+                "uL4"
+            ]
+        },
+        {
+            "chainid": "BG",
+            "name": "50S ribosomal protein L5",
+            "entityNr": "36",
+            "length": "180",
+            "type": "protein",
+            "weight": "20034.3",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L5"
+            },
+            "accession": "A2RNP3",
+            "pfamGroups": [
+                "PF00673",
+                "PF00281"
+            ],
+            "nomenclature": [
+                "uL5"
+            ]
+        },
+        {
+            "chainid": "BH",
+            "name": "50S ribosomal protein L6",
+            "entityNr": "37",
+            "length": "178",
+            "type": "protein",
+            "weight": "19313.3",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L6"
+            },
+            "accession": "A2RNN8",
+            "pfamGroups": [
+                "PF00347"
+            ],
+            "nomenclature": [
+                "uL6"
+            ]
+        },
+        {
+            "chainid": "BM",
+            "name": "50S ribosomal protein L13",
+            "entityNr": "38",
+            "length": "148",
+            "type": "protein",
+            "weight": "16192.9",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L13"
+            },
+            "accession": "A2RP62",
+            "pfamGroups": [
+                "PF00572"
+            ],
+            "nomenclature": [
+                "uL13"
+            ]
+        },
+        {
+            "chainid": "BN",
+            "name": "50S ribosomal protein L14",
+            "entityNr": "39",
+            "length": "122",
+            "type": "protein",
+            "weight": "12944.1",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L14"
+            },
+            "accession": "A2RNP5",
+            "pfamGroups": [
+                "PF00238"
+            ],
+            "nomenclature": [
+                "uL14"
+            ]
+        },
+        {
+            "chainid": "AD",
+            "name": "30S ribosomal protein S4",
+            "entityNr": "4",
+            "length": "203",
+            "type": "protein",
+            "weight": "23232.6",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S4"
+            },
+            "accession": "A2RI10",
+            "pfamGroups": [
+                "PF01479",
+                "PF00163"
+            ],
+            "nomenclature": [
+                "uS4"
+            ]
+        },
+        {
+            "chainid": "BO",
+            "name": "50S ribosomal protein L15",
+            "entityNr": "40",
+            "length": "147",
+            "type": "protein",
+            "weight": "15376.6",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L15"
+            },
+            "accession": "A2RNN4",
+            "pfamGroups": [
+                "PF00828"
+            ],
+            "nomenclature": [
+                "uL15"
+            ]
+        },
+        {
+            "chainid": "BP",
+            "name": "50S ribosomal protein L16",
+            "entityNr": "41",
+            "length": "137",
+            "type": "protein",
+            "weight": "15375.1",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L16"
+            },
+            "accession": "A2RNP8",
+            "pfamGroups": [
+                "PF00252"
+            ],
+            "nomenclature": [
+                "uL16"
+            ]
+        },
+        {
+            "chainid": "BQ",
+            "name": "50S ribosomal protein L17",
+            "entityNr": "42",
+            "length": "126",
+            "type": "protein",
+            "weight": "14280.5",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L17"
+            },
+            "accession": "A2RNM6",
+            "pfamGroups": [
+                "PF01196"
+            ],
+            "nomenclature": [
+                "bL17"
+            ]
+        },
+        {
+            "chainid": "BR",
+            "name": "50S ribosomal protein L18",
+            "entityNr": "43",
+            "length": "115",
+            "type": "protein",
+            "weight": "12426.2",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L18"
+            },
+            "accession": "A2RNN7",
+            "pfamGroups": [
+                "PF00861"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "BS",
+            "name": "50S ribosomal protein L19",
+            "entityNr": "44",
+            "length": "114",
+            "type": "protein",
+            "weight": "13129.3",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L19"
+            },
+            "accession": "A2RLS5",
+            "pfamGroups": [
+                "PF01245"
+            ],
+            "nomenclature": [
+                "bL19"
+            ]
+        },
+        {
+            "chainid": "BT",
+            "name": "50S ribosomal protein L20",
+            "entityNr": "45",
+            "length": "119",
+            "type": "protein",
+            "weight": "13726.4",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L20"
+            },
+            "accession": "A2RMR1",
+            "pfamGroups": [
+                "PF00453"
+            ],
+            "nomenclature": [
+                "bL20"
+            ]
+        },
+        {
+            "chainid": "BU",
+            "name": "50S ribosomal protein L21",
+            "entityNr": "46",
+            "length": "104",
+            "type": "protein",
+            "weight": "11444.2",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L21"
+            },
+            "accession": "A2RLA4",
+            "pfamGroups": [
+                "PF00829"
+            ],
+            "nomenclature": [
+                "bL21"
+            ]
+        },
+        {
+            "chainid": "BV",
+            "name": "50S ribosomal protein L22",
+            "entityNr": "47",
+            "length": "115",
+            "type": "protein",
+            "weight": "12490.5",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L22"
+            },
+            "accession": "A2RNQ0",
+            "pfamGroups": [
+                "PF00237"
+            ],
+            "nomenclature": [
+                "uL22"
+            ]
+        },
+        {
+            "chainid": "BW",
+            "name": "50S ribosomal protein L23",
+            "entityNr": "48",
+            "length": "97",
+            "type": "protein",
+            "weight": "10819.6",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L23"
+            },
+            "accession": "A2RNQ3",
+            "pfamGroups": [
+                "PF00276"
+            ],
+            "nomenclature": [
+                "uL23"
+            ]
+        },
+        {
+            "chainid": "BX",
+            "name": "50S ribosomal protein L24",
+            "entityNr": "49",
+            "length": "101",
+            "type": "protein",
+            "weight": "10897.8",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L24"
+            },
+            "accession": "A2RNP4",
+            "pfamGroups": [
+                "PF17136",
+                "PF00467"
+            ],
+            "nomenclature": [
+                "uL24",
+                "eS4"
+            ]
+        },
+        {
+            "chainid": "AE",
+            "name": "30S ribosomal protein S5",
+            "entityNr": "5",
+            "length": "168",
+            "type": "protein",
+            "weight": "17609.3",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S5"
+            },
+            "accession": "A2RNN6",
+            "pfamGroups": [
+                "PF03719",
+                "PF00333"
+            ],
+            "nomenclature": [
+                "uS5"
+            ]
+        },
+        {
+            "chainid": "BZ",
+            "name": "50S ribosomal protein L27",
+            "entityNr": "50",
+            "length": "94",
+            "type": "protein",
+            "weight": "10053.5",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "50S ribosomal protein L27"
+            },
+            "accession": "A2RLA2",
+            "pfamGroups": [
+                "PF01016"
+            ],
+            "nomenclature": [
+                "bL27"
+            ]
+        },
+        {
+            "chainid": "A",
+            "name": "Ribosome hibernation promotion factor",
+            "entityNr": "51",
+            "length": "185",
+            "type": "protein",
+            "weight": "21346.0",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "synonym": {
+                "name": "HPF,Lactococcus lactis hibernation promotion factor,LIHPF"
+            },
+            "polymerDescription": {
+                "description": "16S ribosomal RNA"
+            },
+            "accession": "A2RIX0",
+            "pfamGroups": [
+                "PF16321",
+                "PF02482"
+            ],
+            "nomenclature": []
+        },
+        {
+            "chainid": "AF",
+            "name": "30S ribosomal protein S6",
+            "entityNr": "6",
+            "length": "97",
+            "type": "protein",
+            "weight": "11321.8",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S6"
+            },
+            "accession": "A2RNZ4",
+            "pfamGroups": [
+                "PF01250"
+            ],
+            "nomenclature": [
+                "bS6"
+            ]
+        },
+        {
+            "chainid": "AG",
+            "name": "30S ribosomal protein S7",
+            "entityNr": "7",
+            "length": "155",
+            "type": "protein",
+            "weight": "17713.4",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S7"
+            },
+            "accession": "A2RP73",
+            "pfamGroups": [
+                "PF00177"
+            ],
+            "nomenclature": [
+                "uS7"
+            ]
+        },
+        {
+            "chainid": "AH",
+            "name": "30S ribosomal protein S8",
+            "entityNr": "8",
+            "length": "132",
+            "type": "protein",
+            "weight": "14692.1",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S8"
+            },
+            "accession": "A2RNN9",
+            "pfamGroups": [
+                "PF00410"
+            ],
+            "nomenclature": [
+                "uS8"
+            ]
+        },
+        {
+            "chainid": "AI",
+            "name": "30S ribosomal protein S9",
+            "entityNr": "9",
+            "length": "130",
+            "type": "protein",
+            "weight": "14124.3",
+            "Taxonomy": {
+                "name": "Lactococcus lactis",
+                "id": "1358"
+            },
+            "polymerDescription": {
+                "description": "30S ribosomal protein S9"
+            },
+            "accession": "A2RP61",
+            "pfamGroups": [
+                "PF00380"
+            ],
+            "nomenclature": [
+                "uS9"
+            ]
+        }
+    ]
+}

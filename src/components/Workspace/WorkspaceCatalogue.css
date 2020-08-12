@@ -1,0 +1,25 @@
+.workspace-catalogue{
+  padding: 10px;
+  display: flex;
+  grid-template-columns: 1fr 1fr;
+
+  color:white;
+  outline: 1px solid white;
+}
+.workspace-available {
+  outline: 1px solid green;
+  width:400px
+}
+.workspace-selected {
+  outline: 1px solid red;
+  width:400px
+}
+
+
+.struct-modal{
+  width: 120px;
+  cursor: pointer;
+  outline: 1px solid cyan;
+
+}
+

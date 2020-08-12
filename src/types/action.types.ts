@@ -1,3 +1,4 @@
+// -⋯⋯⋅⋱ DATA Action types⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯⋯⋯⋯⋅⋱⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯⋯⋯⋅⋱⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯
 export const REQUEST_HOMOLOGS_ERR = "REQUEST_HOMOLOGS_ERR";
 export const REQUEST_HOMOLOGS_SUCCESS = "REQUEST_HOMOLOGS_SUCCESS";
 export const REQUEST_HOMOLOGS_GO = "REQUEST_HOMOLOGS_GO";
@@ -40,12 +41,34 @@ export type StructActionTypes =
 
 export type DataActionTypes = HomologyActionTypes | StructActionTypes;
 
-// -⋯⋯⋅⋱UI Action types⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯⋯⋯⋯⋅⋱⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯⋯⋯⋅⋱⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯
+// -⋯⋯⋅⋱ DATA Action types⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯⋯⋯⋯⋅⋱⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯⋯⋯⋅⋱⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯
 
+// -⋯⋯⋅⋱ UI Action types⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯⋯⋯⋯⋅⋱⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯⋯⋯⋅⋱⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯
 export const TOGGLE_TOOLGROUP_BY_ID = "TOGGLE_TOOLGROUP_BY_ID";
 export interface toggleToolgroupById {
   type: typeof TOGGLE_TOOLGROUP_BY_ID;
   id: number;
 }
-export type UIActionTypes = toggleToolgroupById;
-export type AppActions = DataActionTypes | UIActionTypes;
+
+export const TOGGLE_WORKSPACE_SELECTED="TOGGLE_WORKSPACE_SELECTED"
+export const LOAD_UP_WORKSPACE_STRUCTURES="LOAD_UP_WORKSPACE_STRUCTURES"
+export interface toggleWorkspaceSelected {
+  type: typeof TOGGLE_WORKSPACE_SELECTED,
+  pdbid:string
+}
+
+export interface loadUpWorkspaceStructures {
+  type: typeof LOAD_UP_WORKSPACE_STRUCTURES,
+  structures: string[]
+}
+export type WorkspaceActions = toggleWorkspaceSelected | loadUpWorkspaceStructures;
+
+// -⋯⋯⋅⋱UI Action types⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯⋯⋯⋯⋅⋱⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯⋯⋯⋅⋱⋰⋆⋅⋅⋄⋅⋅∶⋅⋅⋄▫▪▭┈┅✕⋅⋅⋄⋅⋅✕∶⋅⋅⋄⋱⋰⋯
+
+
+export type UIActions = WorkspaceActions | toggleToolgroupById;
+
+
+
+
+export type AppActions = DataActionTypes | UIActions;

@@ -1,0 +1,1155 @@
+{
+    "metadata": {
+        "pdbid": "5XY3",
+        "rnacount": 3,
+        "proteincount": 40,
+        "rnanames": [
+            "1",
+            "3",
+            "4"
+        ],
+        "noaccession_proteins": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "accession_proteins": [
+            "G",
+            "H",
+            "I",
+            "J",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z",
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+            "g",
+            "h",
+            "i",
+            "j",
+            "k",
+            "A",
+            "l",
+            "m",
+            "o",
+            "p",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F"
+        ],
+        "nomenclatureCoverage": 0.875
+    },
+    "polymers": [
+        {
+            "chainid": "1",
+            "RNA": true,
+            "entityNr": "1",
+            "length": "2765",
+            "type": "rna",
+            "weight": "892223.0",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "polymerDescription": {
+                "description": "25S ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "3",
+            "RNA": true,
+            "entityNr": "2",
+            "length": "118",
+            "type": "rna",
+            "weight": "37963.6",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "polymerDescription": {
+                "description": "5S ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "4",
+            "RNA": true,
+            "entityNr": "3",
+            "length": "162",
+            "type": "rna",
+            "weight": "52173.9",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "polymerDescription": {
+                "description": "5.8S ribosomal RNA"
+            },
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "G",
+            "name": "Ribosomal protein L7Ae, putative",
+            "entityNr": "10",
+            "length": "244",
+            "type": "protein",
+            "weight": "27602.3",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL8"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L7Ae, putative"
+            },
+            "accession": "A2ET60",
+            "pfamGroups": [
+                "PF01248"
+            ],
+            "nomenclature": [
+                "eL30",
+                "eS12"
+            ]
+        },
+        {
+            "chainid": "H",
+            "name": "Ribosomal protein L6, putative",
+            "entityNr": "11",
+            "length": "197",
+            "type": "protein",
+            "weight": "22930.5",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL6"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L6, putative"
+            },
+            "accession": "A2DDT1",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "I",
+            "name": "Ribosomal protein, putative",
+            "entityNr": "12",
+            "length": "209",
+            "type": "protein",
+            "weight": "23800.8",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL16"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein, putative"
+            },
+            "accession": "A2FVZ6",
+            "pfamGroups": [
+                "PF00252"
+            ],
+            "nomenclature": [
+                "uL16"
+            ]
+        },
+        {
+            "chainid": "J",
+            "name": "60S ribosomal protein L11, putative",
+            "entityNr": "13",
+            "length": "169",
+            "type": "protein",
+            "weight": "19373.5",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL5"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L11, putative"
+            },
+            "accession": "A2E7L8",
+            "pfamGroups": [
+                "PF00673",
+                "PF00281"
+            ],
+            "nomenclature": [
+                "uL5"
+            ]
+        },
+        {
+            "chainid": "L",
+            "name": "Ribosomal protein L13e, putative",
+            "entityNr": "14",
+            "length": "189",
+            "type": "protein",
+            "weight": "21865.7",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL13"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L13e, putative"
+            },
+            "accession": "A2G4E1",
+            "pfamGroups": [
+                "PF01294"
+            ],
+            "nomenclature": [
+                "eL13"
+            ]
+        },
+        {
+            "chainid": "M",
+            "name": "Ribosomal protein L14, putative",
+            "entityNr": "15",
+            "length": "128",
+            "type": "protein",
+            "weight": "14726.1",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL14"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L14, putative"
+            },
+            "accession": "A2DZ49",
+            "pfamGroups": [
+                "PF01929"
+            ],
+            "nomenclature": [
+                "eL14"
+            ]
+        },
+        {
+            "chainid": "N",
+            "name": "Ribosomal protein L15",
+            "entityNr": "16",
+            "length": "204",
+            "type": "protein",
+            "weight": "24323.5",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL15"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L15"
+            },
+            "accession": "A2ECR7",
+            "pfamGroups": [
+                "PF00827"
+            ],
+            "nomenclature": [
+                "eL15"
+            ]
+        },
+        {
+            "chainid": "O",
+            "name": "Ribosomal protein L13, putative",
+            "entityNr": "17",
+            "length": "200",
+            "type": "protein",
+            "weight": "22569.1",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL13"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L13, putative"
+            },
+            "accession": "A2DZ26",
+            "pfamGroups": [
+                "PF00572"
+            ],
+            "nomenclature": [
+                "uL13"
+            ]
+        },
+        {
+            "chainid": "P",
+            "name": "Ribosomal protein L22, putative",
+            "entityNr": "18",
+            "length": "164",
+            "type": "protein",
+            "weight": "18530.5",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL22"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L22, putative"
+            },
+            "accession": "A2DM53",
+            "pfamGroups": [
+                "PF00237"
+            ],
+            "nomenclature": [
+                "uL22"
+            ]
+        },
+        {
+            "chainid": "Q",
+            "name": "60S ribosomal protein L18, putative",
+            "entityNr": "19",
+            "length": "186",
+            "type": "protein",
+            "weight": "21122.5",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL18"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L18, putative"
+            },
+            "accession": "A2D7Q5",
+            "pfamGroups": [
+                "PF17135"
+            ],
+            "nomenclature": [
+                "eL18"
+            ]
+        },
+        {
+            "chainid": "R",
+            "name": "60S ribosomal protein L19-3, putative",
+            "entityNr": "20",
+            "length": "178",
+            "type": "protein",
+            "weight": "21056.8",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL19"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L19-3, putative"
+            },
+            "accession": "A2D8G1",
+            "pfamGroups": [
+                "PF01280"
+            ],
+            "nomenclature": [
+                "eL19"
+            ]
+        },
+        {
+            "chainid": "S",
+            "name": "60S ribosomal protein L18a",
+            "entityNr": "21",
+            "length": "176",
+            "type": "protein",
+            "weight": "19854.0",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL20"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L18a"
+            },
+            "accession": "A2EP03",
+            "pfamGroups": [
+                "PF01775"
+            ],
+            "nomenclature": [
+                "eL20"
+            ]
+        },
+        {
+            "chainid": "T",
+            "name": "Ribosomal protein L21e, putative",
+            "entityNr": "22",
+            "length": "159",
+            "type": "protein",
+            "weight": "17910.9",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL21"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L21e, putative"
+            },
+            "accession": "A2F2S5",
+            "pfamGroups": [
+                "PF01157"
+            ],
+            "nomenclature": [
+                "eL21"
+            ]
+        },
+        {
+            "chainid": "U",
+            "name": "60S ribosomal protein L22-1, putative",
+            "entityNr": "23",
+            "length": "106",
+            "type": "protein",
+            "weight": "12237.1",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL22"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L22-1, putative"
+            },
+            "accession": "A2DNV5",
+            "pfamGroups": [
+                "PF01776"
+            ],
+            "nomenclature": [
+                "eL22"
+            ]
+        },
+        {
+            "chainid": "V",
+            "name": "60S ribosomal protein L23, putative",
+            "entityNr": "24",
+            "length": "140",
+            "type": "protein",
+            "weight": "14840.6",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL14"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L23, putative"
+            },
+            "accession": "A2DP51",
+            "pfamGroups": [
+                "PF00238"
+            ],
+            "nomenclature": [
+                "uL14"
+            ]
+        },
+        {
+            "chainid": "W",
+            "name": "Ribosomal protein L24e, putative",
+            "entityNr": "25",
+            "length": "113",
+            "type": "protein",
+            "weight": "13282.5",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL24"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L24e, putative"
+            },
+            "accession": "A2DJQ1",
+            "pfamGroups": [
+                "PF01246"
+            ],
+            "nomenclature": [
+                "eL24"
+            ]
+        },
+        {
+            "chainid": "X",
+            "name": "Ribosomal protein L23, putative",
+            "entityNr": "26",
+            "length": "140",
+            "type": "protein",
+            "weight": "15582.2",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL23"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L23, putative"
+            },
+            "accession": "A2DUV8",
+            "pfamGroups": [
+                "PF00276"
+            ],
+            "nomenclature": [
+                "uL23"
+            ]
+        },
+        {
+            "chainid": "Y",
+            "name": "Ribosomal protein L24, putative",
+            "entityNr": "27",
+            "length": "138",
+            "type": "protein",
+            "weight": "15782.6",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL24"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L24, putative"
+            },
+            "accession": "A2DKF2",
+            "pfamGroups": [
+                "PF16906"
+            ],
+            "nomenclature": [
+                "uL24"
+            ]
+        },
+        {
+            "chainid": "Z",
+            "name": "Ribosomal protein L27e, putative",
+            "entityNr": "28",
+            "length": "139",
+            "type": "protein",
+            "weight": "15946.1",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL27"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L27e, putative"
+            },
+            "accession": "A2DNC1",
+            "pfamGroups": [
+                "PF01777"
+            ],
+            "nomenclature": [
+                "eL27"
+            ]
+        },
+        {
+            "chainid": "a",
+            "name": "Uncharacterized protein",
+            "entityNr": "29",
+            "length": "151",
+            "type": "protein",
+            "weight": "17006.8",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL15"
+            },
+            "polymerDescription": {
+                "description": "Uncharacterized protein"
+            },
+            "accession": "A2DHU7",
+            "pfamGroups": [
+                "PF00828"
+            ],
+            "nomenclature": [
+                "uL15"
+            ]
+        },
+        {
+            "chainid": "b",
+            "name": "60S ribosomal protein L29",
+            "entityNr": "30",
+            "length": "58",
+            "type": "protein",
+            "weight": "6823.72",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL29"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L29"
+            },
+            "accession": "A2DM33",
+            "pfamGroups": [
+                "PF01779"
+            ],
+            "nomenclature": [
+                "eL29"
+            ]
+        },
+        {
+            "chainid": "c",
+            "name": "60S ribosomal protein L30, putative",
+            "entityNr": "31",
+            "length": "112",
+            "type": "protein",
+            "weight": "12316.2",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL30"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L30, putative"
+            },
+            "accession": "A2E6Z9",
+            "pfamGroups": [
+                "PF01248"
+            ],
+            "nomenclature": [
+                "eL30",
+                "eS12"
+            ]
+        },
+        {
+            "chainid": "d",
+            "name": "Ribosomal protein L31e, putative",
+            "entityNr": "32",
+            "length": "110",
+            "type": "protein",
+            "weight": "12446.5",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL31"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L31e, putative"
+            },
+            "accession": "A2D9N8",
+            "pfamGroups": [
+                "PF01198"
+            ],
+            "nomenclature": [
+                "eL31"
+            ]
+        },
+        {
+            "chainid": "e",
+            "name": "Ribosomal protein L32, putative",
+            "entityNr": "33",
+            "length": "132",
+            "type": "protein",
+            "weight": "15249.7",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL32"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L32, putative"
+            },
+            "accession": "A2F2J0",
+            "pfamGroups": [
+                "PF01655"
+            ],
+            "nomenclature": [
+                "eL32"
+            ]
+        },
+        {
+            "chainid": "f",
+            "name": "Ribosomal protein L35Ae, putative",
+            "entityNr": "34",
+            "length": "102",
+            "type": "protein",
+            "weight": "11668.7",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL33"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L35Ae, putative"
+            },
+            "accession": "A2DSF3",
+            "pfamGroups": [
+                "PF01247"
+            ],
+            "nomenclature": [
+                "eL33"
+            ]
+        },
+        {
+            "chainid": "g",
+            "name": "Ribosomal protein L34e, putative",
+            "entityNr": "35",
+            "length": "116",
+            "type": "protein",
+            "weight": "13346.6",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL34"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L34e, putative"
+            },
+            "accession": "A2FWA1",
+            "pfamGroups": [
+                "PF01199"
+            ],
+            "nomenclature": [
+                "eL34"
+            ]
+        },
+        {
+            "chainid": "h",
+            "name": "Ribosomal protein L29, putative",
+            "entityNr": "36",
+            "length": "124",
+            "type": "protein",
+            "weight": "14300.0",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL29"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L29, putative"
+            },
+            "accession": "A2E6R2",
+            "pfamGroups": [
+                "PF00831"
+            ],
+            "nomenclature": [
+                "uL29"
+            ]
+        },
+        {
+            "chainid": "i",
+            "name": "Ribosomal protein L36e, putative",
+            "entityNr": "37",
+            "length": "91",
+            "type": "protein",
+            "weight": "10941.7",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL36"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L36e, putative"
+            },
+            "accession": "A2EXW7",
+            "pfamGroups": [
+                "PF01158"
+            ],
+            "nomenclature": [
+                "eL36"
+            ]
+        },
+        {
+            "chainid": "j",
+            "name": "Ribosomal protein L37",
+            "entityNr": "38",
+            "length": "81",
+            "type": "protein",
+            "weight": "9355.95",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL37"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L37"
+            },
+            "accession": "A2F8Y8",
+            "pfamGroups": [
+                "PF01907"
+            ],
+            "nomenclature": [
+                "eL37"
+            ]
+        },
+        {
+            "chainid": "k",
+            "name": "Ribosomal protein L38e, putative",
+            "entityNr": "39",
+            "length": "74",
+            "type": "protein",
+            "weight": "8468.96",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL38"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L38e, putative"
+            },
+            "accession": "A2FFH9",
+            "pfamGroups": [
+                "PF01781"
+            ],
+            "nomenclature": [
+                "eL38"
+            ]
+        },
+        {
+            "chainid": "A",
+            "name": "Ribosomal protein L8, putative",
+            "entityNr": "4",
+            "length": "251",
+            "type": "protein",
+            "weight": "26949.1",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL2"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L8, putative"
+            },
+            "accession": "A2E6Z8",
+            "pfamGroups": [
+                "PF03947",
+                "PF00181"
+            ],
+            "nomenclature": [
+                "uL2"
+            ]
+        },
+        {
+            "chainid": "l",
+            "name": "60S ribosomal protein L39, putative",
+            "entityNr": "40",
+            "length": "51",
+            "type": "protein",
+            "weight": "6297.77",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL39"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L39, putative"
+            },
+            "accession": "A2D9N4",
+            "pfamGroups": [
+                "PF00832"
+            ],
+            "nomenclature": [
+                "eL39"
+            ]
+        },
+        {
+            "chainid": "m",
+            "name": "Ubiquitin, putative",
+            "entityNr": "41",
+            "length": "132",
+            "type": "protein",
+            "weight": "15101.5",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL40"
+            },
+            "polymerDescription": {
+                "description": "Ubiquitin, putative"
+            },
+            "fragment": {
+                "desc": "UNP residues 35-166"
+            },
+            "accession": "A2DGL5",
+            "pfamGroups": [
+                "PF01020",
+                "PF00240"
+            ],
+            "nomenclature": [
+                "eL40"
+            ]
+        },
+        {
+            "chainid": "o",
+            "name": "60S ribosomal protein L44, putative",
+            "entityNr": "42",
+            "length": "104",
+            "type": "protein",
+            "weight": "12471.0",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL41"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L44, putative"
+            },
+            "accession": "A2DAI6",
+            "pfamGroups": [
+                "PF00935"
+            ],
+            "nomenclature": [
+                "eL42"
+            ]
+        },
+        {
+            "chainid": "p",
+            "name": "Uncharacterized protein",
+            "entityNr": "43",
+            "length": "92",
+            "type": "protein",
+            "weight": "10052.0",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL43"
+            },
+            "polymerDescription": {
+                "description": "Uncharacterized protein"
+            },
+            "accession": "A2DEM7",
+            "pfamGroups": [
+                "PF01780"
+            ],
+            "nomenclature": [
+                "eL43"
+            ]
+        },
+        {
+            "chainid": "B",
+            "name": "Uncharacterized protein",
+            "entityNr": "5",
+            "length": "415",
+            "type": "protein",
+            "weight": "46904.3",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL3"
+            },
+            "polymerDescription": {
+                "description": "Uncharacterized protein"
+            },
+            "accession": "A2DD62",
+            "pfamGroups": [
+                "PF00297"
+            ],
+            "nomenclature": [
+                "uL3"
+            ]
+        },
+        {
+            "chainid": "C",
+            "name": "Ribosomal protein, putative",
+            "entityNr": "6",
+            "length": "370",
+            "type": "protein",
+            "weight": "40320.7",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL4"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein, putative"
+            },
+            "accession": "A2E4D0",
+            "pfamGroups": [
+                "PF00573",
+                "PF14204",
+                "PF14374"
+            ],
+            "nomenclature": [
+                "uL4",
+                "uL18"
+            ]
+        },
+        {
+            "chainid": "D",
+            "name": "Ribosomal protein L5",
+            "entityNr": "7",
+            "length": "308",
+            "type": "protein",
+            "weight": "34932.8",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL18"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L5"
+            },
+            "accession": "A2DNM5",
+            "pfamGroups": [
+                "PF17144",
+                "PF14204"
+            ],
+            "nomenclature": [
+                "uL18"
+            ]
+        },
+        {
+            "chainid": "E",
+            "name": "60S ribosomal protein L6, putative",
+            "entityNr": "8",
+            "length": "151",
+            "type": "protein",
+            "weight": "16045.8",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "eL6"
+            },
+            "polymerDescription": {
+                "description": "60S ribosomal protein L6, putative"
+            },
+            "accession": "A2FXW1",
+            "pfamGroups": [],
+            "nomenclature": []
+        },
+        {
+            "chainid": "F",
+            "name": "Ribosomal protein L30p/L7e, putative",
+            "entityNr": "9",
+            "length": "239",
+            "type": "protein",
+            "weight": "26842.3",
+            "Taxonomy": {
+                "name": "Trichomonas vaginalis",
+                "id": "5722"
+            },
+            "synonym": {
+                "name": "uL30"
+            },
+            "polymerDescription": {
+                "description": "Ribosomal protein L30p/L7e, putative"
+            },
+            "accession": "A2F592",
+            "pfamGroups": [
+                "PF08079",
+                "PF00327"
+            ],
+            "nomenclature": [
+                "uL30"
+            ]
+        }
+    ]
+}

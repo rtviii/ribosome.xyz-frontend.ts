@@ -1,0 +1,70 @@
+{
+  "chainid": "J",
+  "name": "60S ribosomal protein L7-3, putative",
+  "entityNr": "10",
+  "length": "283",
+  "type": "protein",
+  "weight": "32760.5",
+  "Taxonomy": {
+    "name": "Plasmodium falciparum",
+    "id": "5833"
+  },
+  "polymerDescription": {
+    "description": "60S ribosomal protein eL8"
+  },
+  "accession": "Q8ILL2",
+  "pfamGroups": [
+    "PF01248"
+  ],
+  "nomenclature": [
+    "eL30",
+    "eS12"
+  ]
+}
+{
+  "chainid": "Z",
+  "name": "60S ribosomal protein L26, putative",
+  "entityNr": "26",
+  "length": "126",
+  "type": "protein",
+  "weight": "14855.7",
+  "Taxonomy": {
+    "name": "Plasmodium falciparum",
+    "id": "5833"
+  },
+  "polymerDescription": {
+    "description": "60S ribosomal protein uL24"
+  },
+  "accession": "O77364",
+  "pfamGroups": [
+    "PF16906",
+    "PF00467"
+  ],
+  "nomenclature": [
+    "uL24",
+    "eS4"
+  ]
+}
+{
+  "chainid": "6",
+  "name": "60S ribosomal protein L30e, putative",
+  "entityNr": "33",
+  "length": "108",
+  "type": "protein",
+  "weight": "11794.8",
+  "Taxonomy": {
+    "name": "Plasmodium falciparum",
+    "id": "5833"
+  },
+  "polymerDescription": {
+    "description": "60S ribosomal protein eL30"
+  },
+  "accession": "Q8IJK8",
+  "pfamGroups": [
+    "PF01248"
+  ],
+  "nomenclature": [
+    "eL30",
+    "eS12"
+  ]
+}

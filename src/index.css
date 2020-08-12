@@ -15,8 +15,9 @@ body {
   scrollbar-width: none;
 }
 a {
-  color: cyan;
+  color: white;
   text-decoration: none;
+  width: 100%;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",

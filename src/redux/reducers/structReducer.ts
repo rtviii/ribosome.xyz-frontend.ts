@@ -46,6 +46,7 @@ export const requestStructDjango = (pdbid: string) => {
   };
 };
 
+
 export const structReducer = (
   state: StructState = structReducerDefaultState,
   action: StructActionTypes

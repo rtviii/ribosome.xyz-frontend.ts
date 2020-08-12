@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../../types/action.types";
 import { toggleToolgroupById } from "../../redux/reducers/toolbarReducer";
-import { Link, withRouter,  } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import "./../../styles/Toolbar.css";
 import DbQueryPanel from "./DbQueryPanel";
 
@@ -75,20 +75,18 @@ const ToolBar: React.FC = () => {
       <ToolGroup id={8} name="Resn Conservation "></ToolGroup>
       <ToolGroup id={9} name="Align"></ToolGroup>
       <div style={{ width: "100%", height: "1px", backgroundColor: "white" }} />
-      <div>
-        <ToolGroup id={6} name="RequestData">
-          <DropoutMenu>
-            <DbQueryPanel />
-          </DropoutMenu>
-        </ToolGroup>
-        <Link to="./display">
-          <ToolGroup id={4} name="Visualization"></ToolGroup>
-        </Link>
 
-        <Link to="./data">
-          <ToolGroup id={5} name="Analytics"></ToolGroup>
-        </Link>
-      </div>
+      <ToolGroup id={6} name="RequestData"> <DropoutMenu>
+          <DbQueryPanel />
+        </DropoutMenu>
+      </ToolGroup>
+      <Link to="./display">
+        <ToolGroup id={4} name="Visualization"></ToolGroup>
+      </Link>
+
+      <Link to="./data">
+        <ToolGroup id={5} name="Analytics"></ToolGroup>
+      </Link>
     </nav>
   );
 };
