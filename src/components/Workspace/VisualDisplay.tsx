@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import tegunov from "./../static/tegunovM.gif";
-// import seqalign from "./../static/imseqalign.png";
-// import secondary from "./../static/secondary.jpg";
 import "./../../styles/VisualDisplay.css";
 
 type ScriptParameters = {
@@ -23,10 +20,10 @@ const useImportScript = (scriptParams: ScriptParameters) => {
     return () => {
       document.body.removeChild(script);
     };
-  }, [scriptParams]);
+  }, [src,scriptParams, async,defer, charset]);
 };
 
-const VisualDisplay = (props: any) => {
+const VisualDisplay = () => {
   //molstar
   useImportScript({
     src:
@@ -102,8 +99,6 @@ const VisualDisplay = (props: any) => {
     document.addEventListener("PDB.topologyViewer.mouseover", e => {
       var {
         entityId,
-        entryId,
-        chainId,
         residueNumber,
       } = (e as PDBEvent).eventData;
 
@@ -121,8 +116,6 @@ const VisualDisplay = (props: any) => {
     document.addEventListener("PDB.topologyViewer.click", e => {
       var {
         entityId,
-        entryId,
-        chainId,
         residueNumber,
       } = (e as PDBEvent).eventData;
 
