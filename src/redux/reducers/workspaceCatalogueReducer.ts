@@ -1,4 +1,4 @@
-import { UIActions } from "./../../types/action.types";
+import { UIActions } from "../types/action.types";
 
 export interface WorkspaceState {
   catalogueAvailable: Array<string>;

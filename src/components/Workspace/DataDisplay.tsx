@@ -1,7 +1,7 @@
 import React from "react";
 import { AppState } from "../../redux/store";
 import { ThunkDispatch } from "redux-thunk";
-import { DataActionTypes } from "../../types/action.types";
+import { DataActionTypes } from "../../redux/types/action.types";
 import { connect } from "react-redux";
 import "./../../styles/DataDisplay.css";
 

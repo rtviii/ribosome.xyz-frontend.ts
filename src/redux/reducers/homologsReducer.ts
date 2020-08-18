@@ -1,4 +1,4 @@
-import { AppActions } from "./../../types/action.types";
+import { AppActions } from "../types/action.types";
 const HomologsReducerDefaultState = {
   loading: false,
   error: false,

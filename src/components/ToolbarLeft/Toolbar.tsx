@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { AppState } from "../../redux/store";
 import { bindActionCreators } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-import { AppActions } from "../../types/action.types";
+import { AppActions } from "../../redux/types/action.types";
 import { toggleToolgroupById } from "../../redux/reducers/toolbarReducer";
 import { Link, withRouter } from "react-router-dom";
 import "./../../styles/Toolbar.css";

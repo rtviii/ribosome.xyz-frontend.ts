@@ -5,10 +5,11 @@ import { createLogger } from "redux-logger";
 import { toolbarReducer } from "./reducers/toolbarReducer";
 import { workspaceCatalogueReducer } from "./reducers/workspaceCatalogueReducer";
 import { structReducer } from "./reducers/structReducer";
+import { localDataReducer } from "./reducers/localDataReducer";
 
 const collapsFilter = (action: any) => {
   var toFilter = ["TOGGLE_WORKSPACE_SELECTED"];
-  return ! toFilter.includes(action!.type);
+  return !toFilter.includes(action!.type);
 };
 
 const logger = createLogger({
@@ -20,6 +21,7 @@ export const UIReducer = combineReducers({
   state_WorkspaceCatalogue: workspaceCatalogueReducer,
 });
 export const DataReducer = combineReducers({
+  state_local: localDataReducer,
   state_Homologs: homologsReducer,
   state_Structs: structReducer,
 });

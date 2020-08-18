@@ -3,7 +3,7 @@ import {
   REQUEST_HOMOLOGS_GO,
   REQUEST_STRUCT_ERR,
   REQUEST_STRUCT_SUCCESS,
-} from "./../../types/action.types";
+} from "../types/action.types";
 import axios from "axios";
 import { Dispatch } from "redux";
 import { Objshape } from './../../components/Workspace/DataDisplay'
@@ -13,7 +13,7 @@ const apibase = process.env.REACT_APP_DJANGO_URL;
 const structReducerDefaultState = {
   structs: [],
   loading: false,
-  error: null,
+  error  : null,
 };
 
 export interface StructState {
@@ -45,6 +45,8 @@ export const requestStructDjango = (pdbid: string) => {
     }
   };
 };
+
+
 
 
 export const structReducer = (
