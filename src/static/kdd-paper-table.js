@@ -517,7 +517,7 @@ export const structs_kdd2019 = { //a for archea
     kingdom: "b",
     res: "3.4 ˚A (X-ray)",
     pub: "Krupkin et al. (2016)",
-    "metadata": {
+    metadata: {
       "pdbid": "5JVG",
       "rnacount": 2,
       "proteincount": 27,
@@ -2694,7 +2694,7 @@ export const structs_kdd2019 = { //a for archea
     kingdom: "e",
     res: "3.6 ˚A (EM)",
     pub: "Khatter et al. (2015)",
-    "metadata": {
+    metadata: {
       "pdbid": "4UG0",
       "rnacount": 5,
       "proteincount": 76,
