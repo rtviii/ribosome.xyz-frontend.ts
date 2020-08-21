@@ -9,6 +9,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image: url('visual1.png');
+  /* background-color: darkblue; */
   background-size: cover;
 
   font-size: 1.2rem;

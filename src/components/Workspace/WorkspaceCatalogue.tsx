@@ -36,16 +36,27 @@ const WorkspaceCatalogue: React.FC<WorkspaceProps> = props => {
 
   return (
     <div className="workspace-catalogue">
+      Available Structures
       <div className="workspace-available">
         {props.catalogueAvailable.map((struct, i: any) => {
-          
-          
-          return <StructHero select={props.toggleSelected} key={i+struct} pdbid={struct} />;
+          return (
+            <StructHero
+              select={props.toggleSelected}
+              key={i + struct}
+              pdbid={struct}
+            />
+          );
         })}
       </div>
       <div className="workspace-selected">
         {props.catalogueSelected.map((struct, i: any) => {
-          return <StructHero select={props.toggleSelected} key={i+struct} pdbid={struct} />;
+          return (
+            <StructHero
+              select={props.toggleSelected}
+              key={i + struct}
+              pdbid={struct}
+            />
+          );
         })}
       </div>
     </div>
