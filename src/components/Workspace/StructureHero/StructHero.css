@@ -2,9 +2,25 @@
 /* tt_content denotes a tooltip content to be revealed on hover */
 .struct-hero {
   cursor: pointer;
-  outline: 1px solid cyan;
   position: relative;
   padding: 10px;
+
+
+  display:flex
+}
+
+.pdbid_title{
+  display: inline-block;
+  text-anchor: middle;
+  text-align: center;
+  margin: auto;
+}
+
+.hero_annotations{
+  width: 70%;
+}
+.hero_annotations p{
+  margin:0;
 }
 
 .struct-hero div p {
@@ -19,18 +35,21 @@
 }
 
 .tooltip {
-  width          : min-content;
-  height         : min-content;
+  width: min-content;
+  height: min-content;
   text-decoration: none;
-  position       : absolute;
-  right          : 20px;
-  bottom         : 20px;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
 }
 
 .tooltip .tt_content {
   display: none;
 }
 
+.tooltip:hover .tt_icon {
+  filter: invert(1);
+}
 .tooltip:hover .tt_content {
   position: absolute;
   display: block;
@@ -45,7 +64,3 @@
 }
 
 
-.tooltip:hover .tt_icon{
-  filter: invert(1);
-
-}

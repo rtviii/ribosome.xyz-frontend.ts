@@ -9,7 +9,6 @@ const StructHero = ({
   select,
 }: {
   pdbid: string;
-  
   select: (pdbid: string) => void;
 }) => {
   var structdata: any = useSelector(
@@ -35,22 +34,18 @@ const StructHero = ({
   };
 
   return (
-    <div
-      className={`struct-hero ${pdbid} ${str.kingdom}`}
-      id={`_struct_${pdbid}`}
-    >
+    <div className={`struct-hero ${pdbid} ${str.kingdom}`} id={`_struct_${pdbid}`}>
       <a className="tooltip">
         <img src={infoicon} className="tt_icon" alt="tooltip" />
         <div className="tt_content">
-          <p>Nomenclature Coverage     : {nomenclatureCoverage}</p>
-          <p>Protein      Chains       : {proteincount}</p>
-          <p>RNA          Chains       : {rnacount}</p>
-                          <p>Deposition: {str.pub}</p>
+          <p>Nomenclature Coverage : {nomenclatureCoverage}</p>
+          <p>Protein Chains : {proteincount}</p>
+          <p>RNA Chains : {rnacount}</p>
+          <p>Deposition: {str.pub}</p>
         </div>
       </a>
-
-      <div className="pdbidtitle">{pdbid}</div>
-      <div>
+      <div className="pdbid_title">{pdbid}</div>
+      <div className="hero_annotations">
         <p className="p_annot resolution">Resolution: {str.res}</p>
         <p className="p_annot species">
           {str.spec} |{" "}
