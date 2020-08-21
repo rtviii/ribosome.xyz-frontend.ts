@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const StructHero = ({
   pdbid,
-  select,
+  // select,
 }: {
   pdbid: string;
   select: (pdbid: string) => void;
@@ -18,7 +18,6 @@ const StructHero = ({
         (s: any) => s.pdbid === pdbid
       )[0]
   );
-  console.log(structdata);
 
   const { nomenclatureCoverage, proteincount, rnacount } = structdata.metadata;
   interface strdata {
@@ -35,12 +34,12 @@ const StructHero = ({
   };
 
   return (
-    <Link to={`${pdbid}`}>
+    <Link to={`/catalogue/${pdbid}`}>
       <div
         className={`struct-hero ${pdbid} ${str.kingdom}`}
         id={`_struct_${pdbid}`}
       >
-        <a className="tooltip">
+        <a  className="tooltip">
           <img src={infoicon} className="tt_icon" alt="tooltip" />
           <div className="tt_content">
             <p>Nomenclature Coverage : {nomenclatureCoverage}</p>
@@ -48,7 +47,7 @@ const StructHero = ({
             <p>RNA Chains : {rnacount}</p>
             <p>Deposition: {str.pub}</p>
           </div>
-        </a>
+        </a >
         <div className="pdbid_title">{pdbid}</div>
         <div className="hero_annotations">
           <p className="p_annot resolution">Resolution: {str.res}</p>

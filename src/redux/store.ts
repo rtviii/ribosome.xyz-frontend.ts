@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware, Action } from "redux";
+import { createStore, combineReducers, applyMiddleware,  } from "redux";
 import thunk, { ThunkMiddleware } from "redux-thunk";
 import { homologsReducer } from "./reducers/homologsReducer";
 import { createLogger } from "redux-logger";

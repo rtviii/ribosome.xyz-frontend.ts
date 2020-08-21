@@ -2,24 +2,24 @@ import React from "react";
 import VisualDisplay from "./VisualDisplay";
 import DataDisplay from "./DataDisplay";
 import "./Display.css";
-import { withRouter, Switch, Route } from "react-router";
+import { withRouter, Switch, Route, Redirect } from "react-router";
 import WorkspaceCatalogue from "./WorkspaceCatalogue";
+import StructurePage from "./Structure/StructurePage";
 
-
-const Display = (props: any) => {
+const Display = () => {
   return (
     <div className="display">
-
-
-    <Switch>
-      <Route path="/display"component={VisualDisplay} />
-      <Route path="/data" component={DataDisplay} />
-      <Route path="/" component={WorkspaceCatalogue}/>
-    </Switch>
+      <Switch>
+        <Route exact path="/">
+          <Redirect to="/catalogue" />
+        </Route>
+        <Route exact path="/display" component={VisualDisplay} />
+        <Route exact path="/data" component={DataDisplay} />
+        <Route exact path="/catalogue" component={WorkspaceCatalogue} />
+        <Route exact path="/catalogue/:pdbid" component={StructurePage} />
+      </Switch>
     </div>
   );
 };
 
 export default withRouter(Display);
-
-

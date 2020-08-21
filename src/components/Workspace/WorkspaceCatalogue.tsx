@@ -36,7 +36,6 @@ const WorkspaceCatalogue: React.FC<WorkspaceProps> = props => {
 
   return (
     <div className="workspace-catalogue">
-      Available Structures
       <div className="workspace-available">
         {props.catalogueAvailable.map((struct, i: any) => {
           return (

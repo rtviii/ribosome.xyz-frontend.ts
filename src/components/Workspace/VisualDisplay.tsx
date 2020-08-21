@@ -148,20 +148,20 @@ const VisualDisplay = () => {
   return (
     <div>
 
-      <button id="resetThemeBtn">Reset View</button>
+      {/* <button id="resetThemeBtn">Reset View</button> */}
 
-      <button
+      {/* <button
         onClick={() => {
           addNewMolecule(viewerpdbid);
         }}
       >
         Struct.Load
-      </button>
-      <input
+      </button> */}
+      {/* <input
         type="text"
         value={viewerpdbid}
         onChange={e => setviewpdbid(e.target.value)}
-      />
+      /> */}
       <div className="display">
         <pdbe-molstar
           id="pdbeMolstarComponent"

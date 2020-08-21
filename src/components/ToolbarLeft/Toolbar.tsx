@@ -76,15 +76,24 @@ const ToolBar: React.FC = () => {
       <ToolGroup id={9} name="Align"></ToolGroup>
       <div style={{ width: "100%", height: "1px", backgroundColor: "white" }} />
 
-      <ToolGroup id={6} name="RequestData"> <DropoutMenu>
+      <div
+        onClick={() => {
+          alert(
+            "Please refer to the API docs. At this moment Prisma/GraphQL server is under construction."
+          );
+        }}
+      >
+        <ToolGroup id={6} name="RequestData">
+          {/* <DropoutMenu>
           <DbQueryPanel />
-        </DropoutMenu>
-      </ToolGroup>
-      <Link to="./display">
+        </DropoutMenu> */}
+        </ToolGroup>
+      </div>
+      <Link to="/display">
         <ToolGroup id={4} name="Visualization"></ToolGroup>
       </Link>
 
-      <Link to="./data">
+      <Link to="/data">
         <ToolGroup id={5} name="Analytics"></ToolGroup>
       </Link>
     </nav>
