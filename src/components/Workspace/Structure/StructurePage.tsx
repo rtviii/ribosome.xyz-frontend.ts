@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import Axios from "axios";
 
+const django: any = process!.env.REACT_APP_DJANGO_URL;
 const StructurePage = () => {
   const { pdbid } = useParams();
 
-  const strdata = require(`./../../../static/nomenclature/${pdbid.toUpperCase()}.json`);
-  console.log(strdata);
+  useEffect(() => {
+    const djurl = encodeURI('http://localhost:8000/neo4j/get_struct/?pdbid=3j9m')
+    console.log(`Encoded : \n ${djurl}`);
+    
+    Axios.get(djurl).then(resp => console.log(resp));
+    return () => {};
+  }, []);
+
+  const trdata = require(`./../../../static/nomenclature/${pdbid.toUpperCase()}.json`);
   return (
     <div style={{ color: "white" }}>
       <h3>Structure Page for {pdbid}</h3>

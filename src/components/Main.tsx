@@ -28,8 +28,11 @@ const Main: React.FC<MainProps> = props => {
       return { pdbid: e!.metadata.pdbid, ...e };
     });
 
+    console.log(process.env);
+    
     props.loadStaticData(reshaped);
     return () => {};
+
   }, [history]);
 
   // const baseapi = process.env.REACT_APP_DJANGO_URL;
