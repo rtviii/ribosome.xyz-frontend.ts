@@ -4,15 +4,15 @@ import DataDisplay from "./DataDisplay";
 import "./Display.css";
 import { withRouter, Switch, Route, Redirect } from "react-router";
 import WorkspaceCatalogue from "./WorkspaceCatalogue";
-import StructurePage from "./Structure/StructurePage";
+import StructurePage from "./StructurePage/StructurePage";
 
 const Display = () => {
   return (
     <div className="display">
+      <Route exact path="/">
+        <Redirect to="/catalogue" />
+      </Route>
       <Switch>
-        <Route exact path="/">
-          <Redirect to="/catalogue" />
-        </Route>
         <Route exact path="/display" component={VisualDisplay} />
         <Route exact path="/data" component={DataDisplay} />
         <Route exact path="/catalogue" component={WorkspaceCatalogue} />

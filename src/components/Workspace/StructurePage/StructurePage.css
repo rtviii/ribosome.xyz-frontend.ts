@@ -1,0 +1,10 @@
+.structure-page {
+  margin: 5px;
+  width: 700px;
+  color: white;
+  outline: 2px dashed slateblue;
+}
+
+.structure-info {
+    font-size: 20px;
+}

@@ -1,0 +1,29 @@
+.ribosomal-protein-hero {
+  width: 600px;
+  color: white;
+  display: flex;
+}
+/* .main-properties {,
+  color: pink;
+} */
+
+.ban-nom {
+  width: 140px;
+  outline: 1px solid white;
+  color: pink;
+  margin-bottom: 10px;
+}
+
+.pdb-name {
+  outline: 1px solid green;
+  color: wheat;
+  font-size: small;
+  height: min-content;
+}
+
+.rnaprottoggle {
+  outline: 1px solid orangered;
+  font-size: xx-large;
+  cursor: pointer;
+  width: 100px;
+}

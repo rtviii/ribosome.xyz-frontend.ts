@@ -45,6 +45,7 @@
 .tooltip {
   width: min-content;
   height: min-content;
+  display: flex;
   text-decoration: none;
   position: absolute;
   right: 20px;
