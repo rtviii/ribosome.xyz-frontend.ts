@@ -1,13 +1,18 @@
 import React from "react";
 import * as rts from "./../../../redux/types/ribTypes";
-import './RibosomalProteinHero.css'
+import "./RibosomalProteinHero.css";
+import { Link } from "react-router-dom";
 
 const RibosomalProteinHero = (data: rts.RibosomalProtein) => {
+
   return (
     <div className="ribosomal-protein-hero">
-
-      <div className="ban-nom">{data.nomenclature}</div>
+      <Link
+        to={data.nomenclature.length > 0 ? `/rps/${data.nomenclature[0]}` : `/rps`}>
+        <div className="ban-nom">{data.nomenclature}</div>
+      </Link>
       <div className="pdb-name">{data._PDBName}</div>
+
       {/* <h5>{data.nomenclature}</h5>
       <h4>Chain {data._PDBChainId}</h4>
       <div className="main-properties">

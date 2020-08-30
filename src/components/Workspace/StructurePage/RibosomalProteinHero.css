@@ -3,7 +3,7 @@
   color: white;
   display: flex;
 }
-/* .main-properties {,
+/* .main-properties {
   color: pink;
 } */
 
@@ -24,6 +24,5 @@
 .rnaprottoggle {
   outline: 1px solid orangered;
   font-size: xx-large;
-  cursor: pointer;
   width: 100px;
 }

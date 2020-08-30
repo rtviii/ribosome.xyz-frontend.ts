@@ -5,6 +5,8 @@ import "./Display.css";
 import { withRouter, Switch, Route, Redirect } from "react-router";
 import WorkspaceCatalogue from "./WorkspaceCatalogue";
 import StructurePage from "./StructurePage/StructurePage";
+import RPPage from "./RibosomalProteins/RPPage";
+import RPsCatalogue from "./RibosomalProteins/RPsCatalogue";
 
 const Display = () => {
   return (
@@ -17,6 +19,8 @@ const Display = () => {
         <Route exact path="/data" component={DataDisplay} />
         <Route exact path="/catalogue" component={WorkspaceCatalogue} />
         <Route exact path="/catalogue/:pdbid" component={StructurePage} />
+        <Route exact path="/rps" component={RPsCatalogue} />
+        <Route exact path="/rps/:nom" component={RPPage} />
       </Switch>
     </div>
   );

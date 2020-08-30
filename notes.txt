@@ -1,0 +1,5 @@
+https://www.ks.uiuc.edu/Research/vmd/vmd-1.2/ug/vmdug_node240.html
+:
+"15.2.1 MIME types
+
+  When a web browser receives a document from a server it actually gets two pieces of information: the header and the body. The header contains information about the message and body. One of the most important pieces of data, called the MIME type specifies what the body of text describes. For instance, a GIF image is given the MIME type of image/gif, a JPEG image is image/jpg, and postscript is application/postscript. A class of types, chemical/*, has been created for chemical models so the MIME type for PDB files is chemical/pdb, for XYZ is chemical/xyz, etc. "

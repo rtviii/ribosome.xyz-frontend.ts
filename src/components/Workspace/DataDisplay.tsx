@@ -15,7 +15,7 @@ type DataDisplayProps = ActionProps & OwnProps & StateProps;
 interface Subchain {
   element: string;
   chainid: string;
-  nom: Array<string | null>;
+  nom    : Array<string | null>;
   surface: number | null;
 }
 interface PDBStruct {
