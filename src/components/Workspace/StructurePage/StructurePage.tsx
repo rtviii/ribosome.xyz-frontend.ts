@@ -7,6 +7,8 @@ import RNAHero from "./RNAHero";
 import Axios from "axios";
 
 const django: any = process!.env.REACT_APP_DJANGO_URL;
+const BACKEND = process.env.REACT_APP_DJANGO_URL
+
 interface NEO__GET_STRUCT {
   RibosomeStructure: rts.RibosomeStructure;
   rRNAs: Array<rts.rRNA>;
@@ -19,7 +21,7 @@ const StructurePage = () => {
   const [rnaprottoggle, togglernaprot] = useState("rRNA");
   useEffect(() => {
     const djurl = encodeURI(
-      `http://localhost:8000/neo4j/get_struct/?pdbid=${pdbid}`
+      `${BACKEND}/neo4j/get_struct/?pdbid=${pdbid}`
     );
     console.log(`Encoded : \n ${djurl}`);
     Axios.get(djurl).then(

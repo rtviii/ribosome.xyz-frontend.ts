@@ -4,15 +4,19 @@ import { useParams } from "react-router-dom";
 import _ from "lodash";
 import Axios from "axios";
 
+
+const BACKEND = process.env.REACT_APP_DJANGO_URL
+
+
 const RPPage = () => {
   var params: any = useParams();
-  
+
 
   useEffect(() => {
     console.log("Got PArams :", params);
     var banName = params.nom;
     const djurl = encodeURI(
-      `http://localhost:8000/neo4j/get_homologs/?banName=${banName}`
+      `${BACKEND}/neo4j/get_homologs/?banName=${banName}`
     );
     Axios.get(djurl).then(
       r => {
