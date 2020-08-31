@@ -2,16 +2,27 @@
   width: 600px;
   color: white;
   display: flex;
+  justify-content: left;
+  
+  outline: 1px solid white;
+  margin-bottom: 10px;
 }
 /* .main-properties {
   color: pink;
 } */
 
 .ban-nom {
-  width: 140px;
+  width: 70px;
   outline: 1px solid white;
   color: pink;
   margin-bottom: 10px;
+}
+.link{
+  width: min-content;
+  margin-right: 20px;
+}
+.link:hover{
+  color: blue;
 }
 
 .pdb-name {
@@ -23,6 +34,29 @@
 
 .rnaprottoggle {
   outline: 1px solid orangered;
+  cursor: pointer;
   font-size: xx-large;
   width: 100px;
+}
+
+p{
+  margin:0;
+  padding:0;
+  /* width: min-content; */
+}
+.chain-download{
+  text-decoration: underline;
+  color: blue;
+  cursor: pointer;
+}
+
+.main-properties{
+  word-wrap: none;
+
+  font-size: small;
+}
+.chainname{
+  width: 80px;
+  font-size: xx-large;
+  color:green
 }

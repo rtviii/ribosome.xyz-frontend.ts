@@ -23,3 +23,5 @@ yarn-error.log*
 
 
 /ribosomexyz-docs
+
+.env

@@ -67,14 +67,13 @@ const DropoutMenu: React.FC = pps => {
 const ToolBar: React.FC = () => {
   return (
     <nav className="toolbar">
-      <ToolGroup id={3} name="Toolgroup3D"></ToolGroup>
-      <ToolGroup id={2} name="Toolgroup2D"></ToolGroup>
-      <ToolGroup id={1} name="Toolgroup1D"></ToolGroup>
-      <div style={{ width: "100%", height: "1px", backgroundColor: "white" }} />
-      <ToolGroup id={7} name="Tunnels & Pores"></ToolGroup>
-      <ToolGroup id={8} name="Resn Conservation "></ToolGroup>
-      <ToolGroup id={9} name="Align"></ToolGroup>
-      <div style={{ width: "100%", height: "1px", backgroundColor: "white" }} />
+
+      <Link to="/catalogue">
+        <ToolGroup id={4} name="Structures Catalogue"></ToolGroup>
+      </Link>
+      <Link to="/rps">
+        <ToolGroup id={4} name="Ribosomal Proteins Catalogue"></ToolGroup>
+      </Link>
 
       <div
         onClick={() => {
@@ -84,11 +83,9 @@ const ToolBar: React.FC = () => {
         }}
       >
         <ToolGroup id={6} name="RequestData">
-          {/* <DropoutMenu>
-          <DbQueryPanel />
-        </DropoutMenu> */}
         </ToolGroup>
       </div>
+
       <Link to="/display">
         <ToolGroup id={4} name="Visualization"></ToolGroup>
       </Link>

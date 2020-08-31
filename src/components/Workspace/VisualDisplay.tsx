@@ -81,7 +81,8 @@ const VisualDisplay = () => {
     ) as any;
     var viewerInstance = pdbeMolstarComponent!.viewerInstance;
     viewerInstance.visual.update({
-      moleculeId: "1cbs",
+      moleculeId: "3j9m",
+      struct_asym_id:"",
       hideCanvasControls: ["expand", "selection", " animation"],
       hideControls: true,
       subscribEvents: true,

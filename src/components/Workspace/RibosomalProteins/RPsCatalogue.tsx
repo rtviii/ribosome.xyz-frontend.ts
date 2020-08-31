@@ -1,19 +1,30 @@
-import React from "react";
-import fileDownload from 'js-file-download'
+import React, { useState, useEffect } from "react";
 import "./RPsCatalogue.css";
 import Axios from "axios";
+import _, { flattenDeep, uniq } from "lodash";
+const BACKEND = process.env.REACT_APP_DJANGO_URL;
 
-const BACKEND = process.env.REACT_APP_DJANGO_URL
 const RPsCatalogue = () => {
-  const getfile = () => {
-    Axios.get(`${BACKEND}/neo4j/get_pdbsubchain/`).then(r => {
-        fileDownload(r.data, 'yourchain.pdb')
+  const [avaialable, setavaialable] = useState<Array<string>>([]);
+  useEffect(() => {
+    Axios.get(`${BACKEND}/neo4j/list_available_rps/`).then(r => {
+      var uniquerps: string[] = uniq(flattenDeep(r.data));
+      setavaialable(uniquerps);
     });
-  };
+    return () => {};
+  }, []);
+
   return (
     <div>
-      <button onClick={()=>getfile()}>Dowload protein</button>
-      "Ribosomal Proteins Catalogue"    
+      <ul>
+        {avaialable.map(x => {
+          return (
+            <div style={{ color: "white", margin: "5px", cursor: "pointer"}}>
+              {x}
+            </div>
+          );
+        })}
+      </ul>
     </div>
   );
 };
