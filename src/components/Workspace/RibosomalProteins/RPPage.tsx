@@ -8,6 +8,7 @@ import RPHero from "./RPHero";
 import RibosomalProteinHero from "../StructurePage/RibosomalProteinHero";
 
 const BACKEND = process.env.REACT_APP_DJANGO_URL;
+
 interface NeoHomolog {
   subchain_of: string;
   protein: RibosomalProtein;
@@ -22,6 +23,7 @@ const RPPage = () => {
     const djurl = encodeURI(
       `${BACKEND}/neo4j/get_homologs/?banName=${banName}`
     );
+    
     Axios.get(djurl).then(
       r => {
         var flattened: NeoHomolog[] = _.flattenDeep(r.data);
