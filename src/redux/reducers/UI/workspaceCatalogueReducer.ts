@@ -1,8 +1,8 @@
-import { UIActions } from "../types/action.types";
+import { UIActions } from "./UIActions";
 
 export interface WorkspaceState {
   catalogueAvailable: Array<string>;
-  catalogueSelected: Array<string>;
+  catalogueSelected : Array<string>;
 }
 
 export const toggleWorkspaceSelected = (pdbid: string): UIActions => ({

@@ -1,48 +1,60 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import * as rts from "../../../redux/types/ribTypes";
+import {
+  RibosomalProtein,
+  RibosomeStructure,
+  rRNA,
+} from "../../../redux/RibosomeTypes";
 import "./StructurePage.css";
 import RibosomalProteinHero from "./RibosomalProteinHero";
 import RNAHero from "./RNAHero";
-import Axios from "axios";
-
-const django: any = process!.env.REACT_APP_DJANGO_URL;
-const BACKEND = process.env.REACT_APP_DJANGO_URL;
+import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
+import { flattenDeep } from "lodash";
 
 interface NEO__GET_STRUCT {
-  RibosomeStructure: rts.RibosomeStructure;
-  rRNAs: Array<rts.rRNA>;
-  ribosomalProteins: Array<rts.RibosomalProtein>;
+  RibosomeStructure: RibosomeStructure;
+  rRNAs: rRNA[];
+  ribosomalProteins: RibosomalProtein[];
 }
 
 const StructurePage = () => {
   const { pdbid } = useParams();
-  const [ribdata, setribdata] = useState({} as NEO__GET_STRUCT);
+  const [structdata, setstruct] = useState<RibosomeStructure>();
+  const [protdata, setprots] = useState<RibosomalProtein[]>([]);
+  const [rrnas, setrrnas] = useState<rRNA[]>([]);
   const [rnaprottoggle, togglernaprot] = useState("rRNA");
   useEffect(() => {
-    const djurl = encodeURI(`${BACKEND}/neo4j/get_struct/?pdbid=${pdbid}`);
-    console.log(`Encoded : \n ${djurl}`);
-    Axios.get(djurl).then(
-      r => {
-        setribdata(r.data[0][0]);
+    interface response {}
+    getNeo4jData("neo4j", {
+      endpoint: "get_struct",
+      params: { pdbid: pdbid },
+    }).then(
+      resp => {
+        var respObj: {
+          RibosomeStructure: RibosomeStructure;
+          rRNAs            : rRNA[];
+          ribosomalProteins: RibosomalProtein[];
+        } = flattenDeep(resp.data)[0] as any;
+        setprots(respObj.ribosomalProteins);
+        setrrnas(respObj.rRNAs);
+        setstruct(respObj.RibosomeStructure);
+
+        // setstruct(respObj)
       },
-      e => {
-        console.log("Got error on /neo request", e);
+      err => {
+        console.log("Got error on /neo request", err);
       }
     );
     return () => {};
   }, []);
 
-  // const trdata = require(`./../../../static/nomenclature/${pdbid.toUpperCase()}.json`);
-
-  return ribdata.RibosomeStructure ? (
+  return structdata ? (
     <div className="structure-page">
       {/* struct */}
       <div>{pdbid}</div>
       <div className="structure-info">
-        {ribdata.RibosomeStructure._species} at{" "}
-        {ribdata.RibosomeStructure.resolution} Å |{" "}
-        {ribdata.RibosomeStructure.publication}
+        {structdata._species} at {structdata.resolution} Å |{" "}
+        {structdata.publication}
       </div>
       {/* proteins */}
       <div
@@ -57,10 +69,10 @@ const StructurePage = () => {
       </div>
       <ul>
         {rnaprottoggle === "rRNA"
-          ? ribdata.ribosomalProteins.map(prot => (
+          ? protdata.map(prot => (
               <RibosomalProteinHero {...prot} {...{ pdbid }} />
             ))
-          : ribdata.rRNAs.map(rna => <RNAHero {...rna} />)}
+          : rrnas!.map(rna => <RNAHero {...rna} />)}
       </ul>
     </div>
   ) : (

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./../../styles/VisualDisplay.css";
 
 type ScriptParameters = {
   src     : string;

@@ -1,32 +1,30 @@
 import React from "react";
 import infoicon from "./info.svg";
+import "./StructHero.css";
+import { RibosomeStructure } from "../../../redux/RibosomeTypes";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../redux/store";
-import "./StructHero.css";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const StructHero = ({
-  pdbid,
-}: // select,
-{
+interface OwnProps {
   pdbid: string;
-  select: (pdbid: string) => void;
-}) => {
-  var structdata: any = useSelector(
-    (state: AppState) =>
-      state.store_data.state_local.structures.filter(
-        (s: any) => s.pdbid === pdbid
-      )[0]
-  );
+}
 
-  const { nomenclatureCoverage, proteincount, rnacount } = structdata.metadata;
+interface ActionProps {}
+// type StructHeroProps = OwnProps | RibosomeStructure | ActionProps;
+
+const StructHero = ({ pdbid }: { pdbid: string }) => {
+  var structdata: any = useSelector((S: AppState) => {
+    return S.Data.RibosomeStructures;
+  });
+
   interface strdata {
     pub: string;
     res: string;
     spec: string;
     kingdom: "a" | "b" | "e";
   }
-  const str: strdata = structdata;
+  // const str: strdata = structdata;
   var kingdoms = {
     a: ["Archea", "lightblue"],
     b: ["Bacteria", "green"],
@@ -36,29 +34,29 @@ const StructHero = ({
   return (
     <>
       <div
-        className={`struct-hero ${pdbid} ${str.kingdom}`}
+        // className={`struct-hero ${pdbid} ${str.kingdom}`}
         id={`_struct_${pdbid}`}
       >
         <a className="tooltip">
           <img src={infoicon} className="tt_icon" alt="tooltip" />
           <div className="tt_content">
-            <p>Nomenclature Coverage : {nomenclatureCoverage}</p>
+            {/* <p>Nomenclature Coverage : {nomenclatureCoverage}</p>
             <p>Protein Chains : {proteincount}</p>
             <p>RNA Chains : {rnacount}</p>
-            <p>Deposition: {str.pub}</p>
+            <p>Deposition: {str.pub}</p> */}
           </div>
         </a>
 
         <Link to={`/catalogue/${pdbid}`}>
           <div className="pdbid_title">{pdbid}</div>
           <div className="hero_annotations">
-            <p className="p_annot resolution">Resolution: {str.res}</p>
-            <p className="p_annot species">
+            {/* <p className="p_annot resolution">Resolution: {str.res}</p> */}
+            {/* <p className="p_annot species">
               {str.spec} |{" "}
               <span style={{ color: kingdoms[str.kingdom][1] }}>
                 {kingdoms[str.kingdom][0]}
               </span>
-            </p>
+            </p> */}
           </div>
         </Link>
       </div>

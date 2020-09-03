@@ -1,4 +1,4 @@
-import {  UIActions } from "../types/action.types";
+import {  UIActions } from "./UIActions";
 export interface Toolbar {
   activeToolGroupId: number;
 }
@@ -12,9 +12,9 @@ const toolbarReducerDefaultState: Toolbar = {
 };
 
 export const toolbarReducer = (
-  state: Toolbar = toolbarReducerDefaultState,
+  state : Toolbar = toolbarReducerDefaultState,
   action: UIActions
-): Toolbar => {
+  )     : Toolbar => {
   switch (action.type) {
     case "TOGGLE_TOOLGROUP_BY_ID":
       return action.id === state.activeToolGroupId

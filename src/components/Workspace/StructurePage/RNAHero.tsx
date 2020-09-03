@@ -1,5 +1,5 @@
 import React from "react";
-import * as rts from "../../../redux/types/ribTypes";
+import * as rts from './../../../redux/RibosomeTypes'
 import './RNAHero.css'
 
 const RNAHero = (data: rts.rRNA) => {

@@ -1,13 +1,12 @@
 import React from "react";
+import { AppActions } from "./../../redux/AppActions";
 import { connect } from "react-redux";
 import { AppState } from "../../redux/store";
 import { bindActionCreators } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-import { AppActions } from "../../redux/types/action.types";
-import { toggleToolgroupById } from "../../redux/reducers/toolbarReducer";
+import { toggleToolgroupById } from "../../redux/reducers/UI/toolbarReducer";
 import { Link, withRouter } from "react-router-dom";
 import "./../../styles/Toolbar.css";
-import DbQueryPanel from "./DbQueryPanel";
 
 interface ReduxProps {
   activeToolgroupId: number;
@@ -36,10 +35,11 @@ const ToolGroupTemplate: React.FC<ToolGroupProps> = pps => {
   );
 };
 const mapState = (state: AppState, ownProps: OwnProps): ReduxProps => ({
-  activeToolgroupId: state.store_ui.state_Toolbar.activeToolGroupId,
+  activeToolgroupId: state.UI.state_Toolbar.activeToolGroupId,
 });
 const mapDispatch = (
   dispatch: ThunkDispatch<any, any, AppActions>,
+
   ownProps: OwnProps
 ): ActionProps => ({
   toggleToolgroupById: bindActionCreators(toggleToolgroupById, dispatch),
@@ -67,7 +67,6 @@ const DropoutMenu: React.FC = pps => {
 const ToolBar: React.FC = () => {
   return (
     <nav className="toolbar">
-
       <Link to="/catalogue">
         <ToolGroup id={4} name="Structures Catalogue"></ToolGroup>
       </Link>
@@ -82,8 +81,7 @@ const ToolBar: React.FC = () => {
           );
         }}
       >
-        <ToolGroup id={6} name="RequestData">
-        </ToolGroup>
+        <ToolGroup id={6} name="RequestData"></ToolGroup>
       </div>
 
       <Link to="/display">

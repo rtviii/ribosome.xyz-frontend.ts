@@ -1,0 +1,20 @@
+.display {
+  /* grid-area: display; */
+  /* position: relative; */
+  /* background-color: teal(0, 0, 0, 0.85); */
+  width: 100%;
+  background: pink;
+  height: 95%;
+
+  display: grid;
+  gap: 10px;
+
+  overflow: hidden; 
+  overflow-y: scroll; 
+  /* grid-template-columns: 1fr 2fr;
+  grid-template-rows: 200px auto;
+  grid-template-areas:
+    "oned oned"
+    "threed twod"; */
+
+}

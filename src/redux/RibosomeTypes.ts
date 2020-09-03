@@ -8,6 +8,7 @@ export interface RibosomeStructure {
   publication  : string;
   proteins     : Array<RibosomalProtein>;
   rnas         : Array<rRNA>;
+  site         : "cytosolic" | "mitochondrial" | "chloroplastic";
 }
 export interface rRNA {
   description: string;

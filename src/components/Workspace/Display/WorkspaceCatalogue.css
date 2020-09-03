@@ -1,0 +1,8 @@
+.workspace-catalogue{
+  background: red;
+  width     : 100%;
+  height    : 100%;
+  padding   : 10px;
+  color     : white;
+  outline   : 1px solid white;
+}

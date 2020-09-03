@@ -1,34 +1,28 @@
-import { createStore, combineReducers, applyMiddleware,  } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk, { ThunkMiddleware } from "redux-thunk";
-import { homologsReducer } from "./reducers/homologsReducer";
 import { createLogger } from "redux-logger";
-import { toolbarReducer } from "./reducers/toolbarReducer";
-import { workspaceCatalogueReducer } from "./reducers/workspaceCatalogueReducer";
-import { structReducer } from "./reducers/structReducer";
-import { localDataReducer } from "./reducers/localDataReducer";
+import { toolbarReducer } from "./reducers/UI/toolbarReducer";
+import { workspaceCatalogueReducer } from "./reducers/UI/workspaceCatalogueReducer";
+import { StructuresReducer } from "./reducers/Data/StructuresReducer/StructuresReducer";
 
 const collapsFilter = (action: any) => {
   var toFilter = ["TOGGLE_WORKSPACE_SELECTED"];
   return !toFilter.includes(action!.type);
 };
-
-const logger = createLogger({
-  collapsed: collapsFilter,
-});
+const logger = createLogger({ collapsed: collapsFilter });
 
 export const UIReducer = combineReducers({
   state_Toolbar: toolbarReducer,
   state_WorkspaceCatalogue: workspaceCatalogueReducer,
 });
+
 export const DataReducer = combineReducers({
-  state_local: localDataReducer,
-  state_Homologs: homologsReducer,
-  state_Structs: structReducer,
+  RibosomeStructures: StructuresReducer,
 });
 
 export const rootReducer = combineReducers({
-  store_data: DataReducer,
-  store_ui: UIReducer,
+  Data: DataReducer,
+  UI: UIReducer,
 });
 
 export type AppState = ReturnType<typeof rootReducer>;

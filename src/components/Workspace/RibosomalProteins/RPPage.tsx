@@ -3,8 +3,7 @@ import "./RPPage.css";
 import { useParams, Link } from "react-router-dom";
 import _, { flatten } from "lodash";
 import Axios from "axios";
-import { RibosomalProtein } from "../../../redux/types/ribTypes";
-import RPHero from "./RPHero";
+import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import RibosomalProteinHero from "../StructurePage/RibosomalProteinHero";
 
 const BACKEND = process.env.REACT_APP_DJANGO_URL;
