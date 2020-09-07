@@ -7,7 +7,7 @@
   margin-bottom: 10px;
 
   outline: 1px solid white;
-  display:flex
+  display:flex;
 }
 
 .struct-hero:hover{

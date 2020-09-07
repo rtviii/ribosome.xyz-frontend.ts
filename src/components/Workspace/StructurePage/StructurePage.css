@@ -5,6 +5,29 @@
   outline: 2px dashed slateblue;
 }
 
+.rnaprottoggle {
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: larger;
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+
 .structure-info {
     font-size: 20px;
+}
+
+.by-subunit {
+  background: wheat;
+  display: flex;
+  outline: 1px dashed cyan;
+}
+
+.ssu,.lsu,.uncharacterized{
+  
+  background:red;
+  margin-right: 30px;
+
+
 }
