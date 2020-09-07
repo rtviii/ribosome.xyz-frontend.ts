@@ -5,8 +5,8 @@ import _, { flatten } from "lodash";
 import Axios from "axios";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import RibosomalProteinHero from "../StructurePage/RibosomalProteinHero";
+import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 
-const BACKEND = process.env.REACT_APP_DJANGO_URL;
 
 interface NeoHomolog {
   subchain_of: string;
@@ -17,13 +17,14 @@ const RPPage = () => {
   const [homologs, sethomologs] = useState<NeoHomolog[]>([]);
 
   useEffect(() => {
-    console.log("Got PArams :", params);
     var banName = params.nom;
-    const djurl = encodeURI(
-      `${BACKEND}/neo4j/get_homologs/?banName=${banName}`
-    );
-    
-    Axios.get(djurl).then(
+
+    getNeo4jData("neo4j", {
+      endpoint: "get_homologs",
+      params: {
+        banName: banName,
+      },
+    }).then(
       r => {
         var flattened: NeoHomolog[] = _.flattenDeep(r.data);
         sethomologs(flattened);
@@ -45,7 +46,10 @@ const RPPage = () => {
           return (
             <div style={{ display: "flex" }}>
               <RibosomalProteinHero {...e.protein} pdbid={e.subchain_of} />{" "}
-              <Link style={{width:'min-content'}} to={`/catalogue/${e.subchain_of}`}>
+              <Link
+                style={{ width: "min-content" }}
+                to={`/catalogue/${e.subchain_of}`}
+              >
                 <div>{e.subchain_of}</div>
               </Link>
             </div>

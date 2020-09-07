@@ -41,9 +41,7 @@ const RibosomalProteinHero = (data: props) => {
 
       <div
         className="chain-download"
-        onClick={() => {
-          downloadsubchain(data.pdbid, data._PDBChainId);
-        }}
+        onClick={() => {downloadsubchain(data.pdbid, data._PDBChainId)}}
       >
           <img src={downicon} className="tt_icon" alt="tooltip" />
       </div>

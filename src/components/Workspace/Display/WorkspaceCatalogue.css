@@ -2,7 +2,6 @@
   width  : 100%;
   height : 100%;
   padding: 10px;
-  color  : white;
   outline: 1px solid white;
 
   display: flex;
@@ -11,7 +10,7 @@
 .kingdom-tray {
   padding: 10px;
   width  : 300px ;
-  outline: 2px dashed white;
+  outline: 2px dashed slategrey;
 }
 
 

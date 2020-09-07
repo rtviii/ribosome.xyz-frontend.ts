@@ -17,7 +17,7 @@ interface getStructure {
   };
 }
 interface getHomologs {
-  endpoint: "get_homolgs";
+  endpoint: "get_homologs";
   params: {
     banName: string;
   };

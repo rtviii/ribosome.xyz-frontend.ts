@@ -1,10 +1,9 @@
 .ribosomal-protein-hero {
   width: min-content;
-  color: white;
   display: flex;
 
-  outline: 1px solid white;
-  
+  outline: 1px solid lavender;
+
   margin-bottom: 10px;
 }
 

@@ -8,16 +8,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* background-image: url('visual1.png'); */
   background-color: whitesmoke;
   color: black;
-  /* background-size: cover; */
 
   font-size: 1.2rem;
   scrollbar-width: none;
 }
 a {
-  color: white; 
+  color: black; 
   text-decoration: none;
   width: 100%;
 }

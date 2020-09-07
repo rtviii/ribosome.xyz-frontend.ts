@@ -5,12 +5,14 @@ import "./../../styles/Navbar.css";
 const Navbar = () => {
   return (
     <div className="navbar">
-      <Link to="/">
-        <div className="logo">
-          <p className="logotext">Home</p>
+      <div className="categories">
+        <div>
+          <Link to="/catalogue">Structures</Link>
         </div>
-      </Link>
-
+        <div>
+          <Link to="/rps">Proteins</Link>
+        </div>
+      </div>
       <div className="navbar-controls">
         <form action="https://rtviii.github.io/ribosome.xyz-backend/APISHAPE.html">
           <button>API</button>

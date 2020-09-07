@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./RPsCatalogue.css";
-import Axios from "axios";
 import _, { flattenDeep, uniq } from "lodash";
 import { Link } from "react-router-dom";
-const BACKEND = process.env.REACT_APP_DJANGO_URL;
+import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
 
 const RPsCatalogue = () => {
   const [avaialable, setavaialable] = useState<Array<string>>([]);
   useEffect(() => {
-    Axios.get(`${BACKEND}/neo4j/list_available_rps/`).then(r => {
+    getNeo4jData("neo4j", {
+      endpoint: "list_available_rps",
+      params: null,
+    }).then(r => {
       var uniquerps: string[] = uniq(flattenDeep(r.data));
       setavaialable(uniquerps);
     });
@@ -16,14 +18,12 @@ const RPsCatalogue = () => {
   }, []);
 
   return (
-    <div>
+    <div className="rps-catalogue">
       <ul>
         {avaialable.map(x => {
           return (
             <Link to={`/rps/${x}`}>
-              <div style={{ color: "white", margin: "5px", cursor: "pointer" }}>
-                {x}
-              </div>
+              <div>{x}</div>
             </Link>
           );
         })}

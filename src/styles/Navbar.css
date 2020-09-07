@@ -8,22 +8,15 @@
   justify-content: space-between;
 }
 
-.logotext {
-  margin: 0;
-  padding: 0;
-  align-self: center;
-  justify-self: center;
-}
-
-.logo {
-  left: 240px;
+.categories {
   display: flex;
   font-size: xx-large;
-  justify-content: right;
-  padding: 0;
-  margin: 0;
-  height: 100%;
-  width: 200px;
+  gap: 40px;
+  justify-content: center;
+  align-items: center;
+  padding-left: 20px;
+  text-decoration: none;
+  color: black;
 }
 
 .navbar-controls {
@@ -34,7 +27,7 @@
 }
 .navbar button {
   font-size: large;
-  color: white;
+  /* color: white; */
   width: 120px;
   height: 100%;
   cursor: pointer;

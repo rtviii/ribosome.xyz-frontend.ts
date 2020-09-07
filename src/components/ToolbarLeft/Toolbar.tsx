@@ -67,12 +67,6 @@ const DropoutMenu: React.FC = pps => {
 const ToolBar: React.FC = () => {
   return (
     <nav className="toolbar">
-      <Link to="/catalogue">
-        <ToolGroup id={4} name="Structures Catalogue"></ToolGroup>
-      </Link>
-      <Link to="/rps">
-        <ToolGroup id={4} name="Ribosomal Proteins Catalogue"></ToolGroup>
-      </Link>
 
       <div
         onClick={() => {

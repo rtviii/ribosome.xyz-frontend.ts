@@ -1,7 +1,5 @@
 .structure-page {
   margin: 5px;
-  width: 700px;
-  color: white;
   outline: 2px dashed slateblue;
 }
 
@@ -19,14 +17,14 @@
 }
 
 .by-subunit {
-  background: wheat;
+  /* background: wheat; */
   display: flex;
   outline: 1px dashed cyan;
 }
 
 .ssu,.lsu,.uncharacterized{
   
-  background:red;
+  /* background:red; */
   margin-right: 30px;
 
 
