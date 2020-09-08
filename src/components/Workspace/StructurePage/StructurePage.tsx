@@ -6,16 +6,17 @@ import {
   rRNA,
 } from "../../../redux/RibosomeTypes";
 import "./StructurePage.css";
-import RibosomalProteinHero from "./RibosomalProteinHero";
+import RibosomalProteinHero from "../RibosomalProteins/RibosomalProteinHero";
 import RNAHero from "./RNAHero";
 import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
 import { flattenDeep } from "lodash";
+import { PageContext } from "../../Main";
 
 const StructurePage = () => {
-  const { pdbid } = useParams();
-  const [structdata, setstruct] = useState<RibosomeStructure>();
-  const [protdata, setprots] = useState<RibosomalProtein[]>([]);
-  const [rrnas, setrrnas] = useState<rRNA[]>([]);
+  const { pdbid }                      = useParams();
+  const [structdata, setstruct]        = useState<RibosomeStructure>();
+  const [protdata, setprots]           = useState<RibosomalProtein[]>([]);
+  const [rrnas, setrrnas]              = useState<rRNA[]>([]);
   const [rnaprottoggle, togglernaprot] = useState("rRNA");
 
   useEffect(() => {
@@ -40,92 +41,94 @@ const StructurePage = () => {
     return () => {};
   }, []);
 
-  useEffect(() => {
-    var y = protdata.filter(x => {
-      var Subunits = flattenDeep(
-        x.nomenclature.map(name => {
-          return name.match(/S|L/g);
-        })
-      );
-      return Subunits.includes("S") && !Subunits.includes("L");
-    });
-    console.log(y.map(x => x.nomenclature));
-  }, [protdata]);
+  // useEffect(() => {
+  //   var y = protdata.filter(x => {
+  //     var Subunits = flattenDeep(
+  //       x.nomenclature.map(name => {
+  //         return name.match(/S|L/g);
+  //       })
+  //     );
+  //     return Subunits.includes("S") && !Subunits.includes("L");
+  //   });
+  //   console.log(y.map(x => x.nomenclature));
+  // }, [protdata]);
 
   return structdata ? (
-    <div className="structure-page">
-      {/* struct */}
-      <h1>{pdbid}</h1>
-      <div className="structure-info">
-        {structdata._species} at {structdata.resolution} Å |{" "}
-        {structdata.publication}
-      </div>
-      <div
-        className="rnaprottoggle"
-        onClick={() => {
-          return rnaprottoggle === "Proteins"
-            ? togglernaprot("rRNA")
-            : togglernaprot("Proteins");
-        }}
-      >
-        Toggle {rnaprottoggle}
-      </div>
-      {rnaprottoggle === "rRNA" ? (
-        <div className="by-subunit">
-          <ul className="ssu">
-            <h2>SSU</h2>
-            {protdata
-              .filter(x => {
-                var Subunits = flattenDeep(
-                  x.nomenclature.map(name => {
-                    return name.match(/S|L/g);
-                  })
-                );
-                return Subunits.includes("L") && !Subunits.includes("S");
-              })
-              .map(x => (
-                <RibosomalProteinHero {...{ pdbid }} {...x} />
-              ))}
-          </ul>
-          <ul className="lsu">
-            <h2>LSU</h2>
-            {protdata
-              .filter(x => {
-                var Subunits = flattenDeep(
-                  x.nomenclature.map(name => {
-                    return name.match(/S|L/g);
-                  })
-                );
-                return Subunits.includes("S") && !Subunits.includes("L");
-              })
-              .map(x => (
-                <RibosomalProteinHero {...{ pdbid }} {...x} />
-              ))}
-          </ul>
-          <ul className="uncharacterized">
-            <h2>Uncharacterized</h2>
-            {protdata
-              .filter(x => {
-                var Subunits = flattenDeep(
-                  x.nomenclature.map(name => {
-                    return name.match(/S|L/g);
-                  })
-                );
-                return (
-                  (Subunits.includes("S") && Subunits.includes("L")) ||
-                  Subunits.length === 0 ||
-                  Subunits.includes(null)
-                );
-              })
-              .map(x => (
-                <RibosomalProteinHero {...{ pdbid }} {...x} />
-              ))}
-          </ul>
+    <PageContext.Provider value="StructurePage">
+      <div className="structure-page">
+        {/* struct */}
+        <h1>{pdbid}</h1>
+        <div className="structure-info">
+          {structdata._species} at {structdata.resolution} Å |{" "}
+          {structdata.publication}
         </div>
-      ) : (
-        rrnas!.map(rna => <RNAHero {...rna} />)
-      )}
-    </div>
+        <div
+          className="rnaprottoggle"
+          onClick={() => {
+            return rnaprottoggle === "Proteins"
+              ? togglernaprot("rRNA")
+              : togglernaprot("Proteins");
+          }}
+        >
+          Toggle {rnaprottoggle}
+        </div>
+        {rnaprottoggle === "rRNA" ? (
+          <div className="by-subunit">
+            <ul className="ssu">
+              <h2>SSU</h2>
+              {protdata
+                .filter(x => {
+                  var Subunits = flattenDeep(
+                    x.nomenclature.map(name => {
+                      return name.match(/S|L/g);
+                    })
+                  );
+                  return Subunits.includes("L") && !Subunits.includes("S");
+                })
+                .map(x => (
+                  <RibosomalProteinHero {...{ pdbid }} {...x} />
+                ))}
+            </ul>
+            <ul className="lsu">
+              <h2>LSU</h2>
+              {protdata
+                .filter(x => {
+                  var Subunits = flattenDeep(
+                    x.nomenclature.map(name => {
+                      return name.match(/S|L/g);
+                    })
+                  );
+                  return Subunits.includes("S") && !Subunits.includes("L");
+                })
+                .map(x => (
+                  <RibosomalProteinHero {...{ pdbid }} {...x} />
+                ))}
+            </ul>
+            <ul className="uncharacterized">
+              <h2>Uncharacterized</h2>
+              {protdata
+                .filter(x => {
+                  var Subunits = flattenDeep(
+                    x.nomenclature.map(name => {
+                      return name.match(/S|L/g);
+                    })
+                  );
+                  return (
+                    (Subunits.includes("S") && Subunits.includes("L")) ||
+                    Subunits.length === 0 ||
+                    Subunits.includes(null)
+                  );
+                })
+                .map(x => (
+                  <RibosomalProteinHero {...{ pdbid }} {...x} />
+                ))}
+            </ul>
+          </div>
+        ) : (
+          rrnas!.map(rna => <RNAHero {...rna} />)
+        )}
+      </div>
+    </PageContext.Provider>
   ) : (
     <div>"spinner"</div>
   );

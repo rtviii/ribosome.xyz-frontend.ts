@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext, Children } from "react";
 import "./RPPage.css";
 import { useParams, Link } from "react-router-dom";
-import _, { flatten } from "lodash";
-import Axios from "axios";
+import {flattenDeep} from "lodash";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
-import RibosomalProteinHero from "../StructurePage/RibosomalProteinHero";
+import RibosomalProteinHero from "./RibosomalProteinHero";
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
-
+import { PageContext } from "../../Main";
 
 interface NeoHomolog {
   subchain_of: string;
   protein: RibosomalProtein;
 }
+
 const RPPage = () => {
   var params: any = useParams();
   const [homologs, sethomologs] = useState<NeoHomolog[]>([]);
@@ -26,7 +26,7 @@ const RPPage = () => {
       },
     }).then(
       r => {
-        var flattened: NeoHomolog[] = _.flattenDeep(r.data);
+        var flattened: NeoHomolog[] = flattenDeep(r.data);
         sethomologs(flattened);
       },
       e => {
@@ -38,25 +38,27 @@ const RPPage = () => {
   }, [params]);
 
   return params!.nom ? (
-    <div className="rp-page">
-      <h1>{params.nom}</h1>
-      <h4>Homologs</h4>
-      <ul className="rp-homologs">
-        {homologs.map((e: NeoHomolog) => {
-          return (
-            <div style={{ display: "flex" }}>
-              <RibosomalProteinHero {...e.protein} pdbid={e.subchain_of} />{" "}
-              <Link
-                style={{ width: "min-content" }}
-                to={`/catalogue/${e.subchain_of}`}
-              >
-                <div>{e.subchain_of}</div>
-              </Link>
-            </div>
-          );
-        })}
-      </ul>
-    </div>
+    <PageContext.Provider value="RibosomalProteinPage">
+      <div className="rp-page">
+        <h1>{params.nom}</h1>
+        <h4>Homologs</h4>
+        <ul className="rp-homologs">
+          {homologs.map((e: NeoHomolog) => {
+            return (
+              <div style={{ display: "flex" }}>
+                <RibosomalProteinHero {...e.protein} pdbid={e.subchain_of} />{" "}
+                <Link
+                  style={{ width: "min-content" }}
+                  to={`/catalogue/${e.subchain_of}`}
+                >
+                  <div>{e.subchain_of}</div>
+                </Link>
+              </div>
+            );
+          })}
+        </ul>
+      </div>
+    </PageContext.Provider>
   ) : (
     <div>"nohting"</div>
   );

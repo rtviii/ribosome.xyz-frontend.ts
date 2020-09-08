@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { AppState, store } from "../../../redux/store";
 import { parseKingdomOut } from "./../Display/WorkspaceCatalogue";
 import { Link } from "react-router-dom";
-import RibosomalProteinHero from "../StructurePage/RibosomalProteinHero";
+import RibosomalProteinHero from "../RibosomalProteins/RibosomalProteinHero";
 import { fromPairs } from "lodash";
 
 // type StructHeroProps = OwnProps & RibosomeStructure & ActionProps;

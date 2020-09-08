@@ -1,0 +1,18 @@
+.rps-catalogue {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: auto
+}
+
+.ban-class-hero {
+  background: rosybrown;
+  height    : 100px;
+  width     : 100px;
+}
+
+.rps-catalogue .ssu,.lsu,.other{
+    display: flex;
+    gap:10px;
+    overflow-x: scroll;
+    scrollbar-color: red;
+}
