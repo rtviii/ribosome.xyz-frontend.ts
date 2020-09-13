@@ -41,3 +41,7 @@ export interface PFAMFamily{
   annotation : string;
   family_type: string;
 }
+
+export interface BanClass{
+  class_id: string;
+}
