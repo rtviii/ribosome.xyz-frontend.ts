@@ -40,31 +40,29 @@ const RibosomalProteinHero = (data: props) => {
         to={
           data.nomenclature.length > 0 ? `/rps/${data.nomenclature[0]}` : `/rps`
         }
-      >
-      </Link>
+      ></Link>
 
       <div className="chain-properties">
-        <div className="ban-nom">{data.nomenclature}</div>
-        <div className="chain">
-          Chain
-          <p className="chainname"> {data._PDBChainId}</p>
-        </div>
+        <p className="header-chain"> Chain</p>
+        <p className="header-nom">BanClass</p>
+        <p className="header-properties">Properties</p>
 
-        <div className="main-properties">
+        <p className="chain"> {data._PDBChainId}</p>
+        <div className="nom">{data.nomenclature}</div>
+        <div className="properties">
           <p>Name : {data._PDBName}</p>
           <p>Uniprot Accession : {data._UniprotAccession}</p>
           <p>Description: {data.description}</p>
           <p>Surface Ratio : {data.surface_ratio}</p>
         </div>
-
-        </div>
-        <div
-          className="chain-download"
-          onClick={() => {
-            downloadsubchain(data.pdbid, data._PDBChainId);
-          }}
-        >
-          <img src={downicon} className="down_icon" />
+      </div>
+      <div
+        className="chain-download"
+        onClick={() => {
+          downloadsubchain(data.pdbid, data._PDBChainId);
+        }}
+      >
+        <img src={downicon} className="down_icon" />
       </div>
     </div>
   );

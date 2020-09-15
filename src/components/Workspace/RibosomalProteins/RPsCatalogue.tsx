@@ -59,7 +59,8 @@ const RPsCatalogue = () => {
 
   return (
     <div className="rps-catalogue">
-      <ul className="ssu">
+      
+      <ul className="rps-ssu">
         <h2 className="title">SSU</h2>
         {available
           .filter(x => {
@@ -70,7 +71,8 @@ const RPsCatalogue = () => {
             return <BanClassHero {...x} />;
           })}
       </ul>
-      <ul className="lsu">
+
+      <ul className="rps-lsu">
         <h2 className="title">LSU</h2>
         {available
           .filter(x => {
@@ -81,7 +83,8 @@ const RPsCatalogue = () => {
             return <BanClassHero {...x} />;
           })}
       </ul>
-      <ul className="other">
+
+      <ul className="rps-other">
         <h2 className="title">Other</h2>
         {available
           .filter(x => {
@@ -92,6 +95,7 @@ const RPsCatalogue = () => {
             return <BanClassHero {...x} />;
           })}
       </ul>
+
     </div>
   );
 };

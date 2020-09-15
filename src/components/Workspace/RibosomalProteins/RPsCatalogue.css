@@ -10,6 +10,7 @@ ul{
 }
 
 .ban-class-hero {
+  position: relative;
   /* display: flex; */
   outline: 1px solid black;
   height: min-content;
@@ -27,9 +28,9 @@ ul{
   color: slateblue;
 }
 
-.rps-catalogue.ssu,
-.lsu,
-.other {
+.rps-ssu,
+.rps-lsu,
+.rps-other {
   display: flex;
   gap: 10px;
   flex-direction: column;
@@ -44,7 +45,9 @@ ul{
 }
 
 .tooltip {
+  position: absolute;
   width: 120px;
+  height: 20px;
   top: 5px;
   right: 5px;
   font-size: small;
