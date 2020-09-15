@@ -9,9 +9,9 @@ import "./StructurePage.css";
 import RibosomalProteinHero from "../RibosomalProteins/RibosomalProteinHero";
 import RNAHero from "./RNAHero";
 import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
-import { flattenDeep } from "lodash";
+import { filter, flattenDeep } from "lodash";
 import { PageContext } from "../../Main";
-import { connect, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import { AppState } from "../../../redux/store";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../../../redux/AppActions";
@@ -23,7 +23,9 @@ interface ReduxProps {
 interface DispatchProps {}
 
 type StructurePageProps = OwnProps & ReduxProps & DispatchProps;
-const StructurePage:React.FC<StructurePageProps> = (props:StructurePageProps) => {
+const StructurePage: React.FC<StructurePageProps> = (
+  props: StructurePageProps
+) => {
   const { pdbid } = useParams();
   const [structdata, setstruct] = useState<RibosomeStructure>();
   const [protdata, setprots] = useState<RibosomalProtein[]>([]);
@@ -41,6 +43,7 @@ const StructurePage:React.FC<StructurePageProps> = (props:StructurePageProps) =>
           rRNAs: rRNA[];
           ribosomalProteins: RibosomalProtein[];
         } = flattenDeep(resp.data)[0] as any;
+
         setprots(respObj.ribosomalProteins);
         setrrnas(respObj.rRNAs);
         setstruct(respObj.RibosomeStructure);
@@ -52,13 +55,9 @@ const StructurePage:React.FC<StructurePageProps> = (props:StructurePageProps) =>
     return () => {};
   }, []);
 
-  const globalFilter = props.globalFilter;
-  
-
   return structdata ? (
     <PageContext.Provider value="StructurePage">
       <div className="structure-page">
-        {/* struct */}
         <a href={`https://www.rcsb.org/structure/${pdbid}`}>
           <h1 className="title">{pdbid}</h1>
         </a>
@@ -89,11 +88,13 @@ const StructurePage:React.FC<StructurePageProps> = (props:StructurePageProps) =>
                   );
                   return Subunits.includes("L") && !Subunits.includes("S");
                 })
-                // .filter(x => {
-                //   x.nomenclature
-                //     .map(nom => nom.includes(globalFilter))
-                //     .includes(true);
-                // })
+                .filter(x => {
+                  if (x.nomenclature.length > 0) {
+                    return x.nomenclature[0].toLowerCase().includes(props.globalFilter)
+                  } else {
+                    return false;
+                  }
+                })
                 .map((x, i) => (
                   <RibosomalProteinHero key={i} {...{ pdbid }} {...x} />
                 ))}
@@ -108,6 +109,13 @@ const StructurePage:React.FC<StructurePageProps> = (props:StructurePageProps) =>
                     })
                   );
                   return Subunits.includes("S") && !Subunits.includes("L");
+                })
+                .filter(x => {
+                  if (x.nomenclature.length > 0) {
+                    return x.nomenclature[0].toLowerCase().includes(props.globalFilter)
+                  } else {
+                    return false;
+                  }
                 })
                 .map((x, j) => (
                   <RibosomalProteinHero key={j} {...{ pdbid }} {...x} />
@@ -129,6 +137,13 @@ const StructurePage:React.FC<StructurePageProps> = (props:StructurePageProps) =>
                     Subunits.includes(null)
                   );
                 })
+                .filter(x => {
+                  if (x.nomenclature.length > 0) {
+                    return x.nomenclature[0].toLowerCase().includes(props.globalFilter)
+                  } else {
+                    return false;
+                  }
+                })
                 .map((x, k) => (
                   <RibosomalProteinHero key={k} {...{ pdbid }} {...x} />
                 ))}
@@ -144,11 +159,11 @@ const StructurePage:React.FC<StructurePageProps> = (props:StructurePageProps) =>
   );
 };
 const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
-  globalFilter: state.UI.state_Filter.filterValue,
+  globalFilter: state.UI.state_Filter.filterValue.toLowerCase(),
 });
 const mapdispatch = (
   dispatch: ThunkDispatch<any, any, AppActions>,
   ownprops: OwnProps
 ): DispatchProps => ({});
 
-export default connect(mapstate,mapdispatch)(StructurePage);
+export default connect(mapstate, mapdispatch)(StructurePage);

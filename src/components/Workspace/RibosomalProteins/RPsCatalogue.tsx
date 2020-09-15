@@ -19,7 +19,7 @@ interface endpointResponseShape {
 const BanClassHero = (prop: endpointResponseShape) => {
   return (
     <Link className="ban-class-hero" to={`/rps/${prop.BanClass}`}>
-      <h1 className="banClassName">{prop.BanClass}</h1>
+      <div className="banClassName">{prop.BanClass}</div>
       <div className="stats">
         <ul>
           <li>
@@ -90,7 +90,7 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
       <ul className="rps-ssu">
         <h2 className="title">SSU</h2>
         {ssu
-          .filter(x => x.BanClass.includes(prop.globalFilter))
+          .filter(x => x.BanClass.toLowerCase().includes(prop.globalFilter))
           .sort()
           .map(x => {
             return <BanClassHero {...x} />;
@@ -100,7 +100,7 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
       <ul className="rps-lsu">
         <h2 className="title">LSU</h2>
         {lsu
-          .filter(x => x.BanClass.includes(prop.globalFilter))
+          .filter(x => x.BanClass.toLowerCase().includes(prop.globalFilter))
           .sort()
           .map(x => {
             return <BanClassHero {...x} />;
@@ -110,7 +110,7 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
       <ul className="rps-other">
         <h2 className="title">Other</h2>
         {other
-          .filter(x => x.BanClass.includes(prop.globalFilter))
+          .filter(x => x.BanClass.toLowerCase().includes(prop.globalFilter))
           .sort()
           .map(x => {
             return <BanClassHero {...x} />;
@@ -121,7 +121,7 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
 };
 
 const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
-  globalFilter: state.UI.state_Filter.filterValue,
+  globalFilter: state.UI.state_Filter.filterValue.toLowerCase(),
 });
 const mapdispatch = (
   dispatch: ThunkDispatch<any, any, AppActions>,
