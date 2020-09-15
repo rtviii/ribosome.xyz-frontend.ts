@@ -1,5 +1,5 @@
 import React from "react";
-import infoicon from "./info.svg";
+import infoicon from "./../../../static/info.svg";
 import "./StructHero.css";
 import { RibosomeStructure } from "../../../redux/RibosomeTypes";
 import { useSelector } from "react-redux";
