@@ -1,6 +1,8 @@
 .structure-page {
   margin: 5px;
-  outline: 2px dashed slateblue;
+}
+.structure-page a:hover {
+  color:blue;
 }
 
 .rnaprottoggle {
@@ -17,15 +19,18 @@
 }
 
 .by-subunit {
-  /* background: wheat; */
-  display: flex;
-  outline: 1px dashed cyan;
+  display: grid;
+  /* grid-template-rows: repeat(3, 1fr); */
+  padding: 20px;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
-.ssu,.lsu,.uncharacterized{
-  
-  /* background:red; */
-  margin-right: 30px;
+.structure-page.ssu,
+.lsu,
+.other {
 
-
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
 }

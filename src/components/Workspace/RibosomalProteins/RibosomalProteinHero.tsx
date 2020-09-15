@@ -7,14 +7,14 @@ import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import { PageContext, PageContexts } from "../../Main";
 
 interface props {
-  pdbid            : string;
-  _PDBChainId      : string;
+  pdbid: string;
+  _PDBChainId: string;
   _UniprotAccession: string;
-  _PDBName         : string;
-  surface_ratio    : number | null;
-  description      : string;
-  nomenclature     : Array<string>;
-  _PFAMFamilies    : Array<string>;
+  _PDBName: string;
+  surface_ratio: number | null;
+  description: string;
+  nomenclature: Array<string>;
+  _PFAMFamilies: Array<string>;
 }
 
 const RibosomalProteinHero = (data: props) => {
@@ -26,7 +26,7 @@ const RibosomalProteinHero = (data: props) => {
       fileDownload(resp.data, `${pdbid}_subchain_${cid}`);
     });
   };
-  const context:PageContexts = useContext(PageContext);
+  const context: PageContexts = useContext(PageContext);
 
   useEffect(() => {
     console.log("Ribosomal Prot Context", context);
@@ -41,24 +41,30 @@ const RibosomalProteinHero = (data: props) => {
           data.nomenclature.length > 0 ? `/rps/${data.nomenclature[0]}` : `/rps`
         }
       >
-        <div className="ban-nom">{data.nomenclature}</div>
       </Link>
 
-      <p className="chainname"> {data._PDBChainId}</p>
-      <div className="main-properties">
-        <p>Name : {data._PDBName}</p>
-        <p>Uniprot Accession : {data._UniprotAccession}</p>
-        <p>Description: {data.description}</p>
-        <p>Surface Ratio : {data.surface_ratio}</p>
-      </div>
+      <div className="chain-properties">
+        <div className="ban-nom">{data.nomenclature}</div>
+        <div className="chain">
+          Chain
+          <p className="chainname"> {data._PDBChainId}</p>
+        </div>
 
-      <div
-        className="chain-download"
-        onClick={() => {
-          downloadsubchain(data.pdbid, data._PDBChainId);
-        }}
-      >
-        <img src={downicon} className="tt_icon" alt="tooltip" />
+        <div className="main-properties">
+          <p>Name : {data._PDBName}</p>
+          <p>Uniprot Accession : {data._UniprotAccession}</p>
+          <p>Description: {data.description}</p>
+          <p>Surface Ratio : {data.surface_ratio}</p>
+        </div>
+
+        </div>
+        <div
+          className="chain-download"
+          onClick={() => {
+            downloadsubchain(data.pdbid, data._PDBChainId);
+          }}
+        >
+          <img src={downicon} className="down_icon" />
       </div>
     </div>
   );

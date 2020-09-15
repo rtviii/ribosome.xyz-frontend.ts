@@ -13,10 +13,10 @@ import { flattenDeep } from "lodash";
 import { PageContext } from "../../Main";
 
 const StructurePage = () => {
-  const { pdbid }                      = useParams();
-  const [structdata, setstruct]        = useState<RibosomeStructure>();
-  const [protdata, setprots]           = useState<RibosomalProtein[]>([]);
-  const [rrnas, setrrnas]              = useState<rRNA[]>([]);
+  const { pdbid } = useParams();
+  const [structdata, setstruct] = useState<RibosomeStructure>();
+  const [protdata, setprots] = useState<RibosomalProtein[]>([]);
+  const [rrnas, setrrnas] = useState<rRNA[]>([]);
   const [rnaprottoggle, togglernaprot] = useState("rRNA");
 
   useEffect(() => {
@@ -57,7 +57,9 @@ const StructurePage = () => {
     <PageContext.Provider value="StructurePage">
       <div className="structure-page">
         {/* struct */}
-        <h1>{pdbid}</h1>
+        <a href={`https://www.rcsb.org/structure/${pdbid}`}>
+          <h1 className="title">{pdbid}</h1>
+        </a>
         <div className="structure-info">
           {structdata._species} at {structdata.resolution} Å |{" "}
           {structdata.publication}
@@ -85,8 +87,8 @@ const StructurePage = () => {
                   );
                   return Subunits.includes("L") && !Subunits.includes("S");
                 })
-                .map(x => (
-                  <RibosomalProteinHero {...{ pdbid }} {...x} />
+                .map((x,i) => (
+                  <RibosomalProteinHero key={i} {...{ pdbid }} {...x} />
                 ))}
             </ul>
             <ul className="lsu">
@@ -100,12 +102,12 @@ const StructurePage = () => {
                   );
                   return Subunits.includes("S") && !Subunits.includes("L");
                 })
-                .map(x => (
-                  <RibosomalProteinHero {...{ pdbid }} {...x} />
+                .map((x,j) => (
+                  <RibosomalProteinHero key={j}{...{ pdbid }} {...x} />
                 ))}
             </ul>
-            <ul className="uncharacterized">
-              <h2>Uncharacterized</h2>
+            <ul className="other">
+              <h2>Other</h2>
               {protdata
                 .filter(x => {
                   var Subunits = flattenDeep(
@@ -113,19 +115,20 @@ const StructurePage = () => {
                       return name.match(/S|L/g);
                     })
                   );
+
                   return (
                     (Subunits.includes("S") && Subunits.includes("L")) ||
                     Subunits.length === 0 ||
                     Subunits.includes(null)
                   );
                 })
-                .map(x => (
-                  <RibosomalProteinHero {...{ pdbid }} {...x} />
+                .map(( x,k ) => (
+                  <RibosomalProteinHero key={k}{...{ pdbid }} {...x} />
                 ))}
             </ul>
           </div>
         ) : (
-          rrnas!.map(rna => <RNAHero {...rna} />)
+          rrnas!.map(( rna,l ) => <RNAHero key={l} {...rna} />)
         )}
       </div>
     </PageContext.Provider>

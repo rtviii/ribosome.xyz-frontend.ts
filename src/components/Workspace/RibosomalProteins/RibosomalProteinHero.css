@@ -1,37 +1,14 @@
 .ribosomal-protein-hero {
+  position: relative;
   width: min-content;
   display: flex;
-
+  width: 600px;
   outline: 1px solid lavender;
-
   margin-bottom: 10px;
 }
 
-.ban-nom {
-  width: 70px;
 
-  justify-self: center;
-  margin-bottom: 10px;
-}
-.link {
-  width: min-content;
-  margin-right: 20px;
-}
-.link:hover {
-  color: blue;
-}
 
-.pdb-name {
-  outline: 1px solid green;
-  color: wheat;
-  font-size: small;
-  height: min-content;
-}
-
-p {
-  margin: 0;
-  padding: 0;
-}
 .chain-download {
   text-decoration: underline;
   color: blue;
@@ -39,12 +16,28 @@ p {
 }
 
 .main-properties {
-  word-wrap: none;
-
+  width: max-content;
+  outline: 1px solid black;
+  position: relative;
   font-size: small;
 }
-.chainname {
-  width: 80px;
-  font-size: xx-large;
-  color: green;
+.main-properties p {
+  margin: 0;
+  padding: 0;
+}
+
+.chain-properties{
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 8fr ;
+  outline: 2px dashed red;
+}
+
+.chain-download,
+.down_icon{
+  position: absolute;
+  width:20px;
+  height:20px;
+  right: 5px;
+  bottom: 5px;
 }
