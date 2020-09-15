@@ -13,51 +13,72 @@ import { flattenDeep, uniq } from "lodash";
 import { RibosomeStructure } from "./../../../redux/RibosomeTypes";
 import StructHero from "./../StructureHero/StructHero";
 import { PageContext } from "../../Main";
+import { AppActions } from "../../../redux/AppActions";
+
+interface OwnProps {}
+interface ReduxProps {
+  globalFilter: string;
+}
+interface DispatchProps {}
+type WorkspaceCatalogueProps = DispatchProps & OwnProps & ReduxProps;
 
 export const parseKingdomOut = (speciesstr: string) => {
   return speciesstr.slice(-3).replace(/(\(|\))/g, "");
 };
 
-const WorkspaceCatalogue: React.FC = () => {
+const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
+  prop: WorkspaceCatalogueProps
+) => {
   const [allstructs, setallstructs] = useState<RibosomeStructure[]>([]);
 
+  const [bacteria, setbacteria] = useState<RibosomeStructure[]>([]);
+  const [archea, setarchea]     = useState<RibosomeStructure[]>([]);
+  const [eukarya, seteukarya]   = useState<RibosomeStructure[]>([]);
+
   useEffect(() => {
-    var bacteria, archea, eukarya: RibosomeStructure[];
+    var b, a, e: RibosomeStructure[];
     getNeo4jData("neo4j", {
       endpoint: "get_all_structs",
       params: null,
     }).then(response => {
       var structs: RibosomeStructure[] = uniq(flattenDeep(response.data));
       setallstructs(structs);
-      bacteria = structs.filter(x => parseKingdomOut(x._species) === "b");
-      archea = structs.filter(x => parseKingdomOut(x._species) === "a");
-      eukarya = structs.filter(x => parseKingdomOut(x._species) === "e");
+      b = structs.filter(x => parseKingdomOut(x._species) === "b");
+      a = structs.filter(x => parseKingdomOut(x._species) === "a");
+      e = structs.filter(x => parseKingdomOut(x._species) === "e");
+      setarchea(a);
+      setbacteria(b);
+      seteukarya(e);
     });
   }, []);
+
+
 
   return allstructs.length > 0 ? (
     <PageContext.Provider value="WorkspaceCatalogue">
       <div className="workspace-catalogue">
         <div className="bacteria kingdom-tray">
           <h2>Bacteria</h2>
-          {allstructs
-            .filter(x => parseKingdomOut(x._species) === "b")
+          {bacteria
+            .filter(x => x._PDBId.includes(prop.globalFilter.toUpperCase()))
+
             .map((x, i) => (
               <StructHero {...x} key={i + "b"} />
             ))}
         </div>
         <div className="archea kingdom-tray">
           <h2>Archea</h2>
-          {allstructs
-            .filter(x => parseKingdomOut(x._species) === "a")
+          {archea
+
+            .filter(x => x._PDBId.includes(prop.globalFilter.toUpperCase()))
             .map((x, i) => {
               return <StructHero {...x} key={i + "a"} />;
             })}
         </div>
         <div className="eukarya kingdom-tray">
           <h2>Eukarya</h2>
-          {allstructs
-            .filter(x => parseKingdomOut(x._species) === "e")
+          {eukarya
+            .filter(x => x._PDBId.includes(prop.globalFilter.toUpperCase()))
             .map((x, i) => (
               <StructHero {...x} key={i + "e"} />
             ))}
@@ -65,8 +86,16 @@ const WorkspaceCatalogue: React.FC = () => {
       </div>
     </PageContext.Provider>
   ) : (
-    <p>Loading up... Will replace with some spinner.</p>
+    <p>Loading up... Will replace with a spinner.</p>
   );
 };
 
-export default WorkspaceCatalogue;
+const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
+  globalFilter: state.UI.state_Filter.filterValue,
+});
+const mapdispatch = (
+  dispatch: ThunkDispatch<any, any, AppActions>,
+  ownprops: OwnProps
+): DispatchProps => ({});
+
+export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./../../styles/Navbar.css";
+import SearchBox from './SearchBox'
 
 const Navbar = () => {
   return (
@@ -13,6 +14,7 @@ const Navbar = () => {
           <Link to="/rps">Proteins</Link>
         </div>
       </div>
+      <SearchBox/>
       <div className="navbar-controls">
         <form action="https://rtviii.github.io/ribosome.xyz-backend/APISHAPE.html">
           <button>API</button>

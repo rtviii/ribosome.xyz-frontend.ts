@@ -27,12 +27,6 @@ const RibosomalProteinHero = (data: props) => {
     });
   };
   const context: PageContexts = useContext(PageContext);
-
-  useEffect(() => {
-    console.log("Ribosomal Prot Context", context);
-    return () => {};
-  }, [context]);
-
   return (
     <div className="ribosomal-protein-hero">
       <Link

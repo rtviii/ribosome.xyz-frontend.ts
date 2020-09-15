@@ -11,8 +11,19 @@ import RNAHero from "./RNAHero";
 import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
 import { flattenDeep } from "lodash";
 import { PageContext } from "../../Main";
+import { connect, useSelector } from "react-redux";
+import { AppState } from "../../../redux/store";
+import { ThunkDispatch } from "redux-thunk";
+import { AppActions } from "../../../redux/AppActions";
 
-const StructurePage = () => {
+interface OwnProps {}
+interface ReduxProps {
+  globalFilter: string;
+}
+interface DispatchProps {}
+
+type StructurePageProps = OwnProps & ReduxProps & DispatchProps;
+const StructurePage:React.FC<StructurePageProps> = (props:StructurePageProps) => {
   const { pdbid } = useParams();
   const [structdata, setstruct] = useState<RibosomeStructure>();
   const [protdata, setprots] = useState<RibosomalProtein[]>([]);
@@ -41,17 +52,8 @@ const StructurePage = () => {
     return () => {};
   }, []);
 
-  // useEffect(() => {
-  //   var y = protdata.filter(x => {
-  //     var Subunits = flattenDeep(
-  //       x.nomenclature.map(name => {
-  //         return name.match(/S|L/g);
-  //       })
-  //     );
-  //     return Subunits.includes("S") && !Subunits.includes("L");
-  //   });
-  //   console.log(y.map(x => x.nomenclature));
-  // }, [protdata]);
+  const globalFilter = props.globalFilter;
+  
 
   return structdata ? (
     <PageContext.Provider value="StructurePage">
@@ -87,7 +89,12 @@ const StructurePage = () => {
                   );
                   return Subunits.includes("L") && !Subunits.includes("S");
                 })
-                .map((x,i) => (
+                // .filter(x => {
+                //   x.nomenclature
+                //     .map(nom => nom.includes(globalFilter))
+                //     .includes(true);
+                // })
+                .map((x, i) => (
                   <RibosomalProteinHero key={i} {...{ pdbid }} {...x} />
                 ))}
             </ul>
@@ -102,8 +109,8 @@ const StructurePage = () => {
                   );
                   return Subunits.includes("S") && !Subunits.includes("L");
                 })
-                .map((x,j) => (
-                  <RibosomalProteinHero key={j}{...{ pdbid }} {...x} />
+                .map((x, j) => (
+                  <RibosomalProteinHero key={j} {...{ pdbid }} {...x} />
                 ))}
             </ul>
             <ul className="other">
@@ -122,13 +129,13 @@ const StructurePage = () => {
                     Subunits.includes(null)
                   );
                 })
-                .map(( x,k ) => (
-                  <RibosomalProteinHero key={k}{...{ pdbid }} {...x} />
+                .map((x, k) => (
+                  <RibosomalProteinHero key={k} {...{ pdbid }} {...x} />
                 ))}
             </ul>
           </div>
         ) : (
-          rrnas!.map(( rna,l ) => <RNAHero key={l} {...rna} />)
+          rrnas!.map((rna, l) => <RNAHero key={l} {...rna} />)
         )}
       </div>
     </PageContext.Provider>
@@ -136,5 +143,12 @@ const StructurePage = () => {
     <div>"spinner"</div>
   );
 };
+const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
+  globalFilter: state.UI.state_Filter.filterValue,
+});
+const mapdispatch = (
+  dispatch: ThunkDispatch<any, any, AppActions>,
+  ownprops: OwnProps
+): DispatchProps => ({});
 
-export default StructurePage;
+export default connect(mapstate,mapdispatch)(StructurePage);

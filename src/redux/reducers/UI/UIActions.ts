@@ -11,10 +11,19 @@ export interface toggleWorkspaceSelected {
   pdbid:string
 }
 
+
+
+export const INPUT_FILTER_VALUE = "INPUT_FILTER_VALUE";
+export interface inputFilterValue{
+  type: typeof INPUT_FILTER_VALUE,
+  payload: string
+}
+
+
 export interface loadUpWorkspaceStructures {
   type: typeof LOAD_UP_WORKSPACE_STRUCTURES,
   structures: string[]
 }
 export type WorkspaceActions = toggleWorkspaceSelected | loadUpWorkspaceStructures;
 
-export type UIActions = WorkspaceActions | any;
+export type UIActions = WorkspaceActions | inputFilterValue;

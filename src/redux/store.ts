@@ -1,7 +1,8 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk, { ThunkMiddleware } from "redux-thunk";
 import { createLogger } from "redux-logger";
-import { toolbarReducer } from "./reducers/UI/toolbarReducer";
+// import { toolbarReducer } from "./reducers/UI/toolbarReducer";
+import { PagewideFilterReducer } from "./reducers/UI/PagewideFilterReducer";
 import { workspaceCatalogueReducer } from "./reducers/UI/workspaceCatalogueReducer";
 import { StructuresReducer } from "./reducers/Data/StructuresReducer/StructuresReducer";
 
@@ -12,8 +13,9 @@ const collapsFilter = (action: any) => {
 const logger = createLogger({ collapsed: collapsFilter });
 
 export const UIReducer = combineReducers({
-  state_Toolbar: toolbarReducer,
+  // state_Toolbar: toolbarReducer,
   state_WorkspaceCatalogue: workspaceCatalogueReducer,
+  state_Filter: PagewideFilterReducer
 });
 
 export const DataReducer = combineReducers({

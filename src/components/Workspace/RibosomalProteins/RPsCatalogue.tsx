@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
-import _, { flattenDeep, uniq } from "lodash";
+import _, { filter, flattenDeep, uniq } from "lodash";
 import { Link } from "react-router-dom";
 import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
 import "./RPsCatalogue.css";
 import infoicon from "./../../../static/info.svg";
 import { BanClass } from "../../../redux/RibosomeTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { AppActions } from "../../../redux/AppActions";
+import { AppState } from "../../../redux/store";
+import { connect } from "react-redux";
+import { SSL_OP_SINGLE_DH_USE } from "constants";
 
 interface endpointResponseShape {
   BanClass: BanClass;
@@ -42,30 +47,50 @@ const BanClassHero = (prop: endpointResponseShape) => {
   );
 };
 
-const RPsCatalogue = () => {
+interface OwnProps {}
+interface ReduxProps {
+  globalFilter: string;
+}
+interface DispatchProps {}
+type RPsCatalogueProps = DispatchProps & OwnProps & ReduxProps;
+const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
   const [available, setavailable] = useState<Array<endpointResponseShape>>([]);
+  const [ssu, setssu] = useState<Array<endpointResponseShape>>([]);
+  const [lsu, setlsu] = useState<Array<endpointResponseShape>>([]);
+  const [other, setother] = useState<Array<endpointResponseShape>>([]);
+
   useEffect(() => {
     getNeo4jData("neo4j", {
       endpoint: "list_available_rps",
       params: null,
     }).then(r => {
       var uniquerps: Array<endpointResponseShape> = uniq(flattenDeep(r.data));
-      console.log(uniquerps);
 
       setavailable(uniquerps);
+      setlsu(
+        uniquerps.filter(x => {
+          return x.BanClass.includes("L") && !x.BanClass.includes("S");
+        })
+      );
+      setssu(
+        uniquerps.filter(x => {
+          return x.BanClass.includes("S") && !x.BanClass.includes("L");
+        })
+      );
+      setother(
+        uniquerps.filter(x => {
+          return ["RACK1", "bTHX"].includes(x.BanClass);
+        })
+      );
     });
     return () => {};
   }, []);
-
   return (
     <div className="rps-catalogue">
-      
       <ul className="rps-ssu">
         <h2 className="title">SSU</h2>
-        {available
-          .filter(x => {
-            return x.BanClass.includes("L") && !x.BanClass.includes("S");
-          })
+        {ssu
+          .filter(x => x.BanClass.includes(prop.globalFilter))
           .sort()
           .map(x => {
             return <BanClassHero {...x} />;
@@ -74,10 +99,8 @@ const RPsCatalogue = () => {
 
       <ul className="rps-lsu">
         <h2 className="title">LSU</h2>
-        {available
-          .filter(x => {
-            return x.BanClass.includes("S") && !x.BanClass.includes("L");
-          })
+        {lsu
+          .filter(x => x.BanClass.includes(prop.globalFilter))
           .sort()
           .map(x => {
             return <BanClassHero {...x} />;
@@ -86,18 +109,23 @@ const RPsCatalogue = () => {
 
       <ul className="rps-other">
         <h2 className="title">Other</h2>
-        {available
-          .filter(x => {
-            return ["RACK1", "bTHX"].includes(x.BanClass);
-          })
+        {other
+          .filter(x => x.BanClass.includes(prop.globalFilter))
           .sort()
           .map(x => {
             return <BanClassHero {...x} />;
           })}
       </ul>
-
     </div>
   );
 };
 
-export default RPsCatalogue;
+const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
+  globalFilter: state.UI.state_Filter.filterValue,
+});
+const mapdispatch = (
+  dispatch: ThunkDispatch<any, any, AppActions>,
+  ownprops: OwnProps
+): DispatchProps => ({});
+
+export default connect(mapstate, mapdispatch)(RPsCatalogue);
