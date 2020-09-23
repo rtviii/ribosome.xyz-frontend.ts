@@ -30,10 +30,9 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
   const [allstructs, setallstructs] = useState<RibosomeStructure[]>([]);
-
   const [bacteria, setbacteria] = useState<RibosomeStructure[]>([]);
-  const [archea, setarchea]     = useState<RibosomeStructure[]>([]);
-  const [eukarya, seteukarya]   = useState<RibosomeStructure[]>([]);
+  const [archea, setarchea] = useState<RibosomeStructure[]>([]);
+  const [eukarya, seteukarya] = useState<RibosomeStructure[]>([]);
 
   useEffect(() => {
     var b, a, e: RibosomeStructure[];
@@ -52,13 +51,11 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
     });
   }, []);
 
-
-
   return allstructs.length > 0 ? (
     <PageContext.Provider value="WorkspaceCatalogue">
       <div className="workspace-catalogue">
         <div className="bacteria kingdom-tray">
-          <h2>Bacteria</h2>
+          <h2 className="tray-title">Bacteria</h2>
           {bacteria
             .filter(x => x._PDBId.includes(prop.globalFilter.toUpperCase()))
 
@@ -66,21 +63,21 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
               <StructHero {...x} key={i + "b"} />
             ))}
         </div>
-        <div className="archea kingdom-tray">
-          <h2>Archea</h2>
-          {archea
-
-            .filter(x => x._PDBId.includes(prop.globalFilter.toUpperCase()))
-            .map((x, i) => {
-              return <StructHero {...x} key={i + "a"} />;
-            })}
-        </div>
         <div className="eukarya kingdom-tray">
-          <h2>Eukarya</h2>
+          <h2 className="tray-title">Eukarya</h2>
           {eukarya
             .filter(x => x._PDBId.includes(prop.globalFilter.toUpperCase()))
             .map((x, i) => (
               <StructHero {...x} key={i + "e"} />
+            ))}
+        </div>
+
+        <div className="archea kingdom-tray">
+          <h2 className="tray-title">Archea</h2>
+          {archea
+            .filter(x => x._PDBId.includes(prop.globalFilter.toUpperCase()))
+            .map((x, i) => (
+              <StructHero {...x} key={i + "a"} />
             ))}
         </div>
       </div>

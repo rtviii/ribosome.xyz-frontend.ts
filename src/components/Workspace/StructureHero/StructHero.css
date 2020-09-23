@@ -2,12 +2,14 @@
 /* tt_content denotes a tooltip content to be revealed on hover */
 .struct-hero {
   cursor: pointer;
-  position: relative;
+  /* position: relative; */
   padding: 10px;
   margin-bottom: 10px;
   outline: 2px solid black;
 
-  display:flex;
+ /* margin: auto; */
+  align-self: start;
+  height: min-content;
 }
 
 .struct-hero:hover{

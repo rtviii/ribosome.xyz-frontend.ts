@@ -1,12 +1,14 @@
 import React from "react";
-import * as rts from './../../../redux/RibosomeTypes'
-import './RNAHero.css'
+import * as rts from "./../../../redux/RibosomeTypes";
+import "./RNAHero.css";
 
 const RNAHero = (data: rts.rRNA) => {
   return (
-    <div className='RNAHero'>
-      <div>{data._PDBChainId}</div>
-      <p>{data.description}</p>
+    <div className="RNAHero">
+      Chain: {data._PDBChainId}
+      <div className='rna-description'>
+        Description: {data.description}
+      </div>
     </div>
   );
 };

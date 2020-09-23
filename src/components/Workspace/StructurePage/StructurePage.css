@@ -1,16 +1,25 @@
-.structure-page {
-  margin: 5px;
+
+.structure-page{
+  position: relative;
+  display: flex;
+}
+
+
+.structure-page--main {
+  /* margin: 5px; */
+  width: 18vw;
 }
 .structure-page a:hover {
   color:blue;
 }
+.structure-page--components{
 
+
+}
 .rnaprottoggle {
-  text-decoration: underline;
   cursor: pointer;
-  font-size: larger;
-  width: 200px;
-  margin-bottom: 20px;
+  text-decoration: underline;
+  
 }
 
 
@@ -20,10 +29,15 @@
 
 .by-subunit {
   display: grid;
-  /* grid-template-rows: repeat(3, 1fr); */
-  padding: 20px;
   grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  padding-left: 20px;
 }
+.subunit-title{
+  font-size: xx-large;
+  font-weight: 550;
+  margin: 20px 0;
+ }
 
 .ssu,
 .lsu,
@@ -31,6 +45,5 @@
 
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 20px;
+  /* gap: 10px; */
 }

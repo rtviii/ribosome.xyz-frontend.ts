@@ -1,16 +1,23 @@
 .workspace-catalogue {
-  width  : 100%;
-  height : 100%;
+  height: 100%;
   padding: 10px;
   outline: 1px solid white;
-
   display: flex;
+  gap: 20px;
 }
 
 .kingdom-tray {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   padding: 10px;
-  width  : 300px ;
-  outline: 2px dashed slategrey;
+  gap: 10px;
+  width: 600px;
+  outline: 1px dashed slategrey;
 }
 
-
+.tray-title {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-auto-flow: column;
+  height: min-content;
+}

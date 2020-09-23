@@ -80,11 +80,11 @@ const VisualDisplay = () => {
     ) as any;
     var viewerInstance = pdbeMolstarComponent!.viewerInstance;
     viewerInstance.visual.update({
-      moleculeId: "3j9m",
-      struct_asym_id:"",
+      moleculeId        : "3j9m",
+      struct_asym_id    : "",
       hideCanvasControls: ["expand", "selection", " animation"],
-      hideControls: true,
-      subscribEvents: true,
+      hideControls      : true,
+      subscribEvents    : true,
     });
 
     interface PDBEvent extends Event {

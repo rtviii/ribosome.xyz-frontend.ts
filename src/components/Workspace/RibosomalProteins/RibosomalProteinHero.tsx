@@ -7,14 +7,14 @@ import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import { PageContext, PageContexts } from "../../Main";
 
 interface props {
-  pdbid: string;
-  _PDBChainId: string;
+  pdbid            : string;
+  _PDBChainId      : string;
   _UniprotAccession: string;
-  _PDBName: string;
-  surface_ratio: number | null;
-  description: string;
-  nomenclature: Array<string>;
-  _PFAMFamilies: Array<string>;
+  _PDBName         : string;
+  surface_ratio    : number | null;
+  description      : string;
+  nomenclature     : Array<string>;
+  _PFAMFamilies    : Array<string>;
 }
 
 const RibosomalProteinHero = (data: props) => {
@@ -24,6 +24,8 @@ const RibosomalProteinHero = (data: props) => {
       params: { chainid: cid, structid: pdbid },
     }).then(resp => {
       fileDownload(resp.data, `${pdbid}_subchain_${cid}`);
+    }, error=>{
+      alert("This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!")
     });
   };
   const context: PageContexts = useContext(PageContext);
@@ -42,12 +44,24 @@ const RibosomalProteinHero = (data: props) => {
         <p className="header-properties">Properties</p>
 
         <p className="chain"> {data._PDBChainId}</p>
-        <div className="nom">{data.nomenclature}</div>
+        <div className="nom">
+          {" "}
+          <Link to={`/rps/${data.nomenclature[0]}`}> {data.nomenclature}</Link>
+        </div>
         <div className="properties">
-          <p>Name : {data._PDBName}</p>
-          <p>Uniprot Accession : {data._UniprotAccession}</p>
-          <p>Description: {data.description}</p>
-          <p>Surface Ratio : {data.surface_ratio}</p>
+          <p>Name: {data._PDBName}</p>
+
+          <p>
+            Uniprot:
+            <a
+              href={`https://www.uniprot.org/uniprot/${data._UniprotAccession}`}
+            >
+              {data._UniprotAccession}
+            </a>
+          </p>
+
+           {/* <p>Description: {data.description}</p> */}
+          <p>Surface Ratio : {data.surface_ratio? data.surface_ratio.toFixed(2) : "NaN" }</p>
         </div>
       </div>
       <div

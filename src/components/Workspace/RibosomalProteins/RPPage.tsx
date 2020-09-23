@@ -60,7 +60,7 @@ const RPPage = () => {
       </div>
     </PageContext.Provider>
   ) : (
-    <div>"nohting"</div>
+    <div>"Fetching..."</div>
   );
 };
 
