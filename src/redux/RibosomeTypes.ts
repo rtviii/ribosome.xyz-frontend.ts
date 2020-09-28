@@ -42,6 +42,14 @@ export interface PFAMFamily{
   family_type: string;
 }
 
+
+export interface Ligand {
+  name     : string;
+  chemicalId       : string;
+  neighbors: Array<string>;
+
+}
+
 export type BanClass=
   | "eL39"
   | "eL38"

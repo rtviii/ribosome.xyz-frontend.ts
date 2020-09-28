@@ -23,5 +23,6 @@ yarn-error.log*
 
 
 /ribosomexyz-docs
+/ribparse
 
 .env
