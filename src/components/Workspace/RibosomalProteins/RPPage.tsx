@@ -1,14 +1,16 @@
 import React, { useEffect, useState, createContext, Children } from "react";
 import "./RPPage.css";
 import { useParams, Link } from "react-router-dom";
-import {flattenDeep} from "lodash";
+import { flattenDeep } from "lodash";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import RibosomalProteinHero from "./RibosomalProteinHero";
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import { PageContext } from "../../Main";
+import * as ribt from "./../../../redux/RibosomeTypes";
+import Axios from "axios";
 
 interface NeoHomolog {
-  subchain_of: string;
+  parent: string;
   protein: RibosomalProtein;
 }
 
@@ -20,14 +22,19 @@ const RPPage = () => {
     var banName = params.nom;
 
     getNeo4jData("neo4j", {
-      endpoint: "get_homologs",
-      params: {
-        banName: banName,
-      },
-    }).then(
+                endpoint: "gmo_nom_class",
+                params: {
+                  banName:banName
+                },
+              }).then(
       r => {
+        
         var flattened: NeoHomolog[] = flattenDeep(r.data);
+        console.log(
+         flattened
+        );
         sethomologs(flattened);
+
       },
       e => {
         console.log("Got error on /neo request", e);
@@ -46,12 +53,12 @@ const RPPage = () => {
           {homologs.map((e: NeoHomolog) => {
             return (
               <div style={{ display: "flex" }}>
-                <RibosomalProteinHero {...e.protein} pdbid={e.subchain_of} />{" "}
+                <RibosomalProteinHero {...e.protein} pdbid={e.parent} />{" "}
                 <Link
                   style={{ width: "min-content" }}
-                  to={`/catalogue/${e.subchain_of}`}
+                  to={`/catalogue/${e.parent}`}
                 >
-                  <div>{e.subchain_of}</div>
+                  <div>{e.parent}</div>
                 </Link>
               </div>
             );

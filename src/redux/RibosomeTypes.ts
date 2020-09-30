@@ -6,8 +6,11 @@ export interface RibosomeStructure {
   _organismId  : string;
   resolution   : number;
   publication  : string;
+  expMethod    : string;
+  title        : string;
   proteins     : Array<RibosomalProtein>;
   rnas         : Array<rRNA>;
+  ligands      : Array<Ligand>
   site         : "cytosolic" | "mitochondrial" | "chloroplastic";
 }
 export interface rRNA {
@@ -42,12 +45,16 @@ export interface PFAMFamily{
   family_type: string;
 }
 
-
 export interface Ligand {
-  name     : string;
-  chemicalId       : string;
-  neighbors: Array<string>;
+  chemicalId   : string;
+  chemicalName : string;
+  formula      : string;
+  SMILES       : string;
+  cif_residueId: number | 'none';
+}
 
+export interface NomenclatureClass{
+  class_id:BanClass
 }
 
 export type BanClass=
@@ -148,4 +155,6 @@ export type BanClass=
   | "eS28"
   | "eS27"
   | "eS26"
-  | "eS25";
+  | "eS25"
+  | "AMBIGUOUS";
+

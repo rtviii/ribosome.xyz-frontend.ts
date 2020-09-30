@@ -1,0 +1,20 @@
+.struct-grid {
+  outline: 4px dashed black;
+
+  height: 100%;
+  width: 80vw;
+  display: grid;
+  grid-template-rows: repeat(1fr, 12);
+  grid-template-columns: repeat(1fr, 12);
+}
+
+.lsu {
+  outline: 1px solid cyan;
+
+  grid-row: 1/7;
+}
+.ssu {
+  outline: 1px solid cyan;
+  grid-row: 7/12;
+}
+

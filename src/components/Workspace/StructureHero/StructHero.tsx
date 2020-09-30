@@ -29,7 +29,6 @@ const StructHero: React.FC<RibosomeStructure> = prop => {
     <>
       <div
         className={`struct-hero ${prop._PDBId} `}
-        
         id={`_struct_${prop._PDBId}`}
       >
         <a className="tooltip">
@@ -44,10 +43,13 @@ const StructHero: React.FC<RibosomeStructure> = prop => {
         <Link to={`/catalogue/${prop._PDBId}`}>
           <div className="pdbid_title">{prop._PDBId}</div>
           <div className="hero_annotations">
-            <p className="p_annot resolution">Resolution: {prop.resolution}</p>
-            <p className="p_annot species">
-              {prop._species} | {parseKingdomOut(prop._species)}
+            <p className="p_annot resolution">
+              Resolution: {prop.resolution} Å
             </p>
+            <p className="p_annot species">
+              {prop._species} 
+            </p>
+            <p className="p_annot expMethod">Method: {prop.expMethod}</p>
           </div>
         </Link>
       </div>

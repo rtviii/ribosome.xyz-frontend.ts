@@ -4,22 +4,21 @@ import { Link } from "react-router-dom";
 import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
 import "./RPsCatalogue.css";
 import infoicon from "./../../../static/info.svg";
-import { BanClass } from "../../../redux/RibosomeTypes";
+import { BanClass, NomenclatureClass } from "../../../redux/RibosomeTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../../../redux/AppActions";
 import { AppState } from "../../../redux/store";
 import { connect } from "react-redux";
-import { SSL_OP_SINGLE_DH_USE } from "constants";
 
 interface endpointResponseShape {
-  BanClass: BanClass;
-  presentIn: Array<string>;
-  spans: Array<number>;
+  NomenclatureClass: BanClass;
+  presentIn        : Array<string>;
+  spans            : Array<number>;
 }
 const BanClassHero = (prop: endpointResponseShape) => {
   return (
-    <Link className="ban-class-hero" to={`/rps/${prop.BanClass}`}>
-      <div className="banClassName">{prop.BanClass}</div>
+    <Link className="ban-class-hero" to={`/rps/${prop.NomenclatureClass}`}>
+      <div className="banClassName">{prop.NomenclatureClass}</div>
       <div className="stats">
         <ul>
           <li>
@@ -64,22 +63,25 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
       endpoint: "list_available_rps",
       params: null,
     }).then(r => {
+      
       var uniquerps: Array<endpointResponseShape> = uniq(flattenDeep(r.data));
 
+      console.log(uniquerps);
+      
       setavailable(uniquerps);
       setlsu(
         uniquerps.filter(x => {
-          return x.BanClass.includes("L") && !x.BanClass.includes("S");
+          return x.NomenclatureClass.includes("L") && !x.NomenclatureClass.includes("S");
         })
       );
       setssu(
         uniquerps.filter(x => {
-          return x.BanClass.includes("S") && !x.BanClass.includes("L");
+          return x.NomenclatureClass.includes("S") && !x.NomenclatureClass.includes("L");
         })
       );
       setother(
         uniquerps.filter(x => {
-          return ["RACK1", "bTHX"].includes(x.BanClass);
+          return ["RACK1", "bTHX"].includes(x.NomenclatureClass);
         })
       );
     });
@@ -90,7 +92,7 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
       <ul className="rps-ssu">
         <h2 className="title">SSU</h2>
         {ssu
-          .filter(x => x.BanClass.toLowerCase().includes(prop.globalFilter))
+          .filter(x => x.NomenclatureClass.toLowerCase().includes(prop.globalFilter))
           .sort()
           .map(x => {
             return <BanClassHero {...x} />;
@@ -100,7 +102,7 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
       <ul className="rps-lsu">
         <h2 className="title">LSU</h2>
         {lsu
-          .filter(x => x.BanClass.toLowerCase().includes(prop.globalFilter))
+          .filter(x => x.NomenclatureClass.toLowerCase().includes(prop.globalFilter))
           .sort()
           .map(x => {
             return <BanClassHero {...x} />;
@@ -110,7 +112,7 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
       <ul className="rps-other">
         <h2 className="title">Other</h2>
         {other
-          .filter(x => x.BanClass.toLowerCase().includes(prop.globalFilter))
+          .filter(x => x.NomenclatureClass.toLowerCase().includes(prop.globalFilter))
           .sort()
           .map(x => {
             return <BanClassHero {...x} />;

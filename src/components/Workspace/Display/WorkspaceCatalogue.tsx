@@ -30,9 +30,9 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
   const [allstructs, setallstructs] = useState<RibosomeStructure[]>([]);
-  const [bacteria, setbacteria] = useState<RibosomeStructure[]>([]);
-  const [archea, setarchea] = useState<RibosomeStructure[]>([]);
-  const [eukarya, seteukarya] = useState<RibosomeStructure[]>([]);
+  const [bacteria, setbacteria]     = useState<RibosomeStructure[]>([]);
+  const [archea, setarchea]         = useState<RibosomeStructure[]>([]);
+  const [eukarya, seteukarya]       = useState<RibosomeStructure[]>([]);
 
   useEffect(() => {
     var b, a, e: RibosomeStructure[];
@@ -41,6 +41,8 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
       params: null,
     }).then(response => {
       var structs: RibosomeStructure[] = uniq(flattenDeep(response.data));
+      console.log(structs);
+      
       setallstructs(structs);
       b = structs.filter(x => parseKingdomOut(x._species) === "b");
       a = structs.filter(x => parseKingdomOut(x._species) === "a");

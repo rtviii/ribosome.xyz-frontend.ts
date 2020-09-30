@@ -1,15 +1,19 @@
 import Axios from "axios";
 const BACKEND: any = process.env.REACT_APP_DJANGO_URL;
-type  DjangoAPIs   = "neo4j" | "admin" | "pdb";
+type DjangoAPIs = "neo4j" | "admin" | "pdb";
 
 type Neo4jEndpoints =
   | getStructure
+  | getAllStructures
   | getHomologs
-  | getHomologs
-  | customCypher
-  | downloadSubchain
   | listAvailableRPs
-  | getAllStructures;
+  | customCypher
+  | gmoNomClass
+  | gmoLigandClass
+  | getAllLigands
+  // this is a "PDB endpoint" strictly speaking
+  | downloadSubchain;
+
 interface getStructure {
   endpoint: "get_struct";
   params: {
@@ -42,6 +46,22 @@ interface downloadSubchain {
 interface listAvailableRPs {
   endpoint: "list_available_rps";
   params: null;
+}
+interface gmoNomClass {
+  endpoint: "gmo_nom_class";
+  params: {
+    banName: string;
+  };
+}
+interface gmoLigandClass {
+  endpoint: "gmo_ligand_class";
+  params: {
+    chemicalId: string;
+  };
+}
+interface getAllLigands{
+  endpoint: 'get_all_ligands',
+  params: null
 }
 
 export const getNeo4jData = (api: DjangoAPIs, ep: Neo4jEndpoints) => {
