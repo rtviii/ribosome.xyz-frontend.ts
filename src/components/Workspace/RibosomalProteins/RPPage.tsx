@@ -17,7 +17,6 @@ interface NeoHomolog {
 const RPPage = () => {
   var params: any = useParams();
   const [homologs, sethomologs] = useState<NeoHomolog[]>([]);
-
   useEffect(() => {
     var banName = params.nom;
 
@@ -53,7 +52,7 @@ const RPPage = () => {
           {homologs.map((e: NeoHomolog) => {
             return (
               <div style={{ display: "flex" }}>
-                <RibosomalProteinHero {...e.protein} pdbid={e.parent} />{" "}
+                <RibosomalProteinHero {...e.protein} {...e.parent} />{" "}
                 <Link
                   style={{ width: "min-content" }}
                   to={`/catalogue/${e.parent}`}

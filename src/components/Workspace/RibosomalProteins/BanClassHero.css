@@ -1,0 +1,37 @@
+.ban-class-hero {
+  position : relative;
+  outline  : 1px solid black;
+  height   : min-content;
+  position : relative;
+  width    : 300px;
+  height   : 100px;
+  font-size: small;
+}
+.tt_icon-rp-hero {
+  height     : 20px;
+  width      : 20px;
+  margin-left: 5px;
+  filter     : invert(0.5);
+}
+.tooltip-rp-hero {
+  width    : 120px;
+  height   : 20px;
+  top      : 5px;
+  right    : 5px;
+  font-size: small;
+}
+
+.tt_content-rp-hero {
+  display: none;
+}
+.tooltip-rp-hero:hover .tt_icon-rp-hero {
+  /* filter: invert(1); */
+  cursor: pointer;
+}
+.tooltip-rp-hero:hover .tt_content-rp-hero {
+  display: block;
+  z-index: 2;
+  position: relative;
+  /* left: 200px; */
+  background-color: grey;
+}

@@ -9,55 +9,44 @@ import { Link } from "react-router-dom";
 import RibosomalProteinHero from "../RibosomalProteins/RibosomalProteinHero";
 import { fromPairs } from "lodash";
 
-// type StructHeroProps = OwnProps & RibosomeStructure & ActionProps;
 
-const StructHero: React.FC<RibosomeStructure> = prop => {
-  interface strdata {
-    pub: string;
-    res: string;
-    spec: string;
-    kingdom: "a" | "b" | "e";
-  }
-  // const str: strdata = structdata;
-  var kingdoms = {
-    a: ["Archea", "lightblue"],
-    b: ["Bacteria", "green"],
-    e: ["Eukarya", "orange"],
-  };
-
+const StructHero: React.FC<{
+  struct: RibosomeStructure;
+  protCount: number;
+  rnaCount: number;
+  ligs: string[];
+}> = props => {
+  console.log(props.struct._PDBId, props.ligs);
+  
+  const struct: RibosomeStructure = props.struct;
   return (
-    <>
       <div
-        className={`struct-hero ${prop._PDBId} `}
-        id={`_struct_${prop._PDBId}`}
+        className={`struct-hero ${struct._PDBId} `}
+        id={`_struc_${struct._PDBId}`}
       >
+
+
+        <Link to={`/catalogue/${struct._PDBId}`}>
+          <div className="pdbid_title">{struct._PDBId}</div>
+        </Link>
+        <div className="hero_annotations">
+          <p className="p_annot resolution">Resolution: {struct.resolution} Å</p>
+          <p className="p_annot expMethod">Method: {struct.expMethod}</p>
+          <p className="p_annot resolution">Publication: {struct.pdbx_database_id_DOI}</p>
+          <p className="p_annot resolution">Site: {struct.site}</p>
+          <p className="p_annot protCount">Number of proteins: {props.protCount}</p>
+          <p className="p_annot rnaCount">Number of rRNAs: {props.rnaCount}</p>
+          <p className="p_annot ligands"> Ligands: {props.ligs} </p>
+
+          <p className="p_annot species">Organism: {struct._organismName}</p>
+        </div>
         <a className="tooltip">
           <img src={infoicon} className="tt_icon" alt="tooltip" />
           <div className="tt_content">
-            <p>Protein Chains : {prop.proteinNumber}</p>
-            <p>RNA Chains : {prop.rRNANumber}</p>
-            <p>Deposition: {prop.publication}</p>
+            <p>Deposition: {struct.authors}</p>
           </div>
         </a>
-
-        <Link to={`/catalogue/${prop._PDBId}`}>
-          <div className="pdbid_title">{prop._PDBId}</div>
-          <div className="hero_annotations">
-            <p className="p_annot resolution">
-              Resolution: {prop.resolution} Å
-            </p>
-            <p className="p_annot species">
-              {prop._species} 
-            </p>
-            <p className="p_annot expMethod">Method: {prop.expMethod}</p>
-          </div>
-        </Link>
       </div>
-    </>
   );
 };
-
-// const msp = (state:AppState, OwnProps:OwnProps):RibosomeStructure =>({
-//   StructureData:  state.Data.RibosomeStructures.Structures.filter(x => x._PDBId === OwnProps.pdbid)[0]
-// })
 export default StructHero;

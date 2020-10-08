@@ -1,5 +1,5 @@
 .struct-grid {
-  outline: 4px dashed black;
+  padding: 0px 10px;
 
   height: 100%;
   width: 80vw;
@@ -9,12 +9,10 @@
 }
 
 .lsu {
-  outline: 1px solid cyan;
 
   grid-row: 1/7;
 }
 .ssu {
-  outline: 1px solid cyan;
   grid-row: 7/12;
 }
 

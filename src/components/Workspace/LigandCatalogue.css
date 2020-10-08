@@ -1,0 +1,45 @@
+
+.ligand-catalogue a{
+    color:blue
+}
+
+.ligand-catalogue{
+  /* outline              : 2px solid red; */
+  width                : 100%;
+  grid-auto-flow       : row;
+  display              : grid;
+  gap: 20px;
+  grid-template-columns: 1fr 6fr;
+
+}
+
+.filters-tools{
+  outline: 1px solid blue;
+  padding: 10px;
+  width: 200px;
+  grid-column: 1/2;
+}
+
+.ligands-catalogue-structs{
+  grid-column: 2/8;
+  grid-auto-flow: row;
+  gap: 10px;
+ grid-template-columns:  1fr 1fr 1fr 1fr 1fr;
+}
+
+
+.ligand-hero{
+    outline: 1px solid black;
+}
+
+
+
+.tooltip-content-ligand-catalogue{
+  display:none;
+}
+.tooltip:hover .tooltip-content-ligand-catalogue{
+  display: block;
+}
+
+
+

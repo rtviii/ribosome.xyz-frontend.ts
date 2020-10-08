@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   Ligand,
   RibosomalProtein,
@@ -30,10 +30,12 @@ const StructurePage: React.FC<StructurePageProps> = (
   props: StructurePageProps
 ) => {
   const { pdbid }: { pdbid: string } = useParams();
-  const [structdata, setstruct] = useState<RibosomeStructure>();
-  const [protdata, setprots] = useState<RibosomalProtein[]>([]);
-  const [rrnas, setrrnas] = useState<rRNA[]>([]);
-  const [ligands, setligands] = useState<Ligand[]>([]);
+  const [structdata, setstruct]      = useState<RibosomeStructure>();
+  const [protdata, setprots]         = useState<RibosomalProtein[]>([]);
+  const [rrnas, setrrnas]            = useState<rRNA[]>([]);
+  const [ligands, setligands]        = useState<Ligand[]>([]);
+
+  const [ions, setions]              = useState(true);
 
   const [activecat, setactivecat] = useState("proteins");
   const [rnaprottoggle, togglernaprot] = useState("rRNA");
@@ -44,18 +46,19 @@ const StructurePage: React.FC<StructurePageProps> = (
       params: { pdbid: pdbid },
     }).then(
       resp => {
-        var respObj: {
-          RibosomeStructure: RibosomeStructure;
-          rRNAs: rRNA[];
-          ribosomalProteins: RibosomalProtein[];
-          lls: Ligand[];
-        } = flattenDeep(resp.data)[0] as any;
-        console.log(respObj);
-
-        setprots(respObj.ribosomalProteins);
-        setrrnas(respObj.rRNAs);
-        setstruct(respObj.RibosomeStructure);
-        setligands(respObj.lls);
+        const respdat = flattenDeep(resp.data)[0] as ResponseShape;
+       
+        type ResponseShape = {
+          RibosomeStructure: RibosomeStructure,
+          ligands          : Ligand[],
+          rRNAs            : rRNA[],
+          ribosomalProteins: RibosomalProtein[]
+        }
+        console.log(respdat);
+        setstruct(respdat.RibosomeStructure)
+        setprots(respdat.ribosomalProteins)
+        setrrnas(respdat.rRNAs)
+        setligands(respdat.ligands)
       },
       err => {
         console.log("Got error on /neo request", err);
@@ -78,11 +81,25 @@ const StructurePage: React.FC<StructurePageProps> = (
             }}
           />
         );
-
       case "rrna":
-        return "rna";
+        return rrnas.map(obj => <RNAHero {...obj} />);
       case "ligands":
-        return "ligands";
+        return ligands
+          .filter(lig => {
+            return ions ? true : !lig.chemicalName.includes("ION");
+          })
+          .map(lig => (
+            <div className="ligand-hero">
+              <h3>
+                <Link to={`/ligands/${lig.chemicalId}`}>{lig.chemicalId}</Link>
+              </h3>
+              <div>Name: {lig.chemicalName}</div>
+              <div>
+                <code>cif</code> residue:{" "}
+                {lig.cif_residueId ? lig.cif_residueId : "not calculated"}
+              </div>
+            </div>
+          ));
       default:
         return "Something went wrong";
     }
@@ -91,10 +108,7 @@ const StructurePage: React.FC<StructurePageProps> = (
     <PageContext.Provider value="StructurePage">
       <div className="structure-page">
         <div className="structure-page--main">
-          {/* <a href={`https://www.rcsb.org/structure/${pdbid}`}> */}
           <h2 className="title">{pdbid}</h2>
-          {/* </a> */}
-          Toggle: RNA/Protein/Ligands
           <div className="controls">
             <div className="component-category">
               <div
@@ -116,20 +130,16 @@ const StructurePage: React.FC<StructurePageProps> = (
                 Ligands
               </div>
             </div>
-
-            <div
-              className="rnaprottoggle"
-              onClick={() => {
-                return rnaprottoggle === "Proteins"
-                  ? togglernaprot("rRNA")
-                  : togglernaprot("Proteins");
+            <input
+              type="checkbox"
+              id="ionscheck"
+              onChange={() => {
+                setions(!ions);
               }}
-            >
-              Toggle: {rnaprottoggle}
-            </div>
+            />
           </div>
           <div className="structure-info">
-            <div className="annotation">Species: {structdata._species} </div>
+            <div className="annotation">Species: {structdata._organismName} </div>
             <div className="annotation">
               Resolution: {structdata.resolution}Å
             </div>
@@ -137,13 +147,12 @@ const StructurePage: React.FC<StructurePageProps> = (
               Experimental Method: {structdata.expMethod}
             </div>
             <div className="annotation">
-              Publication: {structdata.publication}
+              Publication: {structdata.pdbx_database_id_DOI}
             </div>
             <div className="annotation">
               Orgnaism Id: {structdata._organismId}
             </div>
           </div>
-          <div className="tooling">Tooling filters</div>
         </div>
 
         <div className="structure-page--components">

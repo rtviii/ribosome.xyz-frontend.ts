@@ -17,7 +17,6 @@
   display: grid;
   grid-template-rows: repeat(40px, 5);
   gap: 5px;
-  background-color: aliceblue;
 }
 .annotation {
   font-size: 14px;
@@ -26,13 +25,11 @@
 
 .title,
 h2 {
-  border: 1px solid brown;
   margin: 0;
   text-align: center;
 }
-.structure-page--components {
-  background-color: teal;
-}
+/* .structure-page--components {
+} */
 .rnaprottoggle {
   padding: 0 20px;
   cursor: pointer;
@@ -58,7 +55,6 @@ h2 {
   cursor: pointer;
   padding: 5px;
   width:min-content;
-  outline: 1px dashed black;
   font-size: 20px;
 }
 .activecat{
@@ -71,5 +67,4 @@ h2 {
 
 }
 .tooling {
-  /* color: aliceblue; */
 }

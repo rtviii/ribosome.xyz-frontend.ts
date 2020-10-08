@@ -9,7 +9,6 @@ type Neo4jEndpoints =
   | listAvailableRPs
   | customCypher
   | gmoNomClass
-  | gmoLigandClass
   | getAllLigands
   // this is a "PDB endpoint" strictly speaking
   | downloadSubchain;
@@ -44,19 +43,13 @@ interface downloadSubchain {
   };
 }
 interface listAvailableRPs {
-  endpoint: "list_available_rps";
-  params: null;
+  endpoint: "list_nom_classes";
+  params  : null;
 }
 interface gmoNomClass {
   endpoint: "gmo_nom_class";
   params: {
     banName: string;
-  };
-}
-interface gmoLigandClass {
-  endpoint: "gmo_ligand_class";
-  params: {
-    chemicalId: string;
   };
 }
 interface getAllLigands{

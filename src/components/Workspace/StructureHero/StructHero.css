@@ -1,21 +1,21 @@
-/* p_annot denotes an annotation paragraph */
-/* tt_content denotes a tooltip content to be revealed on hover */
+a{
+  color: blue;
+}
+.table{
+  padding: 20px;
+}
 .struct-hero {
+  outline: 1px solid black;
   cursor: pointer;
-  /* position: relative; */
   padding: 10px;
   margin-bottom: 10px;
-  outline: 2px solid black;
-
- /* margin: auto; */
+  width: 280px;
+  height: 220px;
   align-self: start;
-  height: min-content;
 }
-
+/*  */
 .struct-hero:hover{
   box-shadow: 1px 1px blue;
-  transform: translate(1px, 2px);
-  transition: all 0.2s;
 }
 
 .pdbid_title{
@@ -43,13 +43,7 @@
 }
 
 .tooltip {
-  width: min-content;
-  height: min-content;
-  display: flex;
-  text-decoration: none;
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
+  position: relative;
 }
 
 .tooltip .tt_content {
@@ -58,15 +52,10 @@
 
 .tooltip:hover .tt_icon {
   filter: invert(1);
+
 }
 .tooltip:hover .tt_content {
-  position: absolute;
   display: block;
-  width: 400px;
-  margin: 0;
-  padding: 0;
-  left: 100px;
-  top: -45px;
   outline: 1px solid black;
   background-color: rgba(0, 0, 0, 0.2);
   font-size: 14px;

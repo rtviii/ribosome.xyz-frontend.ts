@@ -18,6 +18,12 @@ a {
   text-decoration: none;
   width: 100%;
 }
+
+pre{
+  width:min-content;
+  margin: 0;
+  padding: 0;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

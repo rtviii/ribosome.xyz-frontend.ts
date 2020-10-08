@@ -29,36 +29,63 @@ export const parseKingdomOut = (speciesstr: string) => {
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
-  const [allstructs, setallstructs] = useState<RibosomeStructure[]>([]);
+  const [allstructs, setallstructs] = useState<{
+        struct   : RibosomeStructure,
+        protCount: number,
+        rnaCount : number,
+        ligs     : string[]
+      }[]>([]);
   const [bacteria, setbacteria]     = useState<RibosomeStructure[]>([]);
   const [archea, setarchea]         = useState<RibosomeStructure[]>([]);
   const [eukarya, seteukarya]       = useState<RibosomeStructure[]>([]);
 
   useEffect(() => {
     var b, a, e: RibosomeStructure[];
+
     getNeo4jData("neo4j", {
       endpoint: "get_all_structs",
-      params: null,
+      params  : null,
     }).then(response => {
-      var structs: RibosomeStructure[] = uniq(flattenDeep(response.data));
-      console.log(structs);
       
+      var structs:Array<{
+        struct   : RibosomeStructure,
+        protCount: number,
+        rnaCount : number,
+        ligs     : string[]
+      }> =flattenDeep(response.data);
+      
+// 
+      
+            
       setallstructs(structs);
-      b = structs.filter(x => parseKingdomOut(x._species) === "b");
-      a = structs.filter(x => parseKingdomOut(x._species) === "a");
-      e = structs.filter(x => parseKingdomOut(x._species) === "e");
-      setarchea(a);
-      setbacteria(b);
-      seteukarya(e);
+      // b = structs.filter(x => parseKingdomOut(x._species) === "b");
+      // a = structs.filter(x => parseKingdomOut(x._species) === "a");
+      // e = structs.filter(x => parseKingdomOut(x._species) === "e");
+      // setarchea(a);
+      // setbacteria(b);
+      // seteukarya(e);
     });
   }, []);
 
   return allstructs.length > 0 ? (
     <PageContext.Provider value="WorkspaceCatalogue">
-      <div className="workspace-catalogue">
-        <div className="bacteria kingdom-tray">
-          <h2 className="tray-title">Bacteria</h2>
-          {bacteria
+      
+
+       <div className="workspace-catalogue">
+         <div className="workspace-catalogue-grid">
+           <div className="filters-tools">
+            Filters and search
+
+           </div>
+          
+          <div className="workspace-catalogue-structs">
+
+          {allstructs.map((x,i)=><StructHero {...x} key={i}/>)}
+          </div>
+         </div>
+         {/* <div className="bacteria kingdom-tray">
+           <h2 className="tray-title">Bacteria</h2>
+           {bacteria
             .filter(x => x._PDBId.includes(prop.globalFilter.toUpperCase()))
 
             .map((x, i) => (
@@ -81,7 +108,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
             .map((x, i) => (
               <StructHero {...x} key={i + "a"} />
             ))}
-        </div>
+        </div> */}
       </div>
     </PageContext.Provider>
   ) : (
