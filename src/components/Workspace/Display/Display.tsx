@@ -7,8 +7,7 @@ import StructurePage from "./../StructurePage/StructurePage";
 import RPPage from "./../RibosomalProteins/RPPage";
 import RPsCatalogue from "./../RibosomalProteins/RPsCatalogue";
 import LigandCatalogue from "../LigandCatalogue";
-// import LigandClass from "./../LigandClass";
-// import DataDisplay from "./Display/DataDisplay";
+import RNACatalogue from './../RNA/RNACatalogue'
 
 const Display = () => {
   return (
@@ -24,6 +23,8 @@ const Display = () => {
         <Route exact path = "/rps" component              = {RPsCatalogue} />
         <Route exact path = "/rps/:nom" component         = {RPPage} />
         <Route exact path = "/ligands" component          = {LigandCatalogue} />
+        <Route exact path = "/rnas" component             = {RNACatalogue} />
+
         {/* <Route exact path = "/ligands/:chemid" component  = {LigandClass} /> */}
       </Switch>
     </div>

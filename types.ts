@@ -82,7 +82,7 @@ export interface RibosomalProtein {
   entity_poly_entity_type            : string;
 
   surface_ratio        : number | null;
-  nomenclature         : Array<BanClass>;
+  nomenclature         : Array<BanClass> | null;
 
 
 }

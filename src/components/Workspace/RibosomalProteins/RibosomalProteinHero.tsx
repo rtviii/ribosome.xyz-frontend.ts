@@ -45,7 +45,7 @@ const RibosomalProteinHero = (data: RibosomalProtein, pdbid:string) => {
         <p className="header-nom">BanClass</p>  
         <p className="header-properties">Properties</p>
 
-        <p className="chain"> {data.strand_id}</p>
+        <p className="chain"> {data.entity_poly_strand_id}</p>
         <div className="nom">
           {" "}
           <Link to={`/rps/${data.nomenclature[0]}`}> {data.nomenclature}</Link>
@@ -69,7 +69,7 @@ const RibosomalProteinHero = (data: RibosomalProtein, pdbid:string) => {
       <div
         className="chain-download"
         onClick={() => {
-          downloadsubchain(pdbid, data.strand_id);
+          downloadsubchain(pdbid, data.entity_poly_strand_id);
         }}
       >
         <img src={downicon} className="down_icon" />

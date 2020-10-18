@@ -147,7 +147,7 @@ const StructurePage: React.FC<StructurePageProps> = (
               Experimental Method: {structdata.expMethod}
             </div>
             <div className="annotation">
-              Publication: {structdata.pdbx_database_id_DOI}
+              Publication: {structdata.citation_pdbx_doi}
             </div>
             <div className="annotation">
               Orgnaism Id: {structdata._organismId}

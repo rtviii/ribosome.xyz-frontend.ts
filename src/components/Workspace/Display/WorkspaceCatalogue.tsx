@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import "./WorkspaceCatalogue.css";
+import React, { useEffect, useState } from "react";import "./WorkspaceCatalogue.css";
 import { connect, useSelector } from "react-redux";
 import {
   WorkspaceState,
@@ -9,11 +8,12 @@ import {
 import { ThunkDispatch } from "redux-thunk";
 import { AppState } from "./../../../redux/store";
 import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
-import { flattenDeep, uniq } from "lodash";
+import { flattenDeep } from "lodash";
 import { RibosomeStructure } from "./../../../redux/RibosomeTypes";
 import StructHero from "./../StructureHero/StructHero";
 import { PageContext } from "../../Main";
 import { AppActions } from "../../../redux/AppActions";
+import LoadingSpinner  from '../../Other/LoadingSpinner'
 
 interface OwnProps {}
 interface ReduxProps {
@@ -30,17 +30,13 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
   const [allstructs, setallstructs] = useState<{
-        struct   : RibosomeStructure,
-        protCount: number,
-        rnaCount : number,
-        ligs     : string[]
+    struct : RibosomeStructure;
+    ligands: string[],
+    rps    : Array<{noms:string[], strands:string}>,
+    rnas   : string[]
       }[]>([]);
-  const [bacteria, setbacteria]     = useState<RibosomeStructure[]>([]);
-  const [archea, setarchea]         = useState<RibosomeStructure[]>([]);
-  const [eukarya, seteukarya]       = useState<RibosomeStructure[]>([]);
 
   useEffect(() => {
-    var b, a, e: RibosomeStructure[];
 
     getNeo4jData("neo4j", {
       endpoint: "get_all_structs",
@@ -48,26 +44,20 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
     }).then(response => {
       
       var structs:Array<{
-        struct   : RibosomeStructure,
-        protCount: number,
-        rnaCount : number,
-        ligs     : string[]
-      }> =flattenDeep(response.data);
+    struct : RibosomeStructure;
+    ligands: string[],
+    rps    : Array<{noms:string[], strands:string}>,
+    rnas   : string[]
+      }> = flattenDeep(response.data);
+
+      console.log(structs);
       
-// 
-      
-            
       setallstructs(structs);
-      // b = structs.filter(x => parseKingdomOut(x._species) === "b");
-      // a = structs.filter(x => parseKingdomOut(x._species) === "a");
-      // e = structs.filter(x => parseKingdomOut(x._species) === "e");
-      // setarchea(a);
-      // setbacteria(b);
-      // seteukarya(e);
     });
   }, []);
 
-  return allstructs.length > 0 ? (
+
+   return allstructs.length > 0 ? (
     <PageContext.Provider value="WorkspaceCatalogue">
       
 
@@ -83,36 +73,11 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
           {allstructs.map((x,i)=><StructHero {...x} key={i}/>)}
           </div>
          </div>
-         {/* <div className="bacteria kingdom-tray">
-           <h2 className="tray-title">Bacteria</h2>
-           {bacteria
-            .filter(x => x._PDBId.includes(prop.globalFilter.toUpperCase()))
-
-            .map((x, i) => (
-              <StructHero {...x} key={i + "b"} />
-            ))}
-        </div>
-        <div className="eukarya kingdom-tray">
-          <h2 className="tray-title">Eukarya</h2>
-          {eukarya
-            .filter(x => x._PDBId.includes(prop.globalFilter.toUpperCase()))
-            .map((x, i) => (
-              <StructHero {...x} key={i + "e"} />
-            ))}
-        </div>
-
-        <div className="archea kingdom-tray">
-          <h2 className="tray-title">Archea</h2>
-          {archea
-            .filter(x => x._PDBId.includes(prop.globalFilter.toUpperCase()))
-            .map((x, i) => (
-              <StructHero {...x} key={i + "a"} />
-            ))}
-        </div> */}
       </div>
     </PageContext.Provider>
   ) : (
-    <p>Loading up... Will replace with a spinner.</p>
+
+    <LoadingSpinner />
   );
 };
 

@@ -1,0 +1,20 @@
+.loading-spinner{
+
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+
+
+
+    position: relative;
+    width: 600px;
+    height: min-content;
+    font-size: xx-large;
+    margin: auto;
+}
+
+
+.spn-row{
+    display: flex;
+    justify-items: center;
+    justify-content: center;
+}

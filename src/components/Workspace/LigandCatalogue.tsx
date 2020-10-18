@@ -30,14 +30,13 @@ type Response = {
   presentIn: string[];
 };
 const LigandCatalogue = () => {
-  const [ligs, setligs] = useState<Response[]>([]);
+  const [ligs, setligs]     = useState<Response[]>([]);
   const [ionsOn, setionsOn] = useState(true);
   useEffect(() => {
     getNeo4jData("neo4j", { endpoint: "get_all_ligands", params: null }).then(
       r => {
         var ligs = flattenDeep(r.data) as Response[];
         setligs(ligs);
-        console.log(ligs);
       }
     );
     return () => {};

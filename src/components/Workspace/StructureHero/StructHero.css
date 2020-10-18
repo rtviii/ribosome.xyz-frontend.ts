@@ -1,64 +1,49 @@
 a{
   color: blue;
 }
-.table{
-  padding: 20px;
-}
+/*  */
 .struct-hero {
   outline: 1px solid black;
-  cursor: pointer;
   padding: 10px;
   margin-bottom: 10px;
   width: 280px;
-  height: 220px;
+  height: 400px;
   align-self: start;
 }
-/*  */
-.struct-hero:hover{
-  box-shadow: 1px 1px blue;
-}
-
 .pdbid_title{
   display: inline-block;
   text-anchor: middle;
   text-align: center;
   margin: auto;
 }
-
-.hero_annotations{
-  width: 70%;
-}
-.hero_annotations p{
-  margin:0;
-}
-
-.struct-hero div p {
-  font-size: 12px;
-}
-
-.tt_icon {
-  height: 20px;
-  width: 20px;
-  filter: invert(0.2);
-}
-
-.tooltip {
+.p_annot{
   position: relative;
-}
-
-.tooltip .tt_content {
-  display: none;
-}
-
-.tooltip:hover .tt_icon {
-  filter: invert(1);
+  font-size: small;
+  cursor: pointer;
+  display: flex;
 
 }
-.tooltip:hover .tt_content {
-  display: block;
-  outline: 1px solid black;
-  background-color: rgba(0, 0, 0, 0.2);
-  font-size: 14px;
+
+
+.experimental_method{
+  position: relative;
+  font-size: small;
+  cursor: pointer;
+  display: flex;
+}
+.experimental_method_value{
+color: royalblue;
 }
 
 
+
+.methods-table{
+  width:600px;
+  text-align: left;
+
+}
+#tooltip{
+  width: 600px;
+  font-size: 12px;
+  background-color:black;
+}

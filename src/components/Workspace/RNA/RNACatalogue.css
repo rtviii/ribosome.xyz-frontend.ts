@@ -1,0 +1,51 @@
+
+.rnas-catalogue {
+  height : 100%;
+  padding: 10px;
+  outline: 1px solid white;
+  display: flex;
+  gap    : 20px;
+}
+
+
+.rnas-catalogue-grid{
+  /* outline              : 2px solid red; */
+  outline: 1px solid cyan;
+  width                : 100%;
+  grid-auto-flow       : row;
+  display              : grid;
+  gap: 20px;
+  grid-template-columns: 1fr 6fr;
+
+}
+
+.filters-tools{
+
+  outline: 1px solid blue;
+
+  padding: 10px;
+  grid-column: 1/2;
+}
+
+.rnas-catalogue-content{
+    outline: 1px solid cyan;
+    grid-column: 2/8;
+    display: grid;
+    grid-auto-flow: row;
+    gap: 10px;
+    grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+
+.rnaclass{
+  border: 1px solid red;
+}
+
+
+.rna-hero{
+  width:300px;
+}
+.rna-hero p{
+  margin: 0;
+  font-size: 12px;
+}

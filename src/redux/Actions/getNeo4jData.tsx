@@ -11,7 +11,13 @@ type Neo4jEndpoints =
   | gmoNomClass
   | getAllLigands
   // this is a "PDB endpoint" strictly speaking
-  | downloadSubchain;
+  | downloadSubchain
+  | getAllRnas
+
+interface getAllRnas{
+endpoint: "get_all_rnas";
+params  : null
+}
 
 interface getStructure {
   endpoint: "get_struct";
