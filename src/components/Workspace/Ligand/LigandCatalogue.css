@@ -1,0 +1,58 @@
+
+.ligand-catalogue a{
+    color:blue;
+    cursor:pointer;
+}
+.ligand-catalogue p{
+  margin: 0;
+}
+
+.ligand-catalogue{
+  /* outline              : 2px solid red; */
+  padding: 10px;
+  width                : 100%;
+  grid-auto-flow       : row;
+  display              : grid;
+  gap: 20px;
+  grid-template-columns: 1fr 6fr;
+
+}
+
+.filters-tools{
+  outline: 1px solid blue;
+  padding: 10px;
+  width: 200px;
+  background-color: aliceblue;
+  grid-column: 1/2;
+}
+
+.ligand-catalogue-grid{
+  grid-column: 2/8;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+
+
+
+}
+
+
+.ligand-hero{
+  position: relative;
+  font-size: 14px;
+  width: 250px;
+  outline: 1px solid black;
+  padding: 10px
+}
+
+.annot-structs{
+  display: flex;
+}
+
+#lig-str-present{
+cursor: pointer;
+text-decoration: underline;
+}
+
+
+

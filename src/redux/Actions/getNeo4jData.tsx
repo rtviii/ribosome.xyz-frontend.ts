@@ -14,6 +14,14 @@ type Neo4jEndpoints =
   | downloadSubchain
   | getAllRnas
 
+
+interface LigandNeighborhood{
+  endpoint:"ligand_neighborhood",
+  params:{
+    structure  : string,
+    chemical_id: string
+  }
+}
 interface getAllRnas{
 endpoint: "get_all_rnas";
 params  : null

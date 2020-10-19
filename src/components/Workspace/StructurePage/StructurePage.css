@@ -10,8 +10,6 @@
 .structure-page a:hover {
   color: blue;
 }
-.structure-page--main {
-}
 .structure-info {
   padding: 0px 20px;
   display: grid;

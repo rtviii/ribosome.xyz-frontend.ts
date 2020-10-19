@@ -7,17 +7,16 @@ import {
   rRNA,
 } from "../../../redux/RibosomeTypes";
 import "./StructurePage.css";
-import RibosomalProteinHero from "../RibosomalProteins/RibosomalProteinHero";
 import RNAHero from "./RNAHero";
 import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
-import { filter, flattenDeep } from "lodash";
+import { flattenDeep } from "lodash";
 import { PageContext } from "../../Main";
 import { connect } from "react-redux";
 import { AppState } from "../../../redux/store";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../../../redux/AppActions";
 import StructGrid from "./StructGrid";
-import { render } from "@testing-library/react";
+import LoadingSpinner from './../../Other/LoadingSpinner'
 
 interface OwnProps {}
 interface ReduxProps {
@@ -34,11 +33,8 @@ const StructurePage: React.FC<StructurePageProps> = (
   const [protdata, setprots]         = useState<RibosomalProtein[]>([]);
   const [rrnas, setrrnas]            = useState<rRNA[]>([]);
   const [ligands, setligands]        = useState<Ligand[]>([]);
-
   const [ions, setions]              = useState(true);
-
   const [activecat, setactivecat] = useState("proteins");
-  const [rnaprottoggle, togglernaprot] = useState("rRNA");
 
   useEffect(() => {
     getNeo4jData("neo4j", {
@@ -46,18 +42,19 @@ const StructurePage: React.FC<StructurePageProps> = (
       params: { pdbid: pdbid },
     }).then(
       resp => {
-        const respdat = flattenDeep(resp.data)[0] as ResponseShape;
+        const respdat:ResponseShape = flattenDeep(resp.data)[0] as ResponseShape;
+        
+       console.log(respdat);
        
         type ResponseShape = {
-          RibosomeStructure: RibosomeStructure,
+          structure: RibosomeStructure,
           ligands          : Ligand[],
-          rRNAs            : rRNA[],
-          ribosomalProteins: RibosomalProtein[]
+          rnas            : rRNA[],
+          rps: RibosomalProtein[]
         }
-        console.log(respdat);
-        setstruct(respdat.RibosomeStructure)
-        setprots(respdat.ribosomalProteins)
-        setrrnas(respdat.rRNAs)
+        setstruct(respdat.structure)
+        setprots(respdat.rps)
+        setrrnas(respdat.rnas)
         setligands(respdat.ligands)
       },
       err => {
@@ -104,6 +101,7 @@ const StructurePage: React.FC<StructurePageProps> = (
         return "Something went wrong";
     }
   };
+
   return structdata ? (
     <PageContext.Provider value="StructurePage">
       <div className="structure-page">
@@ -161,7 +159,7 @@ const StructurePage: React.FC<StructurePageProps> = (
       </div>
     </PageContext.Provider>
   ) : (
-    <div>"spinner"</div>
+    <LoadingSpinner/>
   );
 };
 
@@ -174,81 +172,3 @@ const mapdispatch = (
 ): DispatchProps => ({});
 
 export default connect(mapstate, mapdispatch)(StructurePage);
-
-// <ul className="ssu">
-//   <div className="subunit-title">SSU</div>
-//   {protdata
-//     .filter(x => {
-//       var Subunits = flattenDeep(
-//         x.nomenclature.map(name => {
-//           return name.match(/S|L/g);
-//         })
-//       );
-//       return Subunits.includes("L") && !Subunits.includes("S");
-//     })
-//     .filter(x => {
-//       if (x.nomenclature.length > 0) {
-//         return x.nomenclature[0]
-//           .toLowerCase()
-//           .includes(props.globalFilter);
-//       } else {
-//         return false;
-//       }
-//     })
-//     .map((x, i) => (
-//       <RibosomalProteinHero key={i} {...{ pdbid }} {...x} />
-//     ))}
-// </ul>
-// <ul className="lsu">
-//   <div className="subunit-title">LSU</div>
-//   {protdata
-//     .filter(x => {
-//       var Subunits = flattenDeep(
-//         x.nomenclature.map(name => {
-//           return name.match(/S|L/g);
-//         })
-//       );
-//       return Subunits.includes("S") && !Subunits.includes("L");
-//     })
-//     .filter(x => {
-//       if (x.nomenclature.length > 0) {
-//         return x.nomenclature[0]
-//           .toLowerCase()
-//           .includes(props.globalFilter);
-//       } else {
-//         return false;
-//       }
-//     })
-//     .map((x, j) => (
-//       <RibosomalProteinHero key={j} {...{ pdbid }} {...x} />
-//     ))}
-// </ul>
-// <ul className="other">
-//   <div className="subunit-title">Other</div>
-//   {protdata
-//     .filter(x => {
-//       var Subunits = flattenDeep(
-//         x.nomenclature.map(name => {
-//           return name.match(/S|L/g);
-//         })
-//       );
-
-//       return (
-//         (Subunits.includes("S") && Subunits.includes("L")) ||
-//         Subunits.length === 0 ||
-//         Subunits.includes(null)
-//       );
-//     })
-//     .filter(x => {
-//       if (x.nomenclature.length > 0) {
-//         return x.nomenclature[0]
-//           .toLowerCase()
-//           .includes(props.globalFilter);
-//       } else {
-//         return false;
-//       }
-//     })
-//     .map((x, k) => (
-//       <RibosomalProteinHero key={k} {...{ pdbid }} {...x} />
-//     ))}
-// </ul>

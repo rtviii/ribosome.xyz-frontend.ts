@@ -6,7 +6,7 @@ import WorkspaceCatalogue from "./WorkspaceCatalogue";
 import StructurePage from "./../StructurePage/StructurePage";
 import RPPage from "./../RibosomalProteins/RPPage";
 import RPsCatalogue from "./../RibosomalProteins/RPsCatalogue";
-import LigandCatalogue from "../LigandCatalogue";
+import LigandCatalogue from "./../Ligand/LigandCatalogue";
 import RNACatalogue from './../RNA/RNACatalogue'
 
 const Display = () => {
@@ -16,16 +16,13 @@ const Display = () => {
         <Redirect to="/catalogue" />
       </Route>
       <Switch>
-        <Route exact path="/display" component={VisualDisplay} />
-        {/* <Route exact path = "/data" component             = {DataDisplay} /> */}
+        <Route exact path = "/display" component          = {VisualDisplay} />
         <Route exact path = "/catalogue" component        = {WorkspaceCatalogue} />
         <Route exact path = "/catalogue/:pdbid" component = {StructurePage} />
         <Route exact path = "/rps" component              = {RPsCatalogue} />
         <Route exact path = "/rps/:nom" component         = {RPPage} />
         <Route exact path = "/ligands" component          = {LigandCatalogue} />
         <Route exact path = "/rnas" component             = {RNACatalogue} />
-
-        {/* <Route exact path = "/ligands/:chemid" component  = {LigandClass} /> */}
       </Switch>
     </div>
   );
