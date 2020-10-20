@@ -34,7 +34,7 @@ const StructurePage: React.FC<StructurePageProps> = (
   const [rrnas, setrrnas]            = useState<rRNA[]>([]);
   const [ligands, setligands]        = useState<Ligand[]>([]);
   const [ions, setions]              = useState(true);
-  const [activecat, setactivecat] = useState("proteins");
+  const [activecat, setactivecat]    = useState("proteins");
 
   useEffect(() => {
     getNeo4jData("neo4j", {

@@ -1,6 +1,7 @@
 .structure-page {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
 }
 
 .structure-page--main {
@@ -63,6 +64,4 @@ h2 {
   outline: 1px solid black;
   box-shadow: 1px 1px 1px 1px black;
 
-}
-.tooling {
 }

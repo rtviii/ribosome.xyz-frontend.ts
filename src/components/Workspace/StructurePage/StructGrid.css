@@ -1,18 +1,23 @@
 .struct-grid {
-  padding: 0px 10px;
-
-  height: 100%;
-  width: 80vw;
+  background-color: azure;
+  /* padding: 0px 10px; */
+height: 100%;
+  width: 100%;
   display: grid;
-  grid-template-rows: repeat(1fr, 12);
-  grid-template-columns: repeat(1fr, 12);
+  gap: 10px;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
-.lsu {
-
-  grid-row: 1/7;
+.struct-grid-lsu {
+  /* grid-column: 1/7; */
+  width: min-content;
+  flex-direction: column;
+  display: flex;;
 }
-.ssu {
-  grid-row: 7/12;
+.struct-grid-ssu {
+  /* grid-column: 7/12; */
+  display: flex;;
+  flex-direction: column;
+  width: min-content;
 }
 

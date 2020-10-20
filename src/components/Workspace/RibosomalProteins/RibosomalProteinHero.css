@@ -1,24 +1,24 @@
-
-
-:root{
-  --outline-grey:rgba(127,137,161,0.6);
-}
-
 .ribosomal-protein-hero {
   position: relative;
-  width: min-content;
-  display: flex;
-  width: 25vw;
-  height:150px;
-  margin-bottom: 10px;
-  /* outline: 1px solid rgba(127,137,161,0.4); */
-  outline: 1px solid var(--outline-grey);
-
+  /* background-color: rebeccapurple; */
+  /* display: flexJ */
+  margin: 0;
+  margin-bottom: 20px;
+  padding: 0;
+  display: grid;
+  grid-template-rows: auto;
+  outline: 1px solid gray;
+  
 }
 
-.ribosomal-protein-hero:hover {
-  box-shadow: 1px 1px 1px 2px   rgba(127,137,161,0.82);
+.ribosomal-protein-hero ul,li{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
+.ribosomal-protein-hero li{
+  display: flex;
 }
 
 
@@ -28,61 +28,26 @@
   cursor: pointer;
 }
 
-.main-properties {
-  width: max-content;
-  /* outline: 1px solid black; */
-  position: relative;
-  font-size: small;
+.ribosomal-protein-hero th{
+  font-size: 12px;
+
+}
+table, td,tr, th{
+  width: 400px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid gray;
+}
+.card button{
+  font-size: 12px;
 }
 
-.chain-properties {
-  display: grid;
-  grid-template-areas:
-    "header-chain header-nom header-properties"
-    "chain nom properties";
+.ribosomal-protein-hero p {
+  font-size: 12px;
+  margin   : 0;
+  padding  : 0;
+  font-weight: 800;
 }
-
-p {
-  font-size: small;
-  margin: 0;
-  padding: 0;
-}
-.header-chain {
-  padding: 10px;
-  grid-area: "header-chain";
-  font-size: large;
- border-right: 2px solid var(--outline-grey);
-  border-bottom: 1px solid var(--outline-grey);
-}
-.header-nom {
-  padding: 10px;
-  font-size: large;
-  grid-area: "header-nom";
-  border-right: 2px solid var(--outline-grey);
-  border-bottom: 1px solid var(--outline-grey);
-}
-.header-properties {
-  padding: 10px;
-  font-size: large;
-  grid-area: "header-properties";
-  border-bottom: 1px solid var(--outline-grey);
-}
-.properties {
-  padding: 10px;
-  grid-area: "properties";
-}
-
-.chain {
-  padding: 10px;
-  grid-area: "chain";
-  border-right: 2px solid var(--outline-grey);
-}
-.nom {
-  padding: 10px;
-  grid-area: "nom";
-  border-right: 2px solid var(--outline-grey);
-}
-
 .chain-download,
 .down_icon {
   position: absolute;

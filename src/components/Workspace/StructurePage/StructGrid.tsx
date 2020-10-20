@@ -1,6 +1,6 @@
 import { flattenDeep } from "lodash";
 import "./StructGrid.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import RibosomalProteinHero from "../RibosomalProteins/RibosomalProteinHero";
 import {
   Ligand,
@@ -21,98 +21,44 @@ const StructGrid = ({
   ligands : Ligand[];
 }) => {
 
-  useEffect(() => {
+  const [lsu, setlsu]     = useState<RibosomalProtein[]>([])
+  const [ssu, setssu]     = useState<RibosomalProtein[]>([])
+  const [other, setother] = useState<RibosomalProtein[]>([])
 
-    console.log(protdata);
-    
-    return () => {
-    }
-  }, [])
+
+
+  useEffect(() => {
+    var lsu   = protdata.filter(x=> x.nomenclature.length === 1 && flattenDeep(x.nomenclature.map(name => { return name.match(/L/)})).includes('L') )
+    var ssu   = protdata.filter(x=> x.nomenclature.length === 1 && flattenDeep(x.nomenclature.map(name => { return name.match(/S/)})).includes('S'))
+    var other = protdata.filter(x=> ![...lsu,...ssu].includes(x))
+    setlsu(lsu)
+    setssu(ssu)
+    setother(other)
+  }, [protdata])
   return (
     <div className="struct-grid">
-      <div className="lsu">
-        <div className="subunit-title">LSU</div>
-        {protdata
-          // .filter(x => {
-          //   var Subunits = flattenDeep(
-          //     x.nomenclature.map(name => {
-          //       return name.match(/S|L/g);
-          //     })
-          //   );
-          //   return Subunits.includes("S") && !Subunits.includes("L");
-          // })
+      <div className="struct-grid-lsu">
+        {lsu
           .map((x, j) => (
             <RibosomalProteinHero key={j} {...{ pdbid }} {...x} />
           ))}
       </div>
 
-      <div className="ssu">SSU</div>
-      <div className="subunit-title">LSU</div>
-      {protdata
-        // .filter(x => {
-        //   var Subunits = flattenDeep(
-        //     x.nomenclature.map(name => {
-        //       return name.match(/S|L/g);
-        //     })
-        //   );
-        //   return Subunits.includes("S") && !Subunits.includes("L");
-        // })
+      <div className="struct-grid-ssu">
+      {ssu
         .map((x, j) => (
           <RibosomalProteinHero key={j} {...{ pdbid }} {...x} />
         ))}
+      </div>
+      <div className="struct-grid-other">
+        Other/Undetermined
+      {other
+        .map((x, j) => (
+          <RibosomalProteinHero key={j} {...{ pdbid }} {...x} />
+        ))}
+      </div>
     </div>
   );
 };
 
 export default StructGrid;
-
-//   <ul className="ssu">
-//     <div className="subunit-title">SSU</div>
-//     {protdata
-//       .filter(x => {
-//         var Subunits = flattenDeep(
-//           x.nomenclature.map(name => {
-//             return name.match(/S|L/g);
-//           })
-//         );
-//         return Subunits.includes("L") && !Subunits.includes("S");
-//       })
-//       .map((x, i) => (
-//         <RibosomalProteinHero key={i} {...{ pdbid }} {...x} />
-//       ))}
-//   </ul>
-//   <ul className="lsu">
-//     <div className="subunit-title">LSU</div>
-//     {protdata
-//       .filter(x => {
-//         var Subunits = flattenDeep(
-//           x.nomenclature.map(name => {
-//             return name.match(/S|L/g);
-//           })
-//         );
-//         return Subunits.includes("S") && !Subunits.includes("L");
-//       })
-//       .map((x, j) => (
-//         <RibosomalProteinHero key={j} {...{ pdbid }} {...x} />
-//       ))}
-//   </ul>
-//   <ul className="other">
-//     <div className="subunit-title">Other</div>
-//     {protdata
-//       .filter(x => {
-//         var Subunits = flattenDeep(
-//           x.nomenclature.map(name => {
-//             return name.match(/S|L/g);
-//           })
-//         );
-
-//         return (
-//           (Subunits.includes("S") && Subunits.includes("L")) ||
-//           Subunits.length === 0 ||
-//           Subunits.includes(null)
-//         );
-//       })
-//       .map((x, k) => (
-//         <RibosomalProteinHero key={k} {...{ pdbid }} {...x} />
-//       ))}
-//   </ul>

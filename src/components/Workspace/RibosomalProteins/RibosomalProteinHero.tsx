@@ -6,17 +6,10 @@ import fileDownload from "js-file-download";
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import { PageContext, PageContexts } from "../../Main";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
+import Accordion from "react-bootstrap/esm/Accordion";
+import { Button, Card, ListGroup } from "react-bootstrap";
 
-// interface props {
-//   pdbid            : string;
-//   _PDBChainId      : string;
-//   _UniprotAccession: string;
-//   _PDBName         : string;
-//   surface_ratio    : number | null;
-//   description      : string;
-//   nomenclature     : Array<string>;
-//   _PFAMFamilies    : Array<string>;
-// }
+
 
 const RibosomalProteinHero = (data: RibosomalProtein, pdbid:string) => {
   const downloadsubchain = (pdbid: string, cid: string) => {
@@ -29,53 +22,91 @@ const RibosomalProteinHero = (data: RibosomalProtein, pdbid:string) => {
       alert("This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!")
     });
   };
+  console.log(data);
+  
 
   const context: PageContexts = useContext(PageContext);
   return (
     <div className="ribosomal-protein-hero">
-      <Link
-        className="link"
-        to={
-          data.nomenclature.length > 0 ? `/rps/${data.nomenclature[0]}` : `/rps`
-        }
-      ></Link>
+      <table id="rp-table">
+        <tr>
+          <th>RP Class</th>
+          <th>Strand Id</th>
+          <th>PFAM Accession</th>
+          <th>Uniprot Accession</th>
+        </tr>
+        <tr>
+          <td>
+            <Link to={`/rps/${data.nomenclature[0]}`}>
+              {" "}
+              {data.nomenclature}
+            </Link>
+          </td>
+          <td>{data.entity_poly_strand_id}</td>
 
-      <div className="chain-properties">
-        <p className="header-chain"> Strand Id</p>
-        <p className="header-nom">BanClass</p>  
-        <p className="header-properties">Properties</p>
-
-        <p className="chain"> {data.entity_poly_strand_id}</p>
-        <div className="nom">
-          {" "}
-          <Link to={`/rps/${data.nomenclature[0]}`}> {data.nomenclature}</Link>
-        </div>
-        <div className="properties">
-          <p>Name: {data.pfam_descriptions}</p>
-
-          <p>
-            Uniprot:
+          <td>
+            <ul>
+              {data.pfam_accessions.map(r => (
+                <li>
+                  <a href={`https://pfam.xfam.org/family/${r}`}>{r}</a>
+                </li>
+              ))}
+            </ul>
+          </td>
+          <td>
             <a
-              href={ data.uniprot_accession? `https://www.uniprot.org/uniprot/${data.uniprot_accession}` : ""}
+              href={
+                data.uniprot_accession
+                  ? `https://www.uniprot.org/uniprot/${data.uniprot_accession}`
+                  : ""
+              }
             >
               {data.uniprot_accession}
             </a>
-          </p>
-
-           {/* <p>Description: {data.description}</p> */}
-          <p>Surface Ratio : {data.surface_ratio? data.surface_ratio.toFixed(2) : "NaN" }</p>
-        </div>
-      </div>
-      <div
-        className="chain-download"
-        onClick={() => {
-          downloadsubchain(pdbid, data.entity_poly_strand_id);
-        }}
-      >
-        <img src={downicon} className="down_icon" />
-      </div>
+          </td>
+        </tr>
+      </table>
+      <Accordion defaultActiveKey="1" style={{ fontSize: "12px" }}>
+        <Card>
+          <Card.Header style={{ fontSize: "12px", margin: 0, padding: 0 }}>
+            <Accordion.Toggle as={Button} variant="link" eventKey="0">
+              Description
+            </Accordion.Toggle>
+          </Card.Header>
+          <Accordion.Collapse eventKey="0">
+            <Card.Body>
+              <ListGroup>
+                <ListGroup.Item>
+                  <p>Source organism:</p>{" "}
+                  {data.rcsb_source_organism_description} (
+                  {data.rcsb_source_organism_id})
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <p>RCSB Profile:</p> {data.rcsb_pdbx_description}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <p>PFAM Description:</p>
+                  {data.pfam_comments}
+                </ListGroup.Item>
+                <ListGroup.Item style={{wordBreak:"break-word"}}>
+                  <p>One-letter seq({data.entity_poly_seq_length} AA):</p>
+                  {data.entity_poly_seq_one_letter_code}
+                </ListGroup.Item>
+              </ListGroup>
+            </Card.Body>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
     </div>
   );
 };
 
 export default RibosomalProteinHero;
+      // <div
+      //   className="chain-download"
+      //   onClick={() => {
+      //     downloadsubchain(pdbid, data.entity_poly_strand_id);
+      //   }}
+      // >
+      //   <img src={downicon} className="down_icon" />
+      // </div>

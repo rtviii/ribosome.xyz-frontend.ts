@@ -5,17 +5,15 @@
   width: 100%;
   height: 100%;
 
-  display: grid;
-  gap: 10px;
-
   overflow: hidden; 
   overflow-y: scroll; 
   grid-column-start: 1;
   grid-column-end: 3;
-  /* grid-template-columns: 1fr 2fr;
-  grid-template-rows: 200px auto;
-  grid-template-areas:
-    "oned oned"
-    "threed twod"; */
+
+
+
+  display: grid;
+  gap: 10px;
+
 
 }

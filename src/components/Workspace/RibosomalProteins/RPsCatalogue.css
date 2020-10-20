@@ -1,6 +1,7 @@
 .rps-catalogue {
   display: grid;
-  gap:20px;
+  
+  gap:10px;
   padding: 20px;
 }
 
