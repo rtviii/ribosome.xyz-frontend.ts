@@ -24,30 +24,26 @@ const popoverstructs= (data:Response ) =>{
   </Popover>
 }
 const LigandHero = (data: Response) => {
-
-
   const truncate = (str:string) =>{
       return str.length > 15 ? str.substring(0, 7) + "..." : str;
   }
-
   const l = data.ligand;
   return (
     <div className="ligand-hero">
       <div className="ligand-hero-title">
-        <Link to={`/ligands/${l.chemicalId}`}>{l.chemicalId}</Link> (<span style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>{truncate(l.chemicalName)}</span>)
+        <Link to={`/interfaces/${null}/ligand/${l.chemicalId}`}>{l.chemicalId}</Link> (<span style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>{truncate(l.chemicalName)}</span>)
       </div>
       <p>Weight: {l.formula_weight} ug</p>
        <OverlayTrigger 
         rootClose trigger={'click'}
         placement='right'
         overlay={popoverstructs(data)}><div id='lig-str-present'>Associated structures</div></OverlayTrigger>
-        
     </div>
   );
 };
 
 type Response = {
-  ligand: Ligand;
+  ligand   : Ligand;
   presentIn: string[];
 };
 const LigandCatalogue = () => {

@@ -4,38 +4,25 @@ import { ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import LoadingSpinner from "../../Other/LoadingSpinner";
+import RNAHero from './RNAHero'
 import './RNACatalogue.css'
 
-interface RNAProfile {
+export interface RNAProfile {
   description: string;
-  length: number;
-  parent: string;
-  strand: string;
+  length     : number;
+  parent     : string;
+  strand     : string;
 }
 
 
-const RNAHero = (rna:RNAProfile) => {
-  const truncate = (str:string) =>{
-      return str.length > 15 ? str.substring(0, 15) + "..." : str;
-  }
-  return <div className="rna-hero">
-      
-      <p>Description: <span style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>{truncate(rna.description)}</span></p>
-      <p>Parent structure: <Link to={`/structure/${rna.parent}`}>{rna.parent}</Link></p>
-      <p>RCSB strand id: {rna.strand}</p>
-      <p>AA Length: {rna.length}</p>
-
-
-  </div>;
-};
 const RNACatalogue = () => {
-  const [rnas, setrnas] = useState<RNAProfile[]>([]);
-  const [trnas, settrna] = useState<RNAProfile[]>([]);
-  const [mrnas, setmrna] = useState<RNAProfile[]>([]);
+  const [rnas, setrnas]           = useState<RNAProfile[]>([]);
+  const [trnas, settrna]          = useState<RNAProfile[]>([]);
+  const [mrnas, setmrna]          = useState<RNAProfile[]>([]);
   const [class_16s, setclass_16s] = useState<RNAProfile[]>([]);
   const [class_23s, setclass_23s] = useState<RNAProfile[]>([]);
-  const [class_5s, setclass_5s] = useState<RNAProfile[]>([]);
-  const [other, setother] = useState<RNAProfile[]>([]);
+  const [class_5s, setclass_5s]   = useState<RNAProfile[]>([]);
+  const [other, setother]         = useState<RNAProfile[]>([]);
 
   const filterByClass = (rnas: RNAProfile[], kwords: RegExp) => {
     return rnas.filter(r => {

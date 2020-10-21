@@ -13,7 +13,18 @@ type Neo4jEndpoints =
   // this is a "PDB endpoint" strictly speaking
   | downloadSubchain
   | getAllRnas
+  | LigandNeighborhood
+  | getRnasByStruct
+  | getLigandsByStruct
 
+interface getRnasByStruct{
+  endpoint: "get_rnas_by_struct",
+  params  : null
+}
+interface getLigandsByStruct{
+  endpoint: "get_ligands_by_struct",
+  params  : null
+}
 
 interface LigandNeighborhood{
   endpoint:"ligand_neighborhood",

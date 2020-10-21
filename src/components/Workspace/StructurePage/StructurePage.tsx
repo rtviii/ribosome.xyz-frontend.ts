@@ -7,7 +7,7 @@ import {
   rRNA,
 } from "../../../redux/RibosomeTypes";
 import "./StructurePage.css";
-import RNAHero from "./RNAHero";
+import RNAHero from "./../RNA/RNAHero";
 import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
 import { flattenDeep } from "lodash";
 import { PageContext } from "../../Main";
@@ -17,12 +17,54 @@ import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../../../redux/AppActions";
 import StructGrid from "./StructGrid";
 import LoadingSpinner from './../../Other/LoadingSpinner'
+import { Tooltip } from "react-bootstrap";
+import { OverlayTrigger } from "react-bootstrap";
 
 interface OwnProps {}
 interface ReduxProps {
   globalFilter: string;
 }
 interface DispatchProps {}
+const MethodSwitch = (r: RibosomeStructure) => {
+  var record;
+  if (r.expMethod.toUpperCase() == "X-RAY DIFFRACTION") {
+    record = {
+      diffrn_source_details: r.diffrn_source_details,
+      diffrn_source_pdbx_synchrotron_beamline:
+        r.diffrn_source_pdbx_synchrotron_beamline,
+      diffrn_source_pdbx_synchrotron_site:
+        r.diffrn_source_pdbx_synchrotron_site,
+      diffrn_source_pdbx_wavelength: r.diffrn_source_pdbx_wavelength,
+      diffrn_source_pdbx_wavelength_list: r.diffrn_source_pdbx_wavelength_list,
+      diffrn_source_source: r.diffrn_source_source,
+      diffrn_source_type: r.diffrn_source_type,
+    };
+  } else if (r.expMethod.toUpperCase() == "ELECTRON MICROSCOPY") {
+    record = {
+      cryoem_exp_detail                   : r.cryoem_exp_detail,
+      cryoem_exp_algorithm                : r.cryoem_exp_algorithm,
+      cryoem_exp_resolution_method        : r.cryoem_exp_resolution_method,
+      cryoem_exp_resolution               : r.cryoem_exp_resolution,
+      cryoem_exp_num_particles            : r.cryoem_exp_num_particles,
+      cryoem_exp_magnification_calibration: 
+        r.cryoem_exp_magnification_calibration,
+    };
+  } else {
+    record = {};
+ } 
+
+            return (
+              <table className='methods-table'>
+                Experimental Method Data
+                {Object.entries(record).map(entry => (
+                  <tr>
+                    <td>{entry[0]}</td>
+                    <td>{entry[1]}</td>
+                  </tr>
+                ))}
+              </table>
+            );
+}
 
 type StructurePageProps = OwnProps & ReduxProps & DispatchProps;
 const StructurePage: React.FC<StructurePageProps> = (
@@ -44,14 +86,15 @@ const StructurePage: React.FC<StructurePageProps> = (
       resp => {
         const respdat:ResponseShape = flattenDeep(resp.data)[0] as ResponseShape;
         
-       console.log(respdat);
+       console.log("respdata" , respdat);
        
         type ResponseShape = {
           structure: RibosomeStructure,
-          ligands          : Ligand[],
-          rnas            : rRNA[],
-          rps: RibosomalProtein[]
+          ligands  : Ligand[],
+          rnas     : rRNA[],
+          rps      : RibosomalProtein[]
         }
+        
         setstruct(respdat.structure)
         setprots(respdat.rps)
         setrrnas(respdat.rnas)
@@ -79,16 +122,18 @@ const StructurePage: React.FC<StructurePageProps> = (
           />
         );
       case "rrna":
-        return rrnas.map(obj => <RNAHero {...obj} />);
+        return rrnas.map(obj => <RNAHero {...{description:obj.rcsb_pdbx_description ? obj.rcsb_pdbx_description : "Null", length:obj.entity_poly_seq_length, parent: pdbid, strand:obj.entity_poly_strand_id}}  />);
       case "ligands":
-        return ligands
+        return <div className='struct-page-ligands'>
+      { 
+        ligands
           .filter(lig => {
             return ions ? true : !lig.chemicalName.includes("ION");
           })
           .map(lig => (
             <div className="ligand-hero">
               <h3>
-                <Link to={`/ligands/${lig.chemicalId}`}>{lig.chemicalId}</Link>
+                <Link to={`/interfaces`}>{lig.chemicalId}</Link>
               </h3>
               <div>Name: {lig.chemicalName}</div>
               <div>
@@ -96,7 +141,9 @@ const StructurePage: React.FC<StructurePageProps> = (
                 {lig.cif_residueId ? lig.cif_residueId : "not calculated"}
               </div>
             </div>
-          ));
+          ))
+        }
+        </div>
       default:
         return "Something went wrong";
     }
@@ -128,7 +175,7 @@ const StructurePage: React.FC<StructurePageProps> = (
                 Ligands
               </div>
             </div>
-            <input
+            Hide Ions: <input
               type="checkbox"
               id="ionscheck"
               onChange={() => {
@@ -137,12 +184,36 @@ const StructurePage: React.FC<StructurePageProps> = (
             />
           </div>
           <div className="structure-info">
-            <div className="annotation">Species: {structdata._organismName} </div>
+            <div className="annotation">
+              Species: {structdata._organismName}{" "}
+            </div>
             <div className="annotation">
               Resolution: {structdata.resolution}Å
             </div>
             <div className="annotation">
-              Experimental Method: {structdata.expMethod}
+              Experimental Method:{" "}
+              <OverlayTrigger
+                key="bottom-overlaytrigger"
+                placement="bottom"
+                overlay={
+                  <Tooltip
+                    style={{ backgroundColor: "black" }}
+                    className="tooltip-bottom"
+                    id="tooltip-bottom"
+                  >
+                    <MethodSwitch {...structdata} />
+                  </Tooltip>
+                }
+              >
+                <p className="experimental_method_value">
+                  {" "}
+                  {structdata.expMethod}
+                </p>
+              </OverlayTrigger>
+              {/*  */}
+              <div className="annotation">
+                Title: {structdata.citation_title}
+              </div>
             </div>
             <div className="annotation">
               Publication: {structdata.citation_pdbx_doi}
@@ -150,6 +221,15 @@ const StructurePage: React.FC<StructurePageProps> = (
             <div className="annotation">
               Orgnaism Id: {structdata._organismId}
             </div>
+            <div className="annotation">
+              Authors:{" "}
+              {structdata.citation_rcsb_authors.length > 1
+                ? structdata.citation_rcsb_authors.reduce((acc, curr) => {
+                    return acc.concat(curr, ",");
+                  }, "")
+                : structdata.citation_rcsb_authors[0]}
+            </div>
+            <div className="annotation">Year: {structdata.citation_year}</div>
           </div>
         </div>
 
@@ -159,7 +239,7 @@ const StructurePage: React.FC<StructurePageProps> = (
       </div>
     </PageContext.Provider>
   ) : (
-    <LoadingSpinner/>
+    <LoadingSpinner />
   );
 };
 

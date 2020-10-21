@@ -45,5 +45,5 @@
   display: grid;
   grid-auto-flow: row;
   gap: 10px;
- grid-template-columns:  1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns:  1fr 1fr 1fr;
 }

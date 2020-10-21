@@ -1,0 +1,21 @@
+
+.interfaces{
+
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+}
+
+
+.interface-form{
+    padding: 20px;
+    width:600px;
+}
+
+.interface-display{
+
+
+
+
+}

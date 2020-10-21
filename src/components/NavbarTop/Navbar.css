@@ -4,7 +4,6 @@
   color: white;
   width: 100%;
   border-bottom: 1px dashed black ;
-
   display: flex;
   justify-content: space-between;
 }
@@ -29,7 +28,7 @@
 .navbar button {
   font-size: large;
   /* color: white; */
-  width: 120px;
+ width: 120px;
   height: 100%;
   cursor: pointer;
   border: none;

@@ -21,6 +21,28 @@
   font-size: 14px;
   /* border: 1px solid black; */
 }
+.tooltip-bottom > .tooltip-inner {
+  max-width: 700px;
+  color: whitesmoke;
+  padding: 0;
+  color: black;
+  border: 1px solid #062e56;
+}
+
+.tooltip-bottom > .tooltip-arrow {
+  border-top: 5px solid #062e56;
+}
+
+.methods-table{
+  width:600px;
+  text-align: left;
+  z-index: 4;
+
+  color:white;
+}
+.struct-page-ligands{
+  padding: 20px;
+}
 
 .title,
 h2 {

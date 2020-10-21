@@ -59,13 +59,10 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
 
    return allstructs.length > 0 ? (
     <PageContext.Provider value="WorkspaceCatalogue">
-      
-
        <div className="workspace-catalogue">
          <div className="workspace-catalogue-grid">
            <div className="filters-tools">
             Filters and search
-
            </div>
           
           <div className="workspace-catalogue-structs">
@@ -76,7 +73,6 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
       </div>
     </PageContext.Provider>
   ) : (
-
     <LoadingSpinner />
   );
 };

@@ -1,37 +1,52 @@
 .ban-class-hero {
-  position : relative;
-  outline  : 1px solid black;
-  height   : min-content;
-  position : relative;
-  width    : 300px;
-  height   : 100px;
-  font-size: small;
+  outline: 1px solid black;
+  padding: 5px;
+  width: 200px;
 }
-.tt_icon-rp-hero {
-  height     : 20px;
-  width      : 20px;
-  margin-left: 5px;
-  filter     : invert(0.5);
+.ban-class-hero h4{
+  text-align: left;
 }
-.tooltip-rp-hero {
-  width    : 120px;
-  height   : 20px;
-  top      : 5px;
-  right    : 5px;
-  font-size: small;
+.ban-class-hero p{
+  font-size: 16px;
+  
+  margin: 0;
+  padding: 0;
 }
-
-.tt_content-rp-hero {
-  display: none;
+.ban-class-hero .members{
+  background-color: khaki;
 }
-.tooltip-rp-hero:hover .tt_icon-rp-hero {
-  /* filter: invert(1); */
+.ban-class-hero .rp-class-member-table{
+  max-width: 400px;
+  color:red;
+}
+#member-chains{
+  text-decoration: underline;
+}
+#member-chains:hover{
   cursor: pointer;
 }
-.tooltip-rp-hero:hover .tt_content-rp-hero {
-  display: block;
-  z-index: 2;
-  position: relative;
-  /* left: 200px; */
-  background-color: grey;
+
+
+.rp-class-member{
+  font-size: 14px;
+  display: flex;
+  width: 400px;
 }
+
+
+
+.ban-class-hero .popover-body{
+  max-width: 400px;
+}
+
+.basic-content{
+  overflow: scroll;
+  height: 40vh;
+  width:400px;
+}
+.popover {
+  min-width:500px;
+
+}
+
+

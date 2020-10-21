@@ -16,7 +16,6 @@ const Main: React.FC = () => {
   return (
     <div className="main">
       <Navbar />
-      {/* <Toolbar /> */}
       <Display />
     </div>
   );

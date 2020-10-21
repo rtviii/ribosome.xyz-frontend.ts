@@ -52,24 +52,36 @@ const MethodSwitch = (r: RibosomeStructure) => {
   );
 };
 
-const StructHero: React.FC<{
-  struct : RibosomeStructure;
 
-  ligands: string[],
-  rps    : Array<{noms:string[], strands:string}>,
-  rnas   : string[]
+
+const truncate = (str:string) =>{
+    return str.length > 25 ? str.substring(0, 23) + "..." : str;
+}
+
+const Ligands = (ligs:string[])=>{
+return  <ul style={{listStyle:"none"}}>
+
+{ligs.map(lig => <li></li>)}
+
+  </ul>
+
+}
+const StructHero: React.FC<{
+  struct: RibosomeStructure;
+
+  ligands: string[];
+  rps: Array<{ noms: string[]; strands: string }>;
+  rnas: string[];
 }> = props => {
   const struct: RibosomeStructure = props.struct;
   return (
-    <div
-      className={`struct-hero ${struct.rcsb_id} `}
-      id={`_struc_${struct.rcsb_id}`}
-    >
-      <Link to={`/catalogue/${struct.rcsb_id}`}>
+      <div
+        className={`struct-hero ${struct.rcsb_id} `}
+        id={`_struc_${struct.rcsb_id}`}
+      >
+    <Link to={`/catalogue/${struct.rcsb_id}`}>
         <div className="pdbid_title">{struct.rcsb_id}</div>
-      </Link>
-
-      <div className="hero_annotations">
+    </Link>
         <p className="p_annot">Resolution: {struct.resolution} Å</p>
         <div className="experimental_method">
           <p>Method: </p>
@@ -77,7 +89,11 @@ const StructHero: React.FC<{
             key="bottom-overlaytrigger"
             placement="bottom"
             overlay={
-              <Tooltip id="tooltip">
+              <Tooltip
+                style={{ backgroundColor: "black" }}
+                className="tooltip-bottom"
+                id="tooltip-bottom"
+              >
                 <MethodSwitch {...struct} />
               </Tooltip>
             }
@@ -85,22 +101,52 @@ const StructHero: React.FC<{
             <p className="experimental_method_value">{struct.expMethod}</p>
           </OverlayTrigger>
         </div>
-      </div>
 
-      <div className="p_annot">
-        <p> Publication:</p>
         <p>
+          {" "}
+          Publication:{" "}
           <a href={`https://www.doi.org/${struct.citation_pdbx_doi}`}>
             {struct.citation_pdbx_doi}
           </a>
         </p>
-      </div>
 
-      <div className="p_annot">Number of proteins: {props.rps.length}</div>
-      <div className="p_annot">Number of rRNAs: {props.rnas.length}</div>
-      <div className="p_annot"> Ligands: {props.ligands} </div>
-      <div className="p_annot">Organism: {struct._organismName}</div>
-    </div>
+        <table id="struct-hero-table">
+          <tr>
+            <th>Number of proteins</th>
+            <th>Number of rRNA</th>
+            <th>Ligands/Small molecules </th>
+            <th>Organisms</th>
+          </tr>
+          <tr>
+            <td>{props.rps.length}</td>
+            <td>{props.rnas.length}</td>
+            <td>
+              {props.ligands.map((l, i) => {
+                return i == props.ligands.length - 1 ? (
+                  <span>
+                    <Link to={`/ligands/${l}`}>{l}</Link>
+                  </span>
+                ) : (
+                  <span>
+                    <Link to={`/ligands/${l}`}>{l}</Link>,
+                  </span>
+                );
+              })}{" "}
+            </td>
+            <td>
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+                {struct._organismName.length > 1
+                  ? truncate(
+                      struct._organismName.reduce((acc, curr) => {
+                        return acc.concat(curr, ",");
+                      }, "")
+                    )
+                  : truncate(struct._organismName[0])}
+              </span>
+            </td>
+          </tr>
+        </table>
+      </div>
   );
 };
 export default StructHero;

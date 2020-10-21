@@ -1,27 +1,32 @@
 a{
-  color: blue;
+  color:blue
+  /* color: blue; */
 }
 /*  */
 .struct-hero {
   outline: 1px solid black;
   padding: 10px;
   margin-bottom: 10px;
-  width: 280px;
-  height: 400px;
+  /* width: 280px; */
+  /* height: 400px; */
   align-self: start;
+  height: 300px;
+}
+.struct-hero p{
+  margin: 0;
+  padding: 0;
+}
+#struct-hero-table{
+  width: 100%;
+  height: fit-content
 }
 .pdbid_title{
   display: inline-block;
   text-anchor: middle;
   text-align: center;
+  font-size: 24px;
+  /* color: aliceblue; */
   margin: auto;
-}
-.p_annot{
-  position: relative;
-  font-size: small;
-  cursor: pointer;
-  display: flex;
-
 }
 
 
@@ -32,18 +37,30 @@ a{
   display: flex;
 }
 .experimental_method_value{
-color: royalblue;
+  color:#0056b3;
+  width:100%;
 }
 
+.tooltip-bottom > .tooltip-inner {
+  max-width: 700px;
+  color: whitesmoke;
+  padding: 0;
+  color: black;
+  border: 1px solid #062e56;
+}
 
+.tooltip-bottom > .tooltip-arrow {
+  border-top: 5px solid #062e56;
+}
 
 .methods-table{
   width:600px;
   text-align: left;
 
+  color:white;
 }
-#tooltip{
+/* #tooltip{
   width: 600px;
   font-size: 12px;
   background-color:black;
-}
+} */

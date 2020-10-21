@@ -20,20 +20,16 @@ const Navbar = () => {
   }
 
   const Tools:NavDropdownParams = {
-
     dropdownTitle: "Analytics",
     itemLinks: [
-
       {itemtext: "Exit Tunnel", linkto:'/' },
       {itemtext: "Classification", linkto:'/' },
       {itemtext: "Alpha-shape", linkto:'/' },
       {itemtext: "Conservation Metrics", linkto:'/'},
-      {itemtext: "Binding Interfaces", linkto:'/'},
+      {itemtext: "Binding Interfaces", linkto:'/interfaces'},
       {itemtext: "Conformations", linkto:'/'},
-
     ]
   }
-
   return (
     <div className="navbar">
       <div className="navbar-controls">

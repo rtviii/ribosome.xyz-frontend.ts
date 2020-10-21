@@ -22,7 +22,6 @@ const RibosomalProteinHero = (data: RibosomalProtein, pdbid:string) => {
       alert("This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!")
     });
   };
-  console.log(data);
   
 
   const context: PageContexts = useContext(PageContext);

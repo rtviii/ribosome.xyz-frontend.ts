@@ -13,7 +13,6 @@
 
 .rps-catalogue-classes{
   grid-column: 2/8;
-  outline: 1px solid cyan;
   display: grid;
   grid-auto-flow: row;
 }
@@ -43,9 +42,16 @@
 
 
 .rps-subunit-tray{
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 10px;
-  outline: 2px solid red;
+  
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
 
+}
+
+.subunit-members{
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
 }

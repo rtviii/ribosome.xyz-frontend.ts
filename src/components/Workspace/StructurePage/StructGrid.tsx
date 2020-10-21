@@ -38,6 +38,8 @@ const StructGrid = ({
   return (
     <div className="struct-grid">
       <div className="struct-grid-lsu">
+        
+        <h3>Large Subunit</h3>
         {lsu
           .map((x, j) => (
             <RibosomalProteinHero key={j} {...{ pdbid }} {...x} />
@@ -45,13 +47,14 @@ const StructGrid = ({
       </div>
 
       <div className="struct-grid-ssu">
+        <h3>Small Subunit</h3>
       {ssu
         .map((x, j) => (
           <RibosomalProteinHero key={j} {...{ pdbid }} {...x} />
         ))}
       </div>
       <div className="struct-grid-other">
-        Other/Undetermined
+        <h3>Other/Undetermined</h3>
       {other
         .map((x, j) => (
           <RibosomalProteinHero key={j} {...{ pdbid }} {...x} />

@@ -3,55 +3,29 @@ import _, {  flattenDeep} from "lodash";
 import { Link } from "react-router-dom";
 import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
 import "./RPsCatalogue.css";
-import infoicon from "./../../../static/info.svg";
-import { BanClass } from "../../../redux/RibosomeTypes";
+import { BanClass, RibosomalProtein } from "../../../redux/RibosomeTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../../../redux/AppActions";
 import { AppState } from "../../../redux/store";
 import { connect } from "react-redux";
-import "./BanClassHero.css";
+import RibosomalProteinHero from "./RibosomalProteinHero";
+import BanClassHero from './BanClassHero'
+import LoadingSpinner from "../../Other/LoadingSpinner";
 
-interface endpointResponseShape {
-  NomenclatureClass: BanClass;
-  presentIn: Array<string>;
-  spans: Array<number>;
+export interface endpointResponseShape {
+  nom_class: BanClass;
+  presentIn        : Array<string>;
+  rps              : Array<{        
+    organism_desc: string
+    organism_id  : number
+    uniprot      : string
+    parent       : string
+    parent_reso  : number
+    strand_id    : string
+  }>
 }
 
-const BanClassHero = (prop: endpointResponseShape) => {
-  return (
-    <div className="ban-class-hero">
 
-    <Link  to={`/rps/${prop.NomenclatureClass}`}>
-      <h2>{prop.NomenclatureClass}</h2>
-    </Link>
-      <div className="stats">
-        <p>
-          {" "}
-          Average Surface Ratio:
-          {prop.presentIn
-            ? (
-                prop.spans.reduce((accumulator, curr) => {
-                  return accumulator + curr;
-                }, 0) / prop.spans.length
-              ).toFixed(2)
-            : "not computed"}
-        </p>
-        <p>Spans {prop.presentIn.length} Structures</p>
-        <a className="tooltip-rp-hero">
-          Present in: <img src={infoicon} className="tt_icon-rp-hero" />
-
-          <div className="tt_content-rp-hero">
-            <div>
-              {prop.presentIn.map(x => (
-                <Link to={ `/catalogue/${x}` }> <p>{x}</p></Link>
-              ))}
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-  );
-};
 
 interface OwnProps {}
 interface ReduxProps {
@@ -72,38 +46,44 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
       case "lsu":
         return (
           <div className="rps-subunit-tray">
-            <h2 className="title">LSU</h2>
+            <h2 className="title">Large Subunit Proteins</h2>
+            <div className='subunit-members'>
             {lsu
               .filter(x =>
-                x.NomenclatureClass.toLowerCase().includes(prop.globalFilter)
+                x.nom_class.toLowerCase().includes(prop.globalFilter)
               )
               .sort()
               .map(x => {
                 return <BanClassHero {...x} />;
               })}
+            </div>
           </div>
         );
       case "ssu":
         return (
           <div className="rps-subunit-tray">
-            <h2 className="title">SSU</h2>
+            <h2 className="title">Small Subunit Proteins</h2>
+            <div className='subunit-members'>
             {ssu.sort().map(x => {
               return <BanClassHero {...x} />;
             })}
+          </div>
           </div>
         );
       case "other":
         return (
           <div className="rps-subunit-tray">
             <h2 className="title">Other</h2>
+            <div className='subunit-members'>
             {other
               .filter(x =>
-                x.NomenclatureClass.toLowerCase().includes(prop.globalFilter)
+                x.nom_class.toLowerCase().includes(prop.globalFilter)
               )
               .sort()
               .map(x => {
                 return <BanClassHero {...x} />;
               })}
+              </div>
           </div>
         );
       default:
@@ -115,27 +95,30 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
       endpoint: "list_nom_classes",
       params: null,
     }).then(response => {
-      var uniquerps: Array<endpointResponseShape> = flattenDeep(response.data);
+      var uniquerps: Array<any> = flattenDeep(response.data);
+
       setavailable(uniquerps);
       setlsu(
         uniquerps.filter(x => {
           return (
-            x.NomenclatureClass.includes("L") &&
-            !x.NomenclatureClass.includes("S")
+            x.nom_class.includes("L") &&
+            !x.nom_class.includes("S")
           );
         })
       );
+
       setssu(
         uniquerps.filter(x => {
           return (
-            x.NomenclatureClass.includes("S") &&
-            !x.NomenclatureClass.includes("L")
+            x.nom_class.includes("S") &&
+            !x.nom_class.includes("L")
           );
         })
       );
+
       setother(
         uniquerps.filter(x => {
-          return ["RACK1", "bTHX"].includes(x.NomenclatureClass);
+          return ["RACK1", "bTHX"].includes(x.nom_class);
         })
       );
     });
@@ -166,7 +149,8 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
         </div>
       </div>
       <div className="rps-catalogue-classes">
-        {renderSwitchSubunit(activecat)}
+
+        { available.length > 1 ?  renderSwitchSubunit(activecat):<LoadingSpinner/>}
       </div>
     </div>
   );
