@@ -38,11 +38,11 @@ const RNACatalogue = () => {
       response => {
         var flattened: RNAProfile[] = flattenDeep(response.data);
         setrnas(flattened);
-        var mrna = filterByClass(flattened, /m-rna|messenger|mrna/);
-        var trna = filterByClass(flattened, /t-rna|transfer|trna/);
-        var class_23s = filterByClass(flattened, /23 s|23s|23-s/);
-        var class_16s = filterByClass(flattened, /16 s|16s|16-s/);
-        var class_5s = filterByClass(
+        var mrna      = filterByClass(flattened, /m-rna|messenger|mrna/);
+        var trna      = filterByClass(flattened, /t-rna|transfer|trna/);
+        var class_23s = filterByClass(flattened, /23 s|23s|23-s|28s|28 s|28-s/);
+        var class_16s = filterByClass(flattened, /16 s|16s|16-s|18s|18 s|18-s/);
+        var class_5s  = filterByClass(
           flattened,
           /(?<!2)5 s|(?<!2)5s|(?<!2)5-s|5.8s|5.8 s/
         );
@@ -73,21 +73,20 @@ const RNACatalogue = () => {
         <div className="filters-tools">Filters and search</div>
         <div className="rnas-catalogue-content">
           <div className="rnaclass rna-class-23s">
-            <p className="rna-class-title">23S RNA</p>
+            <p className="rna-class-title">23S-like RNA</p>
             {class_23s.map((r, i) => (
               <RNAHero {...r} key={i} />
             ))}
           </div>
 
           <div className="rnaclass rna-class-16s">
-            <p className="rna-class-title">16S RNA</p>
+            <p className="rna-class-title">16S-like RNA</p>
             {class_16s.map((r, i) => (
               <RNAHero {...r} key={i} />
             ))}
           </div>
-
           <div className="rnaclass rna-class-5s">
-            <p className="rna-class-title">5S RNA</p>
+            <p className="rna-class-title">5S-like RNA</p>
             {class_5s.map((r, i) => (
               <RNAHero {...r} key={i} />
             ))}
@@ -106,7 +105,6 @@ const RNACatalogue = () => {
               <RNAHero {...r} key={i} />
             ))}
           </div>
-
           <div className="rnaclass rna-class-other">
             <p className="rna-class-title">Other/Unclassified</p>
             {other.map((r, i) => (

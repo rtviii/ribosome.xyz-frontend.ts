@@ -35,9 +35,6 @@ export interface RibosomeStructure {
   _organismName       : string[];
 
 
-
-
-
   proteins: Array<RibosomalProtein>;
   rnas    : Array<rRNA> | null;
   ligands : Array<Ligand> | null;

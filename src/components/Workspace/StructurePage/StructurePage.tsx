@@ -86,7 +86,6 @@ const StructurePage: React.FC<StructurePageProps> = (
       resp => {
         const respdat:ResponseShape = flattenDeep(resp.data)[0] as ResponseShape;
         
-       console.log("respdata" , respdat);
        
         type ResponseShape = {
           structure: RibosomeStructure,

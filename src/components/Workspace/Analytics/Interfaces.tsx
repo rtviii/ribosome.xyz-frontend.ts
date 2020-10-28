@@ -4,7 +4,7 @@ import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import { Button, Col, Form, FormControl } from "react-bootstrap";
 import "./Interfaces.css"
 import { useParams } from "react-router-dom";
-import { flattenDeep, isEmpty, uniq, zipWith } from "lodash";
+import { flattenDeep, isEmpty, uniq } from "lodash";
 import LoadingSpinner from "../../Other/LoadingSpinner";
 
 interface InterfacesProp {
@@ -16,11 +16,9 @@ interface URLParams{
   type     : 'rna' | 'ligand'
   id       : string
 }
-
 interface Response{
   struct : string,
   ligands: string[]
-
 }
 interface LigandNeighborhood{  
   center_target  : string

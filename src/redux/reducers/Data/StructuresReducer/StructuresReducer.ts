@@ -1,45 +1,62 @@
-import {
-  REQUEST_STRUCTS_ERR,
-  REQUEST_STRUCTS_GO,
-  REQUEST_STRUCTS_SUCCESS,
-  StructActionTypes,
-} from "./ActionTypes";
+import * as actions from "./ActionTypes";
 import { getNeo4jData } from "./../../../Actions/getNeo4jData";
 
 import { Dispatch } from "redux";
 import { RibosomeStructure } from "../../../RibosomeTypes";
-import { ThunkDispatch } from "redux-thunk";
-const apibase = process.env.REACT_APP_DJANGO_URL;
+import { flattenDeep } from "lodash";
 
 const structReducerDefaultState = {
-  Structures: [],
-  Loading: false,
-  Error: null,
+  StructuresResponse: [],
+  Loading           : false,
+  Error             : null,
 };
 
+export interface NeoStructResp{
+        struct : RibosomeStructure;
+        ligands: string[];
+        rps    : Array<{ noms: string[]; strands: string }>;
+        rnas   : string[];
+      }
 export interface StructState {
-  Structures: RibosomeStructure[];
-  Loading: boolean;
-  Error: null | Error;
+  StructuresResponse: NeoStructResp[]
+  Loading           : boolean;
+  Error             : null | Error;
 }
 
-export const requestAllStructuresDjango = (pdbid: string) => {
-  return async (dispatch: Dispatch<StructActionTypes>) => {
-    dispatch({
-      type: REQUEST_STRUCTS_GO,
-    });
+// PRELOAD
 
+export const filterOnMethod = (method:string):actions.filterStructsMethod =>({
+    type: actions.FILTER_STRUCTS_METHOD ,
+    payload: method
+})
+
+export const filterOnSpecies = (specid:number):actions.filterStructsSpecies =>({
+    type: actions.FILTER_STRUCTS_SPECIES ,
+    payload: specid
+})
+
+
+export const searchByPdbid = (pdbid:string):actions.searchStructsPdbid =>({
+  type: actions.SEARCH_STRUCTS_PDBID,
+  payload: pdbid
+})
+
+export const requestAllStructuresDjango =  () => {
+  return async (dispatch: Dispatch<actions.StructActionTypes>) => {
+    dispatch({
+      type: actions.REQUEST_STRUCTS_GO,
+    });
     getNeo4jData("neo4j", { endpoint: "get_all_structs", params: null }).then(
       response => {
         dispatch({
-          type: REQUEST_STRUCTS_SUCCESS,
-          payload: response.data,
+          type: actions.REQUEST_STRUCTS_SUCCESS,
+          payload: flattenDeep( response.data ) as any,
         });
       },
       error => {
         dispatch({
-          type: REQUEST_STRUCTS_ERR,
-          error: error,
+         type : actions.REQUEST_STRUCTS_ERR,
+         error: error,
         });
       }
     );
@@ -48,15 +65,16 @@ export const requestAllStructuresDjango = (pdbid: string) => {
 
 export const StructuresReducer = (
   state: StructState = structReducerDefaultState,
-  action: StructActionTypes
+  action: actions.StructActionTypes
 ): StructState => {
   switch (action.type) {
     case "REQUEST_STRUCTS_GO":
       return { ...state, Loading: true };
     case "REQUEST_STRUCTS_ERR":
+      console.log('Errored out requesting structs')
       return { ...state, Loading: false, Error: action.error };
     case "REQUEST_STRUCTS_SUCCESS":
-      return { ...state, Structures: [...action.payload], Loading: false };
+      return { ...state, StructuresResponse: [...action.payload], Loading: false };
     default:
       return state;
   }
