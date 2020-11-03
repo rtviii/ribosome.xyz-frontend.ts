@@ -1,7 +1,5 @@
 import { flattenDeep, uniq } from "lodash";
 import React, { useEffect, useState } from "react";
-import { ListGroup } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import LoadingSpinner from "../../Other/LoadingSpinner";
 import RNAHero from './RNAHero'
@@ -71,6 +69,10 @@ const RNACatalogue = () => {
     <div className="rnas-catalogue">
       <div className="rnas-catalogue-grid">
         <div className="filters-tools">Filters and search</div>
+
+
+
+
         <div className="rnas-catalogue-content">
           <div className="rnaclass rna-class-23s">
             <p className="rna-class-title">23S-like RNA</p>

@@ -1,26 +1,26 @@
 .rps-catalogue {
   display: grid;
-  
+  grid-template-columns: 200px auto;
   gap:10px;
   padding: 20px;
 }
 
 .filters-tools-rps{
-  outline: 1px solid blue;
+  outline: 1px solid powderblue;
   padding: 10px;
-  grid-column: 1/2;
+
 }
 
 .rps-catalogue-classes{
-  grid-column: 2/8;
-  display: grid;
-  grid-auto-flow: row;
+  padding:10px;
+  outline: 1px solid powderblue;
+  /* grid-column   : 2/8; */
 }
 
 .component-category{
   padding        : 5px;
   display        : flex;
-  flex-direction : row;
+  flex-direction : column;
   justify-content: space-between;
   gap: 20px;
 }
@@ -28,14 +28,16 @@
 .cat{
   cursor: pointer;
   width:min-content;
-  font-size: 14px;
+  font-size: 20px;
+  white-space: nowrap;
 }
 
 .activecat{
   cursor: pointer;
   padding: 5px;
   width:min-content;
-  font-size: 14px;
+  white-space: nowrap;
+  font-size: 20px;
   outline: 1px solid black;
   box-shadow: 1px 1px 1px 1px black;
 }
@@ -50,8 +52,23 @@
 }
 
 .subunit-members{
-
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
 }
+.subunit-members h4{
+  grid-column: 1/4;
+  height: min-content;
+}
+
+.kingdom-tray {
+  border: 1px solid #0e0e0e;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+/* .subunit-members #b{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+} */

@@ -1,16 +1,27 @@
 .ban-class-hero {
   outline: 1px solid black;
   padding: 5px;
-  width: 200px;
+  display:grid;
+  grid-template-rows: 1fr 1fr;
+  /* width  : 11em; */
+  /* height : 6em; */
 }
+.ban-class-hero :hover{
+  cursor: pointer;
+}
+
+#legacy-noms{
+  width:min-content;
+  white-space: nowrap;
+}
+
 .ban-class-hero h4{
   text-align: left;
 }
 .ban-class-hero p{
   font-size: 16px;
-  
-  margin: 0;
-  padding: 0;
+  margin   : 0;
+  padding  : 0;
 }
 .ban-class-hero .members{
   background-color: khaki;
@@ -33,7 +44,36 @@
   width: 400px;
 }
 
+.banclasses{
+  display: flex;
 
+}
+
+#legacy-qmark{
+  width:20px;
+  height:20px;
+}
+
+#legacy-noms{
+  outline: 1px solid cyan;
+  
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.legacy-nomenclature > .tooltip-inner{
+  color:white;
+  font-size: 14px;
+  background-color: black;
+  max-width       : 600px;
+}
+
+.leg-nom-table{
+  width: 200px;
+  text-align: center;
+  vertical-align: middle;
+}
 
 .ban-class-hero .popover-body{
   max-width: 400px;
@@ -46,7 +86,10 @@
 }
 .popover {
   min-width:500px;
-
 }
 
+#banhero-table{
+  background-color: yellow;
+
+}
 

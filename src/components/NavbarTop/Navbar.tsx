@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Navbar.css";
 import NavMenuDropdown from './NavMenuDropdown'
 import {NavDropdownParams} from './NavMenuDropdown'
@@ -33,6 +34,8 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <div className="navbar-controls">
+
+        <Link to='/home'>       <NavMenuDropdown {...{dropdownTitle:'Home', itemLinks:[]}}/></Link>
         <NavMenuDropdown {...Resources}/>
         <NavMenuDropdown {...Tools}/>
       </div>

@@ -1,13 +1,15 @@
 import React from 'react'
-import infoicon from "./../../../static/info.svg";
 import { Link } from 'react-router-dom';
 import "./BanClassHero.css";
-import { endpointResponseShape } from './RPsCatalogue';
-import { OverlayTrigger } from 'react-bootstrap';
+import { ERS, BanPaperEntry } from './RPsCatalogue';
+import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Popover } from 'react-bootstrap';
+import {large_subunit_map} from './../../../static/large-subunit-map'
+import {small_subunit_map} from './../../../static/small-subunit-map'
+import qmark from './../../../static/qmark.png'
 
 
-const popover = (prop: endpointResponseShape) => (
+const popover = (prop: ERS) => (
   <Popover id="popover-basic">
     <Popover.Title as="h3">Member proteins</Popover.Title>
     <Popover.Content className='basic-content'>
@@ -24,19 +26,39 @@ const popover = (prop: endpointResponseShape) => (
 
 
 
-const BanClassHero = (prop: endpointResponseShape) => {
+const BanClassHero = ({prop, paperinfo}:{ prop: ERS, paperinfo: BanPaperEntry }) => {
+ const renderTooltip = (props:any) => (
+  <Tooltip className="legacy-nomenclature" {...props}>
+    <table className="leg-nom-table">
+      <th>Legacy Nomenclature</th>
+      <tr><td>Human</td><td>{paperinfo.h? paperinfo.h : "-"}</td></tr>
+      <tr>Bacteria<td>{paperinfo.b?paperinfo.b :"-"}</td></tr>
+      <tr>Yeast<td>{paperinfo.y?paperinfo.y :"-"}</td></tr>
+    </table>
+  </Tooltip>
+);
+
   return (
     <div className="ban-class-hero">
-      <Link to={`/rps/${prop.nom_class}`}>
-        <h4>{prop.nom_class}</h4>
-      </Link>
+      <div className="banclasses">
+        <OverlayTrigger placement="left" overlay={renderTooltip}>
+        <Link to={`/rps/${prop.nom_class}`}>
+          <h4>{prop.nom_class}</h4>
+        </Link>
+
+        </OverlayTrigger>
+
+
+      </div>
       <div className="stats">
-          <OverlayTrigger trigger="click" placement="bottom" overlay={popover(prop)}>
-          <p id='member-chains'>Member chains</p>
-          </OverlayTrigger>
-        <p>
-          Spans {prop.presentIn.length} structures
-        </p>
+        <OverlayTrigger
+          trigger="click"
+          placement="bottom"
+          overlay={popover(prop)}
+        >
+          <p id="member-chains">Member chains</p>
+        </OverlayTrigger>
+        <p>Spans {prop.presentIn.length} structures</p>
       </div>
     </div>
   );}

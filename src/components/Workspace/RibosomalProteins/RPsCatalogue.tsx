@@ -10,9 +10,13 @@ import { AppState } from "../../../redux/store";
 import { connect } from "react-redux";
 import RibosomalProteinHero from "./RibosomalProteinHero";
 import BanClassHero from './BanClassHero'
+import {large_subunit_map} from './../../../static/large-subunit-map'
+import {small_subunit_map} from './../../../static/small-subunit-map'
 import LoadingSpinner from "../../Other/LoadingSpinner";
+import RPCatalogueGrid from './RPCatalogueGrid'
 
-export interface endpointResponseShape {
+// endpoint response shape
+export interface ERS {
   nom_class: BanClass;
   presentIn        : Array<string>;
   rps              : Array<{        
@@ -25,6 +29,14 @@ export interface endpointResponseShape {
   }>
 }
 
+export interface BanPaperEntry{
+        pfamDomainAccession: Array<string>;
+        taxRange           : Array<string>;
+        b                  : string| null;
+        y                  : string | null;
+        h                  : string | null;
+}
+
 
 
 interface OwnProps {}
@@ -32,42 +44,104 @@ interface ReduxProps {
   globalFilter: string;
 }
 interface DispatchProps {}
-
 type RPsCatalogueProps = DispatchProps & OwnProps & ReduxProps;
+
+const sortProts = (p1:ERS,p2:ERS) =>{
+
+  var a = p1.nom_class
+  var b = p2.nom_class
+
+  const convert = ( letr:string)=>{
+    switch(letr){
+      case 'b':
+        return 1
+      case 'e':
+        return 2
+      case 'u':
+        return 3
+      default:
+        return 0
+    }
+  }
+  var cl1 =convert( a.slice(0,1) )
+  var cl2 =convert( b.slice(0,1) )
+  if(cl1 === cl2){
+    var numa = a.match(/\d+/g)![0] as unknown as number;
+    var numb = b.match(/\d+/g)![0] as unknown as  number;
+    return numa-numb
+  }
+  return cl1 - cl2
+}
+
 const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
-  const [available, setavailable] = useState<Array<endpointResponseShape>>([]);
-  const [ssu, setssu]             = useState<Array<endpointResponseShape>>([]);
-  const [lsu, setlsu]             = useState<Array<endpointResponseShape>>([]);
-  const [other, setother]         = useState<Array<endpointResponseShape>>([]);
+
+  const [available, setavailable] = useState<Array<ERS>>([]);
+  const [ssu, setssu]             = useState<Array<ERS>>([]);
+  const [lsu, setlsu]             = useState<Array<ERS>>([]);
+  const [other, setother]         = useState<Array<ERS>>([]);
   const [activecat, setactivecat] = useState("lsu");
+
+  const KingdomGrid = ({
+    prots,
+    map,
+  }: {
+    prots: ERS[];
+    map  : Record<string, BanPaperEntry>
+  }) => {
+    const [kb, setkb] = useState<ERS[]>([]);
+    const [ke, setke] = useState<ERS[]>([]);
+    const [ku, setku] = useState<ERS[]>([]);
+    useEffect(() => {
+      var u = prots.filter(x => x.nom_class.match(/^u/));
+      var b = prots.filter(x => x.nom_class.match(/^e/));
+      var e = prots.filter(x => x.nom_class.match(/^b/));
+      setkb(b);
+      setku(u);
+      setke(e);
+    }, [prots]);
+
+    return (
+      <div className="subunit-members">
+        <div id="e">
+          <h4>Eukaryotic</h4>
+          <div className="kingdom-tray">
+            {kb.map(x => {
+              return <BanClassHero prop={x}  paperinfo={map[x.nom_class]}/>;
+            })}
+          </div>
+        </div>
+        <div id="b">
+          <h4>Bacterial</h4>
+          <div className="kingdom-tray">
+            {ke.map(x => {
+              return <BanClassHero prop={x}  paperinfo={map[x.nom_class]}/>;
+            })}{" "}
+          </div>
+        </div>
+        <div id="u">
+          <h4>Universal</h4>
+          <div className="kingdom-tray">
+            {ku.map(x => {
+              return <BanClassHero prop={x}  paperinfo={map[x.nom_class]}/>;
+            })}{" "}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const renderSwitchSubunit = (category: string) => {
     switch (category) {
       case "lsu":
         return (
           <div className="rps-subunit-tray">
-            <h2 className="title">Large Subunit Proteins</h2>
-            <div className='subunit-members'>
-            {lsu
-              .filter(x =>
-                x.nom_class.toLowerCase().includes(prop.globalFilter)
-              )
-              .sort()
-              .map(x => {
-                return <BanClassHero {...x} />;
-              })}
-            </div>
+              <KingdomGrid prots={lsu} map={large_subunit_map}/>
           </div>
         );
       case "ssu":
         return (
           <div className="rps-subunit-tray">
-            <h2 className="title">Small Subunit Proteins</h2>
-            <div className='subunit-members'>
-            {ssu.sort().map(x => {
-              return <BanClassHero {...x} />;
-            })}
-          </div>
+              <KingdomGrid prots={ssu} map={small_subunit_map}/>
           </div>
         );
       case "other":
@@ -77,11 +151,10 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
             <div className='subunit-members'>
             {other
               .filter(x =>
-                x.nom_class.toLowerCase().includes(prop.globalFilter)
-              )
+                x.nom_class.toLowerCase().includes(prop.globalFilter))
               .sort()
               .map(x => {
-                return <BanClassHero {...x} />;
+              return <BanClassHero prop={x}  paperinfo={{ b:"",h:"",pfamDomainAccession:[], taxRange:[],y:""}}/>;
               })}
               </div>
           </div>
@@ -95,6 +168,7 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
       endpoint: "list_nom_classes",
       params: null,
     }).then(response => {
+
       var uniquerps: Array<any> = flattenDeep(response.data);
 
       setavailable(uniquerps);
@@ -104,7 +178,7 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
             x.nom_class.includes("L") &&
             !x.nom_class.includes("S")
           );
-        })
+        }).sort(sortProts)
       );
 
       setssu(
@@ -113,7 +187,7 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
             x.nom_class.includes("S") &&
             !x.nom_class.includes("L")
           );
-        })
+        }).sort(sortProts)
       );
 
       setother(
@@ -127,29 +201,23 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
   return (
     <div className="rps-catalogue">
       <div className="filters-tools-rps">
-        <div className="component-category">
           <div
             onClick={() => setactivecat("lsu")}
-            className={activecat === "lsu" ? "activecat" : "cat"}
-          >
+            className={activecat === "lsu" ? "activecat" : "cat"}>
             Large Subunit
           </div>
           <div
             onClick={() => setactivecat("ssu")}
-            className={activecat === "ssu" ? "activecat" : "cat"}
-          >
+            className={activecat === "ssu" ? "activecat" : "cat"}>
             Small Subunit
           </div>
           <div
             onClick={() => setactivecat("other")}
-            className={activecat === "other" ? "activecat" : "cat"}
-          >
-            Other/Poorly Unclassified
+            className={activecat === "other" ? "activecat" : "cat"}>
+            Other
           </div>
-        </div>
       </div>
       <div className="rps-catalogue-classes">
-
         { available.length > 1 ?  renderSwitchSubunit(activecat):<LoadingSpinner/>}
       </div>
     </div>

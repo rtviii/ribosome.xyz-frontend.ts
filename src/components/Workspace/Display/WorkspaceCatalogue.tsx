@@ -8,6 +8,8 @@ import { AppActions } from "../../../redux/AppActions";
 import LoadingSpinner  from '../../Other/LoadingSpinner'
 import * as redux from './../../../redux/reducers/Data/StructuresReducer/StructuresReducer'
 import { method } from "lodash";
+import { Accordion, Card } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
 interface OwnProps {}
 interface ReduxProps {
@@ -20,23 +22,20 @@ interface DispatchProps {
   __rx_requestStructures: () => void,
 }
 type WorkspaceCatalogueProps = DispatchProps & OwnProps & ReduxProps;
-export const parseKingdomOut = (speciesstr: string) => {
-  return speciesstr.slice(-3).replace(/(\(|\))/g, "");
-};
 
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
 
-	useEffect(() => {
-		prop.__rx_requestStructures()
-	}, [])
+  useEffect(() => {
+    prop.__rx_requestStructures()
+  }, [])
 
-	// Tis has to be all moved to the reducer
-	const [structures, setstructures] = useState<redux.NeoStructResp[]>([])
-	useEffect(()=>{
-		setstructures(prop.__rx_structures)
-	},[prop.__rx_structures])
+  // This has to be all moved to the reducer
+  const [structures, setstructures] = useState<redux.NeoStructResp[]>([])
+  useEffect(()=>{
+    setstructures(prop.__rx_structures)
+  },[prop.__rx_structures])
 
   const filterByPdbId =(structs:redux.NeoStructResp[], filter:string) =>{
     return structs.filter(x=> x.struct.rcsb_id.toLowerCase().includes(filter))
@@ -51,43 +50,46 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
         id: str.struct._organismId,
       };
     });
-    const orgsdict: { [id: string]: string[] } = {};
-
+    const orgsdict: { [id: string]: { names:string[], count:number } } = {};
     organisms.map(org => {
       org.id.forEach((id, index) => {
         if (!Object.keys(orgsdict).includes(id.toString())) {
-          orgsdict[id] = []
-          orgsdict[id].push(org.name[index])
+          orgsdict[id] = {
+            names:[],
+            count:1
+          }
+          orgsdict[id].names.push(org.name[index])
         }else{
-          orgsdict[id].push(org.name[index])
+          orgsdict[id].names.push(org.name[index])
+          orgsdict[id].count+=1
         }
       });
     });
-
     setorganismsAvailable(orgsdict)
-    
   }, [structures]);
 
 
   const [methodFilter, setmethodFilter] = useState<string[]>([])
 
   useEffect(() => {
+  if (methodFilter.length ===0){
+    setstructures(prop.__rx_structures)
+    return
+  }
 
-	if (methodFilter.length ===0){
-		setstructures(prop.__rx_structures)
-		return
-	}
-
-	var filtered = structures.filter(struct => methodFilter.includes(struct.struct.expMethod));
-	setstructures(filtered)
-
+  var filtered = structures.filter(struct => methodFilter.includes(struct.struct.expMethod));
+    setstructures(filtered)
   }, [methodFilter]);
 
 
+  const [subunits, setSubunits]             = useState<number>(0);
+  useEffect(()=>{
+
+  },[])
   const [organismFilter, setorganismFilter] = useState<string[]>([]);
 
   const filterByOrganism = (struct: redux.NeoStructResp) => {
-	  if (organismFilter.length <1 ) return true
+    if (organismFilter.length <1 ) return true
     for (var id of struct.struct._organismId) {
       if (organismFilter.includes(id.toString())) {
         return true;
@@ -97,8 +99,13 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   };
 
   useEffect(() => {
-	  console.log(organismFilter)
+    console.log(organismFilter)
   }, [organismFilter])
+
+
+const truncate = (str:string) =>{
+    return str.length > 25 ? str.substring(0, 23) + "..." : str;
+}
 
   const [pdbidFilter, setPbidFilter] = useState<string>("");
   return !prop.loading ? (
@@ -113,7 +120,6 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
             }}
           />
           <li>
-            ELECTRON MICROSCOPY
             <input
               id="ELECTRON MICROSCOPY"
               onChange={e => {
@@ -127,9 +133,9 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
               }}
               type="checkbox"
             />
+            ELECTRON MICROSCOPY
           </li>
           <li>
-            X-RAY DIFFRACTION
             <input
               id="X-RAY DIFFRACTION"
               type="checkbox"
@@ -142,12 +148,28 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
                 }
               }}
             />
+            X-RAY DIFFRACTION
           </li>
           <br />
-          {Object.entries(organismsAvailable).map((tpl: any) => {
+
+        
+<Accordion defaultActiveKey="0">
+  <Card>
+    <Card.Header>
+      <Accordion.Toggle as={Button} variant="link" eventKey="0">
+		  Species
+      </Accordion.Toggle>
+    </Card.Header>
+
+    <Accordion.Collapse eventKey="0">
+      <Card.Body>
+
+
+<div className='wspace-species'>
+
+          {Object.entries(organismsAvailable).map((tpl:any) => {
             return (
               <li>
-                {tpl[0]}({tpl[1][0]})
                 <input
                   onChange={e => {
                     var checked = e.target.checked;
@@ -163,10 +185,21 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
                   type="checkbox"
                   id={tpl[0]}
                 />
+                {tpl[1].count} x {truncate(tpl[1].names[0])} (id:{tpl[0]})
               </li>
             );
-          })}
-          <div></div>
+        })}
+
+</div>
+	  </Card.Body>
+    </Accordion.Collapse>
+  </Card>
+</Accordion>
+
+
+        
+
+
         </div>
         <div className="workspace-catalogue-structs">
           {filterByPdbId(structures.filter(filterByOrganism), pdbidFilter).map((x, i) => (

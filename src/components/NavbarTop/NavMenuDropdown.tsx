@@ -16,7 +16,7 @@ export interface NavDropdownParams{
 const NavMenuDropdown:React.FC<NavDropdownParams> = (props) => {
   return (
     <div className="dropdown">
-      <button className="dropbtn">
+      <button className="dropbtn" >
         {props.dropdownTitle}
         <i className="fa fa-caret-down"></i>
       </button>

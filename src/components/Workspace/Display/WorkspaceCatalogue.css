@@ -1,10 +1,3 @@
-/* .workspace-catalogue {
-  height : 100%;
-  padding: 10px;
-  outline: 1px solid white;
-  display: flex;
-  gap    : 20px;
-} */
 
 
 
@@ -13,21 +6,34 @@
   grid-auto-flow       : row;
   display              : grid;
   gap                  : 20px;
-  /* background-color     : pink; */
   grid-template-columns: 300px auto;
+  padding-top: 10px;
 
 }
 
 .wspace-catalogue-filters-tools{
-  outline: 1px solid blue;
-  background-color: yellow;
-  font-size: 14px;
-  padding: 10px;
+  outline         : 1px solid aliceblue;
+  font-size       : 14px;
+  padding         : 10px;
 }
 
 .workspace-catalogue-structs{
-  display: grid;
-  grid-auto-flow: row;
-  gap: 10px;
-  grid-template-columns:  1fr 1fr 1fr;
+  display              : grid;
+  grid-auto-flow       : row;
+  gap                  : 10px;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+
+.wspace-species{
+
+  font-size: 12px;
+
+}
+
+
+.wspace-species li{
+
+  display: flex;
+
 }

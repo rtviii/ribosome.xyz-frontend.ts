@@ -19,6 +19,7 @@ import StructGrid from "./StructGrid";
 import LoadingSpinner from './../../Other/LoadingSpinner'
 import { Tooltip } from "react-bootstrap";
 import { OverlayTrigger } from "react-bootstrap";
+import StructHero from "../StructureHero/StructHero";
 
 interface OwnProps {}
 interface ReduxProps {
@@ -215,7 +216,13 @@ const StructurePage: React.FC<StructurePageProps> = (
               </div>
             </div>
             <div className="annotation">
-              Publication: {structdata.citation_pdbx_doi}
+      <p>
+        {" "}
+        Publication:{" "}
+        <a href={`https://www.doi.org/${structdata.citation_pdbx_doi}`}>
+          {structdata.citation_pdbx_doi}
+        </a>
+      </p>
             </div>
             <div className="annotation">
               Orgnaism Id: {structdata._organismId}
