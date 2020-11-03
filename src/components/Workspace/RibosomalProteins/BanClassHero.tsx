@@ -2,12 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import "./BanClassHero.css";
 import { ERS, BanPaperEntry } from './RPsCatalogue';
-import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import {  OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Popover } from 'react-bootstrap';
-import {large_subunit_map} from './../../../static/large-subunit-map'
-import {small_subunit_map} from './../../../static/small-subunit-map'
-import qmark from './../../../static/qmark.png'
-
 
 const popover = (prop: ERS) => (
   <Popover id="popover-basic">

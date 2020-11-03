@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";import "./WorkspaceCatalogue.css";
 import { connect  } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import { AppState, rootReducer } from "./../../../redux/store";
+import { AppState } from "./../../../redux/store";
 import StructHero from "./../StructureHero/StructHero";
 import { PageContext } from "../../Main";
 import { AppActions } from "../../../redux/AppActions";
 import LoadingSpinner  from '../../Other/LoadingSpinner'
 import * as redux from './../../../redux/reducers/Data/StructuresReducer/StructuresReducer'
-import { method } from "lodash";
 import { Accordion, Card } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 
@@ -37,9 +36,10 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
     setstructures(prop.__rx_structures)
   },[prop.__rx_structures])
 
-  const filterByPdbId =(structs:redux.NeoStructResp[], filter:string) =>{
-    return structs.filter(x=> x.struct.rcsb_id.toLowerCase().includes(filter))
-  }
+
+
+
+
 
   const [organismsAvailable, setorganismsAvailable] = useState({})
 
@@ -81,13 +81,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
     setstructures(filtered)
   }, [methodFilter]);
 
-
-  const [subunits, setSubunits]             = useState<number>(0);
-  useEffect(()=>{
-
-  },[])
   const [organismFilter, setorganismFilter] = useState<string[]>([]);
-
   const filterByOrganism = (struct: redux.NeoStructResp) => {
     if (organismFilter.length <1 ) return true
     for (var id of struct.struct._organismId) {
@@ -97,17 +91,28 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
     }
     return false;
   };
-
   useEffect(() => {
     console.log(organismFilter)
   }, [organismFilter])
-
-
 const truncate = (str:string) =>{
     return str.length > 25 ? str.substring(0, 23) + "..." : str;
 }
 
+  const filterByPdbId                = (structs: redux.NeoStructResp[], filter: string) => {
+    return structs.filter(x => {
+      var concated =
+        x.struct.rcsb_id.toLowerCase() +
+        x.struct.citation_title.toLocaleLowerCase() +
+        x.struct._organismName.reduce((acc:string, curr:string)=> acc.concat(curr.toLocaleLowerCase()), '' )
+      return concated.includes(filter);
+    });
+  };
+
+
   const [pdbidFilter, setPbidFilter] = useState<string>("");
+
+  
+
   return !prop.loading ? (
     <PageContext.Provider value="WorkspaceCatalogue">
       <div className="workspace-catalogue-grid">
@@ -116,7 +121,8 @@ const truncate = (str:string) =>{
           <input
             value={pdbidFilter}
             onChange={e => {
-              setPbidFilter(e.target.value);
+              var value = e.target.value
+            setPbidFilter(value);
             }}
           />
           <li>
@@ -128,7 +134,7 @@ const truncate = (str:string) =>{
                 if (e.target.checked) {
                   setmethodFilter([...methodFilter, id]);
                 } else {
-                  setmethodFilter(methodFilter.filter(str => str != id));
+                  setmethodFilter(methodFilter.filter(str => str !== id));
                 }
               }}
               type="checkbox"
@@ -144,7 +150,7 @@ const truncate = (str:string) =>{
                 if (e.target.checked) {
                   setmethodFilter([...methodFilter, id]);
                 } else {
-                  setmethodFilter(methodFilter.filter(str => str != id));
+                  setmethodFilter(methodFilter.filter(str => str !== id));
                 }
               }}
             />
@@ -176,7 +182,7 @@ const truncate = (str:string) =>{
                     var id      = e.target.id;
                     if (!checked) {
                       setorganismFilter(
-                        organismFilter.filter(str => !(str.toString() == id))
+                        organismFilter.filter(str => !(str.toString() === id))
                       );
                     } else {
                       setorganismFilter([...organismFilter, id.toString()]);
@@ -195,16 +201,11 @@ const truncate = (str:string) =>{
     </Accordion.Collapse>
   </Card>
 </Accordion>
-
-
-        
-
-
         </div>
         <div className="workspace-catalogue-structs">
-          {filterByPdbId(structures.filter(filterByOrganism), pdbidFilter).map((x, i) => (
-            <StructHero {...x} key={i} />
-          ))}
+
+          {filterByPdbId(structures.filter(filterByOrganism), pdbidFilter).map((x, i) => (<StructHero {...x} key={i} />))}
+
         </div>
       </div>
     </PageContext.Provider>

@@ -1,4 +1,4 @@
-import { flattenDeep, uniq } from "lodash";
+import { flattenDeep } from "lodash";
 import React, { useEffect, useState } from "react";
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import LoadingSpinner from "../../Other/LoadingSpinner";

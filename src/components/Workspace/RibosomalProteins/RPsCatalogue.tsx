@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from "react";
-import _, {  flattenDeep} from "lodash";
-import { Link } from "react-router-dom";
+import {  flattenDeep} from "lodash";
 import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
 import "./RPsCatalogue.css";
-import { BanClass, RibosomalProtein } from "../../../redux/RibosomeTypes";
+import { BanClass } from "../../../redux/RibosomeTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../../../redux/AppActions";
 import { AppState } from "../../../redux/store";
 import { connect } from "react-redux";
-import RibosomalProteinHero from "./RibosomalProteinHero";
 import BanClassHero from './BanClassHero'
 import {large_subunit_map} from './../../../static/large-subunit-map'
 import {small_subunit_map} from './../../../static/small-subunit-map'
 import LoadingSpinner from "../../Other/LoadingSpinner";
-import RPCatalogueGrid from './RPCatalogueGrid'
 
 // endpoint response shape
 export interface ERS {
@@ -36,8 +33,6 @@ export interface BanPaperEntry{
         y                  : string | null;
         h                  : string | null;
 }
-
-
 
 interface OwnProps {}
 interface ReduxProps {

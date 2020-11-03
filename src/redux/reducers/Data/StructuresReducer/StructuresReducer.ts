@@ -1,6 +1,5 @@
 import * as actions from "./ActionTypes";
 import { getNeo4jData } from "./../../../Actions/getNeo4jData";
-
 import { Dispatch } from "redux";
 import { RibosomeStructure } from "../../../RibosomeTypes";
 import { flattenDeep } from "lodash";

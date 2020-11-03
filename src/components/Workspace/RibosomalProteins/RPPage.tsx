@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext, Children } from "react";
+import React, { useEffect, useState  } from "react";
 import "./RPPage.css";
 import { useParams, Link } from "react-router-dom";
 import { flattenDeep } from "lodash";
@@ -6,8 +6,6 @@ import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import RibosomalProteinHero from "./RibosomalProteinHero";
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import { PageContext } from "../../Main";
-import * as ribt from "./../../../redux/RibosomeTypes";
-import Axios from "axios";
 
 interface NeoHomolog {
   parent: string;
@@ -52,7 +50,7 @@ const RPPage = () => {
           {homologs.map((e: NeoHomolog) => {
             return (
               <div style={{ display: "flex" }}>
-                <RibosomalProteinHero {...e.protein} {...e.parent} />{" "}
+                <RibosomalProteinHero data={e.protein} pdbid={e.parent} />{" "}
                 <Link
                   style={{ width: "min-content" }}
                   to={`/catalogue/${e.parent}`}

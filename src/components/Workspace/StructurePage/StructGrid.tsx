@@ -5,7 +5,6 @@ import RibosomalProteinHero from "../RibosomalProteins/RibosomalProteinHero";
 import {
   Ligand,
   RibosomalProtein,
-  RibosomeStructure,
   rRNA,
 } from "./../../../redux/RibosomeTypes";
 
@@ -42,7 +41,7 @@ const StructGrid = ({
         <h3>Large Subunit</h3>
         {lsu
           .map((x, j) => (
-            <RibosomalProteinHero key={j} {...{ pdbid }} {...x} />
+            <RibosomalProteinHero key={j} data={x} pdbid={pdbid} />
           ))}
       </div>
 
@@ -50,14 +49,14 @@ const StructGrid = ({
         <h3>Small Subunit</h3>
       {ssu
         .map((x, j) => (
-          <RibosomalProteinHero key={j} {...{ pdbid }} {...x} />
+          <RibosomalProteinHero key={j} data={x} pdbid={pdbid}  />
         ))}
       </div>
       <div className="struct-grid-other">
         <h3>Other/Undetermined</h3>
       {other
         .map((x, j) => (
-          <RibosomalProteinHero key={j} {...{ pdbid }} {...x} />
+          <RibosomalProteinHero key={j} data={x} pdbid={pdbid} />
         ))}
       </div>
     </div>

@@ -1,5 +1,4 @@
 import React from "react";
-import VisualDisplay from "./VisualDisplay";
 import "./Display.css";
 import { withRouter, Switch, Route, Redirect } from "react-router";
 import WorkspaceCatalogue from "./WorkspaceCatalogue";

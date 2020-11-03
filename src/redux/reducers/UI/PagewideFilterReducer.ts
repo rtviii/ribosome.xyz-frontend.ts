@@ -1,4 +1,3 @@
-import { act } from "react-dom/test-utils";
 import { UIActions } from "./UIActions";
 export interface PagewideFilter {
   filterValue: string;

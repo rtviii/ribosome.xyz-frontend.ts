@@ -15,7 +15,7 @@ const popoverstructs= (data:Response ) =>{
       <ul>
              {data.presentIn.map(( pdbid:string ) => (
                <Link to={`/catalogue/${pdbid}`}>
-                 <li><a>{pdbid}</a></li>
+                 <li><a href={`/catalogue/${pdbid}`}>{pdbid}</a></li>
                </Link>
              ))}
       </ul>

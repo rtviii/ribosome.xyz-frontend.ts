@@ -5,7 +5,6 @@ import { AppActions } from '../redux/AppActions';
 import { NeoStructResp } from '../redux/reducers/Data/StructuresReducer/StructuresReducer';
 import { AppState } from '../redux/store';
 import * as redux from './../redux/reducers/Data/StructuresReducer/StructuresReducer'
-import rib from './../static/Protein_translation.gif'
 import  conversion from './../static/conversion.png'
 import './Home.css'
 import { Link } from 'react-router-dom'

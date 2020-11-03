@@ -19,7 +19,6 @@ import StructGrid from "./StructGrid";
 import LoadingSpinner from './../../Other/LoadingSpinner'
 import { Tooltip } from "react-bootstrap";
 import { OverlayTrigger } from "react-bootstrap";
-import StructHero from "../StructureHero/StructHero";
 
 interface OwnProps {}
 interface ReduxProps {
@@ -28,7 +27,7 @@ interface ReduxProps {
 interface DispatchProps {}
 const MethodSwitch = (r: RibosomeStructure) => {
   var record;
-  if (r.expMethod.toUpperCase() == "X-RAY DIFFRACTION") {
+  if (r.expMethod.toUpperCase() === "X-RAY DIFFRACTION") {
     record = {
       diffrn_source_details: r.diffrn_source_details,
       diffrn_source_pdbx_synchrotron_beamline:
@@ -40,7 +39,7 @@ const MethodSwitch = (r: RibosomeStructure) => {
       diffrn_source_source: r.diffrn_source_source,
       diffrn_source_type: r.diffrn_source_type,
     };
-  } else if (r.expMethod.toUpperCase() == "ELECTRON MICROSCOPY") {
+  } else if (r.expMethod.toUpperCase() === "ELECTRON MICROSCOPY") {
     record = {
       cryoem_exp_detail                   : r.cryoem_exp_detail,
       cryoem_exp_algorithm                : r.cryoem_exp_algorithm,
@@ -106,7 +105,7 @@ const StructurePage: React.FC<StructurePageProps> = (
     );
 
     return () => {};
-  }, []);
+  }, [pdbid]);
 
   const renderSwitch = (activecategory: string) => {
     switch (activecategory) {

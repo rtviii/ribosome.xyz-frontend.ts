@@ -1,4 +1,4 @@
-import React, { useEffect, createContext } from "react";
+import React, {  createContext } from "react";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../redux/AppActions";
 import { AppState } from "../redux/store";

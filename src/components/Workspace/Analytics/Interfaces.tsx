@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Ligand, rRNA } from "../../../redux/RibosomeTypes";
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
-import { Button, Col, Form, FormControl } from "react-bootstrap";
+import { Button, Col, Form } from "react-bootstrap";
 import "./Interfaces.css"
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { flattenDeep, isEmpty, uniq } from "lodash";
 import LoadingSpinner from "../../Other/LoadingSpinner";
 
@@ -32,7 +32,7 @@ const Interfaces: React.FC<InterfacesProp> = pps => {
 
 const [ligandNeighborhood, setLigandNeighborhood] = useState<LigandNeighborhood[]>([])
 const [loadingInterfaces, setLoading]             = useState<boolean>(false)
-var   params: URLParams                           = useParams();
+// var   params: URLParams                           = useParams();
 
 const [ligands, setLigands] = useState<Response[]>([])
 useEffect(() => {
@@ -58,7 +58,7 @@ const filterStruct = (structure:string, ligs:Response[])=>{
   if (isEmpty(structure)){
     return []
   }
-  var filtered =  flattenDeep(ligs.filter(r=>r.struct == structure) )[0]
+  var filtered =  flattenDeep(ligs.filter(r=>r.struct === structure) )[0]
   return filtered.ligands
 }
 

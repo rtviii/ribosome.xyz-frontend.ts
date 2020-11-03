@@ -1,6 +1,6 @@
 import Axios from "axios";
 const BACKEND: any = process.env.REACT_APP_DJANGO_URL;
-type DjangoAPIs = "neo4j" | "admin" | "pdb";
+type  DjangoAPIs   = "neo4j" | "admin" | "pdb";
 
 type Neo4jEndpoints =
   | getStructure
@@ -10,13 +10,22 @@ type Neo4jEndpoints =
   | customCypher
   | gmoNomClass
   | getAllLigands
-  // this is a "PDB endpoint" strictly speaking
   | downloadSubchain
   | getAllRnas
   | LigandNeighborhood
   | getRnasByStruct
   | getLigandsByStruct
+  | downloadCifChain
 
+
+
+interface downloadCifChain{
+  endpoint: "cif_chain",
+  params:{
+    structid: string,
+    chainid : string
+  }
+}
 interface getRnasByStruct{
   endpoint: "get_rnas_by_struct",
   params  : null
@@ -84,7 +93,5 @@ interface getAllLigands{
 
 export const getNeo4jData = (api: DjangoAPIs, ep: Neo4jEndpoints) => {
   const URI = encodeURI(`${BACKEND}/${api}/${ep.endpoint}/`);
-  return typeof ep.params != null
-    ? Axios.get(URI, { params: ep.params })
-    : Axios.get(URI);
+  return ep.params != null ? Axios.get(URI, { params: ep.params }) : Axios.get(URI);
 };

@@ -1,32 +1,33 @@
-import React, { useContext, useEffect, createContext } from "react";
+import React  from "react";
 import "./RibosomalProteinHero.css";
 import { Link } from "react-router-dom";
 import downicon from "./download.png";
 import fileDownload from "js-file-download";
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
-import { PageContext, PageContexts } from "../../Main";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import Accordion from "react-bootstrap/esm/Accordion";
 import { Button, Card, ListGroup } from "react-bootstrap";
 
 
 
-const RibosomalProteinHero = (data: RibosomalProtein, pdbid:string) => {
-  const downloadsubchain = (pdbid: string, cid: string) => {
+const RibosomalProteinHero = ({pdbid, data}:{pdbid:string, data:RibosomalProtein}) => {
+
+  const parseAndDownloadChain = (pdbid: string, cid: string) => {
     getNeo4jData("neo4j", {
-      endpoint: "get_pdbsubchain",
-      params: { chainid: cid, structid: pdbid },
+      endpoint: "cif_chain",
+      params  : {structid: pdbid, chainid:cid}
     }).then(resp => {
-      fileDownload(resp.data, `${pdbid}_subchain_${cid}`);
+      fileDownload(resp.data, `${pdbid}_${cid}.cif`);
     }, error=>{
-      alert("This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!")
+      alert("This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" +  error)
     });
   };
-  
 
-  const context: PageContexts = useContext(PageContext);
   return (
     <div className="ribosomal-protein-hero">
+
+      <button onClick={()=>parseAndDownloadChain( pdbid, data.entity_poly_strand_id)}> Download</button>
+
       <table id="rp-table">
         <tr>
           <th>RP Class</th>

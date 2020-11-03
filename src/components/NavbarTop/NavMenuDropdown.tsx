@@ -21,11 +21,7 @@ const NavMenuDropdown:React.FC<NavDropdownParams> = (props) => {
         <i className="fa fa-caret-down"></i>
       </button>
       <div className="dropdown-content">
-        {props.itemLinks.map(item=><Link to={item.linkto}>{item.itemtext}</Link>)}
-        {/* <Link to="/catalogue">Structures</Link>
-        <Link to="/rps">      Ribosomal Proteins</Link>
-        <Link to="/ligands">  rRNAs</Link>
-        <Link to="/ligands">  Ligands</Link> */}
+        {props.itemLinks.map((item,i )=><Link key={i} to={item.linkto}>{item.itemtext}</Link>)}
       </div>
     </div>
   );

@@ -7,11 +7,14 @@ import { store } from "./redux/store";
 import { BrowserRouter as Router,  } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import 'react-app-polyfill/ie11'  
+import 'react-app-polyfill/stable'
+
 ReactDOM.render(
   <Provider store={store}>
     <Router>
       <React.StrictMode>
-        <Main />
+        <Main/>
       </React.StrictMode>
     </Router>
   </Provider>,
