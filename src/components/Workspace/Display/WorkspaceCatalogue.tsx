@@ -9,6 +9,7 @@ import LoadingSpinner  from '../../Other/LoadingSpinner'
 import * as redux from './../../../redux/reducers/Data/StructuresReducer/StructuresReducer'
 import { Accordion, Card } from "react-bootstrap";
 import { Button } from "react-bootstrap";
+import { transform } from "lodash";
 
 interface OwnProps {}
 interface ReduxProps {
@@ -95,7 +96,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
     console.log(organismFilter)
   }, [organismFilter])
 const truncate = (str:string) =>{
-    return str.length > 25 ? str.substring(0, 23) + "..." : str;
+    return str.length > 20 ? str.substring(0, 15) + "..." : str;
 }
 
   const filterByPdbId                = (structs: redux.NeoStructResp[], filter: string) => {
@@ -112,6 +113,16 @@ const truncate = (str:string) =>{
   const [pdbidFilter, setPbidFilter] = useState<string>("");
 
   
+  const transformToShortTax = (taxname:string) =>{
+    var words = taxname.split(' ') 
+    if ( words.length>1 ){
+    var fl =words[0].slice(0,1)
+    var full = fl.toLocaleUpperCase() + '. ' + words[1]
+    return full
+    }else{
+      return words[0]
+    }
+  }
 
   return !prop.loading ? (
     <PageContext.Provider value="WorkspaceCatalogue">
@@ -170,12 +181,22 @@ const truncate = (str:string) =>{
     <Accordion.Collapse eventKey="0">
       <Card.Body>
 
-
 <div className='wspace-species'>
 
+<li>
+  <div className='species-filter'>
+
+<div></div>
+<div>Tax</div>
+<div>Total</div>
+</div>
+</li>
           {Object.entries(organismsAvailable).map((tpl:any) => {
+            transformToShortTax(tpl[1].names[0])
             return (
               <li>
+                <div className='species-filter'>
+
                 <input
                   onChange={e => {
                     var checked = e.target.checked;
@@ -191,7 +212,13 @@ const truncate = (str:string) =>{
                   type="checkbox"
                   id={tpl[0]}
                 />
-                {tpl[1].count} x {truncate(tpl[1].names[0])} (id:{tpl[0]})
+                <div>
+                {truncate(transformToShortTax(tpl[1].names[0]))} (id:{tpl[0]})
+                </div>
+                <div>
+                {tpl[1].count}
+                </div>
+                </div>
               </li>
             );
         })}

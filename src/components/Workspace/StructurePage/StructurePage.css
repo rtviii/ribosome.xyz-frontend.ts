@@ -49,8 +49,7 @@ h2 {
   margin: 0;
   text-align: center;
 }
-/* .structure-page--components {
-} */
+
 .rnaprottoggle {
   padding: 0 20px;
   cursor: pointer;
@@ -66,23 +65,21 @@ h2 {
 }
 
 .component-category{
-  padding:20px;
   display: flex;
-  flex-direction: row;
+  padding:15px;
   justify-content: space-between;
-  gap: 20px;
 }
+
 .cat{
   cursor: pointer;
   padding: 5px;
-  width:min-content;
   font-size: 20px;
 }
 .activecat{
   cursor: pointer;
   padding: 5px;
   width:min-content;
-  font-size: 20px;
+  font-size: 20px; 
   outline: 1px solid black;
   box-shadow: 1px 1px 1px 1px black;
 

@@ -124,6 +124,19 @@ const StructurePage: React.FC<StructurePageProps> = (
         return rrnas.map(obj => <RNAHero {...{description:obj.rcsb_pdbx_description ? obj.rcsb_pdbx_description : "Null", length:obj.entity_poly_seq_length, parent: pdbid, strand:obj.entity_poly_strand_id}}  />);
       case "ligands":
         return <div className='struct-page-ligands'>
+            
+            <div>
+
+
+            Hide Ions:{" "}
+            <input
+              type="checkbox"
+              id="ionscheck"
+              onChange={() => {
+                setions(!ions);
+              }}
+            />
+            </div>
       { 
         ligands
           .filter(lig => {
@@ -153,34 +166,29 @@ const StructurePage: React.FC<StructurePageProps> = (
       <div className="structure-page">
         <div className="structure-page--main">
           <h2 className="title">{pdbid}</h2>
-          <div className="controls">
-            <div className="component-category">
-              <div
-                onClick={() => setactivecat("rrna")}
-                className={activecat === "rrna" ? "activecat" : "cat"}
-              >
-                rRNA
-              </div>
-              <div
-                onClick={() => setactivecat("proteins")}
-                className={activecat === "proteins" ? "activecat" : "cat"}
-              >
-                Proteins
-              </div>
-              <div
-                onClick={() => setactivecat("ligands")}
-                className={activecat === "ligands" ? "activecat" : "cat"}
-              >
-                Ligands
-              </div>
+
+          <div className="component-category">
+
+            <div
+              onClick={() => setactivecat("rrna")}
+              className={activecat === "rrna" ? "activecat" : "cat"}
+            >
+              rRNA
             </div>
-            Hide Ions: <input
-              type="checkbox"
-              id="ionscheck"
-              onChange={() => {
-                setions(!ions);
-              }}
-            />
+
+            <div
+              onClick={() => setactivecat("proteins")}
+              className={activecat === "proteins" ? "activecat" : "cat"}
+            >
+              Proteins
+            </div>
+
+            <div
+              onClick={() => setactivecat("ligands")}
+              className={activecat === "ligands" ? "activecat" : "cat"}
+            >
+              Ligands
+            </div>
           </div>
           <div className="structure-info">
             <div className="annotation">
@@ -215,13 +223,13 @@ const StructurePage: React.FC<StructurePageProps> = (
               </div>
             </div>
             <div className="annotation">
-      <p>
-        {" "}
-        Publication:{" "}
-        <a href={`https://www.doi.org/${structdata.citation_pdbx_doi}`}>
-          {structdata.citation_pdbx_doi}
-        </a>
-      </p>
+              <p>
+                {" "}
+                Publication:{" "}
+                <a href={`https://www.doi.org/${structdata.citation_pdbx_doi}`}>
+                  {structdata.citation_pdbx_doi}
+                </a>
+              </p>
             </div>
             <div className="annotation">
               Orgnaism Id: {structdata._organismId}

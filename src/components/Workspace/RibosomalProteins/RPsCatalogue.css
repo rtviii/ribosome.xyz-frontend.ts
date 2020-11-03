@@ -17,7 +17,7 @@
   /* grid-column   : 2/8; */
 }
 
-.component-category{
+.rps-catalogue .component-category{
   padding        : 5px;
   display        : flex;
   flex-direction : column;
@@ -25,14 +25,14 @@
   gap: 20px;
 }
 
-.cat{
+.rps-catalogue .cat{
   cursor: pointer;
   width:min-content;
   font-size: 20px;
   white-space: nowrap;
 }
 
-.activecat{
+.rps-catalogue .activecat{
   cursor: pointer;
   padding: 5px;
   width:min-content;
