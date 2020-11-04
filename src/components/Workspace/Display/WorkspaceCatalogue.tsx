@@ -23,6 +23,16 @@ interface DispatchProps {
 }
 type WorkspaceCatalogueProps = DispatchProps & OwnProps & ReduxProps;
 
+export   const transformToShortTax = (taxname:string) =>{
+    var words = taxname.split(' ') 
+    if ( words.length>1 ){
+    var fl =words[0].slice(0,1)
+    var full = fl.toLocaleUpperCase() + '. ' + words[1]
+    return full
+    }else{
+      return words[0]
+    }
+  }
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
@@ -113,126 +123,122 @@ const truncate = (str:string) =>{
   const [pdbidFilter, setPbidFilter] = useState<string>("");
 
   
-  const transformToShortTax = (taxname:string) =>{
-    var words = taxname.split(' ') 
-    if ( words.length>1 ){
-    var fl =words[0].slice(0,1)
-    var full = fl.toLocaleUpperCase() + '. ' + words[1]
-    return full
-    }else{
-      return words[0]
-    }
-  }
 
   return !prop.loading ? (
     <PageContext.Provider value="WorkspaceCatalogue">
       <div className="workspace-catalogue-grid">
         <div className="wspace-catalogue-filters-tools">
-          Search:{" "}
-          <input
-            value={pdbidFilter}
-            onChange={e => {
-              var value = e.target.value
-            setPbidFilter(value);
-            }}
-          />
-          <li>
+          <div className="wspace-search">
             <input
-              id="ELECTRON MICROSCOPY"
+              value={pdbidFilter}
               onChange={e => {
-                var id = e.target.id;
-                console.log(e.target.checked);
-                if (e.target.checked) {
-                  setmethodFilter([...methodFilter, id]);
-                } else {
-                  setmethodFilter(methodFilter.filter(str => str !== id));
-                }
-              }}
-              type="checkbox"
-            />
-            ELECTRON MICROSCOPY
-          </li>
-          <li>
-            <input
-              id="X-RAY DIFFRACTION"
-              type="checkbox"
-              onChange={e => {
-                var id = e.target.id;
-                if (e.target.checked) {
-                  setmethodFilter([...methodFilter, id]);
-                } else {
-                  setmethodFilter(methodFilter.filter(str => str !== id));
-                }
+                var value = e.target.value;
+                setPbidFilter(value);
               }}
             />
-            X-RAY DIFFRACTION
-          </li>
+          </div>
+
+          <br />
+          <div className="wspace-method-filter">
+            <div className="method-instance">
+              <span>ELECTRON MICROSCOPY</span>
+              <input
+                id="ELECTRON MICROSCOPY"
+                onChange={e => {
+                  var id = e.target.id;
+                  console.log(e.target.checked);
+                  if (e.target.checked) {
+                    setmethodFilter([...methodFilter, id]);
+                  } else {
+                    setmethodFilter(methodFilter.filter(str => str !== id));
+                  }
+                }}
+                type="checkbox"
+              />
+            </div>
+            <div className="method-instance">
+              <span>X-RAY DIFFRACTION</span>
+              <input
+                id="X-RAY DIFFRACTION"
+                type="checkbox"
+                onChange={e => {
+                  var id = e.target.id;
+                  if (e.target.checked) {
+                    setmethodFilter([...methodFilter, id]);
+                  } else {
+                    setmethodFilter(methodFilter.filter(str => str !== id));
+                  }
+                }}
+              />
+            </div>
+          </div>
           <br />
 
-        
-<Accordion defaultActiveKey="0">
-  <Card>
-    <Card.Header>
-      <Accordion.Toggle as={Button} variant="link" eventKey="0">
-		  Species
-      </Accordion.Toggle>
-    </Card.Header>
+          <Accordion defaultActiveKey="0">
+            <Card>
+              <Card.Header>
+                <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                  Species
+                </Accordion.Toggle>
+              </Card.Header>
 
-    <Accordion.Collapse eventKey="0">
-      <Card.Body>
-
-<div className='wspace-species'>
-
-<li>
-  <div className='species-filter'>
-
-<div></div>
-<div>Tax</div>
-<div>Total</div>
-</div>
-</li>
-          {Object.entries(organismsAvailable).map((tpl:any) => {
-            transformToShortTax(tpl[1].names[0])
-            return (
-              <li>
-                <div className='species-filter'>
-
-                <input
-                  onChange={e => {
-                    var checked = e.target.checked;
-                    var id      = e.target.id;
-                    if (!checked) {
-                      setorganismFilter(
-                        organismFilter.filter(str => !(str.toString() === id))
+              <Accordion.Collapse eventKey="0">
+                <Card.Body>
+                  <div className="wspace-species">
+                    <li>
+                      <div className="species-filter">
+                        <div></div>
+                        <div>Tax</div>
+                        <div>Total</div>
+                      </div>
+                    </li>
+                    {Object.entries(organismsAvailable).map((tpl: any) => {
+                      transformToShortTax(tpl[1].names[0]);
+                      return (
+                        <li>
+                          <div className="species-filter">
+                            <input
+                              onChange={e => {
+                                var checked = e.target.checked;
+                                var id = e.target.id;
+                                if (!checked) {
+                                  setorganismFilter(
+                                    organismFilter.filter(
+                                      str => !(str.toString() === id)
+                                    )
+                                  );
+                                } else {
+                                  setorganismFilter([
+                                    ...organismFilter,
+                                    id.toString(),
+                                  ]);
+                                }
+                              }}
+                              type="checkbox"
+                              id={tpl[0]}
+                            />
+                            <div>
+                              {truncate(transformToShortTax(tpl[1].names[0]))}{" "}
+                              (id:{tpl[0]})
+                            </div>
+                            <div>{tpl[1].count}</div>
+                          </div>
+                        </li>
                       );
-                    } else {
-                      setorganismFilter([...organismFilter, id.toString()]);
-                    }
-                  }}
-                  type="checkbox"
-                  id={tpl[0]}
-                />
-                <div>
-                {truncate(transformToShortTax(tpl[1].names[0]))} (id:{tpl[0]})
-                </div>
-                <div>
-                {tpl[1].count}
-                </div>
-                </div>
-              </li>
-            );
-        })}
-
-</div>
-	  </Card.Body>
-    </Accordion.Collapse>
-  </Card>
-</Accordion>
+                    })}
+                  </div>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
         </div>
+
         <div className="workspace-catalogue-structs">
-
-          {filterByPdbId(structures.filter(filterByOrganism), pdbidFilter).map((x, i) => (<StructHero {...x} key={i} />))}
-
+          {filterByPdbId(structures.filter(filterByOrganism), pdbidFilter).map(
+            (x, i) => (
+              <StructHero {...x} key={i} />
+            )
+          )}
         </div>
       </div>
     </PageContext.Provider>

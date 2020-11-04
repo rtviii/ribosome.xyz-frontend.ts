@@ -1,6 +1,19 @@
 
 
 
+.wspace-search{
+  font-size: 20px;
+}
+
+.wspace-method-filter{
+  display: flex;
+  flex-direction: column;
+}
+.wspace-method-filter .method-instance{
+  display: flex;
+  justify-content: space-between;
+
+}
 .workspace-catalogue-grid{
   width                : 100%;
   grid-auto-flow       : row;

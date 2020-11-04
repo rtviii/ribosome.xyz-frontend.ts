@@ -9,47 +9,35 @@
 
 
 .rnas-catalogue-grid{
-  /* outline              : 2px solid red; */
   width                : 100%;
   grid-auto-flow       : row;
   display              : grid;
-  gap: 20px;
-  grid-template-columns: 1fr 6fr;
-
+  gap                  : 20px;
+  grid-template-columns: 2fr 9fr;
 }
 
 .filters-tools{
-
   outline: 1px solid blue;
-
   padding: 10px;
-  grid-column: 1/2;
+  width  : 100%;
 }
 
 .rnas-catalogue-content{
-    grid-column: 2/8;
-    display: grid;
-    grid-auto-flow: row;
-    gap: 10px;
-    grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr;
-
-}
-
-
-.rnaclass{
-  /* border: 1px solid red; */
+  grid-column          : 2/8;
+  display              : grid;
+  grid-auto-flow       : row;
+  gap                  : 10px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 .rna-hero{
   margin-top: 10px;
-  width:250px;
-  padding: 10px;
-  outline: 1px solid black;
-  word-wrap: break-word;
-  
+  width     : 250px;
+  padding   : 10px;
+  outline   : 1px solid black;
+  word-wrap : break-word;
 }
 .rna-hero p{
-  
-  margin: 0;
+  margin   : 0;
   font-size: 12px;
 }

@@ -121,7 +121,20 @@ const StructurePage: React.FC<StructurePageProps> = (
           />
         );
       case "rrna":
-        return rrnas.map(obj => <RNAHero {...{description:obj.rcsb_pdbx_description ? obj.rcsb_pdbx_description : "Null", length:obj.entity_poly_seq_length, parent: pdbid, strand:obj.entity_poly_strand_id}}  />);
+        return rrnas.map(obj => (
+          <RNAHero
+            rna ={{
+              description: obj.rcsb_pdbx_description
+                ? obj.rcsb_pdbx_description
+                       :  "Null",
+                length : obj.entity_poly_seq_length,
+                parent : pdbid,
+                strand : obj.entity_poly_strand_id,
+                orgid  : obj.rcsb_source_organism_id,
+                orgname: obj.rcsb_source_organism_description
+            }}
+          />
+        ));
       case "ligands":
         return <div className='struct-page-ligands'>
             

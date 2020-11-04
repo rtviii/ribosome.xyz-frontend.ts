@@ -4,16 +4,25 @@ import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import LoadingSpinner from "../../Other/LoadingSpinner";
 import RNAHero from './RNAHero'
 import './RNACatalogue.css'
+import { Accordion, Card } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import { transformToShortTax } from "../Display/WorkspaceCatalogue";
 
 export interface RNAProfile {
   description: string;
   length     : number;
   parent     : string;
   strand     : string;
+  orgname    : string[];
+  orgid      : number[];
 }
 
 
+const truncate = (str:string) =>{
+    return str.length > 20 ? str.substring(0, 15) + "..." : str;
+}
 const RNACatalogue = () => {
+  // const [baserna, setbaserna]     = useState<RNAProfile[]>([]);
   const [rnas, setrnas]           = useState<RNAProfile[]>([]);
   const [trnas, settrna]          = useState<RNAProfile[]>([]);
   const [mrnas, setmrna]          = useState<RNAProfile[]>([]);
@@ -31,20 +40,22 @@ const RNACatalogue = () => {
     });
   };
 
-  useEffect(() => {
+  const [organismFilter, setorganismFilter] = useState<Array<number>>([])
+  useEffect(()=>{
     getNeo4jData("neo4j", { endpoint: "get_all_rnas", params: null }).then(
       response => {
         var flattened: RNAProfile[] = flattenDeep(response.data);
-        setrnas(flattened);
-        var mrna      = filterByClass(flattened, /m-rna|messenger|mrna/);
-        var trna      = filterByClass(flattened, /t-rna|transfer|trna/);
-        var class_23s = filterByClass(flattened, /23 s|23s|23-s|28s|28 s|28-s/);
-        var class_16s = filterByClass(flattened, /16 s|16s|16-s|18s|18 s|18-s/);
-        var class_5s  = filterByClass(
-          flattened,
-          /(?<!2)5 s|(?<!2)5s|(?<!2)5-s|5.8s|5.8 s/
-        );
-        var other = flattened.filter(
+        setrnas(flattened)})
+  }, [])
+
+  useEffect(() => {
+        var mrna       = filterByClass(rnas, /m-rna|messenger|mrna/);
+        var trna       = filterByClass(rnas, /t-rna|transfer|trna/);
+        var class_23s  = filterByClass(rnas, /23 s|23s|23-s|28s|28 s|28-s/);
+        var class_16s  = filterByClass(rnas, /16 s|16s|16-s|18s|18 s|18-s/);
+        var class_5s   = filterByClass(rnas,/(?<!2)5 s|(?<!2)5s|(?<!2)5-s|5.8s|5.8 s/);
+
+        var other = rnas.filter(
           el =>
             ![
               ...mrna,
@@ -61,56 +72,184 @@ const RNACatalogue = () => {
         setclass_23s(class_23s);
         setclass_5s(class_5s);
         setother(other);
-      }
-    );
-  }, []);
-  return other.length < 1 ? <LoadingSpinner/>:  (
+     
+  }, [rnas, organismFilter]);
 
+
+  // useEffect(() => {
+  //   console.log('orgfilter chagned')
+  //   console.log(baserna);
+    
+  //   var filtered = baserna.filter(rna => { 
+  //   organismFilter.includes(rna.orgid[0]) })
+  //   setrnas()
+  // }, [organismFilter])
+
+  const [organismsAvailable, setorganismsAvailable] = useState({})
+  useEffect(() => {
+    var organisms = rnas.map(str => {
+      return {
+        name: str.orgname.map(x => x.toLowerCase()),
+        id  : str.orgid
+      };
+    });
+
+    const orgsdict: { [id: string]: { names:string[], count:number } } = {};
+    organisms.map(org => {
+      org.id.forEach((id:number, index:number) => {
+        if (!Object.keys(orgsdict).includes(id.toString())) {
+          orgsdict[id] = {
+            names:[],
+            count:1
+          }
+          orgsdict[id].names.push(org.name[index])
+        }else{
+          orgsdict[id].names.push(org.name[index])
+          orgsdict[id].count+=1
+        }
+      });
+    });
+    console.log(orgsdict)
+    setorganismsAvailable(orgsdict)
+  }, [rnas]);
+
+
+
+  const filterByOrganims = (
+    elems: RNAProfile[],
+    filter: number[]
+  ): RNAProfile[] => {
+    if (filter.length === 0) {
+      console.log("yep its empty, returning all", elems.length);
+      return elems;
+    }
+
+    if (filter.length > 0) {
+      var ftrd = elems.filter(elem => {
+        for (var n of elem.orgid) {
+          if (filter.includes(n)) return true;
+        }
+        return false;
+      });
+      return ftrd;
+    }
+    return elems;
+  };
+
+  useEffect(() => {
+
+    console.log(organismFilter);
+    
+  }, [organismFilter])
+
+  return other.length < 1 ? (
+    <LoadingSpinner />
+  ) : (
     <div className="rnas-catalogue">
       <div className="rnas-catalogue-grid">
-        <div className="filters-tools">Filters and search</div>
+        <div className="filters-tools">
+          <Accordion defaultActiveKey="0">
+            <Card>
+              <Card.Header>
+                <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                  Species
+                </Accordion.Toggle>
+              </Card.Header>
 
+              <Accordion.Collapse eventKey="0">
+                <Card.Body>
+                  <div className="wspace-species">
+                    <li>
+                      <div className="species-filter">
+                        <div></div>
+                        <div>Tax</div>
+                        <div>Total</div>
+                      </div>
+                    </li>
+                    {Object.entries(organismsAvailable).map((tpl: any) => {
+                      transformToShortTax(tpl[1].names[0]);
+                      return (
+                        <li>
+                          <div className="species-filter">
+                            <input
+                              onChange={e => {
+                                var checked = e.target.checked;
+                                var id = e.target.id;
 
-
+                                if (!checked) {
+                                  console.log("id popped", tpl[0]);
+                                  setorganismFilter(
+                                    organismFilter.filter(id => id !== parseInt(tpl[0]))
+                                  );
+                                } else {
+                                  console.log("id pushed", tpl[0]);
+                                  setorganismFilter([
+                                    ...organismFilter,
+                                    parseInt(tpl[0]),
+                                  ]);
+                                }
+                              }}
+                              type="checkbox"
+                              id={tpl[0]}
+                            />
+                            <div>
+                              {truncate(transformToShortTax(tpl[1].names[0]))}{" "}
+                              (id:{tpl[0]})
+                            </div>
+                            <div>{tpl[1].count}</div>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </div>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+        </div>
 
         <div className="rnas-catalogue-content">
           <div className="rnaclass rna-class-23s">
             <p className="rna-class-title">23S-like RNA</p>
-            {class_23s.map((r, i) => (
-              <RNAHero {...r} key={i} />
-            ))}
+            {
+            
+            filterByOrganims(class_23s, organismFilter).map((r, i) => (
+              <RNAHero rna={r} key={i} />))
+              
+              }
           </div>
 
           <div className="rnaclass rna-class-16s">
             <p className="rna-class-title">16S-like RNA</p>
-            {class_16s.map((r, i) => (
-              <RNAHero {...r} key={i} />
+            {filterByOrganims( class_16s, organismFilter ).map((r, i) => (
+              <RNAHero rna={r} key={i} />
             ))}
           </div>
           <div className="rnaclass rna-class-5s">
             <p className="rna-class-title">5S-like RNA</p>
-            {class_5s.map((r, i) => (
-              <RNAHero {...r} key={i} />
+            {filterByOrganims( class_5s, organismFilter ).map((r, i) => (
+              <RNAHero rna={r} key={i} />
             ))}
           </div>
 
           <div className="rnaclass rna-class-mrna">
             <p className="rna-class-title">mRNA</p>
-            {mrnas.map((r, i) => (
-              <RNAHero {...r} key={i} />
+
+            {filterByOrganims( mrnas, organismFilter ).map((r, i) => (
+              <RNAHero rna={r} key={i} />
             ))}
           </div>
 
           <div className="rnaclass rna-class-trna">
             <p className="rna-class-title">tRNA</p>
-            {trnas.map((r, i) => (
-              <RNAHero {...r} key={i} />
+            {filterByOrganims( trnas, organismFilter ).map((r, i) => (
+              <RNAHero rna={r} key={i} />
             ))}
           </div>
           <div className="rnaclass rna-class-other">
             <p className="rna-class-title">Other/Unclassified</p>
-            {other.map((r, i) => (
-              <RNAHero {...r} key={i} />
+            {filterByOrganims( other, organismFilter ).map((r, i) => (
+              <RNAHero rna={r} key={i} />
             ))}
           </div>
         </div>
