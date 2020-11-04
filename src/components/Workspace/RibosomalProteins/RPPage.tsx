@@ -8,10 +8,16 @@ import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import { PageContext } from "../../Main";
 
 interface NeoHomolog {
-  parent: string;
+  parent : string;
+  orgname: string[]
+  orgid  : number[]
   protein: RibosomalProtein;
+  title: string
 }
 
+const truncate = (str:string) =>{
+    return str.length > 40 ? str.substring(0, 30) + "..." : str;
+}
 const RPPage = () => {
   var params: any = useParams();
   const [homologs, sethomologs] = useState<NeoHomolog[]>([]);
@@ -38,29 +44,43 @@ const RPPage = () => {
       }
     );
 
-    return () => {};
+
   }, [params]);
+
 
   return params!.nom ? (
     <PageContext.Provider value="RibosomalProteinPage">
+
+    <h1>Ribosomal Proteins</h1>
       <div className="rp-page">
         <h1>{params.nom}</h1>
-        <h4>Homologs</h4>
-        <ul className="rp-homologs">
           {homologs.map((e: NeoHomolog) => {
             return (
-              <div style={{ display: "flex" }}>
+              <div className="homolog-hero" style={{ display: "flex" }}>
                 <RibosomalProteinHero data={e.protein} pdbid={e.parent} />{" "}
-                <Link
-                  style={{ width: "min-content" }}
-                  to={`/catalogue/${e.parent}`}
-                >
-                  <div>{e.parent}</div>
-                </Link>
+
+                <div className="homolog-struct">
+                  <div id='homolog-struct-title'>
+                    <Link
+                      style={{ width: "min-content" }}
+                      to={`/catalogue/${e.parent}`}
+                    >
+                      <h4>{e.parent}</h4>
+                    </Link>{" "}
+                    <p> {e.title}</p>
+                  </div>
+                  {
+                    e.orgname.map(
+                      ( org,i ) =>
+                  <span id='homolog-tax-span'>{truncate( e.orgname[i] )}( ID: {e.orgid[i]} )</span>
+                    )
+                  }
+                  
+                </div>
               </div>
             );
           })}
-        </ul>
+
       </div>
     </PageContext.Provider>
   ) : (

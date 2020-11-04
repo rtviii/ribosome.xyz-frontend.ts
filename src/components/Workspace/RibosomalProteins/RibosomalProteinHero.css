@@ -1,13 +1,17 @@
+table{
+  margin: 0;
+  width: 100%
+}
 .ribosomal-protein-hero {
   position: relative;
-  /* background-color: rebeccapurple; */
-  /* display: flexJ */
-  margin: 0;
-  margin-bottom: 20px;
-  padding: 0;
-  display: grid;
-  grid-template-rows: auto;
-  outline: 1px solid gray;
+  width:400px;
+  padding-bottom: 20px;
+  /* margin: 0; */
+  /* margin-bottom: 20px; */
+  /* padding: 0; */
+  /* display: grid; */
+  /* grid-template-rows: auto; */
+  /* outline: 1px solid gray; */
   
 }
 
@@ -55,4 +59,27 @@ table, td,tr, th{
   height: 20px;
   right: 5px;
   bottom: 5px;
+}
+.prot-loading{
+  display        : flex;
+  justify-content: space-between;
+  width:100%;
+}
+.prot-loading img{
+  width : 20px;
+  height: 20px;
+}
+#download-protein{
+  width : 20px;
+  height: 20px;
+  margin-right: 20px;
+}
+
+.down-banner{
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+
 }

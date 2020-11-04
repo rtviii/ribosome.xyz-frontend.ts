@@ -11,12 +11,10 @@ const Navbar = () => {
 
     dropdownTitle: "Resources",
     itemLinks: [
-
       {itemtext: "Structures", linkto:'/catalogue'},
       {itemtext: "Ribosomal Proteins", linkto:'/rps'},
       {itemtext: "Ligands", linkto:'/ligands'},
       {itemtext: "rRNA", linkto:'/rnas'},
-
     ]
   }
 
@@ -25,7 +23,6 @@ const Navbar = () => {
     itemLinks: [
       {itemtext: "Exit Tunnel", linkto:'/' },
       {itemtext: "Classification", linkto:'/' },
-      {itemtext: "Alpha-shape", linkto:'/' },
       {itemtext: "Conservation Metrics", linkto:'/'},
       {itemtext: "Binding Interfaces", linkto:'/interfaces'},
       {itemtext: "Conformations", linkto:'/'},
@@ -34,7 +31,6 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <div className="navbar-controls">
-
         <Link to='/home'>       <NavMenuDropdown {...{dropdownTitle:'Home', itemLinks:[]}}/></Link>
         <NavMenuDropdown {...Resources}/>
         <NavMenuDropdown {...Tools}/>

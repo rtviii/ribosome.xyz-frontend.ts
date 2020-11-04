@@ -8,35 +8,30 @@
   gap: 20px;
 }
 
+.struct-grid {
+  white-space: nowrap;
+}
 
 .struct-grid-lsu {
-  /* grid-column: 1/7; */
-  min-width: 100%;
-  width: min-content;
-  flex-direction: column;
   display: flex;;
-  outline: 1px solid black;
+  flex-direction: column;
+  width: min-content;
+  /* outline: 1px solid black; */
   padding: 10px;
-  /* overflow-y: hidden; */
-  /* overflow: scroll; */
 }
 .struct-grid-ssu {
-  /* grid-column: 7/12; */
-  min-width: 100%;
-  display: flex;;
+  display: flex;
   flex-direction: column;
   width: min-content;
-  outline: 1px solid black;
+  /* outline: 1px solid black; */
   padding: 10px;
 }
 
 .struct-grid-other {
-  min-width: 100%;
-  /* grid-column: 7/12; */
   display: flex;;
   flex-direction: column;
   width: min-content;
-  outline: 1px solid black;
+  /* outline: 1px solid black; */
   padding: 10px;
 }
 

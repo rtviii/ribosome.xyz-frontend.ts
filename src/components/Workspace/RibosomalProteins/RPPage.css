@@ -1,3 +1,42 @@
 .rp-page{
-    padding: 10px;
+    padding: 40px;
+    display        : grid;
+    gap: 10px;;
+}
+.homolog-hero{
+    outline        : 1px solid cyan;
+    width: 200px;
+
+}
+
+
+.homolog-struct{
+    background-color: azure;
+    display: flex;
+    flex-direction: column;
+    padding:10px
+}
+.homolog-struct:hover{
+    box-shadow: 1px 2px 3px blue;
+}
+
+.homolog-struct span{
+    font-size  : small;
+    white-space: nowrap;
+}
+
+#homolog-struct-title h4{
+    padding: 0;
+    margin-right: 10px ;
+}
+#homolog-struct-title p{
+    font-size: 14px;
+
+}
+#homolog-struct-title{
+    display: flex;
+    width: 400px;
+}
+#homolog-tax-span{
+    width: 300px;
 }
