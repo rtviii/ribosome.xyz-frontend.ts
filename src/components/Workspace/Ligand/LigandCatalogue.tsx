@@ -9,28 +9,65 @@ import LoadingSpinner from "../../Other/LoadingSpinner";
 import { Accordion } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 
-const popoverstructs= (data:LigandResponseShape ) =>{
-
-  return <Popover id='popover-structs' contentEditable={ 'true' } >
-   <Popover.Title as="h3">Structures</Popover.Title>
-    <Popover.Content>
-    <div>
-      <ul>
-
-             {data.presentIn.map(( struct:LigandAssocStruct ) => (
-
-               <Link to={`/catalogue/${struct.struct}`}>
-                 <li><a href={`/catalogue/${struct.struct}`}>{struct.struct}</a></li>
-               </Link>
-             ))}
-
-      </ul>
-    </div>
-    </Popover.Content>
-
-  </Popover>
+type LigandAssocStruct ={
+    struct : string;
+    orgname: string[];
+    orgid  : number[];
 }
-const LigandHero = (data: LigandResponseShape) => {
+type LigandResponseShape = {
+  ligand   : Ligand;
+  presentIn: Array<LigandAssocStruct>;
+};
+
+const truncate = (str:string) =>{
+    return str.length > 45 ? str.substring(0, 40) + "..." : str;
+}
+  const filterByorg = (
+
+    structs: LigandAssocStruct[],
+    specFilter: number[]
+  ): LigandAssocStruct[] => {
+    if (specFilter.length===0){
+      return structs
+    }
+    var filt = structs.filter(struct => {
+      for (var orgid of struct.orgid) {
+        if (specFilter.includes(orgid)) {
+          return true;
+        }
+      }
+      return false;
+    });
+    return filt;
+  };
+
+const popoverstructs= (data:LigandResponseShape, specFilter: number[]) =>{
+
+
+  return (
+    <Popover id="popover-structs">
+      <Popover.Title as="h3">Structures</Popover.Title>
+      <Popover.Content>
+        <div className="ligand-structs-popover">
+          {filterByorg(data.presentIn, specFilter).map(
+            (struct: LigandAssocStruct) => (
+              <li>
+                <div className='assoc-struct-span'>
+
+                  <Link to={`/catalogue/${struct.struct}`}>
+                    <span>{struct.struct}</span>
+                  </Link>
+                  <span>{truncate( struct.orgname[0] )}</span>
+                </div>
+              </li>
+            )
+          )}
+        </div>
+      </Popover.Content>
+    </Popover>
+  );
+}
+const LigandHero = ({data, speciesFilter}:{ data: LigandResponseShape, speciesFilter: number[] }) => {
   const truncate = (str:string) =>{
       return str.length > 15 ? str.substring(0, 7) + "..." : str;
   }
@@ -43,20 +80,10 @@ const LigandHero = (data: LigandResponseShape) => {
       <p>Weight: {l.formula_weight} ug</p>
        <OverlayTrigger 
         rootClose trigger={'click'}
-        placement='right'
-        overlay={popoverstructs(data)}><div id='lig-str-present'>Associated structures</div></OverlayTrigger>
+        placement='bottom'
+        overlay={popoverstructs(data, speciesFilter)}><div id='lig-str-present'>Associated structures({filterByorg( data.presentIn, speciesFilter ).length})</div></OverlayTrigger>
     </div>
   );
-};
-
-type LigandAssocStruct ={
-    struct : string;
-    orgname: string[];
-    orgid  : number[];
-}
-type LigandResponseShape = {
-  ligand   : Ligand;
-  presentIn: Array<LigandAssocStruct>;
 };
 
 const LigandCatalogue = () => {
@@ -144,6 +171,13 @@ const LigandCatalogue = () => {
 
   const [ligfilter, setligfilter] = useState<string>("")
   const [organismFilter, setorganismFilter] = useState<Array<number>>([])
+  const searchByName = (l:LigandResponseShape[], search:string)=>{
+    return l.filter(l =>
+      (l.ligand.chemicalId + l.ligand.chemicalName + l.ligand.pdbx_description)
+        .toLocaleLowerCase()
+        .includes(search.toLocaleLowerCase())
+    );
+  }
 
   return (
     <div className="ligand-catalogue">
@@ -151,6 +185,8 @@ const LigandCatalogue = () => {
         Hide Ions: <input type="checkbox" onChange={e => setionsOn(!ionsOn)} />
 
           <div className="ligands-search">
+
+Search:
             <input
               value={ligfilter}
               onChange={e => {
@@ -222,10 +258,10 @@ const LigandCatalogue = () => {
       <div className="ligand-catalogue-grid">
         {ligs.length > 0 ? (
           ionsOn ? (
-            filterByOrg(ligs, organismFilter).map((l: LigandResponseShape) => <LigandHero {...l} />)
+            searchByName( filterByOrg(ligs, organismFilter), ligfilter).map((l: LigandResponseShape) => <LigandHero data={l} speciesFilter={organismFilter} />)
           ) : (
-            filterByOrg(ligs, organismFilter).filter(l => !l.ligand.chemicalName.toLocaleLowerCase().includes("ion"))
-                .map((l: LigandResponseShape) => <LigandHero {...l} />)
+            searchByName(filterByOrg(ligs, organismFilter), ligfilter).filter(l => !l.ligand.chemicalName.toLocaleLowerCase().includes("ion"))
+                .map((l: LigandResponseShape) => <LigandHero data={l} speciesFilter={organismFilter} />)
               )
           ) : (
           <LoadingSpinner />

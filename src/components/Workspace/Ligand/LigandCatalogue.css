@@ -8,13 +8,12 @@
 }
 
 .ligand-catalogue{
-  /* outline              : 2px solid red; */
   padding: 10px;
   width                : 100%;
-  grid-auto-flow       : row;
   display              : grid;
-  gap: 20px;
-  grid-template-columns: 1fr 6fr;
+  gap: 10px;
+  grid-template-columns: 1fr 9fr;
+  grid-template-rows: auto;
 
 }
 
@@ -28,21 +27,34 @@
 
 .ligand-catalogue-grid{
   grid-column: 2/8;
-  display: grid;
+  display:grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 10px;
-
-
-
 }
 
 
 .ligand-hero{
+  white-space: nowrap;
   position: relative;
   font-size: 14px;
-  width: 250px;
+  min-width: 200px;
+  width: min-content;
+  height: min-content;
   outline: 1px solid black;
-  padding: 10px
+  padding: 10px;
+}
+
+/* 
+.assoc-struct-span span{
+  padding: 0;
+  margin: 0;
+  padding-right: 10px;
+} */
+.assoc-struct-span{
+  display: flex;
+  white-space: nowrap;
+
+  width: 100%;
 }
 
 .annot-structs{
