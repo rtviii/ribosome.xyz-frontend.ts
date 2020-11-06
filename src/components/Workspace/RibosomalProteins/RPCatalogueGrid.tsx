@@ -15,6 +15,6 @@ const RPCatalogueGrid = (proteins:[]) => {
               return <BanClassHero {...x} />;
             })}
             </div>
-        </div>) : <LoadingSpinner/>
+        </div>) : <LoadingSpinner annotation='Fetching proteins...'/>
 }
 export default RPCatalogueGrid

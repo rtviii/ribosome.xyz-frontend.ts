@@ -14,7 +14,7 @@ const Display = () => {
   return (
     <div className="display">
       <Route exact path="/">
-        <Redirect to="/catalogue" />
+        <Redirect to="/home" />
       </Route>
       <Switch>
         <Route exact path = "/home" component                         = {Home} />

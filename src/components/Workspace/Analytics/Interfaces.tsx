@@ -151,7 +151,7 @@ return (
 
     <div className="interfaces-display">
       {loadingInterfaces ? (
-        <LoadingSpinner />
+        <LoadingSpinner annotation='' />
       ) : (
         ligandNeighborhood.map(r => {
           return (

@@ -264,7 +264,7 @@ Search:
                 .map((l: LigandResponseShape) => <LigandHero data={l} speciesFilter={organismFilter} />)
               )
           ) : (
-          <LoadingSpinner />
+          <LoadingSpinner annotation='Fetching data...' />
         )}
       </div>
     </div>

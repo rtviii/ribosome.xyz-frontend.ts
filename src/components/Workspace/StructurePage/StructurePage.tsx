@@ -265,7 +265,7 @@ const StructurePage: React.FC<StructurePageProps> = (
       </div>
     </PageContext.Provider>
   ) : (
-    <LoadingSpinner />
+    <LoadingSpinner annotation='Loading structure...' />
   );
 };
 

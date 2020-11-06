@@ -24,6 +24,7 @@ interface DispatchProps {
 type WorkspaceCatalogueProps = DispatchProps & OwnProps & ReduxProps;
 
 export   const transformToShortTax = (taxname:string) =>{
+  if (typeof taxname === 'string'){
     var words = taxname.split(' ') 
     if ( words.length>1 ){
     var fl =words[0].slice(0,1)
@@ -32,6 +33,8 @@ export   const transformToShortTax = (taxname:string) =>{
     }else{
       return words[0]
     }
+  }
+  else return taxname
   }
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
@@ -106,6 +109,9 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
     console.log(organismFilter)
   }, [organismFilter])
 const truncate = (str:string) =>{
+  if (typeof str === 'undefined'){
+    return str
+  }
     return str.length > 20 ? str.substring(0, 15) + "..." : str;
 }
 
@@ -243,7 +249,7 @@ const truncate = (str:string) =>{
       </div>
     </PageContext.Provider>
   ) : (
-    <LoadingSpinner />
+    <LoadingSpinner annotation='Fetching data...' />
   );
 };
 

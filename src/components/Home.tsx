@@ -8,6 +8,7 @@ import * as redux from './../redux/reducers/Data/StructuresReducer/StructuresRed
 import  conversion from './../static/conversion.png'
 import './Home.css'
 import { Link } from 'react-router-dom'
+import LoadingSpinner from './Other/LoadingSpinner';
 
 
 interface OwnProps {}
@@ -25,13 +26,10 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
   }, []);
 
   var [structn, setstructn] = useState<number>(0);
-
-  var [protn, setProtn] = useState<number>(0);
-
-  var [rnan, setrnan] = useState<number>(0);
-
-  var [xray, setxray] = useState<number>(0);
-  var [em, setem] = useState<number>(0);
+  var [protn, setProtn]     = useState<number>(0);
+  var [rnan, setrnan]       = useState<number>(0);
+  var [xray, setxray]       = useState<number>(0);
+  var [em, setem]           = useState<number>(0);
 
   // var emn:number = 0;
   // var xrayn:number = 0;
@@ -71,18 +69,24 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
       <div id="stats">
         <h2>The database contains:</h2>
 
-        <p>
-          <b>{protn}</b> unique <Link to='/rps'>ribosomal protein</Link>s and <b>{rnan}</b> <Link to='/rnas'>rRNA</Link> across
-        </p>
-
-        <p>
-          <b>{structn}</b> <Link to='/catalogue'>structures</Link> : <b>{em}</b> ElectronMicroscopy  | <b>{xray}</b> X-Ray Diffraction
-        </p>
+        {structn === 0 ? (
+          <LoadingSpinner annotation=''/>
+        ) : (
+          <div>
+            <p>
+              <b>{protn}</b> unique <Link to="/rps">ribosomal protein</Link>s
+              and <b>{rnan}</b> <Link to="/rnas">rRNA</Link> across
+            </p>
+            <p>
+              <b>{structn}</b> <Link to="/catalogue">structures</Link> :{" "}
+              <b>{em}</b> ElectronMicroscopy | <b>{xray}</b> X-Ray Diffraction
+            </p>
+          </div>
+        )}
       </div>
-        <img id="conversion" src={conversion} />
+      <img id="conversion" src={conversion} />
       <div className="content">
         <div className="related-materials">
-
           <h2>Relevant Materials</h2>
           <ul>
             <li>

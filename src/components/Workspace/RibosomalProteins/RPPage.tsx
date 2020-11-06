@@ -50,7 +50,6 @@ const RPPage = () => {
 
   return params!.nom ? (
     <PageContext.Provider value="RibosomalProteinPage">
-
     <h1>Ribosomal Proteins</h1>
       <div className="rp-page">
         <h1>{params.nom}</h1>
@@ -58,7 +57,6 @@ const RPPage = () => {
             return (
               <div className="homolog-hero" style={{ display: "flex" }}>
                 <RibosomalProteinHero data={e.protein} pdbid={e.parent} />{" "}
-
                 <div className="homolog-struct">
                   <div id='homolog-struct-title'>
                     <Link

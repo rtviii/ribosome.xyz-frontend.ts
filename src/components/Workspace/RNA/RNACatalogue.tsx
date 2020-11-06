@@ -143,7 +143,7 @@ const RNACatalogue = () => {
   }, [organismFilter])
 
   return other.length < 1 ? (
-    <LoadingSpinner />
+    <LoadingSpinner annotation='Loading RNA...' />
   ) : (
     <div className="rnas-catalogue">
       <div className="rnas-catalogue-grid">

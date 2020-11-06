@@ -123,13 +123,13 @@ const StructHero: React.FC<{
 
                 return i === props.ligands.length - 1 ? (
                   <span key={'span1' + l + i}>
-                    <Link key={'link1' + l + i}  to={`/ligands/${l}`}>
+                    <Link key={'link1' + l + i}  to={`/ligands`}>
                       {l}
                     </Link>
                   </span>
                 ) : (
                   <span key={'span2' + l + i}>
-                    <Link key={'link2' +l + i} to={`/ligands/${l}`}>
+                    <Link key={'link2' +l + i} to={`/ligands`}>
                       {l}
                     </Link>
                     ,

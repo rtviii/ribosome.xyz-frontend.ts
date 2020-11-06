@@ -213,7 +213,7 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
           </div>
       </div>
       <div className="rps-catalogue-classes">
-        { available.length > 1 ?  renderSwitchSubunit(activecat):<LoadingSpinner/>}
+        { available.length > 1 ?  renderSwitchSubunit(activecat):<LoadingSpinner annotation='Loading ...'/>}
       </div>
     </div>
   );
