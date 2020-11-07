@@ -85,6 +85,33 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
         )}
       </div>
       <img id="conversion" src={conversion} />
+
+
+
+
+{/* stats:
+rna
+proteins
+average resolution
+    */}
+
+{/* references
+
+acknowledgements: 
+ribovision
+Mole
+rcsb-gql */}
+
+{/* 
+Collaboration thesis
+*/}
+
+{/* 
+footer: 
+khanh dao-duc's lab
+ubc
+rcsb, pfam, uniprot
+ */}
       <div className="content">
         <div className="related-materials">
           <h2>Relevant Materials</h2>

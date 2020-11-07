@@ -1,4 +1,4 @@
-import React, { useState }  from "react";
+import React, { useState } from "react";
 import "./RibosomalProteinHero.css";
 import { Link } from "react-router-dom";
 import downicon from "./download.png";
@@ -7,34 +7,52 @@ import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import Accordion from "react-bootstrap/esm/Accordion";
 import { Button, Card, ListGroup } from "react-bootstrap";
-import loading from './../../../static/loading.gif'
+import loading from "./../../../static/loading.gif";
+import { chain } from "lodash";
 
-
-
-const RibosomalProteinHero = ({pdbid, data}:{pdbid:string, data:RibosomalProtein}) => {
-
-  const [isFetching, setisFetching] = useState<boolean>(false)
+const RibosomalProteinHero = ({
+  pdbid,
+  data,
+}: {
+  pdbid: string;
+  data: RibosomalProtein;
+}) => {
+  const [isFetching, setisFetching] = useState<boolean>(false);
   const parseAndDownloadChain = (pdbid: string, cid: string) => {
-    setisFetching(true)
+    setisFetching(true);
+    var duplicates = cid.split(",");
+    if (duplicates.length > 1) {
+      var cid = duplicates[0];
+    }
+    // else{
+
+    // }
+    console.log("Fetchin chaings ", cid);
+
     getNeo4jData("neo4j", {
       endpoint: "cif_chain",
-      params  : {structid: pdbid, chainid:cid}
-    }).then(resp => {
-      setisFetching(false)
-      fileDownload(resp.data, `${pdbid}_${cid}.cif`);
-
-    }, error=>{
-      alert("This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" +  error)
-      setisFetching(false)
-    });
+      params: { structid: pdbid, chainid: cid },
+    }).then(
+      resp => {
+        setisFetching(false);
+        fileDownload(resp.data, `${pdbid}_${cid}.cif`);
+      },
+      error => {
+        alert(
+          "This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" +
+            error
+        );
+        setisFetching(false);
+      }
+    );
   };
 
-  const RPLoader = () => 
+  const RPLoader = () => (
     <div className="prot-loading">
       <span>Parsing file..</span>
       <img src={loading} />
-    </div>;
-  
+    </div>
+  );
 
   return (
     <div className="ribosomal-protein-hero">
@@ -78,12 +96,20 @@ const RibosomalProteinHero = ({pdbid, data}:{pdbid:string, data:RibosomalProtein
       </table>
       <Accordion defaultActiveKey="1" style={{ fontSize: "12px" }}>
         <Card>
-          <Card.Header style={{ fontSize: "12px", margin: 0, padding: 0, display:"flex", justifyContent:'space-between'}}>
+          <Card.Header
+            style={{
+              fontSize: "12px",
+              margin: 0,
+              padding: 0,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <Accordion.Toggle as={Button} variant="link" eventKey="0">
               Description
             </Accordion.Toggle>
-            <div 
-className="down-banner"
+            <div
+              className="down-banner"
               onClick={() =>
                 parseAndDownloadChain(pdbid, data.entity_poly_strand_id)
               }
@@ -91,13 +117,13 @@ className="down-banner"
               {isFetching ? (
                 <RPLoader />
               ) : (
-                <div >
+                <button className='down-prot-button'>
                   <img
                     id="download-protein"
                     src={downicon}
                     alt="download protein"
                   />
-                </div>
+                </button>
               )}
             </div>
           </Card.Header>

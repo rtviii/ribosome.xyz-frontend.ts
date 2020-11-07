@@ -19,6 +19,9 @@ export interface RNAProfile {
 
 
 const truncate = (str:string) =>{
+    if (typeof str ==='undefined'){
+      return " "
+    }
     return str.length > 20 ? str.substring(0, 15) + "..." : str;
 }
 const RNACatalogue = () => {
