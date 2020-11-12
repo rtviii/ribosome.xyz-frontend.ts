@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./RibosomalProteinHero.css";
 import { Link } from "react-router-dom";
-import downicon from "./download.png";
+import downicon from "./../../../static/download.png"
 import fileDownload from "js-file-download";
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
@@ -24,10 +24,6 @@ const RibosomalProteinHero = ({
     if (duplicates.length > 1) {
       var cid = duplicates[0];
     }
-    // else{
-
-    // }
-    console.log("Fetchin chaings ", cid);
 
     getNeo4jData("neo4j", {
       endpoint: "cif_chain",

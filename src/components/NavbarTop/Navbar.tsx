@@ -26,6 +26,7 @@ const Navbar = () => {
       {itemtext: "Conservation Metrics", linkto:'/'},
       {itemtext: "Binding Interfaces", linkto:'/interfaces'},
       {itemtext: "Conformations", linkto:'/'},
+      {itemtext: "RP Nomenclature Tool", linkto:'/'}
     ]
   }
   return (

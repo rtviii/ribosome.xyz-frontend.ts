@@ -10,14 +10,28 @@ type Neo4jEndpoints =
   | customCypher
   | gmoNomClass
   | getAllLigands
-  | downloadSubchain
   | getAllRnas
-  | LigandNeighborhood
   | getRnasByStruct
   | getLigandsByStruct
   | downloadCifChain
+  | get_ligand_nbhd
+  | download_ligand_nbhd;
 
 
+interface get_ligand_nbhd {
+  endpoint:"get_ligand_nbhd",
+  params:{
+    struct: string,
+    chemid  : string;
+  }
+}
+interface download_ligand_nbhd {
+  endpoint:"download_ligand_nbhd",
+  params:{
+    structid: string,
+    chemid  : string;
+  }
+}
 
 interface downloadCifChain{
   endpoint: "cif_chain",
@@ -35,13 +49,6 @@ interface getLigandsByStruct{
   params  : null
 }
 
-interface LigandNeighborhood{
-  endpoint:"ligand_neighborhood",
-  params:{
-    structure  : string,
-    chemical_id: string
-  }
-}
 interface getAllRnas{
 endpoint: "get_all_rnas";
 params  : null
@@ -68,13 +75,6 @@ interface customCypher {
 interface getAllStructures {
   endpoint: "get_all_structs";
   params: null;
-}
-interface downloadSubchain {
-  endpoint: "get_pdbsubchain";
-  params: {
-    chainid: string;
-    structid: string;
-  };
 }
 interface listAvailableRPs {
   endpoint: "list_nom_classes";

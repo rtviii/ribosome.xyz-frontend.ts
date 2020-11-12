@@ -1,14 +1,98 @@
 
 .interfaces{
-
-
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-
+    /* display              : grid; */
+    /* grid-template-columns: 1fr;
+    grid-template-rows: 400px auto; */
 }
 
 
 .interface-form{
-    padding: 20px;
-    width:600px;
+    width:100%;
+    
+
+    display: grid;
+    /* grid-template-rows: 1fr 1fr; */
+
+    grid-template-columns: 1fr 2fr 2fr;
+    
 }
+
+#submit {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.lig-selection{
+    /* display: grid; */
+    /* grid-template-rows: 1fr 1fr 1fr; */
+    padding: 40px;
+
+}
+
+.row span{
+    font-size: 20px;
+    /* font-weight: 600px; */
+    margin-top: 20px;
+}
+
+.lig-filters{
+    padding: 40px;
+}
+.lig-result{
+    padding: 40px;
+    font-size: 12px;
+    width: 600px;
+}
+
+
+#pic{
+    
+
+    object-fit: contain;
+    width:600px;
+    /* height:400px; */
+}
+
+.exposition{
+    height: min-content;
+    padding:40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    font-size: 14px;
+}
+
+.lig-result button{
+    font-size: 20px;
+    color:blue;
+}
+
+.residue-profile{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+
+#nbrs-hdr{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    justify-content: space-between;
+    font-weight: 500;
+    font-size: 16px;
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+}
+
+
+#downicon{
+    width : 15px;
+    height: 15px;
+    cursor: pointer;
+    transition: all 200ms;
+}
+#downicon:hover{
+    transform: translateY(3px);
+}
+
