@@ -7,6 +7,12 @@ import { Tooltip } from "react-bootstrap";
 
 const MethodSwitch = (r: RibosomeStructure) => {
   var record;
+  console.log(
+    r.rcsb_external_ref_id,
+    r.rcsb_external_ref_link,
+    r.rcsb_external_ref_type
+  )
+
   if (r.expMethod.toUpperCase() === "X-RAY DIFFRACTION") {
     record = {
       diffrn_source_details: r.diffrn_source_details,

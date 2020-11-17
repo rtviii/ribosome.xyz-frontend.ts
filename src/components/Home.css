@@ -1,10 +1,73 @@
 .homepage{
-    padding:50px;
-    display: grid;
-    grid-template-rows: 1fr 3fr;
-    grid-template-columns: 3fr 5fr;
+  display              : grid;
+  grid-template-columns: 1fr 1fr 2fr 2fr;
+  /* grid-template-rows   : 1fr 1fr 1fr; */
+  gap:10px;
+  grid-template-areas  : 
+    "stats  stats  mods     mods"
+    "relmat relmat mods     mods"
+    "relmat relmat footer   footer";
+}
 
-    text-align: left;
+#kddgroup{
+    outline: 1px solid cyan;
+    display: flex;
+
+}
+#kddgroup .txt{
+    outline: 1px solid cyan;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+#ubclogo{
+    height: 100px;
+
+}
+
+.relmats ul{
+    padding: 0;
+    margin: 0;
+}
+.mods{
+    grid-area: mods;
+    height: min-content;
+}
+
+.mods-acc{
+    max-height: 600px;
+    font-size: 14px;
+}
+
+.rrr{
+    font-size: 14px;
+}
+.stats{
+    grid-area: stats;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    height: min-content;
+}
+
+#stats-proper{
+    display: flex;
+    margin-bottom: 80px;
+}
+#teg{
+    width:200px
+}
+
+.area{
+    padding: 20px;
+}
+
+
+
+#conversion{
+
+    width: 800px;
 }
 
 .homepage a{
@@ -12,35 +75,31 @@
 }
 
 .homepage p{
-    margin: 0;
+    margin : 0;
     padding: 0;
 }
-#stats{
-    height:min-content;
-}
 
-#conversion{
-    /* padding: 50px; */
-    grid-column: 1/4;
-    width: 1000px;
-
-}
-.homepage img{
-
-    margin: 0;
-    padding: 0;
-    width:400px;
+.footer{
     position: relative;
-    right: 20px;
+    grid-area: footer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;    
+    vertical-align: middle;
+}
+.footerimg{
+    height: 80px;
 }
 
-.homepage h1,h2{
-    text-align: left;
-    font-size: small;
-}
-.content{
-    font-size: 16px;
-    grid-row: 1/2;
-    grid-column: 2/4;
+#tunnel{
+    width:100%;
 }
 
+#foot{
+    font-size: 14px;
+    position: absolute;
+    right: 0px;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+}
