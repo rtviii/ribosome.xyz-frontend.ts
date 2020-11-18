@@ -1,8 +1,8 @@
 import Axios from "axios";
-const BACKEND: any = process.env.REACT_APP_DJANGO_URL;
-type  DjangoAPIs   = "neo4j" | "admin" | "pdb";
 
-type Neo4jEndpoints =
+const BACKEND: any   = process.env.REACT_APP_DJANGO_URL;
+type  DjangoAPIs     = "neo4j" | "admin" | "pdb";
+type  Neo4jEndpoints = 
   | getStructure
   | getAllStructures
   | getHomologs
@@ -15,15 +15,16 @@ type Neo4jEndpoints =
   | getLigandsByStruct
   | downloadCifChain
   | get_ligand_nbhd
-  | download_ligand_nbhd;
+  | download_ligand_nbhd
+
 
 
 interface get_ligand_nbhd {
-  endpoint:"get_ligand_nbhd",
-  params:{
-    struct: string,
-    chemid  : string;
-  }
+  endpoint: "get_ligand_nbhd";
+  params: {
+    struct: string;
+    chemid: string;
+  };
 }
 interface download_ligand_nbhd {
   endpoint:"download_ligand_nbhd",

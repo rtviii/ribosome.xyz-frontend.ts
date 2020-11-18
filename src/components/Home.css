@@ -8,6 +8,13 @@
     "relmat relmat mods     mods"
     "relmat relmat footer   footer";
 }
+#title-figcap{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+
+}
+
 
 #kddgroup{
     outline: 1px solid cyan;
@@ -21,10 +28,22 @@
     justify-content: center;
 
 }
-#ubclogo{
-    height: 100px;
 
+
+.group-plug{
+    outline: 1px solid paleturquoise;
+    display: flex;
+    padding: 5px;
+    margin-bottom: 10px;
 }
+.footerimg{
+    width: 140px;
+}
+
+.group-plug  p{
+    width: 400px;
+}
+
 
 .relmats ul{
     padding: 0;
@@ -56,7 +75,7 @@
     margin-bottom: 80px;
 }
 #teg{
-    width:200px
+    width:300px
 }
 
 .area{
@@ -86,9 +105,6 @@
     flex-direction: column;
     justify-content: center;    
     vertical-align: middle;
-}
-.footerimg{
-    height: 80px;
 }
 
 #tunnel{

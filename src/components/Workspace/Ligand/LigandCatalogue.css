@@ -6,6 +6,15 @@
 .ligand-catalogue p{
   margin: 0;
 }
+#download-ligand-struct{
+
+  border:none;
+  background: none;
+  width:15px;
+  /* margin-left: 20px; */
+  /* left: 20%; */
+  /* position: relative; */
+}
 
 .ligand-catalogue{
   padding: 10px;
@@ -53,8 +62,13 @@
 .assoc-struct-span{
   display: flex;
   white-space: nowrap;
-
+  /* text-align: ; */
   width: 100%;
+}
+
+.assoc-struct-span a{
+  /* width: min-content; */
+  margin-right: 20px;
 }
 
 .annot-structs{

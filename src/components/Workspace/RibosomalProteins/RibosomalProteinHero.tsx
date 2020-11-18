@@ -8,7 +8,6 @@ import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import Accordion from "react-bootstrap/esm/Accordion";
 import { Button, Card, ListGroup } from "react-bootstrap";
 import loading from "./../../../static/loading.gif";
-import { chain } from "lodash";
 
 const RibosomalProteinHero = ({
   pdbid,

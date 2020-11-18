@@ -1,4 +1,6 @@
+
 import { flattenDeep } from "lodash";
+import fileDownload from "js-file-download";
 import React, { useEffect, useState } from "react";
 import { getNeo4jData } from './../../../redux/Actions/getNeo4jData';
 import "./LigandCatalogue.css";
@@ -8,6 +10,8 @@ import {Card, OverlayTrigger, Popover} from 'react-bootstrap'
 import LoadingSpinner from "../../Other/LoadingSpinner";
 import { Accordion } from "react-bootstrap";
 import { Button } from "react-bootstrap";
+
+import download from './../../../static/download.png'
 
 type LigandAssocStruct ={
     struct : string;
@@ -41,8 +45,25 @@ const truncate = (str:string) =>{
     return filt;
   };
 
-const popoverstructs= (data:LigandResponseShape, specFilter: number[]) =>{
+const popoverstructs= (data:LigandResponseShape, specFilter: number[], ligandchemid:string) =>{
 
+  const parseAndDownloadChain = (pdbid: string, chemid:string) => {
+
+    getNeo4jData("neo4j", {
+      endpoint: "download_ligand_nbhd",
+      params: {chemid: chemid, structid:pdbid},
+    }).then(
+      resp => {
+        fileDownload(resp.data, `LIGAND_${chemid.toUpperCase()}.json`);
+      },
+      error => {
+        alert(
+          "This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" +
+            error
+        );
+      }
+    );
+  };
 
   return (
     <Popover id="popover-structs">
@@ -52,12 +73,24 @@ const popoverstructs= (data:LigandResponseShape, specFilter: number[]) =>{
           {filterByorg(data.presentIn, specFilter).map(
             (struct: LigandAssocStruct) => (
               <li>
-                <div className='assoc-struct-span'>
-
+                <div className="assoc-struct-span">
                   <Link to={`/catalogue/${struct.struct}`}>
                     <span>{struct.struct}</span>
                   </Link>
-                  <span>{truncate( struct.orgname[0] )}</span>
+                  <span>{truncate(struct.orgname[0])}</span>
+                  <button
+                    id="download-ligand-struct"
+                    className="down-ligand-struct"
+                    onClick={() => {
+                      parseAndDownloadChain(struct.struct, ligandchemid);
+                    }}
+                  >
+                    <img
+                      id="download-ligand-struct"
+                      src={download}
+                      alt="download-ligand-struct"
+                    />
+                  </button>
                 </div>
               </li>
             )
@@ -81,7 +114,8 @@ const LigandHero = ({data, speciesFilter}:{ data: LigandResponseShape, speciesFi
        <OverlayTrigger 
         rootClose trigger={'click'}
         placement='bottom'
-        overlay={popoverstructs(data, speciesFilter)}><div id='lig-str-present'>Associated structures({filterByorg( data.presentIn, speciesFilter ).length})</div></OverlayTrigger>
+        overlay={popoverstructs(data, speciesFilter,data.ligand.chemicalId)}><div id='lig-str-present'>
+          Associated structures({filterByorg( data.presentIn, speciesFilter ).length})</div></OverlayTrigger>
     </div>
   );
 };

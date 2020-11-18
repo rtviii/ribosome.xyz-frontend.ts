@@ -2,3 +2,17 @@
 .rna-hero-title{
     font-size: 16px;
 }
+
+.rna-hero{
+    position: relative;
+}
+
+
+#download-rna{
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    border: none;
+    background: none;
+    width:15px;
+}
