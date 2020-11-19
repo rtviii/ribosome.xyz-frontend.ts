@@ -16,8 +16,18 @@ type  Neo4jEndpoints =
   | downloadCifChain
   | get_ligand_nbhd
   | download_ligand_nbhd
+  | get_tunnel
 
 
+
+
+interface get_tunnel {
+  endpoint: "tunnel",
+  params:{
+    struct: string;
+    filetype: "report" | "centerline";
+  }
+}
 
 interface get_ligand_nbhd {
   endpoint: "get_ligand_nbhd";

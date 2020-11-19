@@ -21,12 +21,12 @@ const Navbar = () => {
   const Tools:NavDropdownParams = {
     dropdownTitle: "Analytics",
     itemLinks: [
-      {itemtext: "Exit Tunnel", linkto:'/' },
-      {itemtext: "Classification", linkto:'/' },
-      {itemtext: "Conservation Metrics", linkto:'/'},
       {itemtext: "Binding Interfaces", linkto:'/interfaces'},
-      {itemtext: "Conformations", linkto:'/'},
-      {itemtext: "RP Nomenclature Tool", linkto:'/'}
+      {itemtext: "Exit Tunnel", linkto:'/tunnel' },
+      {itemtext: "Classification", linkto:'/classify' },
+      {itemtext: "RP Nomenclature", linkto:'/rpnomenclature'},
+      // {itemtext: "Conservation Metrics", linkto:'/'},
+      // {itemtext: "Conformations", linkto:'/conformations'},
     ]
   }
   return (

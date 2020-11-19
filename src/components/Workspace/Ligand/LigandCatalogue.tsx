@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { getNeo4jData } from './../../../redux/Actions/getNeo4jData';
 import "./LigandCatalogue.css";
 import { Ligand } from "./../../../redux/RibosomeTypes";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {Card, OverlayTrigger, Popover} from 'react-bootstrap'
 import LoadingSpinner from "../../Other/LoadingSpinner";
 import { Accordion } from "react-bootstrap";
@@ -123,8 +123,9 @@ const LigandHero = ({data, speciesFilter}:{ data: LigandResponseShape, speciesFi
 const LigandCatalogue = () => {
   const [ligs, setligs]     = useState<LigandResponseShape[]>([]);
   const [ionsOn, setionsOn] = useState(true);
-
   const [organismsAvailable, setorganismsAvailable] = useState({})
+
+  var params: any = useParams();
 
   useEffect(() => {
     const orgsdict: { [id: string]: { names:string[], count:number } } = {};
@@ -203,7 +204,9 @@ const LigandCatalogue = () => {
     return str.length > 20 ? str.substring(0, 15) + "..." : str;
   };
 
-  const [ligfilter, setligfilter] = useState<string>("")
+  var params:any = useParams()
+  const lig = params.lig
+  const [ligfilter, setligfilter] = useState<string>(lig ? lig : "")
   const [organismFilter, setorganismFilter] = useState<Array<number>>([])
   const searchByName = (l:LigandResponseShape[], search:string)=>{
     return l.filter(l =>
@@ -212,6 +215,16 @@ const LigandCatalogue = () => {
         .includes(search.toLocaleLowerCase())
     );
   }
+
+
+  // useEffect(() => {
+  // var params:any = useParams()
+  // const lig = params.lig
+  // if (lig!==undefined){
+
+
+  // }
+  // }, [])
 
   return (
     <div className="ligand-catalogue">

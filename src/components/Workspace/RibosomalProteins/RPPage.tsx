@@ -5,6 +5,7 @@ import { flattenDeep } from "lodash";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import RibosomalProteinHero from "./RibosomalProteinHero";
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
+import axios from 'axios'
 import { PageContext } from "../../Main";
 
 interface NeoHomolog {
@@ -12,11 +13,28 @@ interface NeoHomolog {
   orgname: string[]
   orgid  : number[]
   protein: RibosomalProtein;
-  title: string
+  title  : string
+}
+
+
+const RiboVisionRequest = async ()=>{
+
+const username = 'LDW_group'
+const password = 'RiboVision_Desire'
+const url = 'https://ribovision3.chemistry.gatech.edu/desire-api/alignments/?name=bL21'
+  await axios.get(url, {
+    auth:{
+      username:username,
+      password: password
+    }
+  }).then(
+    r=> console.log(r.data),
+    e=> console.log("erorr" ,e)
+  )
 }
 
 const truncate = (str:string) =>{
-    return str.length > 40 ? str.substring(0, 30) + "..." : str;
+    return str.length > 40 ? str.substring(0, 30) + "...": str;
 }
 const RPPage = () => {
   var params: any = useParams();
@@ -50,6 +68,7 @@ const RPPage = () => {
 
   return params!.nom ? (
     <PageContext.Provider value="RibosomalProteinPage">
+  <button   onClick={()=>RiboVisionRequest()} >Ribvosion</button>
     <h1>Ribosomal Proteins</h1>
       <div className="rp-page">
         <h1>{params.nom}</h1>

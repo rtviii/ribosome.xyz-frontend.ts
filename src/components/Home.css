@@ -8,11 +8,23 @@
     "relmat relmat mods     mods"
     "relmat relmat footer   footer";
 }
+
+
+.relmats{
+    margin-bottom: 20px;
+}
+.relmats li{
+    list-style-type: square;
+    margin-left: 20px;
+    /* padding: 10px; */
+}
+
 #title-figcap{
     display: flex;
     text-align: center;
     justify-content: center;
 
+    font-size: 14px;
 }
 
 
@@ -60,7 +72,7 @@
 }
 
 .rrr{
-    font-size: 14px;
+    font-size: 16px;
 }
 .stats{
     grid-area: stats;
@@ -72,7 +84,7 @@
 
 #stats-proper{
     display: flex;
-    margin-bottom: 80px;
+    margin-bottom: 40px;
 }
 #teg{
     width:300px
@@ -83,10 +95,20 @@
 }
 
 
+.modfig{
+    margin: 20px;
+    display         :  flex;
+    flex-direction  :  column;
+    align-items     :  center;
+}
 
 #conversion{
-
-    width: 800px;
+    width: 400px;
+    transition: all 150ms;
+}
+#conversion:hover{
+    cursor: pointer;
+    box-shadow: 1px 4px 2px 2px rgba(0, 0, 0, 0.151);
 }
 
 .homepage a{
@@ -106,9 +128,21 @@
     justify-content: center;    
     vertical-align: middle;
 }
+#fig1{
+    width:400px;
+    transition: all 150ms;
+}
+#fig1:hover{
+    cursor: pointer;
+    box-shadow: 1px 4px 2px 2px rgba(0, 0, 0, 0.151);
+}
 
 #tunnel{
     width:100%;
+}
+#mapdown{
+    color:blue;
+    cursor: pointer;
 }
 
 #foot{
@@ -118,4 +152,23 @@
     display: flex;
     justify-items: center;
     align-items: center;
+}
+#indent{
+    padding-left: 30px;
+}
+
+#mod-header{
+    font-size: 16px;
+}
+.mod-card-body{
+    /* background-color: bisque; */
+    padding: 20px;
+    
+}
+#react-images-container{
+background-color: #FFF;
+}
+.ril-inner {
+
+background-color: #FFF;
 }
