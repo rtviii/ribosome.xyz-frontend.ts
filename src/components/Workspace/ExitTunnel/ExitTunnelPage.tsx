@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import { Accordion, Button, Card, ListGroup } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { getNeo4jData } from '../../../redux/Actions/getNeo4jData'
-import LigandCatalogue from '../Ligand/LigandCatalogue'
 import tunneldemo from './../../../static/tunneldemo.gif'
 import './ExitTunnelPage.css'
 import downicon from './../../../static/download.png'
@@ -16,7 +15,6 @@ import Lightbox from 'react-image-lightbox'
 
 
 const getfile = (pdbid:string,ftype:"report"|"centerline")=>{
-
   var pdbid = pdbid.toUpperCase()
   getNeo4jData("neo4j",{endpoint:"tunnel", params:{
       struct:pdbid,
@@ -34,7 +32,6 @@ const getfile = (pdbid:string,ftype:"report"|"centerline")=>{
       }
         }
   )
-
 }
 
 interface ResidueProfile{
@@ -118,10 +115,6 @@ const TunnelWallProfile:React.FC = ({children})=>{
         <span className='head-id'><strong>{wall.pdbid}</strong></span>
         <span className='head-title'>{structState && structState.length > 0  ? structState[0].structure.citation_title : null}</span>
         <span className='head-species'>{structState && structState.length > 0  ? structState[0].structure._organismName : null}</span>
-        
-
-      {/* <span>{struct ? struct[0].structure.citation_title:null}</span>
-      <span>({struct? struct[0].._organismName:null} )</span> */}
         </div>
         <Button variant='secondary' style={{marginRight:"10px"}} onClick={()=>getfile(  wall.pdbid,"report")}> <code>.json</code> report  
                   <img
