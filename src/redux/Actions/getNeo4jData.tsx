@@ -1,7 +1,14 @@
 import Axios from "axios";
 
 const BACKEND: any   = process.env.REACT_APP_DJANGO_URL;
-type  DjangoAPIs     = "neo4j" | "admin" | "pdb";
+type  DjangoAPIs     = "neo4j" | "static_files" 
+
+
+type  StaticFilesEndpoints = 
+  | downloadCifChain
+  | download_ligand_nbhd
+  | get_tunnel
+
 type  Neo4jEndpoints = 
   | getStructure
   | getAllStructures
@@ -13,11 +20,10 @@ type  Neo4jEndpoints =
   | getAllRnas
   | getRnasByStruct
   | getLigandsByStruct
-  | downloadCifChain
   | get_ligand_nbhd
-  | download_ligand_nbhd
-  | get_tunnel
 
+
+type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
 
 
@@ -102,7 +108,7 @@ interface getAllLigands{
   params: null
 }
 
-export const getNeo4jData = (api: DjangoAPIs, ep: Neo4jEndpoints) => {
+export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {
   const URI = encodeURI(`${BACKEND}/${api}/${ep.endpoint}/`);
   return ep.params != null ? Axios.get(URI, { params: ep.params }) : Axios.get(URI);
 };

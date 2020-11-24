@@ -24,7 +24,7 @@ const RibosomalProteinHero = ({
       var cid = duplicates[0];
     }
 
-    getNeo4jData("neo4j", {
+    getNeo4jData("static_files", {
       endpoint: "cif_chain",
       params: { structid: pdbid, chainid: cid },
     }).then(
@@ -34,8 +34,7 @@ const RibosomalProteinHero = ({
       },
       error => {
         alert(
-          "This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" +
-            error
+          "This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" + error
         );
         setisFetching(false);
       }

@@ -101,9 +101,10 @@ const filterStruct = (structure:string, ligs:Response[])=>{
 const [ligandInterface, setligandInterface] = useState<LigandInterface>({constituents:[],nbrs:[]})
 
 const requestLigandInterface = (struct: string, chemid: string) => {
-  getNeo4jData("neo4j", {endpoint:"get_ligand_nbhd",params:{
-    chemid: chemid,
-    struct: struct
+  getNeo4jData("static_files", {
+    endpoint:"get_ligand_nbhd", params:{
+    chemid  :  chemid,
+    struct  :  struct
   }}).then(
     r=>{
       console.log(r.data)
@@ -310,7 +311,7 @@ const ResidueProfile = ({ res }: { res: Residue }) => {
       var cid = duplicates[0];
     }
 
-    getNeo4jData("neo4j", {
+    getNeo4jData("static_files", {
       endpoint: "cif_chain",
       params: { structid: pdbid, chainid: cid },
     }).then(
@@ -353,11 +354,11 @@ const InterfaceDisplay = ({data, chemid, struct, containingStructs}:{ data:Ligan
             {data.constituents.length > 0 ? (
               <button
                 onClick={() => {
-                  getNeo4jData("neo4j", {
+                  getNeo4jData("static_files", {
                     endpoint: "download_ligand_nbhd",
                     params: {
-                      chemid: chemid,
-                      structid: struct,
+                      chemid    :  chemid,
+                      structid  :  struct,
                     },
                   }).then(r =>
                     fileDownload(

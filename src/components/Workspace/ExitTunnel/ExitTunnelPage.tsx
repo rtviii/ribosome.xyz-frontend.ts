@@ -12,24 +12,24 @@ import Lightbox from 'react-image-lightbox'
 
 
 
-
-
 const getfile = (pdbid:string,ftype:"report"|"centerline")=>{
   var pdbid = pdbid.toUpperCase()
-  getNeo4jData("neo4j",{endpoint:"tunnel", params:{
-      struct:pdbid,
-      filetype:ftype
+
+  getNeo4jData("static_files",{
+    endpoint:"tunnel", 
+    params:{
+      struct    :  pdbid,
+      filetype  :  ftype
+
   }}).then(
+
       r=>{ 
         if (ftype ==='report'){
-
         fileDownload(JSON.stringify(r.data), ftype === 'report' ? `${pdbid}_tunnel_report.json`: `${pdbid}_tunnel_centerline.csv`) 
-      }
+        }
       else{
-
         fileDownload(r.data,  `${pdbid}_tunnel_centerline.csv`) 
-
-      }
+        }
         }
   )
 }
@@ -99,7 +99,7 @@ const TunnelWallProfile:React.FC = ({children})=>{
 
     useEffect(() => {
 
-        getNeo4jData("neo4j",{endpoint:"tunnel", params:{
+        getNeo4jData("static_files",{endpoint:"tunnel", params:{
             struct:'4UG0',
             filetype:'report',
         }}).then(
@@ -111,25 +111,38 @@ const TunnelWallProfile:React.FC = ({children})=>{
 
     return (
       <div>
-        <div className='tunnel-head'>
-        <span className='head-id'><strong>{wall.pdbid}</strong></span>
-        <span className='head-title'>{structState && structState.length > 0  ? structState[0].structure.citation_title : null}</span>
-        <span className='head-species'>{structState && structState.length > 0  ? structState[0].structure._organismName : null}</span>
+        <div className="tunnel-head">
+          <span className="head-id">
+            <strong>{wall.pdbid}</strong>
+          </span>
+          <span className="head-title">
+            {structState && structState.length > 0
+              ? structState[0].structure.citation_title
+              : null}
+          </span>
+          <span className="head-species">
+            {structState && structState.length > 0
+              ? structState[0].structure._organismName
+              : null}
+          </span>
         </div>
-        <Button variant='secondary' style={{marginRight:"10px"}} onClick={()=>getfile(  wall.pdbid,"report")}> <code>.json</code> report  
-                  <img
-                    id="down-wall-prot"
-                    src={downicon}
-                    alt="download protein"
-                  />
-</Button>
-        <Button  variant='secondary' onClick={()=>getfile(  wall.pdbid,"centerline")}> <code>.csv</code> centerline  
-                  <img
-                    id="down-wall-prot"
-                    src={downicon}
-                    alt="download protein"
-                  />
-</Button>
+        <Button
+          variant="secondary"
+          style={{ marginRight: "10px" }}
+          onClick={() => getfile(wall.pdbid, "report")}
+        >
+          {" "}
+          <code>.json</code> report
+          <img id="down-wall-prot" src={downicon} alt="download protein" />
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() => getfile(wall.pdbid, "centerline")}
+        >
+          {" "}
+          <code>.csv</code> centerline
+          <img id="down-wall-prot" src={downicon} alt="download protein" />
+        </Button>
 
         <div className="tunnel-wall-profile">
           <div id="prot-top">
@@ -168,9 +181,13 @@ const TunnelWallProfile:React.FC = ({children})=>{
             <h4>Ligands & Small Molecules</h4>
             <div className="ligand-container">
               {wall.ligands.map(l => {
-                return <div className='wall-ligand'>
-                  <span><Link to={ `/ligands/${l.resname}` }>{l.resname}</Link></span>
-                  </div>;
+                return (
+                  <div className="wall-ligand">
+                    <span>
+                      <Link to={`/ligands/${l.resname}`}>{l.resname}</Link>
+                    </span>
+                  </div>
+                );
               })}
             </div>
           </div>
@@ -188,7 +205,7 @@ const WallChain:React.FC<{banid:string|null, chain:string, resids:ResidueProfile
       var cid = duplicates[0];
     }
 
-    getNeo4jData("neo4j", {
+    getNeo4jData("static_files", {
       endpoint: "cif_chain",
       params: { structid: pdbid, chainid: cid },
     }).then(

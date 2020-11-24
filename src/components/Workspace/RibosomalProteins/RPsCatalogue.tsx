@@ -170,18 +170,14 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
       setlsu(
         uniquerps.filter(x => {
           return (
-            x.nom_class.includes("L") &&
-            !x.nom_class.includes("S")
+            x.nom_class.includes("L") && !x.nom_class.includes("S")
           );
         }).sort(sortProts)
       );
 
       setssu(
         uniquerps.filter(x => {
-          return (
-            x.nom_class.includes("S") &&
-            !x.nom_class.includes("L")
-          );
+          return (x.nom_class.includes("S") && !x.nom_class.includes("L"));
         }).sort(sortProts)
       );
 

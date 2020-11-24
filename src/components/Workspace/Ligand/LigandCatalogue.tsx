@@ -49,7 +49,7 @@ const popoverstructs= (data:LigandResponseShape, specFilter: number[], ligandche
 
   const parseAndDownloadChain = (pdbid: string, chemid:string) => {
 
-    getNeo4jData("neo4j", {
+    getNeo4jData("static_files", {
       endpoint: "download_ligand_nbhd",
       params: {chemid: chemid, structid:pdbid},
     }).then(

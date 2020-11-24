@@ -15,7 +15,7 @@ const RNAHero = ({rna}:{rna:RNAProfile}) => {
     if (duplicates.length > 1) {
       var cid = duplicates[0];
     }
-    getNeo4jData("neo4j", {
+    getNeo4jData("static_files", {
       endpoint: "cif_chain",
       params: { structid: pdbid, chainid: cid },
     }).then(
