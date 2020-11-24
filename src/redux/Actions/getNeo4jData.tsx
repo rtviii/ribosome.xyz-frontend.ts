@@ -98,7 +98,7 @@ interface listAvailableRPs {
   params  : null;
 }
 interface gmoNomClass {
-  endpoint: "gmo_nom_class";
+  endpoint: "gmo_nom_class"
   params: {
     banName: string;
   };

@@ -22,7 +22,8 @@ yarn-debug.log*
 yarn-error.log*
 
 
-/ribosomexyz-docs
-/ribparse
-/ribxyz
 .env
+.gitignore
+/old
+/.apacheconfig
+/.vscode
