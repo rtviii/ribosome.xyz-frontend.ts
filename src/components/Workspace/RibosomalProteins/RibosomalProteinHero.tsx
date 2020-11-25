@@ -18,16 +18,24 @@ const RibosomalProteinHero = ({
 }) => {
   const [isFetching, setisFetching] = useState<boolean>(false);
   const parseAndDownloadChain = (pdbid: string, cid: string) => {
+
     setisFetching(true);
+
     var duplicates = cid.split(",");
+
     if (duplicates.length > 1) {
+
       var cid = duplicates[0];
+
     }
 
     getNeo4jData("static_files", {
-      endpoint: "cif_chain",
-      params: { structid: pdbid, chainid: cid },
-    }).then(
+
+      endpoint  :  "cif_chain",
+      params    :  { structid: pdbid, chainid: cid },
+
+    })
+    .then(
       resp => {
         setisFetching(false);
         fileDownload(resp.data, `${pdbid}_${cid}.cif`);
@@ -94,7 +102,7 @@ const RibosomalProteinHero = ({
             style={{
               fontSize: "12px",
               margin: 0,
-              padding: 0,
+              padding: "0px 20px 0px 0px",
               display: "flex",
               justifyContent: "space-between",
             }}
@@ -121,24 +129,27 @@ const RibosomalProteinHero = ({
               )}
             </div>
           </Card.Header>
+
           <Accordion.Collapse eventKey="0">
             <Card.Body>
               <ListGroup>
                 <ListGroup.Item>
+                  <div>
+
                   <p>Source organism:</p>{" "}
                   {data.rcsb_source_organism_description} (
                   {data.rcsb_source_organism_id})
-                </ListGroup.Item>
-                <ListGroup.Item>
                   <p>RCSB Profile:</p> {data.rcsb_pdbx_description}
-                </ListGroup.Item>
-                <ListGroup.Item>
                   <p>PFAM Description:</p>
+                  <div className='pfamdescription-aa'>
                   {data.pfam_comments}
-                </ListGroup.Item>
-                <ListGroup.Item style={{ wordBreak: "break-word" }}>
+                  </div>
                   <p>One-letter seq({data.entity_poly_seq_length} AA):</p>
+                  <div className='pfamdescription-aa'>
                   {data.entity_poly_seq_one_letter_code}
+
+                  </div>
+                  </div>
                 </ListGroup.Item>
               </ListGroup>
             </Card.Body>

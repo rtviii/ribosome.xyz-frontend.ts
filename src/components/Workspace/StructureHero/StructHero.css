@@ -4,31 +4,44 @@
 }
 
 .struct-hero {
-  outline      : 1px solid black;
-  margin-bottom: 10px;
-  padding: 10px;
-  height       : min-content;
-  font-size: 14px;
-  width: 500px;
+  outline        :  1px solid black;
+  margin-bottom  :  10px;
+  padding        :  10px;
+  height         :  min-content;
+  font-size      :  14px;
+  width          :  500px;
 }
 
+#linkicon{
+  margin-left  :  5px;
+  width        :  15px
+}
+#pdb-title-a{
+  width   :  min-content;
+  height  :  min-content;
+}
 
+.doi-pdb{
+  display          :  flex;
+  justify-content  :  space-between;
+}
+
+#citation-doi{
+  display         :  flex;
+  flex-direction  :  column;
+  padding         :  5px;
+}
 #header-description{
-  display        : flex;
-  justify-content: flex-start;
-  height: 60px;
-  position: relative;
+  display          :  flex;
+  justify-content  :  flex-start;
+  position         :  relative;
 }
 #header-reso-year{
-display: flex;
-justify-content: space-between;
+display          :  flex;
+justify-content  :  space-between;
 }
 
 
-#title-description{
-  font-size: 0.75vw ;
-  padding-left: 10px ;
-}
 
 .struct-hero p{
   margin : 0;
@@ -36,36 +49,36 @@ justify-content: space-between;
 }
 
 #struct-hero-table{
-  width : 100%;
-  height: fit-content
+  width   :  100%;
+  height  :  fit-content
 }
 .pdbid_title{
-  display    : inline-block;
-  text-anchor: middle;
-  text-align : center;
-  font-size  : 24px;
-  margin     : auto;
+  display      :  inline-block;
+  text-anchor  :  middle;
+  text-align   :  center;
+  font-size    :  24px;
+  margin       :  auto;
 }
 
 .experimental_method{
-  display: flex;
-  width: min-content;
-  white-space: nowrap;
+  display      :  flex;
+  width        :  min-content;
+  white-space  :  nowrap;
 }
 
 
 .experimental_method_value{
-  padding-left: 5px;
-  color      : #0056b3;
-  width      : min-content;
-  white-space: nowrap;
+  padding-left  :  5px;
+  color         :  #0056b3;
+  width         :  min-content;
+  white-space   :  nowrap;
 }
 
 .tooltip-bottom > .tooltip-inner {
-  max-width: 700px;
-  padding  : 0;
-  color    : black;
-  border   : 1px solid #062e56;
+  max-width  :  700px;
+  padding    :  0;
+  color      :  black;
+  border     :  1px solid #062e56;
 }
 
 .tooltip-bottom > .tooltip-arrow {
@@ -73,12 +86,12 @@ justify-content: space-between;
 }
 
 .methods-table{
-  width     : 600px;
-  text-align: left;
-  color     : white;
+  width       :  600px;
+  text-align  :  left;
+  color       :  white;
 }
 #struct-reso{margin-right: 10px;}
 #struct-year{
-  white-space: nowrap;
-  font-style: italic;
+  white-space  :  nowrap;
+  font-style   :  italic;
 }

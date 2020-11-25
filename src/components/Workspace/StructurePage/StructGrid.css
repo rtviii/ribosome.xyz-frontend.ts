@@ -8,9 +8,7 @@
   gap: 20px;
 }
 
-.struct-grid {
-  white-space: nowrap;
-}
+
 
 .struct-grid-lsu {
   display: flex;;

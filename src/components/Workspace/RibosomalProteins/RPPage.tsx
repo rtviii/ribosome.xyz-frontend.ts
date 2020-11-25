@@ -17,21 +17,21 @@ interface NeoHomolog {
 }
 
 
-const RiboVisionRequest = async ()=>{
+// const RiboVisionRequest = async ()=>{
 
-const username = 'LDW_group'
-const password = 'RiboVision_Desire'
-const url = 'https://ribovision3.chemistry.gatech.edu/desire-api/alignments/?name=bL21'
-  await axios.get(url, {
-    auth:{
-      username:username,
-      password: password
-    }
-  }).then(
-    r=> console.log(r.data),
-    e=> console.log("erorr" ,e)
-  )
-}
+// const username = 'LDW_group'
+// const password = 'RiboVision_Desire'
+// const url = 'https://ribovision3.chemistry.gatech.edu/desire-api/alignments/?name=bL21'
+//   await axios.get(url, {
+//     auth:{
+//       username:username,
+//       password: password
+//     }
+//   }).then(
+//     r=> console.log(r.data),
+//     e=> console.log("erorr" ,e)
+//   )
+// }
 
 const truncate = (str:string) =>{
     return str.length > 40 ? str.substring(0, 30) + "...": str;
@@ -68,7 +68,7 @@ const RPPage = () => {
 
   return params!.nom ? (
     <PageContext.Provider value="RibosomalProteinPage">
-  <button   onClick={()=>RiboVisionRequest()} >Ribvosion</button>
+  {/* <button   onClick={()=>RiboVisionRequest()} >Ribvosion</button> */}
     <h1>Ribosomal Proteins</h1>
       <div className="rp-page">
         <h1>{params.nom}</h1>

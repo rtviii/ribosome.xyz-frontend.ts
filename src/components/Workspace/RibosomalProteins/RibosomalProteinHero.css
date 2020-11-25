@@ -6,12 +6,7 @@ table{
   position: relative;
   width:400px;
   padding-bottom: 20px;
-  /* margin: 0; */
-  /* margin-bottom: 20px; */
-  /* padding: 0; */
-  /* display: grid; */
-  /* grid-template-rows: auto; */
-  /* outline: 1px solid gray; */
+
   
 }
 
@@ -83,6 +78,14 @@ table, td,tr, th{
   cursor: pointer;
   border: none;
 }
+
+.pfamdescription-aa{
+  word-break: normal; 
+   word-break  :  normal;
+
+   /* white-space: nowrap; */
+}
+
 
 .down-banner{
 

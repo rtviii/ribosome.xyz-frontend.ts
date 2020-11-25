@@ -309,7 +309,7 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
                 manual curation of the resulting nomenclature given the
                 inclusive nature of certain protein families. Nevertheless, we
                 urge users and authors of the future depostions to adopt
-                firsthand the naming system as per{" "}
+                firsthand the naming system described in{" "}
                 <a href="https://bangroup.ethz.ch/research/nomenclature-of-ribosomal-proteins.html">
                   Ban et al
                 </a>
