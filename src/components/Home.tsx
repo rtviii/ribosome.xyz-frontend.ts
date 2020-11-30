@@ -29,7 +29,6 @@ import Lightbox from 'react-image-lightbox';
 import fileDownload from 'js-file-download';
  
 
-#Adding markdown-edittable fields for others to edit code-free.
 
 
 const AcknPlug:React.FC<{text:string}> = ({text, children})=>{
