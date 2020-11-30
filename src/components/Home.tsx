@@ -18,9 +18,6 @@ import teg from './../static/tegunovM.gif'
 import fig1 from './../static/review_fig.svg'
 
 import tunnel from './../static/tunnel.png'
-import overview from './../static/overview.png'
-import ban from './../static/ban.png'
-import loading from './../static/loading.gif'
 import InlineSpinner from './Other/InlineSpinner'
 
 import { Accordion, Card } from 'react-bootstrap';
@@ -32,13 +29,7 @@ import Lightbox from 'react-image-lightbox';
 import fileDownload from 'js-file-download';
  
 
-
-// Tunnel tab
-// Home mods summaries
-// Ribovision summary for proteins
-// Exposition on the graph structure
-// More elaborate filters
-
+#Adding markdown-edittable fields for others to edit code-free.
 
 const AcknPlug:React.FC<{text:string}> = ({text, children})=>{
   return (
@@ -88,22 +79,15 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
   var [em, setem]           = useState<number>(0);
 
   useEffect(() => {
-
     var structs = prop.__rx_structures;
-
-    console.log(structs);
-
-    var prot   = 0;
-
-    var rna    = 0;
-
-    var struct = 0;
-
-        struct = structs.length;
+    var prot    = 0;
+    var rna     = 0;
+    var struct  = 0;
+        struct  = structs.length;
 
     for (var str of structs) {
       prot += str.rps.length;
-      rna += str.rnas.length;
+      rna  += str.rnas.length;
     }
 
     setProtn(prot);
@@ -112,7 +96,7 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
 
 
     var xray = 0;
-    var em = 0;
+    var em   = 0;
     structs.map(struct => {
       if (struct.struct.expMethod === "X-RAY DIFFRACTION") {
         xray += 1;
