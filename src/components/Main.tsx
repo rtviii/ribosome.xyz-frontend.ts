@@ -8,6 +8,10 @@ import Display from "./Workspace/Display/Display";
 import * as redux from './../redux/reducers/Data/StructuresReducer/StructuresReducer'
 import { connect } from "react-redux";
 
+
+// Some other comment to conflict.
+
+
 export type PageContexts =
   | "RibosomalProteinPage"
   | "ProteinCatalogue"
