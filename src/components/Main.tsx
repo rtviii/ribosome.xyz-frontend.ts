@@ -9,6 +9,7 @@ import * as redux from './../redux/reducers/Data/StructuresReducer/StructuresRed
 import { connect } from "react-redux";
 
 // Some other comment to conflict. mdfields it is.lgtm
+// diverge from mdfields
 
 export type PageContexts =
   | "RibosomalProteinPage"
