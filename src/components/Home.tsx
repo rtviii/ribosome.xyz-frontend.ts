@@ -8,7 +8,6 @@ import * as redux from './../redux/reducers/Data/StructuresReducer/StructuresRed
 import  conversion from './../static/conversion.png'
 import './Home.css'
 import { Link } from 'react-router-dom'
-import LoadingSpinner from './Other/LoadingSpinner';
 
 import bioplogo from './../static/biopython_logo.svg'
 import pdb from './../static/pdb.png'
@@ -27,8 +26,12 @@ import {small_subunit_map} from './../static/small-subunit-map'
 
 import Lightbox from 'react-image-lightbox';
 import fileDownload from 'js-file-download';
- 
-
+import ReactMarkdown from 'react-markdown/with-html'
+import gfm from 'remark-gfm'
+// import * as md_home from './../md/Home'
+import * as md_files from './../md/exports'
+import cats from './../md/cats.md'
+import Axios from 'axios';
 
 
 const AcknPlug:React.FC<{text:string}> = ({text, children})=>{
@@ -108,8 +111,34 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
     setem(em);
   }, [prop.__rx_structures]);
 
-  const[isOpen1, setopen1] = useState<boolean>(false)
-  const[isOpen2, setopen2] = useState<boolean>(false)
+
+  
+
+
+
+  const [mds, setmds] = useState<string[]>([])
+  useEffect(()=>{
+    Axios.all([... Object.values( md_files.Home ).map(url =>Axios.get(url))])
+    .then( r=>  setmds(r.map(resp=>resp.data))  )},[])
+
+    
+  const rmdrenderes ={
+    image: ({
+            alt,
+            src,
+            title,
+        }:{
+            alt?  : string;
+            src?  : string;
+            title?: string;
+        }) => (
+            <img 
+                alt={alt} 
+                src={src} 
+                title={title} 
+                style={{ maxWidth: 475, margin: "40px" }}  />
+        ),
+  }
   return (
     <div className="homepage">
       <div className="stats area">
@@ -238,136 +267,21 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
       </div>
       <div className="mods area">
         <h4>Overview of tools and data we provide.</h4>
-        <Accordion id="mods-acc" defaultActiveKey="1">
-          <ModsCard
-            togglename={"Ribosomal Proteins: Classification, Search, Export"}
-            activekey={"1"}
-          >
-            <div className="mod-card-body">
-              <p className="rrr">
-                In order to enable comprehensive comparison of structures
-                deposited by the community in to the RCSB/PDB, a common ontology
-                is required for comparing proteins and the data associated with
-                them across multiple files(Fig. 1). One solution is to refer to
-                Uniprot accession codes and/or InterPro families of the
-                proteins, but the naming of ribosomal proteins presents a
-                specific obstacle for data integration. Due to historical
-                contingency, many ribosomal proteins from different species were
-                originally assigned the same name, despite being often unrelated
-                in structure and function. To eliminate confusion, a
-                nomenclature has been proposed to standardize known ribosomal
-                protein names and provide a framework for novel ones. While this
-                nomenclature has been mostly adopted in recent structural
-                studies, PFAM families and UniProt database as well as PDB still
-                contain numerous references to earlier naming systems.
-              </p>
-
-              <div className="modfig">
-                <img
-                  id="fig1"
-                  src={fig1}
-                  onClick={() => {
-                    setopen1(true);
-                  }}
-                />
-                <figcaption id="title-figcap">Fig. 1</figcaption>
-              </div>
-              {isOpen1 && (
-                <Lightbox
-                  reactModalStyle={{ content: { backgroundColor: "white" } }}
-                  mainSrc={fig1}
-                  nextSrc={fig1}
-                  prevSrc={fig1}
-                  onCloseRequest={() => setopen1(false)}
-                  onMovePrevRequest={() => {}}
-                  onMoveNextRequest={() => {}}
-                />
-              )}
-              <p className="rrr">
-                A semi-programmatic{" "}
-                <Link to="/rpnomenclature">conversion mechanism</Link> based on{" "}
-                <a href="https://pfam.xfam.org/">protein families</a> is
-                implemented to enforce standard ribosomal protein nomenclature.
-                The classification is based on <span id="mapdown" onClick={()=>{downloadMap()}}>the mapping</span> from protein families
-                to the proposed nomenclature classes. There remains a need for
-                manual curation of the resulting nomenclature given the
-                inclusive nature of certain protein families. Nevertheless, we
-                urge users and authors of the future depostions to adopt
-                firsthand the naming system described in{" "}
-                <a href="https://bangroup.ethz.ch/research/nomenclature-of-ribosomal-proteins.html">
-                  Ban et al
-                </a>
-                .
-              </p>
-
-              <div className="modfig">
-                <img
-                  id="conversion"
-                  src={conversion}
-                  onClick={() => {
-                    setopen2(true);
-                  }}
-                />
-                <figcaption id="title-figcap">Fig. 2</figcaption>
-                {isOpen2 && (
-                  <Lightbox
-                    reactModalStyle={{ content: { backgroundColor: "white" } }}
-                    mainSrc={conversion}
-                    nextSrc={conversion}
-                    prevSrc={conversion}
-                    onCloseRequest={() => setopen2(false)}
-                    onMovePrevRequest={() => {}}
-                    onMoveNextRequest={() => {}}
-                  />
-                )}
-              </div>
-            </div>
-          </ModsCard>
-
-          <ModsCard togglename={"Ribosome Exit Tunnel  "} activekey={"4"}>
-            <div className="mod-card-body">
-              <p className="rrr">
-                Ribosome exit tunnel, peptidyl-transferase center are of
-                particular interest in the exploration of the translation
-                process and evolutionary modifications in different species. We
-                gather a selection of exit-tunnel replicas from the available
-                structures in the hopes of further extending this dataset in the
-                future.
-              </p>
-              <img id="tunnel" src={tunnel} alt="tunnel" />
-            </div>
-          </ModsCard>
+          <div className='md-content'>
+          {mds.map(md=><ReactMarkdown 
+          plugins={[gfm]}
+          renderers={rmdrenderes} 
+          source={md}
+          // skipHtml={false}
+          escapeHtml={false}
           
-          <ModsCard togglename={"rRNA, mRNA, tRNA"} activekey={"2"}>
-            <div className="mod-card-body">
-              <p className="rrr">
-                A centralized resource to search, access and compare individual
-                rRNA strands across a variety of structures
-              </p>
-            </div>
-          </ModsCard>
-
-          <ModsCard
-            togglename={"Ligands, Antibiotics, Ions, Small Molecules"}
-            activekey={"3"}
-          >
-            <div className="mod-card-body">
-              <p className="rrr">
-                Crystallographic models frequently feature ligands and small
-                molecules that are not intrinsic to the ribosome but are still
-                of great interest whether due to their pharmacological,
-                evolutionary or other import. We provide a residue-level
-                catalogu of ligands, small molecules and antibiotics and their
-                physical neighborhood as well as tools to search for similar
-                molecules across other structures in the database.
-              </p>
-            </div>
-          </ModsCard>
-
-        </Accordion>
+          />)}
+          
+          
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
 };
 
 
