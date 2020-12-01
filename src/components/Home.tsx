@@ -1,78 +1,55 @@
-import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { AppActions } from '../redux/AppActions';
-import { NeoStructResp } from '../redux/reducers/Data/StructuresReducer/StructuresReducer';
-import { AppState } from '../redux/store';
-import * as redux from './../redux/reducers/Data/StructuresReducer/StructuresReducer'
-import  conversion from './../static/conversion.png'
-import './Home.css'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { AppActions } from "../redux/AppActions";
+import { NeoStructResp } from "../redux/reducers/Data/StructuresReducer/StructuresReducer";
+import { AppState } from "../redux/store";
+import * as redux from "./../redux/reducers/Data/StructuresReducer/StructuresReducer";
+import conversion from "./../static/conversion.png";
+import "./Home.css";
+import { Link } from "react-router-dom";
 
-import bioplogo from './../static/biopython_logo.svg'
-import pdb from './../static/pdb.png'
-import pfam from './../static/pfam.gif'
-import ubc from './../static/ubc-logo.png'
-import teg from './../static/tegunovM.gif'
-import fig1 from './../static/review_fig.svg'
+import bioplogo from "./../static/biopython_logo.svg";
+import pdb from "./../static/pdb.png";
+import pfam from "./../static/pfam.gif";
+import ubc from "./../static/ubc-logo.png";
+import teg from "./../static/tegunovM.gif";
+import InlineSpinner from "./Other/InlineSpinner";
 
-import tunnel from './../static/tunnel.png'
-import InlineSpinner from './Other/InlineSpinner'
+import { Accordion, Card } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import { large_subunit_map } from "./../static/large-subunit-map";
+import { small_subunit_map } from "./../static/small-subunit-map";
+import fileDownload from "js-file-download";
+import {ReactMarkdownElement,md_files} from './Other/ReactMarkdownElement'
+import gfm from "remark-gfm";
+import Axios from "axios";
 
-import { Accordion, Card } from 'react-bootstrap';
-import { Button } from 'react-bootstrap';
-import {large_subunit_map} from './../static/large-subunit-map'
-import {small_subunit_map} from './../static/small-subunit-map'
+const AcknPlug: React.FC<{ text: string }> = ({ text, children }) => {
+  return <div className="group-plug">{children}</div>;
+};
 
-import Lightbox from 'react-image-lightbox';
-import fileDownload from 'js-file-download';
-import ReactMarkdown from 'react-markdown/with-html'
-import gfm from 'remark-gfm'
-// import * as md_home from './../md/Home'
-import * as md_files from './../md/exports'
-import cats from './../md/cats.md'
-import Axios from 'axios';
-
-
-const AcknPlug:React.FC<{text:string}> = ({text, children})=>{
-  return (
-    <div className="group-plug">
-        {children}
-    </div>
-  );
-}
-
-
-const downloadMap = ()=>{
+const downloadMap = () => {
   const map = {
     ...large_subunit_map,
-    ...small_subunit_map
-  }
+    ...small_subunit_map,
+  };
 
-  fileDownload(JSON.stringify(map),"BanNomenclatureMap_v.02.json")
-
-}
-
+  fileDownload(JSON.stringify(map), "BanNomenclatureMap_v.02.json");
+};
 
 interface OwnProps {}
 interface ReduxProps {
-
-  __rx_structures: NeoStructResp[]
-
+  __rx_structures: NeoStructResp[];
 }
 interface DispatchProps {
-
-  __rx_requestStructures: () => void, 
-
+  __rx_requestStructures: () => void;
 }
 type HomeProps = DispatchProps & OwnProps & ReduxProps;
 
 const Home: React.FC<HomeProps> = (prop: HomeProps) => {
-
   useEffect(() => {
-
     prop.__rx_requestStructures();
-
   }, []);
 
   var [structn, setstructn] = useState<number>(0);
@@ -83,23 +60,22 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
 
   useEffect(() => {
     var structs = prop.__rx_structures;
-    var prot    = 0;
-    var rna     = 0;
-    var struct  = 0;
-        struct  = structs.length;
+    var prot = 0;
+    var rna = 0;
+    var struct = 0;
+    struct = structs.length;
 
     for (var str of structs) {
       prot += str.rps.length;
-      rna  += str.rnas.length;
+      rna += str.rnas.length;
     }
 
     setProtn(prot);
     setrnan(rna);
     setstructn(struct);
 
-
     var xray = 0;
-    var em   = 0;
+    var em = 0;
     structs.map(struct => {
       if (struct.struct.expMethod === "X-RAY DIFFRACTION") {
         xray += 1;
@@ -111,34 +87,13 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
     setem(em);
   }, [prop.__rx_structures]);
 
+  const [mds, setmds] = useState<string[]>([]);
+  useEffect(() => {
+    Axios.all([
+      ...Object.values(md_files.all.home).map(url => Axios.get(url)),
+    ]).then(r => setmds(r.map(resp => resp.data)));
+  }, []);
 
-  
-
-
-
-  const [mds, setmds] = useState<string[]>([])
-  useEffect(()=>{
-    Axios.all([... Object.values( md_files.Home ).map(url =>Axios.get(url))])
-    .then( r=>  setmds(r.map(resp=>resp.data))  )},[])
-
-    
-  const rmdrenderes ={
-    image: ({
-            alt,
-            src,
-            title,
-        }:{
-            alt?  : string;
-            src?  : string;
-            title?: string;
-        }) => (
-            <img 
-                alt={alt} 
-                src={src} 
-                title={title} 
-                style={{ maxWidth: 475, margin: "40px" }}  />
-        ),
-  }
   return (
     <div className="homepage">
       <div className="stats area">
@@ -163,7 +118,7 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
             </li>
             <li>
               <b>{structn ? structn : <InlineSpinner />}</b> ribosome{" "}
-              <Link to="/catalogue">structures:</Link>{" "}
+              <Link to="/structs">structures:</Link>{" "}
             </li>
             <li id="indent">
               <b>-{em ? em : <InlineSpinner />}</b> ElectronMicroscopy
@@ -204,6 +159,7 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
         </div>
 
         <div className="acknowledgements">
+
           <h4>Acknowlegements</h4>
           <AcknPlug text="">
             <div>
@@ -255,52 +211,49 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
                 </a>{" "}
                 at Georgia Institute of Technology.
               </p>
-              <p className='in-dev'> 
-              This is still in active development phase.
-              All usability and conceptual suggestions would be very much appreciated.
-              Thanks for getting in touch at <a href='mailto:rtkushner@gmail.com'>rtkushner@gmail.com</a>!
+              <p className="in-dev">
+                This is still in active development phase. All usability and
+                conceptual suggestions would be very much appreciated. Thanks
+                for getting in touch at{" "}
+                <a href="mailto:rtkushner@gmail.com">rtkushner@gmail.com</a>!
               </p>
             </div>
             <img id="ubclogo" className="footerimg" src={ubc} alt="ubc" />
           </AcknPlug>
+
         </div>
       </div>
       <div className="mods area">
         <h4>Overview of tools and data we provide.</h4>
-          <div className='md-content'>
-          {mds.map(md=><ReactMarkdown 
-          plugins={[gfm]}
-          renderers={rmdrenderes} 
-          source={md}
-          // skipHtml={false}
-          escapeHtml={false}
-          
-          />)}
-          
-          
-          </div>
+        <div className="md-content">
+          {mds.map(md => (
+            <ReactMarkdownElement    md={md}/>
+          ))}
         </div>
       </div>
-    );
+    </div>
+  );
 };
 
-
-const ModsCard: React.FC<{ togglename: string, activekey:string }> = ({
+const ModsCard: React.FC<{ togglename: string; activekey: string }> = ({
   children,
   togglename,
-  activekey
+  activekey,
 }) => {
   return (
     <Card>
       <Card.Header>
-        <Accordion.Toggle id='mod-header' as={Button} variant="link" eventKey={activekey}>
+        <Accordion.Toggle
+          id="mod-header"
+          as={Button}
+          variant="link"
+          eventKey={activekey}
+        >
           {togglename}
         </Accordion.Toggle>
       </Card.Header>
       <Accordion.Collapse eventKey={activekey}>
-        <Card.Body>
-          {children}
-        </Card.Body>
+        <Card.Body>{children}</Card.Body>
       </Accordion.Collapse>
     </Card>
   );

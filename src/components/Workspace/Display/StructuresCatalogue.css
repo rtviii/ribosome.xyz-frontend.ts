@@ -1,0 +1,62 @@
+
+
+
+.wspace-search{
+  font-size: 20px;
+}
+
+.wspace-method-filter{
+  display: flex;
+  flex-direction: column;
+}
+.wspace-method-filter .method-instance{
+  display: flex;
+  justify-content: space-between;
+
+}
+.workspace-catalogue-grid{
+  width                : 100%;
+  grid-auto-flow       : row;
+  display              : grid;
+  gap                  : 20px;
+  grid-template-columns: 300px auto;
+  padding-top: 10px;
+
+}
+
+.wspace-catalogue-filters-tools{
+  outline         : 1px solid aliceblue;
+  font-size       : 14px;
+  padding         : 10px;
+}
+
+.workspace-catalogue-structs{
+  display              : grid;
+  grid-auto-flow       : row;
+  gap                  : 10px;
+  grid-template-rows: 200px auto;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+
+.wspace-species{
+  font-size: 12px;
+
+}
+
+.card-body{
+  padding: 0;
+}
+
+.wspace-species li{
+  display: flex;
+}
+
+.species-filter{
+  /* font-size      : large; */
+  width          : 100%;
+  display        : flex;
+  justify-content: space-between;
+  /* background-color: blue; */
+
+}

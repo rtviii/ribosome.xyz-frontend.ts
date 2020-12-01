@@ -38,7 +38,7 @@ const RNAHero = ({rna}:{rna:RNAProfile}) => {
         />
       </button>
       <p><span className='rna-hero-title' style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>{truncate(rna.description)}</span></p>
-      <p>Parent structure: <Link to={`/catalogue/${rna.parent}`}>{rna.parent}</Link></p>
+      <p>Parent structure: <Link to={`/structs/${rna.parent}`}>{rna.parent}</Link></p>
       <p>RCSB strand id: {rna.strand}</p>
       <p>AA Length: {rna.length}</p>
       <p>Tax Id:{rna.orgid[0]} </p>

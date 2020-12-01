@@ -74,7 +74,7 @@ const popoverstructs= (data:LigandResponseShape, specFilter: number[], ligandche
             (struct: LigandAssocStruct) => (
               <li>
                 <div className="assoc-struct-span">
-                  <Link to={`/catalogue/${struct.struct}`}>
+                  <Link to={`/structs/${struct.struct}`}>
                     <span>{struct.struct}</span>
                   </Link>
                   <span>{truncate(struct.orgname[0])}</span>

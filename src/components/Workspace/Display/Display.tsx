@@ -1,7 +1,7 @@
 import React from "react";
 import "./Display.css";
 import { withRouter, Switch, Route, Redirect } from "react-router";
-import WorkspaceCatalogue from "./WorkspaceCatalogue";
+import WorkspaceCatalogue from "./StructuresCatalogue";
 import StructurePage from "./../StructurePage/StructurePage";
 import RPPage from "./../RibosomalProteins/RPPage";
 import RPsCatalogue from "./../RibosomalProteins/RPsCatalogue";
@@ -18,17 +18,19 @@ const Display = () => {
       <Route exact path="/">
         <Redirect to="/home" />
       </Route>
+
       <Switch>
         <Route exact path = "/home" component                         = {Home} />
 
-        <Route exact path = "/catalogue" component                    = {WorkspaceCatalogue} />
-        <Route exact path = "/catalogue/:pdbid" component             = {StructurePage} />
+        <Route exact path = "/structs" component                      = {WorkspaceCatalogue} />
+        <Route exact path = "/structs/:pdbid" component               = {StructurePage} />
 
         <Route exact path = "/rps" component                          = {RPsCatalogue} />
         <Route exact path = "/rps/:nom" component                     = {RPPage} />
 
         <Route exact path = "/ligands" component                      = {LigandCatalogue} />
-        <Route exact path = "/ligands/:lig" component                      = {LigandCatalogue} />
+        <Route exact path = "/ligands/:lig" component                 = {LigandCatalogue} />
+
         <Route exact path = "/rnas" component                         = {RNACatalogue} />
 
         <Route exact path = "/interfaces" component                   = {Interfaces} />
@@ -36,10 +38,10 @@ const Display = () => {
 
         <Route exact path = "/tunnel"                      component  = {ExitTunnelPage} />
 
-        <Route exact path = "/classify"                      component= {WorkInProgress} />
-        <Route exact path = "/rpnomenclature"                component= {WorkInProgress} />
-        <Route exact path = "/conservation"                component= {WorkInProgress} />
-        <Route exact path = "/rxzgraph"                component= {WorkInProgress} />
+        <Route exact path = "/classify"                     component= {WorkInProgress} />
+        <Route exact path = "/rpnomenclature"               component= {WorkInProgress} />
+        <Route exact path = "/conservation"                 component= {WorkInProgress} />
+        <Route exact path = "/rxzgraph"                     component= {WorkInProgress} />
       </Switch>
     </div>
   );

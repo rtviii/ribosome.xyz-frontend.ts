@@ -6,7 +6,7 @@ import RNAHero from './RNAHero'
 import './RNACatalogue.css'
 import { Accordion, Card } from "react-bootstrap";
 import { Button } from "react-bootstrap";
-import { transformToShortTax } from "../Display/WorkspaceCatalogue";
+import { transformToShortTax } from "../Display/StructuresCatalogue";
 
 export interface RNAProfile {
   description: string;

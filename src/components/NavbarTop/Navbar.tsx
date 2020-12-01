@@ -11,7 +11,7 @@ const Navbar = () => {
 
     dropdownTitle: "Resources",
     itemLinks: [
-      {itemtext: "Structures", linkto:'/catalogue'},
+      {itemtext: "Structures", linkto:'/structs'},
       {itemtext: "Ribosomal Proteins", linkto:'/rps'},
       {itemtext: "Ligands", linkto:'/ligands'},
       {itemtext: "rRNA", linkto:'/rnas'},
