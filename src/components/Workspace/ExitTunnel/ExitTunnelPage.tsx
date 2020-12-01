@@ -9,6 +9,7 @@ import './ExitTunnelPage.css'
 import downicon from './../../../static/download.png'
 import { Ligand, RibosomalProtein, RibosomeStructure, rRNA } from '../../../redux/RibosomeTypes'
 import Lightbox from 'react-image-lightbox'
+import {ReactMarkdownElement,md_files} from './../../Other/ReactMarkdownElement'
 
 
 
@@ -54,26 +55,15 @@ interface TunnelWall{
     }
 }
 
-
-const sortByChain = (rss:ResidueProfile[])=>{
-  var chains: { [chain: string]: { resid: number; resn: string }[] } = {};
-  for (var r of rss){
-    if (!Object.keys(chains).includes(r.strand)){
-
-    }
-
-  }
-}
         
 const TunnelWallProfile:React.FC = ({children})=>{
 
-        type StructResponseShape = {
-          structure: RibosomeStructure,
-          ligands  : Ligand[],
-          rnas     : rRNA[],
-          rps      : RibosomalProtein[]
-        }
-
+    type StructResponseShape = {
+      structure: RibosomeStructure,
+      ligands  : Ligand[],
+      rnas     : rRNA[],
+      rps      : RibosomalProtein[]
+    }
     const [wall, setwall] = useState<TunnelWall>({
         pdbid        :  "null",
         probeRadius  :  0,
@@ -82,7 +72,6 @@ const TunnelWallProfile:React.FC = ({children})=>{
         ligands      :  [],
         nomMap       :  {}
     })
-
     const [structState, setstruct] = useState<StructResponseShape[]>([] as StructResponseShape[])
 
 
@@ -321,86 +310,11 @@ const [setOpen, setsetOpen] = useState<boolean>(false)
               </Card.Header>
               <Accordion.Collapse eventKey="1">
                 <Card.Body>
-                  <div className="exposee">
-                    <p>
-                      The constitution of the exit tunnel is of interest for
-                      evolutionary, physio-chemical and pharmacological reasons.
-                      We provide a mechanism to export some preliminary data
-                      about the walls of the exit tunnel as well
-                      cylinder-centerline of the tunnel as is caputured in a
-                      given model.
-                    </p>
-                    Three main features are provided at the moment that
-                    characterize tunnel walls:
-                    <ul>
-                      <li>
-                        Residue profile of the RPs that interface with the
-                        tunnel
-                      </li>
-                      (Each protein is identified by its new nomenclature (ex.
-                      uL4) where is possible and can thus be compared against
-                      homologous chains in other structures. The in-chain IDs of
-                      the tunnel-interfacing residues are provided for each
-                      protein.)
-                      <li>
-                        Nucleotides of the RNA that interface with the tunnle
-                      </li>
-                      <li>
-                        Ligands, ions or small molecules if any are found
-                        embedded in the walls of the tunnel
-                      </li>
-                    </ul>
-                    <br />
-                    <img
-                      id="demogif"
-                      onClick={() => {
-                        setsetOpen(true);
-                      }}
-                      src={tunneldemo}
-                      alt=""
-                    />
-                    <span>Method:</span>
-                    <ul>
-
-                    <li>
-                      The tunnel shape is extracted via the MOLE software.
-                    </li>
-                    <li>
-                      We{" "}
-                      <a href="https://biopython.org/docs/1.75/api/Bio.PDB.NeighborSearch.html">
-                        search
-                      </a>{" "}
-                      for residues-neighbors inside the structure that are
-                      within <strong>10</strong> Angstrom of each
-                      coordinate-step of the resulting tunnel-replica.
-                    </li>
-                    <li>
-                      Each unique residue is then matched to its parent chain,
-                      which in turn are matched against{" "}
-                      <Link to="/rxzgraph"> the graph</Link> to obtain the
-                      standard nomenclature.
-                    </li>
-                    </ul>
-                    <br />
-                    We plan to augment these data with conservation scores and
-                    phys/chem profiles kindly provided by Loren William's{" "} 
-                    <a href="https://pubs.rsc.org/en/content/articlelanding/2014/fd/c3fd00126a#!divAbstract">
-                       group at Gatech
-                    </a>{" "}in the course of further development of both databases.
-                    {setOpen && (
-                      <Lightbox
-                        reactModalStyle={{
-                          content: { backgroundColor: "white" },
-                        }}
-                        mainSrc={tunneldemo}
-                        nextSrc={tunneldemo}
-                        prevSrc={tunneldemo}
-                        onCloseRequest={() => setsetOpen(false)}
-                        onMovePrevRequest={() => {}}
-                        onMoveNextRequest={() => {}}
-                      />
-                    )}
-                  </div>
+                  
+                  <ReactMarkdownElement
+                  md={md_files.all.tunnel.tunnel_page}
+                  
+                  />
                 </Card.Body>
               </Accordion.Collapse>
             </Card>

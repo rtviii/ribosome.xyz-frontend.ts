@@ -38,6 +38,11 @@
   grid-template-columns: 1fr 1fr 1fr;
 }
 
+.md-elem{
+
+  grid-column: 1/4;
+}
+
 
 .wspace-species{
   font-size: 12px;

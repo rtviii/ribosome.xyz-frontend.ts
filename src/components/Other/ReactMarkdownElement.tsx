@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import ReactMarkdown from "react-markdown/with-html";
 import gfm from "remark-gfm";
 import * as md_files from './../../md/exports'
+import  './ReactMarkdownElement.css'
 
 const ReactMarkdownElement = ({md}:{md:any}) => {
   const rmdrenderes = {
@@ -18,6 +19,7 @@ const ReactMarkdownElement = ({md}:{md:any}) => {
       <img
         alt={alt}
         src={src}
+        id="md-elem-img"
         title={title}
         style={{ maxWidth: 475, margin: "40px" }}
       />
@@ -32,7 +34,7 @@ const ReactMarkdownElement = ({md}:{md:any}) => {
   }, [])
 
     return (
-        <div>
+        <div className='md-elem'>
             
             <ReactMarkdown
               plugins    = {[gfm]}

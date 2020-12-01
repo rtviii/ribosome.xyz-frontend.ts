@@ -225,11 +225,11 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
       </div>
       <div className="mods area">
         <h4>Overview of tools and data we provide.</h4>
-        <div className="md-content">
-          {mds.map(md => (
-            <ReactMarkdownElement    md={md}/>
-          ))}
-        </div>
+        <ReactMarkdownElement md={md_files.all.home.prots}/>
+        <ReactMarkdownElement md={md_files.all.home.ligs}/>
+        <ReactMarkdownElement md={md_files.all.home.exittunnel}/>
+        <ReactMarkdownElement md={md_files.all.home.rna}/>
+        <ReactMarkdownElement md={md_files.all.home.limitations}/>
       </div>
     </div>
   );
