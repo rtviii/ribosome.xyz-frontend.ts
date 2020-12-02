@@ -9,6 +9,11 @@
     "relmat relmat footer   footer";
 }
 
+.md-content{
+
+    width: 40vw
+}
+
 
 .relmats{
     margin-bottom: 20px;

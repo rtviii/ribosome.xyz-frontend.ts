@@ -37,8 +37,12 @@
 .ligand-catalogue-grid{
   grid-column: 2/8;
   display:grid;
+  grid-template-rows: max-content auto;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 10px;
+}
+.md-elem{
+  grid-column: 1/7;
 }
 
 

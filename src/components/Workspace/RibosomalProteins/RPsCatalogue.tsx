@@ -11,6 +11,7 @@ import BanClassHero from './BanClassHero'
 import {large_subunit_map} from './../../../static/large-subunit-map'
 import {small_subunit_map} from './../../../static/small-subunit-map'
 import LoadingSpinner from "../../Other/LoadingSpinner";
+import {ReactMarkdownElement, md_files} from './../../Other/ReactMarkdownElement'
 
 // endpoint response shape
 export interface ERS {
@@ -97,6 +98,9 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
 
     return (
       <div className="subunit-members">
+        <ReactMarkdownElement 
+        md={md_files.all.rps.rps_page}/>
+        
         <div id="e">
           <h4>Eukaryotic</h4>
           <div className="kingdom-tray">

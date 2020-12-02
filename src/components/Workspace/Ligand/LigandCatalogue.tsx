@@ -10,6 +10,7 @@ import {Card, OverlayTrigger, Popover} from 'react-bootstrap'
 import LoadingSpinner from "../../Other/LoadingSpinner";
 import { Accordion } from "react-bootstrap";
 import { Button } from "react-bootstrap";
+import {md_files, ReactMarkdownElement } from '../../Other/ReactMarkdownElement'
 
 import download from './../../../static/download.png'
 
@@ -74,7 +75,7 @@ const popoverstructs= (data:LigandResponseShape, specFilter: number[], ligandche
             (struct: LigandAssocStruct) => (
               <li>
                 <div className="assoc-struct-span">
-                  <Link to={`/catalogue/${struct.struct}`}>
+                  <Link to={`/structs/${struct.struct}`}>
                     <span>{struct.struct}</span>
                   </Link>
                   <span>{truncate(struct.orgname[0])}</span>
@@ -228,12 +229,13 @@ const LigandCatalogue = () => {
 
   return (
     <div className="ligand-catalogue">
+
       <div className="filters-tools">
         Hide Ions: <input type="checkbox" onChange={e => setionsOn(!ionsOn)} />
 
           <div className="ligands-search">
 
-Search:
+        Search:
             <input
               value={ligfilter}
               onChange={e => {
@@ -303,6 +305,8 @@ Search:
       </div>
 
       <div className="ligand-catalogue-grid">
+        <ReactMarkdownElement 
+        md={md_files.all.ligands.ligands_page}/>
         {ligs.length > 0 ? (
           ionsOn ? (
             searchByName( filterByOrg(ligs, organismFilter), ligfilter).map((l: LigandResponseShape) => <LigandHero data={l} speciesFilter={organismFilter} />)

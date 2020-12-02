@@ -6,7 +6,8 @@ import RNAHero from './RNAHero'
 import './RNACatalogue.css'
 import { Accordion, Card } from "react-bootstrap";
 import { Button } from "react-bootstrap";
-import { transformToShortTax } from "../Display/WorkspaceCatalogue";
+import { transformToShortTax } from "../Display/StructuresCatalogue";
+import {ReactMarkdownElement, md_files} from './../../Other/ReactMarkdownElement'
 
 export interface RNAProfile {
   description: string;
@@ -78,16 +79,6 @@ const RNACatalogue = () => {
      
   }, [rnas, organismFilter]);
 
-
-  // useEffect(() => {
-  //   console.log('orgfilter chagned')
-  //   console.log(baserna);
-    
-  //   var filtered = baserna.filter(rna => { 
-  //   organismFilter.includes(rna.orgid[0]) })
-  //   setrnas()
-  // }, [organismFilter])
-
   const [organismsAvailable, setorganismsAvailable] = useState({})
   useEffect(() => {
     var organisms = rnas.map(str => {
@@ -115,8 +106,6 @@ const RNACatalogue = () => {
     console.log(orgsdict)
     setorganismsAvailable(orgsdict)
   }, [rnas]);
-
-
 
   const filterByOrganims = (
     elems: RNAProfile[],
@@ -150,6 +139,7 @@ const RNACatalogue = () => {
   ) : (
     <div className="rnas-catalogue">
       <div className="rnas-catalogue-grid">
+
         <div className="filters-tools">
           <Accordion defaultActiveKey="0">
             <Card>
@@ -212,6 +202,7 @@ const RNACatalogue = () => {
         </div>
 
         <div className="rnas-catalogue-content">
+        <ReactMarkdownElement    md={md_files.all.rnas.rnas_page}   />
           <div className="rnaclass rna-class-23s">
             <p className="rna-class-title">23S-like RNA</p>
             {

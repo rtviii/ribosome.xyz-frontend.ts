@@ -80,13 +80,11 @@ const StructHero: React.FC<{
     >
       <div className="struct-hero-header">
         <div id="header-description">
-
-      <div className="pdbid_title">
-
-          <Link id='pdb-title-a' to={`/catalogue/${struct.rcsb_id}`}>
-            <div >{struct.rcsb_id}</div>
-          </Link>
-      </div>
+          <div className="pdbid_title">
+            <Link id="pdb-title-a" to={`/structs/${struct.rcsb_id}`}>
+              <div>{struct.rcsb_id}</div>
+            </Link>
+          </div>
 
           <div id="citation-doi">
             <div id="title-description">{struct.citation_title}</div>
@@ -98,7 +96,7 @@ const StructHero: React.FC<{
               <div className="pdblink">
                 <a href={`https://www.rcsb.org/structure/${struct.rcsb_id}`}>
                   PDB
-                <img id="linkicon" alt="linkicon" src={linkicon} />
+                  <img id="linkicon" alt="linkicon" src={linkicon} />
                 </a>
               </div>
             </div>

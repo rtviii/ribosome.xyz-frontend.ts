@@ -80,7 +80,7 @@ const RPPage = () => {
                   <div id='homolog-struct-title'>
                     <Link
                       style={{ width: "min-content" }}
-                      to={`/catalogue/${e.parent}`}
+                      to={`/structs/${e.parent}`}
                     >
                       <h4>{e.parent}</h4>
                     </Link>{" "}

@@ -12,7 +12,7 @@ const popover = (prop: ERS) => (
       {prop.rps.map(rp => {
         return(
             <div className='rp-class-member'>
-                <span>{rp.parent_reso} Å | {rp.organism_desc}({rp.organism_id}) in <Link to={`/catalogue/${rp.parent}`}>{rp.parent}</Link> </span>
+                <span>{rp.parent_reso} Å | {rp.organism_desc}({rp.organism_id}) in <Link to={`/structs/${rp.parent}`}>{rp.parent}</Link> </span>
             </div>
         );
       })}
