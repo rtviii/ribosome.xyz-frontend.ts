@@ -48,6 +48,7 @@ interface DispatchProps {
 type HomeProps = DispatchProps & OwnProps & ReduxProps;
 
 const Home: React.FC<HomeProps> = (prop: HomeProps) => {
+
   useEffect(() => {
     prop.__rx_requestStructures();
   }, []);
@@ -59,11 +60,12 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
   var [em, setem]           = useState<number>(0);
 
   useEffect(() => {
+
     var structs = prop.__rx_structures;
-    var prot = 0;
-    var rna = 0;
-    var struct = 0;
-    struct = structs.length;
+    var prot    = 0;
+    var rna     = 0;
+    var struct  = 0;
+        struct  = structs.length;
 
     for (var str of structs) {
       prot += str.rps.length;
