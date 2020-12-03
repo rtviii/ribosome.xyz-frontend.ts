@@ -14,7 +14,7 @@
         - Neighboring proteins
     4. Nomenclature tool to deduce the class of a protein/proteins based on 3D structure/sequence
 
-
+Ribosome
 
 
  
