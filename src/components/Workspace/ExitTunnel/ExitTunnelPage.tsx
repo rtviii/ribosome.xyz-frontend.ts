@@ -76,13 +76,15 @@ const TunnelWallProfile:React.FC = ({children})=>{
 
     useEffect(() => {
       setselectedStruct('4UG0')
+      setstruct([])
     }, [])
     
     useEffect(() => {
       getNeo4jData("neo4j",{ endpoint:"get_struct", params:{
         pdbid:selectedStruct
       }}).then(re=>{ 
-        setstruct(re.data[0]) 
+        console.log("GOT STRUCT ,", re.data);
+        setstruct(re.data) 
       }
       )
     }, [ selectedStruct])
@@ -92,23 +94,20 @@ const TunnelWallProfile:React.FC = ({children})=>{
         struct:selectedStruct,
         filetype:'report',
     }}).then(
-        r=> { 
-            setwall(r.data)
-            console.log(r.data) },
-            e=>console.log("error", e)
+        r=> { setwall(r.data)           },
+        e=>console.log("error", e)
     )}, [selectedStruct])
+
+
+
 
     return (
       <div>
         <div className="tunnel-head">
-
-
-<DropdownButton id="dropdown-basic-button" title={selectedStruct}>
+<DropdownButton id="dropdown-basic-button" title={structState[0] ? `${structState[0].structure.rcsb_id}` + " " +`${structState[0].structure.citation_title}` :" "}>
 {tunnels.map(t => <Dropdown.Item onSelect={()=>{setselectedStruct(t)}}>{ t }</Dropdown.Item>)}
 </DropdownButton>
-          <span className="head-id">
-            <strong>{wall.pdbid}</strong>
-          </span>
+
           <span className="head-title">
             {structState && structState.length > 0
               ? structState[0].structure.citation_title
@@ -120,12 +119,12 @@ const TunnelWallProfile:React.FC = ({children})=>{
               : null}
           </span>
         </div>
+
         <Button
           variant="secondary"
           style={{ marginRight: "10px" }}
           onClick={() => getfile(wall.pdbid, "report")}
         >
-          {" "}
           <code>.json</code> report
           <img id="down-wall-prot" src={downicon} alt="download protein" />
         </Button>
@@ -133,12 +132,12 @@ const TunnelWallProfile:React.FC = ({children})=>{
           variant="secondary"
           onClick={() => getfile(wall.pdbid, "centerline")}
         >
-          {" "}
           <code>.csv</code> centerline
           <img id="down-wall-prot" src={downicon} alt="download protein" />
         </Button>
 
         <div className="tunnel-wall-profile">
+
           <div id="prot-top">
             <h4>Adjacent Proteins</h4>
             <div className="protein-container">

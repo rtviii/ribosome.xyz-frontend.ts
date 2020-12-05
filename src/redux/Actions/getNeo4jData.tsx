@@ -21,12 +21,18 @@ type  Neo4jEndpoints =
   | getRnasByStruct
   | getLigandsByStruct
   | get_ligand_nbhd
+  | match_structs_by_proteins
 
 
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
 
-
+interface match_structs_by_proteins{
+  endpoint:"match_structs",
+  params:{
+    proteins:string
+  }
+}
 interface get_tunnel {
   endpoint: "tunnel",
   params:{

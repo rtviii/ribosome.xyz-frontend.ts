@@ -10,6 +10,11 @@ import * as redux from '../../../redux/reducers/Data/StructuresReducer/Structure
 import { Accordion, Card } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import {md_files, ReactMarkdownElement } from './../../Other/ReactMarkdownElement'
+import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
+import {large_subunit_map} from './../../../static/large-subunit-map'
+import {small_subunit_map} from './../../../static/small-subunit-map'
+import Select from 'react-select'
+import { getOptionValue } from "react-select/src/builtins";
 
 interface OwnProps {}
 interface ReduxProps {
@@ -77,6 +82,15 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   }, [structures]);
 
 
+
+
+  const filterByProteinPresence=(structs: redux.NeoStructResp[], filter: string[])=>{
+    if (filter.length ==0){
+      return structs
+    }
+    return structs.filter(str=>filter.includes(str.struct.rcsb_id) )
+  }
+
   const [methodFilter, setmethodFilter] = useState<string[]>([])
   useEffect(() => {
   if (methodFilter.length ===0){
@@ -121,8 +135,34 @@ const truncate = (str:string) =>{
 
 
   const [pdbidFilter, setPbidFilter] = useState<string>("");
+  const [structsWithProteins, setstructsWithProteins] = useState<string[]>([])
 
-  
+  const requestByProtein = ()=>{
+  getNeo4jData("neo4j", {
+    endpoint: "match_structs",
+    params  : { proteins: selectedProteins.join(",") },
+  }).then(r => {
+    setstructsWithProteins(r.data)
+    console.log(r.data);
+  });
+}
+
+  var protopts: {
+    value: string;
+    label: string;
+  }[] = [
+    ...Object.keys(large_subunit_map),
+    ...Object.keys(small_subunit_map),
+  ].map(name => {
+    return { value: name, label: name };
+  });
+
+  const [selectedProteins, setselectedProteins] = useState<string[]>([]);
+  const handleChange = (e: any) => {setselectedProteins(Array.isArray(e) ? e.map(x => x.value) : []);};
+ 
+  useEffect(() => {
+    requestByProtein()
+  }, [selectedProteins])
 
   return !prop.loading ? (
     <PageContext.Provider value="WorkspaceCatalogue">
@@ -138,6 +178,24 @@ const truncate = (str:string) =>{
             />
           </div>
           <br />
+          <div className="match-structs">
+             Find by proteins:
+            <Select
+              options={protopts}
+              value={protopts.filter(( obj ) => selectedProteins.includes(obj.value))}
+              onChange={handleChange} 
+              isMulti
+              isClearable
+            />
+
+          <Button onClick={()=>{requestByProtein()}}>
+          Find
+          </Button>
+
+
+
+
+          </div>
 
           <div className="wspace-method-filter">
             <div className="method-instance">
@@ -234,18 +292,18 @@ const truncate = (str:string) =>{
         </div>
 
         <div className="workspace-catalogue-structs">
+          <ReactMarkdownElement md={md_files.all.structs.structures} />
 
-<ReactMarkdownElement 
-md={md_files.all.structs.structures}
-/>
-
-          {filterByPdbId(structures.filter(filterByOrganism), pdbidFilter).map(
-            (x, i) => (              <StructHero {...x} key={i} />))}
+          {filterByPdbId(filterByProteinPresence( structures, structsWithProteins ).filter(filterByOrganism), pdbidFilter).map(
+            (x, i) => (
+              <StructHero {...x} key={i} />
+            )
+          )}
         </div>
       </div>
     </PageContext.Provider>
   ) : (
-    <LoadingSpinner annotation='Fetching data...' />
+    <LoadingSpinner annotation="Fetching data..." />
   );
 };
 
