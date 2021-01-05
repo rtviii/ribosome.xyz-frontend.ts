@@ -5,15 +5,14 @@ import { AppActions } from "../redux/AppActions";
 import { NeoStructResp } from "../redux/reducers/Data/StructuresReducer/StructuresReducer";
 import { AppState } from "../redux/store";
 import * as redux from "./../redux/reducers/Data/StructuresReducer/StructuresReducer";
-import conversion from "./../static/conversion.png";
 import "./Home.css";
 import { Link } from "react-router-dom";
 
 import bioplogo from "./../static/biopython_logo.svg";
 import pdb from "./../static/pdb.png";
 import pfam from "./../static/pfam.gif";
+import raylogo from './../static/raylogo.png'
 import ubc from "./../static/ubc-logo.png";
-import teg from "./../static/tegunovM.gif";
 import InlineSpinner from "./Other/InlineSpinner";
 
 import { Accordion, Card } from "react-bootstrap";
@@ -22,7 +21,6 @@ import { large_subunit_map } from "./../static/large-subunit-map";
 import { small_subunit_map } from "./../static/small-subunit-map";
 import fileDownload from "js-file-download";
 import {ReactMarkdownElement,md_files} from './Other/ReactMarkdownElement'
-import gfm from "remark-gfm";
 import Axios from "axios";
 
 const AcknPlug: React.FC<{ text: string }> = ({ text, children }) => {
@@ -101,7 +99,7 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
       <div className="stats area">
         <div id="stats-proper">
           <div>
-            <img id="teg" src={teg} alt="teg" />
+            <img id="teg" src={raylogo} alt="teg" />
             <figcaption id="title-figcap">
               [ Figure from Tegunov. Will replace with own movie ]
             </figcaption>

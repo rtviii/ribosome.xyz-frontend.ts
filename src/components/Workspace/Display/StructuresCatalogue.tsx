@@ -36,6 +36,10 @@ export   const transformToShortTax = (taxname:string) =>{
   }
   else return taxname
   }
+
+// Want to find structure by presence of multiple proteins
+
+
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
@@ -109,7 +113,7 @@ const truncate = (str:string) =>{
     return str.length > 20 ? str.substring(0, 15) + "..." : str;
 }
 
-  const filterByPdbId                = (structs: redux.NeoStructResp[], filter: string) => {
+  const filterByPdbId = (structs: redux.NeoStructResp[], filter: string) => {
     return structs.filter(x => {
       var concated =
         x.struct.rcsb_id.toLowerCase() +
@@ -234,18 +238,14 @@ const truncate = (str:string) =>{
         </div>
 
         <div className="workspace-catalogue-structs">
-
-<ReactMarkdownElement 
-md={md_files.all.structs.structures}
-/>
-
+          <ReactMarkdownElement md={md_files.all.structs.structures} />
           {filterByPdbId(structures.filter(filterByOrganism), pdbidFilter).map(
-            (x, i) => (              <StructHero {...x} key={i} />))}
+            (x, i) => (<StructHero {...x} key={i} />))}
         </div>
       </div>
     </PageContext.Provider>
   ) : (
-    <LoadingSpinner annotation='Fetching data...' />
+    <LoadingSpinner annotation="Fetching data..." />
   );
 };
 
