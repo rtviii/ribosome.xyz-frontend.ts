@@ -1,38 +1,36 @@
 import fileDownload from 'js-file-download'
-import { chain } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { Accordion, Button, Card, ListGroup } from 'react-bootstrap'
+import { Accordion, Button, Card, Dropdown, DropdownButton, ListGroup } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { getNeo4jData } from '../../../redux/Actions/getNeo4jData'
-import tunneldemo from './../../../static/tunneldemo.gif'
 import './ExitTunnelPage.css'
 import downicon from './../../../static/download.png'
 import { Ligand, RibosomalProtein, RibosomeStructure, rRNA } from '../../../redux/RibosomeTypes'
-import Lightbox from 'react-image-lightbox'
 import {ReactMarkdownElement,md_files} from './../../Other/ReactMarkdownElement'
+import {tunnels} from './../../../static/tunnels'
 
 
 
 const getfile = (pdbid:string,ftype:"report"|"centerline")=>{
   var pdbid = pdbid.toUpperCase()
-
-  getNeo4jData("static_files",{
-    endpoint:"tunnel", 
-    params:{
-      struct    :  pdbid,
-      filetype  :  ftype
-
-  }}).then(
-
-      r=>{ 
-        if (ftype ==='report'){
-        fileDownload(JSON.stringify(r.data), ftype === 'report' ? `${pdbid}_tunnel_report.json`: `${pdbid}_tunnel_centerline.csv`) 
-        }
-      else{
-        fileDownload(r.data,  `${pdbid}_tunnel_centerline.csv`) 
-        }
-        }
-  )
+  getNeo4jData("static_files", {
+    endpoint: "tunnel",
+    params: {
+      struct: pdbid,
+      filetype: ftype,
+    },
+  }).then(r => {
+    if (ftype === "report") {
+      fileDownload(
+        JSON.stringify(r.data),
+        ftype === "report"
+          ? `${pdbid}_tunnel_report.json`
+          : `${pdbid}_tunnel_centerline.csv`
+      );
+    } else {
+      fileDownload(r.data, `${pdbid}_tunnel_centerline.csv`);
+    }
+  });
 }
 
 interface ResidueProfile{
@@ -45,25 +43,27 @@ interface ResidueProfile{
 }
 
 interface TunnelWall{
-    pdbid        :  string,
-    probeRadius  :  number,
-    proteins     :  { [ chain:string ]:ResidueProfile[] }
-    rna          :  { [ chain:string ]:ResidueProfile[] }
-    ligands      :  ResidueProfile[]
-    nomMap       :  {
+    pdbid      : string,
+    probeRadius: number,
+    proteins   : { [ chain:string ]:ResidueProfile[] }
+    rna        : { [ chain:string ]:ResidueProfile[] }
+    ligands    : ResidueProfile[]
+    nomMap     : {
       [chain:string]: string[]
     }
 }
 
+type StructResponseShape = {
+  structure: RibosomeStructure,
+  ligands  : Ligand[],
+  rnas     : rRNA[],
+  rps      : RibosomalProtein[]
+}
         
 const TunnelWallProfile:React.FC = ({children})=>{
 
-    type StructResponseShape = {
-      structure: RibosomeStructure,
-      ligands  : Ligand[],
-      rnas     : rRNA[],
-      rps      : RibosomalProtein[]
-    }
+
+    const [selectedStruct, setselectedStruct] = useState<string>('')
     const [wall, setwall] = useState<TunnelWall>({
         pdbid        :  "null",
         probeRadius  :  0,
@@ -74,36 +74,40 @@ const TunnelWallProfile:React.FC = ({children})=>{
     })
     const [structState, setstruct] = useState<StructResponseShape[]>([] as StructResponseShape[])
 
-
+    useEffect(() => {
+      setselectedStruct('4UG0')
+      setstruct([])
+    }, [])
     
     useEffect(() => {
-      getNeo4jData("neo4j",{endpoint:"get_struct", params:{
-        pdbid:wall.pdbid
+      getNeo4jData("neo4j",{ endpoint:"get_struct", params:{
+        pdbid:selectedStruct
       }}).then(re=>{ 
-        setstruct(re.data[0]) 
+        console.log("GOT STRUCT ,", re.data);
+        setstruct(re.data) 
       }
-        
       )
-    }, [wall])
+    }, [ selectedStruct])
 
     useEffect(() => {
+    getNeo4jData("static_files",{endpoint:"tunnel", params:{
+        struct:selectedStruct,
+        filetype:'report',
+    }}).then(
+        r=> { setwall(r.data)           },
+        e=>console.log("error", e)
+    )}, [selectedStruct])
 
-        getNeo4jData("static_files",{endpoint:"tunnel", params:{
-            struct:'4UG0',
-            filetype:'report',
-        }}).then(
-            r=> { 
-                setwall(r.data)
-                console.log(r.data) },
-                e=>console.log("error", e)
-        )}, [])
+
+
 
     return (
       <div>
         <div className="tunnel-head">
-          <span className="head-id">
-            <strong>{wall.pdbid}</strong>
-          </span>
+<DropdownButton id="dropdown-basic-button" title={structState[0] ? `${structState[0].structure.rcsb_id}` + " " +`${structState[0].structure.citation_title}` :" "}>
+{tunnels.map(t => <Dropdown.Item onSelect={()=>{setselectedStruct(t)}}>{ t }</Dropdown.Item>)}
+</DropdownButton>
+
           <span className="head-title">
             {structState && structState.length > 0
               ? structState[0].structure.citation_title
@@ -115,12 +119,12 @@ const TunnelWallProfile:React.FC = ({children})=>{
               : null}
           </span>
         </div>
+
         <Button
           variant="secondary"
           style={{ marginRight: "10px" }}
           onClick={() => getfile(wall.pdbid, "report")}
         >
-          {" "}
           <code>.json</code> report
           <img id="down-wall-prot" src={downicon} alt="download protein" />
         </Button>
@@ -128,16 +132,16 @@ const TunnelWallProfile:React.FC = ({children})=>{
           variant="secondary"
           onClick={() => getfile(wall.pdbid, "centerline")}
         >
-          {" "}
           <code>.csv</code> centerline
           <img id="down-wall-prot" src={downicon} alt="download protein" />
         </Button>
 
         <div className="tunnel-wall-profile">
+
           <div id="prot-top">
             <h4>Adjacent Proteins</h4>
             <div className="protein-container">
-              {Object.entries(wall.proteins).map(r => {
+              {wall.proteins ? Object.entries(wall.proteins).map(r => {
                 return (
                   <WallChain
                     pdbid={wall.pdbid}
@@ -146,14 +150,14 @@ const TunnelWallProfile:React.FC = ({children})=>{
                     resids={r[1]}
                   />
                 );
-              })}
+              }) : "None"}
             </div>
           </div>
 
           <div id="rna-top">
             <h4>Adjacent RNA</h4>
             <div className="rna-container">
-              {Object.entries(wall.rna).map(r => {
+              {wall.rna ? Object.entries(wall.rna).map(r => {
                 return (
                   <WallChain
                     pdbid={wall.pdbid}
@@ -162,14 +166,14 @@ const TunnelWallProfile:React.FC = ({children})=>{
                     resids={r[1]}
                   />
                 );
-              })}
+              }) : "None"}
             </div>
           </div>
 
           <div id="lig-top">
-            <h4>Ligands & Small Molecules</h4>
+            <h4>Ligands | Antibiotics | Small Molecules</h4>
             <div className="ligand-container">
-              {wall.ligands.map(l => {
+              {wall.ligands ? wall.ligands.map(l => {
                 return (
                   <div className="wall-ligand">
                     <span>
@@ -177,7 +181,7 @@ const TunnelWallProfile:React.FC = ({children})=>{
                     </span>
                   </div>
                 );
-              })}
+              }): "not found"}
             </div>
           </div>
         </div>
@@ -247,10 +251,7 @@ const WallChain:React.FC<{banid:string|null, chain:string, resids:ResidueProfile
 
 }
 
-
-
 const ExitTunnelPage = () => {
-const [setOpen, setsetOpen] = useState<boolean>(false)
     return (
       <div className="exit-tunnel-page">
         <div className="tip-and-filters">
