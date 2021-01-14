@@ -162,7 +162,7 @@ const truncate = (str:string) =>{
   });
 
   const [selectedProteins, setselectedProteins] = useState<string[]>([]);
-  const handleChange = (e: any) => {setselectedProteins(Array.isArray(e) ? e.map(x => x.value) : []);};
+  const handleChange                            = (e: any) => {setselectedProteins(Array.isArray(e) ? e.map(x => x.value) : []);};
  
   useEffect(() => {
     requestByProtein()

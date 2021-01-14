@@ -8,6 +8,7 @@ type  StaticFilesEndpoints =
   | downloadCifChain
   | download_ligand_nbhd
   | get_tunnel
+  | pairwise_align
 
 type  Neo4jEndpoints = 
   | getStructure
@@ -27,6 +28,16 @@ type  Neo4jEndpoints =
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
 
+interface pairwise_align{
+  endpoint:"pairwise_align",
+  params:{
+      struct1: string,
+      struct2: string,
+      strand1: string,
+      strand2: string
+  }
+
+}
 interface match_structs_by_proteins{
   endpoint:"match_structs",
   params:{

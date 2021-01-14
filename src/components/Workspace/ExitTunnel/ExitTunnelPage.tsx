@@ -104,9 +104,9 @@ const TunnelWallProfile:React.FC = ({children})=>{
     return (
       <div>
         <div className="tunnel-head">
-<DropdownButton id="dropdown-basic-button" title={structState[0] ? `${structState[0].structure.rcsb_id}` + " " +`${structState[0].structure.citation_title}` :" "}>
-{tunnels.map(t => <Dropdown.Item onSelect={()=>{setselectedStruct(t)}}>{ t }</Dropdown.Item>)}
-</DropdownButton>
+          <DropdownButton id="dropdown-basic-button" title={structState[0] ? `${structState[0].structure.rcsb_id}` + " " +`${structState[0].structure.citation_title}` :" "}>
+          {tunnels.map(t => <Dropdown.Item onSelect={()=>{setselectedStruct(t)}}>{ t }</Dropdown.Item>)}
+          </DropdownButton>
 
           <span className="head-title">
             {structState && structState.length > 0

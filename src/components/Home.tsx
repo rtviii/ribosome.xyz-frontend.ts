@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import bioplogo from "./../static/biopython_logo.svg";
 import pdb from "./../static/pdb.png";
 import pfam from "./../static/pfam.gif";
-import raylogo from './../static/raylogo.png'
+import raylogo from "./../static/logohex.png";
 import ubc from "./../static/ubc-logo.png";
 import InlineSpinner from "./Other/InlineSpinner";
 
@@ -20,20 +20,11 @@ import { Button } from "react-bootstrap";
 import { large_subunit_map } from "./../static/large-subunit-map";
 import { small_subunit_map } from "./../static/small-subunit-map";
 import fileDownload from "js-file-download";
-import {ReactMarkdownElement,md_files} from './Other/ReactMarkdownElement'
+import { ReactMarkdownElement, md_files } from "./Other/ReactMarkdownElement";
 import Axios from "axios";
 
 const AcknPlug: React.FC<{ text: string }> = ({ text, children }) => {
   return <div className="group-plug">{children}</div>;
-};
-
-const downloadMap = () => {
-  const map = {
-    ...large_subunit_map,
-    ...small_subunit_map,
-  };
-
-  fileDownload(JSON.stringify(map), "BanNomenclatureMap_v.02.json");
 };
 
 interface OwnProps {}
@@ -46,24 +37,22 @@ interface DispatchProps {
 type HomeProps = DispatchProps & OwnProps & ReduxProps;
 
 const Home: React.FC<HomeProps> = (prop: HomeProps) => {
-
   useEffect(() => {
     prop.__rx_requestStructures();
   }, []);
 
   var [structn, setstructn] = useState<number>(0);
-  var [protn, setProtn]     = useState<number>(0);
-  var [rnan, setrnan]       = useState<number>(0);
-  var [xray, setxray]       = useState<number>(0);
-  var [em, setem]           = useState<number>(0);
+  var [protn, setProtn] = useState<number>(0);
+  var [rnan, setrnan] = useState<number>(0);
+  var [xray, setxray] = useState<number>(0);
+  var [em, setem] = useState<number>(0);
 
   useEffect(() => {
-
     var structs = prop.__rx_structures;
-    var prot    = 0;
-    var rna     = 0;
-    var struct  = 0;
-        struct  = structs.length;
+    var prot = 0;
+    var rna = 0;
+    var struct = 0;
+    struct = structs.length;
 
     for (var str of structs) {
       prot += str.rps.length;
@@ -100,13 +89,10 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
         <div id="stats-proper">
           <div>
             <img id="teg" src={raylogo} alt="teg" />
-            <figcaption id="title-figcap">
-              [ Figure from Tegunov. Will replace with own movie ]
-            </figcaption>
           </div>
 
           <div>
-            <h4>Resource Summary:</h4>
+            <h4>Resource Summary: </h4>
 
             <li>
               <b>{protn ? protn : <InlineSpinner />}</b> unique{" "}
@@ -159,7 +145,6 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
         </div>
 
         <div className="acknowledgements">
-
           <h4>Acknowlegements</h4>
           <AcknPlug text="">
             <div>
@@ -220,16 +205,15 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
             </div>
             <img id="ubclogo" className="footerimg" src={ubc} alt="ubc" />
           </AcknPlug>
-
         </div>
       </div>
       <div className="mods area">
         <h4>Overview of tools and data we provide.</h4>
-        <ReactMarkdownElement md={md_files.all.home.prots}/>
-        <ReactMarkdownElement md={md_files.all.home.ligs}/>
-        <ReactMarkdownElement md={md_files.all.home.exittunnel}/>
-        <ReactMarkdownElement md={md_files.all.home.rna}/>
-        <ReactMarkdownElement md={md_files.all.home.limitations}/>
+        <ReactMarkdownElement md={md_files.all.home.prots} />
+        <ReactMarkdownElement md={md_files.all.home.ligs} />
+        <ReactMarkdownElement md={md_files.all.home.exittunnel} />
+        <ReactMarkdownElement md={md_files.all.home.rna} />
+        <ReactMarkdownElement md={md_files.all.home.limitations} />
       </div>
     </div>
   );

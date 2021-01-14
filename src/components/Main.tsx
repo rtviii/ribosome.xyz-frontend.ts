@@ -7,6 +7,7 @@ import Navbar from "./NavbarTop/Navbar";
 import Display from "./Workspace/Display/Display";
 import * as redux from './../redux/reducers/Data/StructuresReducer/StructuresReducer'
 import { connect } from "react-redux";
+import Dashboard from './../materialui/Dashboard/Dashboard'
 
 // Some other comment to conflict. mdfields it is.lgtm
 // diverge from mdfields
@@ -28,9 +29,10 @@ const Main: React.FC<MainProps> = (prop:MainProps) => {
 
   return (
     <div className="main">
-      <Navbar />
+      <Navbar/> 
       <Display />
-    </div>
+     </div> 
+      // <Dashboard/>
   );
 };
 

@@ -11,7 +11,7 @@ import Interfaces from './../Analytics/Interfaces'
 import Home from './../../Home'
 import ExitTunnelPage from './../ExitTunnel/ExitTunnelPage'
 import WorkInProgress from './../WorkInProgress'
-
+import  ProteinAlignment from './../ProteinAlign/ProteinAlignment'
 const Display = () => {
   return (
     <div className="display">
@@ -20,6 +20,8 @@ const Display = () => {
       </Route>
 
       <Switch>
+        {/* <Route exact path = "/mat_structures" component                         = {StructurePage} /> */}
+        <Route exact path = "/rpalign" component                         = {ProteinAlignment} />
         <Route exact path = "/home" component                         = {Home} />
 
         <Route exact path = "/structs" component                      = {WorkspaceCatalogue} />

@@ -25,6 +25,7 @@ const Navbar = () => {
       {itemtext: "Exit Tunnel", linkto:'/tunnel' },
       {itemtext: "Classification", linkto:'/classify' },
       {itemtext: "RP Nomenclature", linkto:'/rpnomenclature'},
+      {itemtext: "RP Alignment", linkto:'/rpalign'},
       // {itemtext: "Conservation Metrics", linkto:'/'},
       // {itemtext: "Conformations", linkto:'/conformations'},
     ]
