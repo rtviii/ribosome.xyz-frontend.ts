@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";import "./StructuresCatalogue.css";
+import Slider from '@material-ui/core/Slider';
 import { connect  } from "react-redux";
+import clsx from 'clsx';
+import MenuItem from '@material-ui/core/MenuItem';
+import Checkbox from '@material-ui/core/Checkbox';
+import Chip from '@material-ui/core/Chip';
 import { ThunkDispatch } from "redux-thunk";
 import { AppState } from "../../../redux/store";
 // import StructHero from "../StructureHero/StructHero";
@@ -8,6 +13,14 @@ import { AppActions } from "../../../redux/AppActions";
 import LoadingSpinner  from '../../Other/LoadingSpinner'
 import * as redux from '../../../redux/reducers/Data/StructuresReducer/StructuresReducer'
 import { Accordion, Card } from "react-bootstrap";
+import FilledInput from '@material-ui/core/FilledInput';
+import SpeciesFilter from './../../../materialui/SpeciesFilter'
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import SelectProteins from './../../../materialui/SelectProteins'
 import { Button } from "react-bootstrap";
 import {md_files, ReactMarkdownElement } from './../../Other/ReactMarkdownElement'
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
@@ -15,82 +28,23 @@ import {large_subunit_map} from './../../../static/large-subunit-map'
 import {small_subunit_map} from './../../../static/small-subunit-map'
 import Select from 'react-select'
 import StructHero from './../../../materialui/StructHero'
+import Drawer from '@material-ui/core/Drawer';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
-
-
-export function NestedGrid() {
-  // const classes = useStyles();
-
-  // function FormRow() {
-  //   return (
-  //     <React.Fragment>
-  //       {[
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //         "",
-  //       ].map((_: any) => (
-  //         <Grid item xs={2}>
-  //           <StructHero />
-  //         </Grid>
-  //       ))}
-  //     </React.Fragment>
-  //   );
-  // }
-
-  // return (
-  //   <div className={classes.root}>
-  //       <Grid container item xs={12} spacing={2}>
-  //         <FormRow />
-  //       </Grid>
-  //   </div>
-  // );
-}
-
-
-
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(1),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
-  }),
-);
-
-
+import { ListSubheader, useTheme } from "@material-ui/core";
 
 interface OwnProps {}
 interface ReduxProps {
@@ -118,7 +72,6 @@ export const transformToShortTax = (taxname:string) =>{
   else return taxname
   }
 
-// Want to find structure by presence of multiple proteins
 
 
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCatalogueProps) => {
@@ -240,12 +193,23 @@ const truncate = (str:string) =>{
     requestByProtein()
   }, [selectedProteins])
 
-  const classes = useStyles();
   return !prop.loading ? (
 
       <div className="workspace-catalogue-grid">
         <div className="wspace-catalogue-filters-tools">
-          <div className="wspace-search">
+
+
+
+                    {Object.entries(organismsAvailable).map((tpl: any) => {console.log(tpl)})}
+
+
+<StructureFilters 
+
+
+/>
+
+
+          {/* <div className="wspace-search">
             <input
               value={pdbidFilter}
               onChange={e => {
@@ -363,20 +327,23 @@ const truncate = (str:string) =>{
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
-          </Accordion>
+          </Accordion> */}
+
+
         </div>
 
-    <div className={classes.root}>
         <Grid container item xs={12} spacing={3}>
- {filterByPdbId(filterByProteinPresence( structures, structsWithProteins ).filter(filterByOrganism), pdbidFilter).map(
-            (x, i) => (
-          <Grid item>
-            <StructHero {...x} key={i}/>
-          </Grid>
-            )
-          )}
+ 
+{ 
+  filterByPdbId(filterByProteinPresence( structures, structsWithProteins ).filter(filterByOrganism), pdbidFilter).map(
+             (x, i) => (
+           <Grid item>
+             <StructHero {...x} key={i}/>
+           </Grid>
+             )
+           )
+ }
         </Grid>
-    </div>
 
       </div>
   ) : (
@@ -398,3 +365,149 @@ const mapdispatch = (
 });
 
 export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
+
+
+// Date Slider
+
+const ValueSlider=({name,max,min,step}:{name:string, max:number,min:number,step:number})=> {
+const useSliderStyles = makeStyles({
+  root: {
+    width: 300,
+  },
+});
+  const classes = useSliderStyles();
+  const [value, setValue] = React.useState<number[]>([min, max]);
+
+  const handleChange = (event: any, newValue: number | number[]) => {
+    setValue(newValue as number[]);
+  };
+
+  return (
+    <div className={classes.root}>
+      <Typography id="range-slider" gutterBottom>
+        {name}
+      </Typography>
+
+      <Slider
+        min={min}
+        max={max}
+        marks
+        step={step}
+        value={value}
+        onChange={handleChange}
+        valueLabelDisplay="auto"
+        aria-labelledby="range-slider"
+      />
+    </div>
+  );
+}
+
+
+
+// Proteins
+
+
+
+// Search
+function SearchField() {
+  const [name, setName] = React.useState("");
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+    console.log(event.target.value)
+  };
+
+  return (
+    <form  noValidate autoComplete="off">
+      <FormControl>
+        <InputLabel htmlFor="component-simple">Search</InputLabel>
+        <Input id="component-simple" value={name} onChange={handleChange} />
+      </FormControl>
+    </form>
+  );
+}
+
+
+// Filters component
+const StructureFilters = () => {
+  const drawerWidth = 240;
+  const useFiltersStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      root: {
+        display: "flex",
+        zIndex: -1,
+      },
+      appBar: {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: drawerWidth,
+      },
+      drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+      },
+      drawerPaper: {
+        width: drawerWidth,
+      },
+      // necessary for content to be below app bar
+      toolbar: theme.mixins.toolbar,
+      content: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.background.default,
+        padding: theme.spacing(3),
+      },
+    })
+  );
+
+  const filterClasses = useFiltersStyles();
+
+  return (
+    <Drawer
+      style={{ zIndex: -20 }}
+      className={filterClasses.drawer}
+      variant="permanent"
+      classes={{
+        paper: filterClasses.drawerPaper,
+      }}
+      anchor="left"
+    >
+      <div className={filterClasses.toolbar} />
+      <List>
+        <ListSubheader>Search and Filter</ListSubheader>
+        <ListItem key={"year"}>
+          <ValueSlider max={2021} min={2015} name={"Deposition Date"} step={1}/> 
+        </ListItem>
+        <ListItem key={"number-of-proteins"}>
+          <ValueSlider max={150} min={25} name={"Protein Count"} step={1}/> 
+        </ListItem>
+        <ListItem key={"resolution"}>
+          <ValueSlider max={6} min={1} name={"Resolution(A)"} step={0.1}/> 
+        </ListItem>
+      <Divider />
+        <ListItem key={"search"}>
+          <SearchField />
+        </ListItem>
+
+      <Divider />
+        <ListItem key={"select-proteins"}>
+          <Typography id="range-slider">Proteins Present</Typography>
+        </ListItem>
+        <ListItem key={"select-proteins"}>
+          <SelectProteins />
+        </ListItem>
+
+      </List>
+
+      <Divider />
+      <List>
+        <ListSubheader> Species</ListSubheader>
+        <SpeciesFilter species={['Kluyveromyces Lactis','Escherichia Coli','Homo Sapiens','Tetrahymena Thermophila','Deinococcus Radiodurans'
+        
+        ]}/>
+
+      </List>
+    </Drawer>
+  );
+};
+
+
+

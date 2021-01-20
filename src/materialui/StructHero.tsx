@@ -22,7 +22,7 @@ const useStyles = makeStyles({
   },
   heading: {
     fontSize     : 12,
-    paddingBottom: 5,
+    // paddingBottom: 5,
     paddingTop   : 5,
   },
   annotation: {
@@ -73,7 +73,7 @@ const StructHero=(d:NeoStructResp)=> {
           <CardMedia
             component="img"
             alt="Ribosome Banner"
-            height="80"
+            height="120"
             image={hero}
             title="Ribosome Banner"
           />
@@ -113,11 +113,12 @@ const StructHero=(d:NeoStructResp)=> {
 
 
 
-<CardBodyAnnotation keyname={"Organism"} value={truncate( d.struct._organismName[0], 20,20)}/>
-<CardBodyAnnotation keyname={"Method"} value={d.struct.expMethod}/>
-<CardBodyAnnotation keyname={"Proteins"} value={d.rps.length}/>
-<CardBodyAnnotation keyname={"RNA"} value={d.rnas.length}/>
-<CardBodyAnnotation keyname={"Ligands"} value={d.ligands.length} />
+          <CardBodyAnnotation keyname={"Organism"} value={truncate( d.struct._organismName[0], 20,20)}/>
+          <CardBodyAnnotation keyname={"Method"} value={d.struct.expMethod}/>
+          <CardBodyAnnotation keyname={"Proteins"} value={d.rps.length}/>
+          <CardBodyAnnotation keyname={"RNA"} value={d.rnas.length}/>
+          <CardBodyAnnotation keyname={"Ligands"} value={d.ligands.length} />
+          <CardBodyAnnotation keyname={"Author"} value={`${d.struct.citation_rcsb_authors[0]} et al.`} />
           </Grid>
 
         </CardContent>

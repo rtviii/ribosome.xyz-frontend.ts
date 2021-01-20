@@ -12,8 +12,13 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { ListSubheader } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import gear from './../../static/gear.png'
+import enzymes from './../../static/enzymes-icon.png'
 
 const useStyles = makeStyles({
+  root:{
+    zIndex:200
+  },
   list: {
     width: 300,
   },
@@ -34,10 +39,14 @@ const MenuItem = (d:MenuItemData
 )=>{
 
   return (
-
-
           <ListItem button key={d.key} >
-            <ListItemIcon>{<MailIcon />}</ListItemIcon>
+            <ListItemIcon>
+              {
+                <img src={enzymes} style={{height:"20px",width:"20px"}}/>
+              }
+
+
+            </ListItemIcon>
             <Link key='proteins-link' to={d.linkto}>
             <ListItemText primary={d.menutext} />
               </Link>
@@ -72,12 +81,13 @@ export default function TemporaryDrawer() {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
+        <MenuItem key='new' menutext="Home" linkto='home'/>
       <List>
         <ListSubheader>Available Data</ListSubheader>
+        <MenuItem key='new' menutext="Structures" linkto='structs'/>
         <MenuItem key='new' menutext="Proteins" linkto='rps'/>
         <MenuItem key='new' menutext="rRNA" linkto='rna'/>
         <MenuItem key='new' menutext="Ligands" linkto='ligands'/>
-        <MenuItem key='new' menutext="Structures" linkto='structs'/>
       </List>
       <Divider />
       <List>
@@ -91,16 +101,21 @@ export default function TemporaryDrawer() {
   );
 
   return (
-    <div>
-      {
      
-        <React.Fragment key={'left'}>
-          <Button onClick={toggleDrawer('left', true)}>Tools</Button>
+    <div
+style={{position:"absolute", left:"20px", top:"20px", zIndex:4000}}
+    >
+
+        <React.Fragment key={'left'} >
+          <Button onClick={toggleDrawer('left', true)} className={classes.root} >
+            <img src={gear} style={{width:"40px", height:"40px" }} className={classes.root}/>
+
+
+          </Button>
           <Drawer anchor={'left'} open={state['left']} onClose={toggleDrawer('left', false)}>
             {list('left')}
           </Drawer>
         </React.Fragment>
-      }
     </div>
   );
 }
