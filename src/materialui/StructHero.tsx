@@ -8,44 +8,136 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import hero from './../static/sample-hero.png'
+import { Grid, TextareaAutosize } from '@material-ui/core';
+import { NeoStructResp } from '../redux/reducers/Data/StructuresReducer/StructuresReducer';
+import { truncate } from '../components/Main';
 
 const useStyles = makeStyles({
-  root: {
-    maxWidth: 345,
+  card: {
+    width:300
   },
+  title:{
+    fontSize:14,
+    height:70
+  },
+  heading: {
+    fontSize     : 12,
+    paddingBottom: 5,
+    paddingTop   : 5,
+  },
+  annotation: {
+    fontSize: 12,
+    // color: "black",
+  },
+
 });
 
-export default function StructHero() {
+
+
+
+
+
+const CardBodyAnnotation =({ keyname,value }:{keyname:string, value:string|number})=>{
+  const classes=useStyles()
+  return   <Grid
+            container
+            direction="row"
+            justify="space-between"
+            alignItems="center"
+            component="div"
+                        >
+            <Typography variant="caption" color="textSecondary" component="p" 
+className={classes.annotation}
+
+            >
+              {keyname}:
+            </Typography>
+            <Typography variant="caption" color="textPrimary" component="p" noWrap  
+            className={classes.annotation}
+>
+              {value}
+            </Typography>
+</Grid>
+}
+
+
+
+const StructHero=(d:NeoStructResp)=> {
   const classes = useStyles();
 
+  // 
   return (
-    <Card className={classes.root}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          alt="Contemplative Reptile"
-          height="140"
-          image={hero}
-          title="Contemplative Reptile"
-        />
+    <Card className={classes.card}>
+      <CardActionArea >
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            Lizard
+          <CardMedia
+            component="img"
+            alt="Ribosome Banner"
+            height="80"
+            image={hero}
+            title="Ribosome Banner"
+          />
+
+
+
+          <Grid
+            container
+            direction="row"
+            justify="space-between"
+            alignItems="center"
+            component="div"
+            className={classes.heading}
+          >
+            <Typography variant="body2" color="textSecondary" component="p" >
+              {d.struct.rcsb_id}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p"  >
+              {d.struct.resolution} Å
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p" >
+              {d.struct.citation_year}
+            </Typography>
+          </Grid>
+          <Typography variant="body2" component="p" color="primary" className={classes.title}>
+            {d.struct.citation_title}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-            across all continents except Antarctica
-          </Typography>
+
+
+          <Grid
+            container
+            direction="column"
+            justify="flex-start"
+            alignItems="flex-start"
+            component="div"
+          >
+
+
+
+<CardBodyAnnotation keyname={"Organism"} value={truncate( d.struct._organismName[0], 20,20)}/>
+<CardBodyAnnotation keyname={"Method"} value={d.struct.expMethod}/>
+<CardBodyAnnotation keyname={"Proteins"} value={d.rps.length}/>
+<CardBodyAnnotation keyname={"RNA"} value={d.rnas.length}/>
+<CardBodyAnnotation keyname={"Ligands"} value={d.ligands.length} />
+          </Grid>
+
         </CardContent>
       </CardActionArea>
+
+{/* ----------------------------- */}
       <CardActions>
         <Button size="small" color="primary">
-          Share
+          PDB
         </Button>
         <Button size="small" color="primary">
-          Learn More
+          DOI
+        </Button>
+        <Button size="small" color="primary">
+          EMDB
         </Button>
       </CardActions>
     </Card>
   );
 }
+
+
+export default StructHero;

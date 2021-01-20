@@ -240,46 +240,6 @@ const truncate = (str:string) =>{
     requestByProtein()
   }, [selectedProteins])
 
-  const FormRow= ()=> {
-    return (
-      <React.Fragment>
-        {[
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-        ].map((_: any) => (
-          <Grid item xs={2}>
-            <StructHero />
-          </Grid>
-        ))}
-      </React.Fragment>
-    );
-  }
   const classes = useStyles();
   return !prop.loading ? (
 
@@ -407,19 +367,16 @@ const truncate = (str:string) =>{
         </div>
 
     <div className={classes.root}>
-        <Grid container item xs={12} spacing={2}>
-          <FormRow />
+        <Grid container item xs={12} spacing={3}>
+ {filterByPdbId(filterByProteinPresence( structures, structsWithProteins ).filter(filterByOrganism), pdbidFilter).map(
+            (x, i) => (
+          <Grid item>
+            <StructHero {...x} key={i}/>
+          </Grid>
+            )
+          )}
         </Grid>
     </div>
-        {/* <div className="workspace-catalogue-structs"> */}
-          {/* <ReactMarkdownElement md={md_files.all.structs.structures} /> */}
-
-
-          {/* {filterByPdbId(filterByProteinPresence( structures, structsWithProteins ).filter(filterByOrganism), pdbidFilter).map(
-            (x, i) => (
-              <StructHero {...x} key={i} />
-            )
-          )} */}
 
       </div>
   ) : (

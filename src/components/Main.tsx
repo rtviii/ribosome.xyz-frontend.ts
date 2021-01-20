@@ -30,7 +30,6 @@ const Main: React.FC<MainProps> = (prop:MainProps) => {
   return (
     <div className="main">
       <Dashboard/>
-      {/* <Navbar/>  */}
       <Display />
      </div> 
   );
@@ -51,3 +50,10 @@ const mapdispatch = (
 
 export default connect(mapstate, mapdispatch)(Main);
 
+
+export const truncate = (str:string, charlim:number, truncateto:number) =>{
+  if (typeof str === 'undefined'){
+    return str
+  }
+    return str.length > 20 ? str.substring(0, 15) + "..." : str;
+}
