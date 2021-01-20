@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import bioplogo from "./../static/biopython_logo.svg";
 import pdb from "./../static/pdb.png";
 import pfam from "./../static/pfam.gif";
-import raylogo from "./../static/logohex.png";
+import raylogo from "./../static/ray-transp-logo.png";
 import ubc from "./../static/ubc-logo.png";
 import InlineSpinner from "./Other/InlineSpinner";
 
@@ -42,10 +42,10 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
   }, []);
 
   var [structn, setstructn] = useState<number>(0);
-  var [protn, setProtn] = useState<number>(0);
-  var [rnan, setrnan] = useState<number>(0);
-  var [xray, setxray] = useState<number>(0);
-  var [em, setem] = useState<number>(0);
+  var [protn, setProtn]     = useState<number>(0);
+  var [rnan, setrnan]       = useState<number>(0);
+  var [xray, setxray]       = useState<number>(0);
+  var [em, setem]           = useState<number>(0);
 
   useEffect(() => {
     var structs = prop.__rx_structures;

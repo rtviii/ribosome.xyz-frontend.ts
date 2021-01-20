@@ -29,10 +29,10 @@ const Main: React.FC<MainProps> = (prop:MainProps) => {
 
   return (
     <div className="main">
-      <Navbar/> 
+      <Dashboard/>
+      {/* <Navbar/>  */}
       <Display />
      </div> 
-      // <Dashboard/>
   );
 };
 

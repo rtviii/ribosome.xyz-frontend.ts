@@ -16,6 +16,7 @@ import MailIcon from '@material-ui/icons/Mail';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
+
   createStyles({
     root: {
       display: 'flex',
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerPaper: {
       width: drawerWidth,
     },
-    // necessary for content to be below app bar
+
     toolbar: theme.mixins.toolbar,
     content: {
       flexGrow: 1,
@@ -39,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(3),
     },
   }),
+
 );
 
 export default function PermanentDrawerLeft() {

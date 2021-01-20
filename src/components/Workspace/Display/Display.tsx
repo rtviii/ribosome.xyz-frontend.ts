@@ -12,6 +12,7 @@ import Home from './../../Home'
 import ExitTunnelPage from './../ExitTunnel/ExitTunnelPage'
 import WorkInProgress from './../WorkInProgress'
 import  ProteinAlignment from './../ProteinAlign/ProteinAlignment'
+import StructuresPage from './../../../materialui/StructuresPage/StructuresPage'
 const Display = () => {
   return (
     <div className="display">
@@ -20,8 +21,10 @@ const Display = () => {
       </Route>
 
       <Switch>
-        {/* <Route exact path = "/mat_structures" component                         = {StructurePage} /> */}
-        <Route exact path = "/rpalign" component                         = {ProteinAlignment} />
+        <Route exact path = "/mat_structs" component                         = {StructuresPage} />
+
+{/* ---------------------------------------------------------------------------------------------------------------- */}
+        <Route exact path = "/rpalign" component                      = {ProteinAlignment} />
         <Route exact path = "/home" component                         = {Home} />
 
         <Route exact path = "/structs" component                      = {WorkspaceCatalogue} />

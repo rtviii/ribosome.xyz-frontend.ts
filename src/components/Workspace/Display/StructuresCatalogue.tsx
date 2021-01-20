@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";import "./StructuresCatalogue
 import { connect  } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { AppState } from "../../../redux/store";
-import StructHero from "../StructureHero/StructHero";
+// import StructHero from "../StructureHero/StructHero";
 import { PageContext } from "../../Main";
 import { AppActions } from "../../../redux/AppActions";
 import LoadingSpinner  from '../../Other/LoadingSpinner'
@@ -14,7 +14,83 @@ import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import {large_subunit_map} from './../../../static/large-subunit-map'
 import {small_subunit_map} from './../../../static/small-subunit-map'
 import Select from 'react-select'
-import { getOptionValue } from "react-select/src/builtins";
+import StructHero from './../../../materialui/StructHero'
+
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+
+import Grid from '@material-ui/core/Grid';
+
+
+export function NestedGrid() {
+  // const classes = useStyles();
+
+  // function FormRow() {
+  //   return (
+  //     <React.Fragment>
+  //       {[
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //         "",
+  //       ].map((_: any) => (
+  //         <Grid item xs={2}>
+  //           <StructHero />
+  //         </Grid>
+  //       ))}
+  //     </React.Fragment>
+  //   );
+  // }
+
+  // return (
+  //   <div className={classes.root}>
+  //       <Grid container item xs={12} spacing={2}>
+  //         <FormRow />
+  //       </Grid>
+  //   </div>
+  // );
+}
+
+
+
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(1),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+    },
+  }),
+);
+
+
 
 interface OwnProps {}
 interface ReduxProps {
@@ -28,7 +104,7 @@ interface DispatchProps {
 }
 type WorkspaceCatalogueProps = DispatchProps & OwnProps & ReduxProps;
 
-export   const transformToShortTax = (taxname:string) =>{
+export const transformToShortTax = (taxname:string) =>{
   if (typeof taxname === 'string'){
     var words = taxname.split(' ') 
     if ( words.length>1 ){
@@ -45,9 +121,7 @@ export   const transformToShortTax = (taxname:string) =>{
 // Want to find structure by presence of multiple proteins
 
 
-const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
-  prop: WorkspaceCatalogueProps
-) => {
+const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCatalogueProps) => {
 
   useEffect(() => {
     prop.__rx_requestStructures()
@@ -84,8 +158,6 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
     });
     setorganismsAvailable(orgsdict)
   }, [structures]);
-
-
 
 
   const filterByProteinPresence=(structs: redux.NeoStructResp[], filter: string[])=>{
@@ -138,7 +210,7 @@ const truncate = (str:string) =>{
   };
 
 
-  const [pdbidFilter, setPbidFilter] = useState<string>("");
+  const [pdbidFilter, setPbidFilter]                  = useState<string>("");
   const [structsWithProteins, setstructsWithProteins] = useState<string[]>([])
 
   const requestByProtein = ()=>{
@@ -168,8 +240,49 @@ const truncate = (str:string) =>{
     requestByProtein()
   }, [selectedProteins])
 
+  const FormRow= ()=> {
+    return (
+      <React.Fragment>
+        {[
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+        ].map((_: any) => (
+          <Grid item xs={2}>
+            <StructHero />
+          </Grid>
+        ))}
+      </React.Fragment>
+    );
+  }
+  const classes = useStyles();
   return !prop.loading ? (
-    <PageContext.Provider value="WorkspaceCatalogue">
+
       <div className="workspace-catalogue-grid">
         <div className="wspace-catalogue-filters-tools">
           <div className="wspace-search">
@@ -195,8 +308,6 @@ const truncate = (str:string) =>{
           <Button onClick={()=>{requestByProtein()}}>
           Find
           </Button>
-
-
 
 
           </div>
@@ -295,16 +406,22 @@ const truncate = (str:string) =>{
           </Accordion>
         </div>
 
-        <div className="workspace-catalogue-structs">
-          <ReactMarkdownElement md={md_files.all.structs.structures} />
-          {filterByPdbId(filterByProteinPresence( structures, structsWithProteins ).filter(filterByOrganism), pdbidFilter).map(
+    <div className={classes.root}>
+        <Grid container item xs={12} spacing={2}>
+          <FormRow />
+        </Grid>
+    </div>
+        {/* <div className="workspace-catalogue-structs"> */}
+          {/* <ReactMarkdownElement md={md_files.all.structs.structures} /> */}
+
+
+          {/* {filterByPdbId(filterByProteinPresence( structures, structsWithProteins ).filter(filterByOrganism), pdbidFilter).map(
             (x, i) => (
               <StructHero {...x} key={i} />
             )
-          )}
-        </div>
+          )} */}
+
       </div>
-    </PageContext.Provider>
   ) : (
     <LoadingSpinner annotation="Fetching data..." />
   );

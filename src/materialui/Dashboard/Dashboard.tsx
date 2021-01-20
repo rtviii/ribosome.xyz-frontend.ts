@@ -11,6 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { ListSubheader } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles({
   list: {
@@ -23,10 +24,31 @@ const useStyles = makeStyles({
 
 type Anchor = 'left' ;
 
+type MenuItemData = {
+  key:string
+  iconsrc?:string
+  linkto:string
+  menutext: string
+}
+const MenuItem = (d:MenuItemData
+)=>{
+
+  return (
+
+
+          <ListItem button key={d.key} >
+            <ListItemIcon>{<MailIcon />}</ListItemIcon>
+            <Link key='proteins-link' to={d.linkto}>
+            <ListItemText primary={d.menutext} />
+              </Link>
+          </ListItem>
+  )
+}
+
 export default function TemporaryDrawer() {
   const classes = useStyles();
   const [state, setState] = React.useState({
-    left   : true,
+    left   : false,
   });
 
   const toggleDrawer = (anchor: Anchor, open: boolean) => (
@@ -52,42 +74,18 @@ export default function TemporaryDrawer() {
     >
       <List>
         <ListSubheader>Available Data</ListSubheader>
-          <ListItem button key={"Proteins"}>
-            <ListItemIcon>{<MailIcon />}</ListItemIcon>
-            <ListItemText primary={"Proteins"} />
-          </ListItem>
-          <ListItem button key={"rRNA"}>
-            <ListItemIcon>{<MailIcon />}</ListItemIcon>
-            <ListItemText primary={"rRNA"} />
-          </ListItem>
-          <ListItem button key={"Structures"}>
-            <ListItemIcon>{<MailIcon />}</ListItemIcon>
-            <ListItemText primary={"Structures"} />
-          </ListItem>
-          <ListItem button key={"Ligands"}>
-            <ListItemIcon>{<MailIcon />}</ListItemIcon>
-            <ListItemText primary={"Ligands"} />
-          </ListItem>
+        <MenuItem key='new' menutext="Proteins" linkto='rps'/>
+        <MenuItem key='new' menutext="rRNA" linkto='rna'/>
+        <MenuItem key='new' menutext="Ligands" linkto='ligands'/>
+        <MenuItem key='new' menutext="Structures" linkto='structs'/>
       </List>
       <Divider />
       <List>
         <ListSubheader>Tools</ListSubheader>
-          <ListItem button key={"Binding Interfaces"}>
-            <ListItemIcon>{ <MailIcon />}</ListItemIcon>
-            <ListItemText primary={"Binding Interfaces"} />
-          </ListItem>
-          <ListItem button key={"Protein Classification"}>
-            <ListItemIcon>{ <MailIcon />}</ListItemIcon>
-            <ListItemText primary={"Protein Classification"} />
-          </ListItem>
-          <ListItem button key={"Protein Alignment"}>
-            <ListItemIcon>{ <MailIcon />}</ListItemIcon>
-            <ListItemText primary={"Protein Alignment"} />
-          </ListItem>
-          <ListItem button key={"Exit Tunnel"}>
-            <ListItemIcon>{ <MailIcon />}</ListItemIcon>
-            <ListItemText primary={"Exit Tunnel"} />
-          </ListItem>
+        <MenuItem key='new1' menutext="Binding Interfaces" linkto='interfaces'/>
+        <MenuItem key='new1' menutext="Protein Classification" linkto='classify'/>
+        <MenuItem key='new1' menutext="Protein Alignment" linkto='rpalign'/>
+        <MenuItem key='new1' menutext="Exit Tunnel" linkto='tunnel'/>
       </List>
     </div>
   );
@@ -97,7 +95,7 @@ export default function TemporaryDrawer() {
       {
      
         <React.Fragment key={'left'}>
-          <Button onClick={toggleDrawer('left', true)}>{'left'}</Button>
+          <Button onClick={toggleDrawer('left', true)}>Tools</Button>
           <Drawer anchor={'left'} open={state['left']} onClose={toggleDrawer('left', false)}>
             {list('left')}
           </Drawer>
