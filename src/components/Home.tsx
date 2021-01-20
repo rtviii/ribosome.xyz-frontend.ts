@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import bioplogo from "./../static/biopython_logo.svg";
 import pdb from "./../static/pdb.png";
 import pfam from "./../static/pfam.gif";
-import raylogo from './../static/raylogo.png'
+import raylogo from './../static/ray-transp-logo.png'
 import ubc from "./../static/ubc-logo.png";
 import InlineSpinner from "./Other/InlineSpinner";
 
@@ -100,9 +100,6 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
         <div id="stats-proper">
           <div>
             <img id="teg" src={raylogo} alt="teg" />
-            <figcaption id="title-figcap">
-              [ Figure from Tegunov. Will replace with own movie ]
-            </figcaption>
           </div>
 
           <div>
@@ -126,7 +123,6 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
             <li id="indent">
               <b>-{xray ? xray : <InlineSpinner />}</b> X-Ray Diffraction
             </li>
-            <li>{"BUFFERING"} ligands and small molecules</li>
           </div>
         </div>
 
@@ -224,7 +220,6 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
         </div>
       </div>
       <div className="mods area">
-        <h4>Overview of tools and data we provide.</h4>
         <ReactMarkdownElement md={md_files.all.home.prots}/>
         <ReactMarkdownElement md={md_files.all.home.ligs}/>
         <ReactMarkdownElement md={md_files.all.home.exittunnel}/>
