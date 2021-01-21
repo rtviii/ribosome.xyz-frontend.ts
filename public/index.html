@@ -20,6 +20,20 @@
 
         <link rel="stylesheet" type="text/css" href="https://www.ebi.ac.uk/pdbe/pdb-component-library/css/pdbe-molstar-1.1.0-dev.4.css">
         <script type="text/javascript" src="https://www.ebi.ac.uk/pdbe/pdb-component-library/js/pdbe-molstar-component-1.1.0-dev.4.js"></script>
+
+       <script type="text/javascript" src="/public/ngl.js"></script> 
+       <script type="text/javascript">
+            function renderNGL(){
+      var stage = new NGL.Stage("viewport");
+      stage.loadFile("rcsb://1crn", {defaultRepresentation: true});
+      }
+      
+      </script>
+
+
+        <script        type="text/javascript">
+            function test(){              console.log("LOADED")}
+      </script>
         <style>
             #myViewer{
               float:left;

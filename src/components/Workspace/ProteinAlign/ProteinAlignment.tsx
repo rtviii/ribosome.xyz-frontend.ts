@@ -10,6 +10,20 @@ import { RibosomalProtein, RibosomeStructure } from '../../../redux/RibosomeType
 import Button from '@material-ui/core/Button';
 import fileDownload from 'js-file-download';
 
+const useScript = ( url:string ) => {
+  useEffect(() => {
+    const script = document.createElement('script');
+
+    script.src = url;
+    script.async = true;
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    }
+  }, [url]);
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -82,7 +96,10 @@ export default function ProteinAlignment() {
 
 
 
-
+  // useEffect(() => {
+  //   // (window as any).test()
+  //   (window as any).renderNGL()
+  // }, [])
 
 
   return (
@@ -153,7 +170,6 @@ export default function ProteinAlignment() {
     }
     >Align</Button>
     </div>
-
 
 
 
