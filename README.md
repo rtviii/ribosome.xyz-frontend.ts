@@ -1,6 +1,6 @@
 
 # Homepage
-[ /home ](www.ribosome.xyz/home)
+[ /home ](https://ribosome.xyz/home)
 
 
 ![homepage](src/static/readme/ribosome-home.png)
@@ -66,19 +66,19 @@ Listed here are models of the ribosome deposited to the Protein Data Bank (inclu
 
 # Ribosomal Proteins
 
-[/rps](www.ribosome.xyz/rps)
+[/rps](https://ribosome.xyz/rps)
 
-Gathered here are ribosomal proteins that appear in all structures organized into the classes as defined in Ban. All individual chains are available for download, structural- and sequences [ alignment ](www.ribosome.xyz/rpalign).  
+Gathered here are ribosomal proteins that appear in all structures organized into the classes as defined in Ban. All individual chains are available for download, structural- and sequences [ alignment ](https://ribosome.xyz/rpalign).  
 
 
 # Ribosomal RNA
-[/rna](www.ribosome.xyz/rps)
+[/rna](https://ribosome.xyz/rps)
 
 Individual rRNA, mRNA and tRNA strands along with some RNA-like strands are listed here and made available for download and search.
 
 
 # Ligands, Antibiotics, Ions and Small molecules
-[/ligands](www.ribosome.xyz/ligands)
+[/ligands](https://ribosome.xyz/ligands)
 
 Ligands, antibiotics and small molecules that figure in the listed structures are gathered here. You can search acroos structures in which a given ligand is present or, conversely, see which ligands figure in given structure. 
 
@@ -92,7 +92,7 @@ We are also ignoring ions(most have not been parsed and listed) for the most par
 
 # RP Classification
 
-[/classify](www.ribosome.xyz/classify)
+[/classify](https://www.ribosome.xyz/classify)
 
 The absence of standardized naming scheme for ribosomal proteins has been an obstacle to investigation of compositional heterogeneity. We implement the recently proposed nomenclature in code and with reference to sequence-derived protein families (PFAM, Interpro).This makes possible investigation of protein-classes across structures and species.
 
@@ -109,7 +109,7 @@ The absence of standardized naming scheme for ribosomal proteins has been an obs
 
 # Binding Interfaces
 
-[/interfaces](www.ribosome.xyz/classify)
+[/interfaces](https://www.ribosome.xyz/classify)
 
 Ribosomal models are frequently resolved containing extraneous molecules such as antibiotics, inhibitors, transport- and messenger- RNA strands, and ligands. Most of these are of potential pharmacological interest. We provide  "binding interfaces" that detail the nature of the binding site across structures for each particular ligand. For a number of ribosomal structures ligands are available(ions are filtered out): you can inspect and download a "binding interface" for each ligand.
 
@@ -123,7 +123,8 @@ For each residue its ID is provided along with its parent strand as per the sour
 
 
 # Exit Tunnel
-[/tunnel](www.ribosome.xyz/tunnel)
+
+[/tunnel](https://www.ribosome.xyz/tunnel)
 
 The constitution of the exit tunnel is of interest for evolutionary, physio-chemical and pharmacological reasons. We provide a mechanism to export some preliminary data about the walls of the exit tunnel as well cylinder-centerline of the tunnel as caputured by the MOLE cavity-detection algorithm.
 
@@ -145,3 +146,10 @@ We plan to augment these data with conservation scores and physio-chemical profi
 Quantitative methods have been developed for the analysis of the ribosome exit tunnel which is a region intimately involved in the construction of the nascent peptide chain. We plan to extend this to the large subset (200+) of structures in the database that have canonical composition, i.e. where the subunits are well-assembled.
 
 
+
+# RP Alignment
+
+[ /rpalign ](https://ribosome.xyz/rpalign)
+
+
+Not sure what to say here. Will stick a molecular viewer at some point to visualize superimposed chains on the fly.
