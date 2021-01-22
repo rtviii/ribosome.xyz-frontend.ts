@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../../redux/AppActions";
 import { AppState } from "../../redux/store";
-import { PageContext, PageContexts } from "../Main";
 
 interface OwnProps {}
 
@@ -19,11 +18,7 @@ interface DispatchProps {
 type SearchBoxProps = OwnProps & ReduxProps & DispatchProps;
 const SearchBox: React.FC<SearchBoxProps> = (props: SearchBoxProps) => {
   const [value, setvalue]     = useState("");
-  const context: PageContexts = useContext(PageContext);
 
-  useEffect(() => {
-    console.log( context);
-  }, [context]);
   return (
     <div
       style={{

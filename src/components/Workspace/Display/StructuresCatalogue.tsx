@@ -1,61 +1,44 @@
 import React, { useEffect, useState } from "react";import "./StructuresCatalogue.css";
 import Slider from '@material-ui/core/Slider';
 import { connect  } from "react-redux";
-import clsx from 'clsx';
-import MenuItem from '@material-ui/core/MenuItem';
-import Checkbox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';
 import { ThunkDispatch } from "redux-thunk";
 import { AppState } from "../../../redux/store";
 // import StructHero from "../StructureHero/StructHero";
-import { PageContext } from "../../Main";
 import { AppActions } from "../../../redux/AppActions";
 import LoadingSpinner  from '../../Other/LoadingSpinner'
 import * as redux from '../../../redux/reducers/Data/StructuresReducer/StructuresReducer'
-import { Accordion, Card } from "react-bootstrap";
-import FilledInput from '@material-ui/core/FilledInput';
 import SpeciesFilter from './../../../materialui/SpeciesFilter'
 import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
 import SelectProteins from './../../../materialui/SelectProteins'
 import { Button } from "react-bootstrap";
 import {md_files, ReactMarkdownElement } from './../../Other/ReactMarkdownElement'
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import {large_subunit_map} from './../../../static/large-subunit-map'
 import {small_subunit_map} from './../../../static/small-subunit-map'
-import Select from 'react-select'
 import StructHero from './../../../materialui/StructHero'
 import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
-import { ListSubheader, useTheme } from "@material-ui/core";
+import { ListSubheader } from "@material-ui/core";
 
 interface OwnProps {}
 interface ReduxProps {
   __rx_structures: redux.NeoStructResp[]
   globalFilter   : string;
   loading        : boolean;
-
 }
 interface DispatchProps {
   __rx_requestStructures: () => void,
 }
+
 type WorkspaceCatalogueProps = DispatchProps & OwnProps & ReduxProps;
 
 export const transformToShortTax = (taxname:string) =>{
@@ -82,6 +65,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCa
 
   // This has to be all moved to the reducer
   const [structures, setstructures] = useState<redux.NeoStructResp[]>([])
+
   useEffect(()=>{
     setstructures(prop.__rx_structures)
   },[prop.__rx_structures])
@@ -141,16 +125,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCa
     }
     return false;
   };
-  useEffect(() => {
-    console.log(organismFilter)
-  }, [organismFilter])
 
-const truncate = (str:string) =>{
-  if (typeof str === 'undefined'){
-    return str
-  }
-    return str.length > 20 ? str.substring(0, 15) + "..." : str;
-}
 
   const filterByPdbId = (structs: redux.NeoStructResp[], filter: string) => {
     return structs.filter(x => {
@@ -162,19 +137,17 @@ const truncate = (str:string) =>{
     });
   };
 
-
   const [pdbidFilter, setPbidFilter]                  = useState<string>("");
   const [structsWithProteins, setstructsWithProteins] = useState<string[]>([])
 
-  const requestByProtein = ()=>{
-  getNeo4jData("neo4j", {
-    endpoint: "match_structs",
-    params  : { proteins: selectedProteins.join(",") },
-  }).then(r => {
-    setstructsWithProteins(r.data)
-    console.log(r.data);
-  });
-}
+//   const requestByProtein = ()=>{
+//   getNeo4jData("neo4j", {
+//     endpoint: "match_structs",
+//     params  : { proteins: selectedProteins.join(",") },
+//   }).then(r => {
+//     setstructsWithProteins(r.data)
+//   });
+// }
 
   var protopts: {
     value: string;
@@ -186,30 +159,19 @@ const truncate = (str:string) =>{
     return { value: name, label: name };
   });
 
-  const [selectedProteins, setselectedProteins] = useState<string[]>([]);
-  const handleChange                            = (e: any) => {setselectedProteins(Array.isArray(e) ? e.map(x => x.value) : []);};
+  // const [selectedProteins, setselectedProteins] = useState<string[]>([]);
+  // const handleChange                            = (e: any) => {setselectedProteins(Array.isArray(e) ? e.map(x => x.value) : []);};
  
-  useEffect(() => {
-    requestByProtein()
-  }, [selectedProteins])
+  // useEffect(() => {
+  //   requestByProtein()
+  // }, [selectedProteins])
 
   return !prop.loading ? (
+    <div className="workspace-catalogue-grid">
+      <div className="wspace-catalogue-filters-tools">
+        <StructureFilters />
 
-      <div className="workspace-catalogue-grid">
-        <div className="wspace-catalogue-filters-tools">
-
-
-
-                    {Object.entries(organismsAvailable).map((tpl: any) => {console.log(tpl)})}
-
-
-<StructureFilters 
-
-
-/>
-
-
-          {/* <div className="wspace-search">
+        {/* <div className="wspace-search">
             <input
               value={pdbidFilter}
               onChange={e => {
@@ -328,24 +290,27 @@ const truncate = (str:string) =>{
               </Accordion.Collapse>
             </Card>
           </Accordion> */}
-
-
-        </div>
-
-        <Grid container item xs={12} spacing={3}>
- 
-{ 
-  filterByPdbId(filterByProteinPresence( structures, structsWithProteins ).filter(filterByOrganism), pdbidFilter).map(
-             (x, i) => (
-           <Grid item>
-             <StructHero {...x} key={i}/>
-           </Grid>
-             )
-           )
- }
-        </Grid>
-
       </div>
+
+      <Grid container item xs={12} spacing={3}>
+        {
+        
+        // filterByPdbId(
+        //   filterByProteinPresence(structures, structsWithProteins).filter(
+        //     filterByOrganism
+        //   ),
+        //   pdbidFilter
+        // )
+        
+        structures.map((x, i) => (
+
+          <Grid item>
+            <StructHero {...x} key={i} />
+          </Grid>
+
+        ))}
+      </Grid>
+    </div>
   ) : (
     <LoadingSpinner annotation="Fetching data..." />
   );
@@ -357,17 +322,11 @@ const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
   globalFilter   : state.UI.state_Filter.filterValue,
 });
 
-const mapdispatch = (
-  dispatch: ThunkDispatch<any, any, AppActions>,
-  ownprops: OwnProps
-): DispatchProps => ({
-  __rx_requestStructures: ()=> dispatch(redux.requestAllStructuresDjango())
-});
-
+const mapdispatch = (dispatch: ThunkDispatch<any, any, AppActions>,ownprops: OwnProps): DispatchProps => ({
+  __rx_requestStructures: ()=> dispatch(redux.requestAllStructuresDjango())});
 export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
 
 
-// Date Slider
 
 const ValueSlider=({name,max,min,step}:{name:string, max:number,min:number,step:number})=> {
 const useSliderStyles = makeStyles({
@@ -404,17 +363,12 @@ const useSliderStyles = makeStyles({
 
 
 
-// Proteins
-
-
-
 // Search
 function SearchField() {
   const [name, setName] = React.useState("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
-    console.log(event.target.value)
   };
 
   return (
@@ -473,6 +427,10 @@ const StructureFilters = () => {
       <div className={filterClasses.toolbar} />
       <List>
         <ListSubheader>Search and Filter</ListSubheader>
+      <Divider />
+        <ListItem key={"search"}>
+          <SearchField />
+        </ListItem>
         <ListItem key={"year"}>
           <ValueSlider max={2021} min={2015} name={"Deposition Date"} step={1}/> 
         </ListItem>
@@ -481,10 +439,6 @@ const StructureFilters = () => {
         </ListItem>
         <ListItem key={"resolution"}>
           <ValueSlider max={6} min={1} name={"Resolution(A)"} step={0.1}/> 
-        </ListItem>
-      <Divider />
-        <ListItem key={"search"}>
-          <SearchField />
         </ListItem>
 
       <Divider />

@@ -30,9 +30,9 @@ const useStyles = makeStyles({
 type Anchor = 'left' ;
 
 type MenuItemData = {
-  key:string
-  iconsrc?:string
-  linkto:string
+  key     : string
+  iconsrc?: string
+  linkto  : string
   menutext: string
 }
 const MenuItem = (d:MenuItemData
@@ -84,18 +84,18 @@ export default function TemporaryDrawer() {
         <MenuItem key='new' menutext="Home" linkto='home'/>
       <List>
         <ListSubheader>Available Data</ListSubheader>
-        <MenuItem key='new' menutext="Structures" linkto='structs'/>
-        <MenuItem key='new' menutext="Proteins" linkto='rps'/>
-        <MenuItem key='new' menutext="rRNA" linkto='rna'/>
-        <MenuItem key='new' menutext="Ligands" linkto='ligands'/>
+        <MenuItem key='new' menutext="Structures" linkto='/structs'/>
+        <MenuItem key='new' menutext="Proteins" linkto='/rps'/>
+        <MenuItem key='new' menutext="rRNA" linkto='/rnas'/>
+        <MenuItem key='new' menutext="Ligands" linkto='/ligands'/>
       </List>
       <Divider />
       <List>
         <ListSubheader>Tools</ListSubheader>
-        <MenuItem key='new1' menutext="Binding Interfaces" linkto='interfaces'/>
-        <MenuItem key='new1' menutext="Protein Classification" linkto='classify'/>
-        <MenuItem key='new1' menutext="Protein Alignment" linkto='rpalign'/>
-        <MenuItem key='new1' menutext="Exit Tunnel" linkto='tunnel'/>
+        <MenuItem key='new1' menutext="Binding Interfaces" linkto='/interfaces'/>
+        <MenuItem key='new1' menutext="Protein Classification" linkto='/classify'/>
+        <MenuItem key='new1' menutext="Protein Alignment" linkto='/rpalign'/>
+        <MenuItem key='new1' menutext="Exit Tunnel" linkto='/tunnel'/>
       </List>
     </div>
   );

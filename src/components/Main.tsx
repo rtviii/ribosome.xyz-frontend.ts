@@ -12,13 +12,6 @@ import Dashboard from './../materialui/Dashboard/Dashboard'
 // Some other comment to conflict. mdfields it is.lgtm
 // diverge from mdfields
 
-export type PageContexts =
-  | "RibosomalProteinPage"
-  | "ProteinCatalogue"
-  | "StructurePage"
-  | "Main"
-  | "WorkspaceCatalogue";
-export const PageContext = createContext<PageContexts>("Main");
 
 interface OwnProps {}
 interface ReduxProps {}
