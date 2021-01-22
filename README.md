@@ -46,12 +46,11 @@ The species classes of certain structures are somewhat ambiguous due to the fact
 
 1. Classification of structures according to following charateristics is desirable, but is not yet implemneted:
     -  Stages of translation cycle
-    -  Large/Small subunits introspection 
-2. Search according to a desirable set of proteins/ligands
-3. Classification for ribosomal proteins based on:
+    -  Large/Small subunits presence
+2. Classification for ribosomal proteins based on:
     - Buried/solvent-exposed/PTC-interfacing position
     - Neighboring proteins
-4. Nomenclature tool to deduce the class of a protein/proteins based on 3D structure/sequence
+
 
 
 #  DATA SECTION
