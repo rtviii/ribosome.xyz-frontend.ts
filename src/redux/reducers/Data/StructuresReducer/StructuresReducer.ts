@@ -2,27 +2,39 @@ import * as actions from "./ActionTypes";
 import { getNeo4jData } from "./../../../Actions/getNeo4jData";
 import { Dispatch } from "redux";
 import { RibosomeStructure } from "../../../RibosomeTypes";
-import { flattenDeep } from "lodash";
+import { flattenDeep, includes } from "lodash";
 
 const structReducerDefaultState = {
-  StructuresResponse: [],
-  Loading           : false,
-  Error             : null,
-};
+  StructuresResponse     : [],
+  filteredStructs_derived: [],
+  Loading                : false,
+  Error                  : null,};
 
-export interface NeoStructResp{
+export interface NeoStruct{
         struct : RibosomeStructure;
         ligands: string[];
         rps    : Array<{ noms: string[]; strands: string }>;
         rnas   : string[];
-      }
-export interface StructState {
-  StructuresResponse: NeoStructResp[]
-  Loading           : boolean;
-  Error             : null | Error;
 }
 
-// PRELOAD
+export interface StructState {
+  StructuresResponse     : NeoStruct[]
+  filteredStructs_derived: NeoStruct[],
+  Loading                : boolean;
+  Error                  : null | Error;
+}
+
+
+export const filterOnPdbid = (pid:string):actions.filterOnPpdbid =>({
+  type:actions.FILTER_ON_PDBID,
+  payload:pid
+})
+
+export const filterOnSpeciesId = (spec:number):actions.filterOnSpecies =>({
+  type:actions.FILTER_ON_SPECIES,
+  payload:spec
+})
+
 
 export const filterOnMethod = (method:string):actions.filterStructsMethod =>({
     type: actions.FILTER_STRUCTS_METHOD ,
@@ -33,7 +45,6 @@ export const filterOnSpecies = (specid:number):actions.filterStructsSpecies =>({
     type: actions.FILTER_STRUCTS_SPECIES ,
     payload: specid
 })
-
 
 export const searchByPdbid = (pdbid:string):actions.searchStructsPdbid =>({
   type: actions.SEARCH_STRUCTS_PDBID,
@@ -73,7 +84,17 @@ export const StructuresReducer = (
       console.log('Errored out requesting structs')
       return { ...state, Loading: false, Error: action.error };
     case "REQUEST_STRUCTS_SUCCESS":
-      return { ...state, StructuresResponse: [...action.payload], Loading: false };
+      return { ...state, StructuresResponse: [...action.payload], filteredStructs_derived:[...action.payload], Loading: false };
+
+    case "FILTER_ON_PDBID":
+      console.log("got filterchagne", action.payload);
+      
+      var filtered = state.filteredStructs_derived.filter(r=>r.struct.rcsb_id.includes( action.payload ))
+      return {...state, filteredStructs_derived:filtered}
+
+    case  "FILTER_ON_SPECIES":
+      var filtered = state.filteredStructs_derived.filter(r=>r.struct._organismId.includes(action.payload))
+      return {...state, filteredStructs_derived:filtered}
     default:
       return state;
   }

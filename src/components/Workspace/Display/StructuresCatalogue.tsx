@@ -6,11 +6,7 @@ import { AppState } from "../../../redux/store";
 // import StructHero from "../StructureHero/StructHero";
 import { AppActions } from "../../../redux/AppActions";
 import LoadingSpinner  from '../../Other/LoadingSpinner'
-import * as redux from '../../../redux/reducers/Data/StructuresReducer/StructuresReducer'
 import SpeciesFilter from './../../../materialui/SpeciesFilter'
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import SelectProteins from './../../../materialui/SelectProteins'
 import { Button } from "react-bootstrap";
 import {md_files, ReactMarkdownElement } from './../../Other/ReactMarkdownElement'
@@ -23,6 +19,52 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import * as redux from '../../../redux/reducers/Data/StructuresReducer/StructuresReducer'
+import { Dispatch } from 'redux';
+import {useDebounce} from 'use-debounce'
+
+interface filterchangeProp {
+    handleChange: (newval:string)=>void;
+}
+
+export const mapdispatch = (
+  dispatch: Dispatch<AppActions>,
+  ownprops: {}
+): filterchangeProp => ({
+  handleChange: (inputval: string) => dispatch(redux.filterOnPdbid(inputval)),
+});
+
+
+// Search
+const SearchField:React.FC<filterchangeProp> = (prop:filterchangeProp)=> {
+
+
+  const [name, setName] = React.useState("");
+  const [value] = useDebounce(name, 250)
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    var newval = event.target.value
+    setName(newval);
+  };
+
+  useEffect(() => {
+    prop.handleChange(value)
+  }, [value])
+
+  return (
+    <form  noValidate autoComplete="off">
+      <FormControl>
+        <InputLabel htmlFor="component-simple">Search</InputLabel>
+        <Input id="component-simple" value={name} onChange={handleChange} />
+      </FormControl>
+    </form>
+  );
+}
+
+connect(null, mapdispatch)(SearchField);
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
@@ -31,15 +73,12 @@ import { ListSubheader } from "@material-ui/core";
 
 interface OwnProps {}
 interface ReduxProps {
-  __rx_structures: redux.NeoStructResp[]
-  globalFilter   : string;
-  loading        : boolean;
-}
-interface DispatchProps {
-  __rx_requestStructures: () => void,
+  structures  : redux.NeoStruct[]
+  globalFilter: string;
+  loading     : boolean;
 }
 
-type WorkspaceCatalogueProps = DispatchProps & OwnProps & ReduxProps;
+type WorkspaceCatalogueProps = OwnProps & ReduxProps;
 
 export const transformToShortTax = (taxname:string) =>{
   if (typeof taxname === 'string'){
@@ -48,128 +87,31 @@ export const transformToShortTax = (taxname:string) =>{
     var fl =words[0].slice(0,1)
     var full = fl.toLocaleUpperCase() + '. ' + words[1]
     return full
-    }else{
+    }
+    else
+    {
       return words[0]
     }
   }
   else return taxname
-  }
+}
 
 
 
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCatalogueProps) => {
 
+
   useEffect(() => {
-    prop.__rx_requestStructures()
-  }, [])
-
-  // This has to be all moved to the reducer
-  const [structures, setstructures] = useState<redux.NeoStructResp[]>([])
-
-  useEffect(()=>{
-    setstructures(prop.__rx_structures)
-  },[prop.__rx_structures])
-
-  const [organismsAvailable, setorganismsAvailable] = useState({})
-  useEffect(() => {
-    var organisms = structures.map(str => {
-      return {
-        name: str.struct._organismName.map(x => x.toLowerCase()),
-        id: str.struct._organismId,
-      };
-    });
-    const orgsdict: { [id: string]: { names:string[], count:number } } = {};
-    organisms.map(org => {
-      org.id.forEach((id, index) => {
-        if (!Object.keys(orgsdict).includes(id.toString())) {
-          orgsdict[id] = {
-            names:[],
-            count:1
-          }
-          orgsdict[id].names.push(org.name[index])
-        }else{
-          orgsdict[id].names.push(org.name[index])
-          orgsdict[id].count+=1
-        }
-      });
-    });
-    setorganismsAvailable(orgsdict)
-  }, [structures]);
-
-
-  const filterByProteinPresence=(structs: redux.NeoStructResp[], filter: string[])=>{
-    if (filter.length ==0){
-      return structs
+  console.log(prop.structures)
+    return () => {
     }
-    return structs.filter(str=>filter.includes(str.struct.rcsb_id) )
-  }
-
-  const [methodFilter, setmethodFilter] = useState<string[]>([])
-  useEffect(() => {
-  if (methodFilter.length ===0){
-    setstructures(prop.__rx_structures)
-    return
-  }
-
-  var filtered = structures.filter(struct => methodFilter.includes(struct.struct.expMethod));
-    setstructures(filtered)
-  }, [methodFilter]);
-
-  const [organismFilter, setorganismFilter] = useState<string[]>([]);
-  const filterByOrganism = (struct: redux.NeoStructResp) => {
-    if (organismFilter.length <1 ) return true
-    for (var id of struct.struct._organismId) {
-      if (organismFilter.includes(id.toString())) {
-        return true;
-      }
-    }
-    return false;
-  };
+  }, [prop.structures])
 
 
-  const filterByPdbId = (structs: redux.NeoStructResp[], filter: string) => {
-    return structs.filter(x => {
-      var concated =
-        x.struct.rcsb_id.toLowerCase() +
-        x.struct.citation_title.toLocaleLowerCase() +
-        x.struct._organismName.reduce((acc:string, curr:string)=> acc.concat(curr.toLocaleLowerCase()), '' )
-      return concated.includes(filter);
-    });
-  };
-
-  const [pdbidFilter, setPbidFilter]                  = useState<string>("");
-  const [structsWithProteins, setstructsWithProteins] = useState<string[]>([])
-
-//   const requestByProtein = ()=>{
-//   getNeo4jData("neo4j", {
-//     endpoint: "match_structs",
-//     params  : { proteins: selectedProteins.join(",") },
-//   }).then(r => {
-//     setstructsWithProteins(r.data)
-//   });
-// }
-
-  var protopts: {
-    value: string;
-    label: string;
-  }[] = [
-    ...Object.keys(large_subunit_map),
-    ...Object.keys(small_subunit_map),
-  ].map(name => {
-    return { value: name, label: name };
-  });
-
-  // const [selectedProteins, setselectedProteins] = useState<string[]>([]);
-  // const handleChange                            = (e: any) => {setselectedProteins(Array.isArray(e) ? e.map(x => x.value) : []);};
- 
-  // useEffect(() => {
-  //   requestByProtein()
-  // }, [selectedProteins])
 
   return !prop.loading ? (
     <div className="workspace-catalogue-grid">
       <div className="wspace-catalogue-filters-tools">
-        <StructureFilters />
 
         {/* <div className="wspace-search">
             <input
@@ -290,17 +232,11 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCa
               </Accordion.Collapse>
             </Card>
           </Accordion> */}
+        <StructureFilters />
       </div>
 
       <Grid container item xs={12} spacing={3}>
-        {
-        
-        // filterByPdbId(
-        //   filterByProteinPresence(structures, structsWithProteins).filter(
-        //     filterByOrganism
-        //   ),
-        //   pdbidFilter
-        // )
+        {/* {
         
         structures.map((x, i) => (
 
@@ -308,7 +244,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCa
             <StructHero {...x} key={i} />
           </Grid>
 
-        ))}
+        ))} */}
       </Grid>
     </div>
   ) : (
@@ -317,14 +253,12 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCa
 };
 
 const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
-  __rx_structures: state.Data.RibosomeStructures.StructuresResponse,
+  structures: state.Data.RibosomeStructures.StructuresResponse,
   loading        : state.Data.RibosomeStructures.Loading,
   globalFilter   : state.UI.state_Filter.filterValue,
 });
 
-const mapdispatch = (dispatch: ThunkDispatch<any, any, AppActions>,ownprops: OwnProps): DispatchProps => ({
-  __rx_requestStructures: ()=> dispatch(redux.requestAllStructuresDjango())});
-export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
+export default connect(mapstate, null)(WorkspaceCatalogue);
 
 
 
@@ -363,23 +297,6 @@ const useSliderStyles = makeStyles({
 
 
 
-// Search
-function SearchField() {
-  const [name, setName] = React.useState("");
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-  };
-
-  return (
-    <form  noValidate autoComplete="off">
-      <FormControl>
-        <InputLabel htmlFor="component-simple">Search</InputLabel>
-        <Input id="component-simple" value={name} onChange={handleChange} />
-      </FormControl>
-    </form>
-  );
-}
 
 
 // Filters component
@@ -429,7 +346,7 @@ const StructureFilters = () => {
         <ListSubheader>Search and Filter</ListSubheader>
       <Divider />
         <ListItem key={"search"}>
-          <SearchField />
+          <SearchField  />
         </ListItem>
         <ListItem key={"year"}>
           <ValueSlider max={2021} min={2015} name={"Deposition Date"} step={1}/> 

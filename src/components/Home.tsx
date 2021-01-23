@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../redux/AppActions";
-import { NeoStructResp } from "../redux/reducers/Data/StructuresReducer/StructuresReducer";
+import { NeoStruct } from "../redux/reducers/Data/StructuresReducer/StructuresReducer";
 import { AppState } from "../redux/store";
 import * as redux from "./../redux/reducers/Data/StructuresReducer/StructuresReducer";
 import "./Home.css";
@@ -29,17 +29,18 @@ const AcknPlug: React.FC<{ text: string }> = ({ text, children }) => {
 
 interface OwnProps {}
 interface ReduxProps {
-  __rx_structures: NeoStructResp[];
+  __rx_structures: NeoStruct[];
 }
 interface DispatchProps {
   __rx_requestStructures: () => void;
+  filterOnPdbid         : (x:string)=>void;
+  filterOnSpeciesId     : (x:number)=>void;
 }
 type HomeProps = DispatchProps & OwnProps & ReduxProps;
 
 const Home: React.FC<HomeProps> = (prop: HomeProps) => {
-  useEffect(() => {
-    prop.__rx_requestStructures();
-  }, []);
+
+  useEffect(() => {prop.__rx_requestStructures()}, []);
 
   var [structn, setstructn] = useState<number>(0);
   var [protn, setProtn]     = useState<number>(0);
@@ -48,11 +49,12 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
   var [em, setem]           = useState<number>(0);
 
   useEffect(() => {
+
     var structs = prop.__rx_structures;
-    var prot = 0;
-    var rna = 0;
-    var struct = 0;
-    struct = structs.length;
+    var prot    = 0;
+    var rna     = 0;
+    var struct  = 0;
+        struct  = structs.length;
 
     for (var str of structs) {
       prot += str.rps.length;
@@ -77,6 +79,7 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
   }, [prop.__rx_structures]);
 
   const [mds, setmds] = useState<string[]>([]);
+
   useEffect(() => {
     Axios.all([
       ...Object.values(md_files.all.home).map(url => Axios.get(url)),
@@ -86,6 +89,7 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
   return (
     <div className="homepage">
       <div className="stats area">
+
         <div id="stats-proper">
           <div>
             <img id="teg" src={raylogo} alt="teg" />
@@ -93,7 +97,6 @@ const Home: React.FC<HomeProps> = (prop: HomeProps) => {
 
           <div>
             <h4>Resource Summary: </h4>
-
             <li>
               <b>{protn ? protn : <InlineSpinner />}</b> unique{" "}
               <Link to="/rps">ribosomal proteins</Link>
@@ -249,8 +252,9 @@ const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
 
 const mapdispatch = (
   dispatch: ThunkDispatch<any, any, AppActions>,
-  ownprops: OwnProps
-): DispatchProps => ({
+  ownprops: OwnProps): DispatchProps => ({
   __rx_requestStructures: () => dispatch(redux.requestAllStructuresDjango()),
-});
+  filterOnPdbid         : (pdbid:string) => dispatch(redux.filterOnPdbid(pdbid)),
+  filterOnSpeciesId     : (q:number) => dispatch(redux.filterOnSpeciesId(q))});
+
 export default connect(mapstate, mapdispatch)(Home);

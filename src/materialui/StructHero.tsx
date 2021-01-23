@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import hero from './../static/sample-hero.png'
 import { Grid, TextareaAutosize } from '@material-ui/core';
-import { NeoStructResp } from '../redux/reducers/Data/StructuresReducer/StructuresReducer';
+import { NeoStruct } from '../redux/reducers/Data/StructuresReducer/StructuresReducer';
 import { truncate } from '../components/Main';
 
 const useStyles = makeStyles({
@@ -62,7 +62,7 @@ className={classes.annotation}
 
 
 
-const StructHero=(d:NeoStructResp)=> {
+const StructHero=(d:NeoStruct)=> {
   const classes = useStyles();
 
   // 
