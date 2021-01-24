@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";import "./StructuresCatalogue.css";
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import { ListSubheader } from "@material-ui/core";
 import Slider from '@material-ui/core/Slider';
 import { connect  } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -25,10 +28,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import * as redux from '../../../redux/reducers/Data/StructuresReducer/StructuresReducer'
 import { Dispatch } from 'redux';
 import {useDebounce} from 'use-debounce'
+import {transformToShortTax} from './../../Main'
 
-interface filterchangeProp {
-    handleChange: (newval:string)=>void;
-}
+
+interface filterchangeProp {handleChange: (newval:string)=>void;}
 
 export const mapdispatch = (
   dispatch: Dispatch<AppActions>,
@@ -39,9 +42,7 @@ export const mapdispatch = (
 
 
 // Search
-const SearchField:React.FC<filterchangeProp> = (prop:filterchangeProp)=> {
-
-
+const _SearchField:React.FC<filterchangeProp> = (prop:filterchangeProp)=> {
   const [name, setName] = React.useState("");
   const [value] = useDebounce(name, 250)
 
@@ -63,51 +64,22 @@ const SearchField:React.FC<filterchangeProp> = (prop:filterchangeProp)=> {
     </form>
   );
 }
+const SearchField = connect(null, mapdispatch)(_SearchField);
 
-connect(null, mapdispatch)(SearchField);
 
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-
-import Grid from '@material-ui/core/Grid';
-import { ListSubheader } from "@material-ui/core";
-
-interface OwnProps {}
 interface ReduxProps {
   structures  : redux.NeoStruct[]
   globalFilter: string;
   loading     : boolean;
 }
 
-type WorkspaceCatalogueProps = OwnProps & ReduxProps;
-
-export const transformToShortTax = (taxname:string) =>{
-  if (typeof taxname === 'string'){
-    var words = taxname.split(' ') 
-    if ( words.length>1 ){
-    var fl =words[0].slice(0,1)
-    var full = fl.toLocaleUpperCase() + '. ' + words[1]
-    return full
-    }
-    else
-    {
-      return words[0]
-    }
-  }
-  else return taxname
-}
-
-
-
+type WorkspaceCatalogueProps =  ReduxProps;
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCatalogueProps) => {
-
-
   useEffect(() => {
   console.log(prop.structures)
     return () => {
     }
   }, [prop.structures])
-
-
 
   return !prop.loading ? (
     <div className="workspace-catalogue-grid">
@@ -251,13 +223,11 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCa
     <LoadingSpinner annotation="Fetching data..." />
   );
 };
-
-const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
+const mapstate = (state: AppState, ownprops: {}): ReduxProps => ({
   structures: state.Data.RibosomeStructures.StructuresResponse,
   loading        : state.Data.RibosomeStructures.Loading,
   globalFilter   : state.UI.state_Filter.filterValue,
 });
-
 export default connect(mapstate, null)(WorkspaceCatalogue);
 
 

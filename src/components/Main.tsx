@@ -50,3 +50,19 @@ export const truncate = (str:string, charlim:number, truncateto:number) =>{
   }
     return str.length > 20 ? str.substring(0, 15) + "..." : str;
 }
+
+export const transformToShortTax = (taxname:string) =>{
+  if (typeof taxname === 'string'){
+    var words = taxname.split(' ') 
+    if ( words.length>1 ){
+    var fl =words[0].slice(0,1)
+    var full = fl.toLocaleUpperCase() + '. ' + words[1]
+    return full
+    }
+    else
+    {
+      return words[0]
+    }
+  }
+  else return taxname
+}
