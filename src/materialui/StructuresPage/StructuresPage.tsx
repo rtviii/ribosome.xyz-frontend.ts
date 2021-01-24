@@ -14,7 +14,6 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 
 const drawerWidth = 240;
-
 const useStyles = makeStyles((theme: Theme) =>
 
   createStyles({
@@ -40,13 +39,12 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(3),
     },
   }),
-
 );
 
 export default function PermanentDrawerLeft() {
   const classes = useStyles();
-
   return (
+
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
@@ -111,5 +109,6 @@ export default function PermanentDrawerLeft() {
         </Typography>
       </main>
     </div>
+
   );
 }

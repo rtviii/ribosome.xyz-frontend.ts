@@ -4,7 +4,6 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import { AppActions } from "../../../redux/AppActions";
 import * as redux from '../../../redux/reducers/Data/StructuresReducer/StructuresReducer'
-import { ThunkDispatch } from "redux-thunk";
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import {useDebounce} from 'use-debounce'

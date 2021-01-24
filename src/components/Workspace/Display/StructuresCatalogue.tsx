@@ -29,6 +29,7 @@ import * as redux from '../../../redux/reducers/Data/StructuresReducer/Structure
 import { Dispatch } from 'redux';
 import {useDebounce} from 'use-debounce'
 import {transformToShortTax} from './../../Main'
+import { SliderFilterType } from "../../../redux/reducers/Data/StructuresReducer/ActionTypes";
 
 
 interface filterchangeProp {handleChange: (newval:string)=>void;}
@@ -67,12 +68,7 @@ const _SearchField:React.FC<filterchangeProp> = (prop:filterchangeProp)=> {
 const SearchField = connect(null, mapdispatch)(_SearchField);
 
 
-interface ReduxProps {
-  structures  : redux.NeoStruct[]
-  globalFilter: string;
-  loading     : boolean;
-}
-
+interface ReduxProps {structures  : redux.NeoStruct[];globalFilter: string;loading     : boolean;}
 type WorkspaceCatalogueProps =  ReduxProps;
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCatalogueProps) => {
   useEffect(() => {
@@ -232,30 +228,55 @@ export default connect(mapstate, null)(WorkspaceCatalogue);
 
 
 
-const ValueSlider=({name,max,min,step}:{name:string, max:number,min:number,step:number})=> {
-const useSliderStyles = makeStyles({
-  root: {
-    width: 300,
-  },
-});
+
+
+
+interface rangeFilterChange {
+  handleSliderChange:(
+  newrange    :  number[])=>void;}
+
+
+
+export const mapRangeFilter =(tp:SliderFilterType) => (
+  dispatch:Dispatch<AppActions>,
+  ownProps:any,
+):rangeFilterChange=>({
+   handleSliderChange:(newrange)=>dispatch(redux.filterOnRangeChange(tp, newrange))
+})
+
+interface OwnProps {
+  name               :  string;
+  max                :  number;
+  min                :  number;
+  step               :  number;
+}
+type SliderProps = rangeFilterChange & OwnProps;
+const _ValueSlider:React.FC<SliderProps> = (prop:SliderProps) => {
+  const useSliderStyles = makeStyles({
+    root: {
+      width: 300,
+    },
+  });
   const classes = useSliderStyles();
-  const [value, setValue] = React.useState<number[]>([min, max]);
+  const [value, setValue] = React.useState<number[]>([prop.min, prop.max]);
 
   const handleChange = (event: any, newValue: number | number[]) => {
     setValue(newValue as number[]);
+    prop.handleSliderChange(newValue as number[])
+    
   };
 
   return (
     <div className={classes.root}>
       <Typography id="range-slider" gutterBottom>
-        {name}
+        {prop.name}
       </Typography>
 
       <Slider
-        min={min}
-        max={max}
+        min={prop.min}
+        max={prop.max}
         marks
-        step={step}
+        step={prop.step}
         value={value}
         onChange={handleChange}
         valueLabelDisplay="auto"
@@ -263,8 +284,13 @@ const useSliderStyles = makeStyles({
       />
     </div>
   );
-}
+};
 
+
+
+const YearSlider        =  connect(null,mapRangeFilter("YEAR"))(_ValueSlider)
+const ProtcountSlider   =  connect(null,mapRangeFilter("PROTCOUNT"))(_ValueSlider)
+const ResolutionSlider  =  connect(null,mapRangeFilter("RESOLUTION"))(_ValueSlider)
 
 
 
@@ -319,13 +345,13 @@ const StructureFilters = () => {
           <SearchField  />
         </ListItem>
         <ListItem key={"year"}>
-          <ValueSlider max={2021} min={2015} name={"Deposition Date"} step={1}/> 
+          <YearSlider max={2021} min={2015} name={"Deposition Date"} step={1}/> 
         </ListItem>
         <ListItem key={"number-of-proteins"}>
-          <ValueSlider max={150} min={25} name={"Protein Count"} step={1}/> 
+          <ProtcountSlider max={150} min={25} name={"Protein Count"} step={1}/> 
         </ListItem>
         <ListItem key={"resolution"}>
-          <ValueSlider max={6} min={1} name={"Resolution(A)"} step={0.1}/> 
+          <ResolutionSlider max={6} min={1} name={"Resolution(A)"} step={0.1}/> 
         </ListItem>
 
       <Divider />

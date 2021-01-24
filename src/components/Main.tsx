@@ -50,7 +50,6 @@ export const truncate = (str:string, charlim:number, truncateto:number) =>{
   }
     return str.length > 20 ? str.substring(0, 15) + "..." : str;
 }
-
 export const transformToShortTax = (taxname:string) =>{
   if (typeof taxname === 'string'){
     var words = taxname.split(' ') 

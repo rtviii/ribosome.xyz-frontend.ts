@@ -2,7 +2,7 @@ import * as actions from "./ActionTypes";
 import { getNeo4jData } from "./../../../Actions/getNeo4jData";
 import { Dispatch } from "redux";
 import { RibosomeStructure } from "../../../RibosomeTypes";
-import { flattenDeep, includes } from "lodash";
+import { flattenDeep  } from "lodash";
 
 const structReducerDefaultState = {
   StructuresResponse     : [],
@@ -11,10 +11,10 @@ const structReducerDefaultState = {
   Error                  : null,};
 
 export interface NeoStruct{
-        struct : RibosomeStructure;
-        ligands: string[];
-        rps    : Array<{ noms: string[]; strands: string }>;
-        rnas   : string[];
+  struct : RibosomeStructure;
+  ligands: string[];
+  rps    : Array<{ noms: string[]; strands: string }>;
+  rnas   : string[];
 }
 
 export interface StructState {
@@ -24,13 +24,21 @@ export interface StructState {
   Error                  : null | Error;
 }
 
-
+export const filterOnRangeChange = (slidertype:actions.SliderFilterType,newrange:number[]):actions.filterOnRangeChange =>({
+  type:actions.FILTER_ON_RANGE_CHANGE,
+  newrange,
+  slidertype
+})
+export const filteronProteinsPresent = (protpresent:string[]):actions.filterOnProteinsPresent =>({
+  type:actions.FILTER_ON_PROTEINS_PRESENT,
+  payload:protpresent
+})
 export const filterOnPdbid = (pid:string):actions.filterOnPpdbid =>({
   type:actions.FILTER_ON_PDBID,
   payload:pid
 })
 
-export const filterOnSpeciesId = (spec:number):actions.filterOnSpecies =>({
+export const filterOnSpeciesId = (spec:number[]):actions.filterOnSpecies =>({
   type:actions.FILTER_ON_SPECIES,
   payload:spec
 })
@@ -46,10 +54,6 @@ export const filterOnSpecies = (specid:number):actions.filterStructsSpecies =>({
     payload: specid
 })
 
-export const searchByPdbid = (pdbid:string):actions.searchStructsPdbid =>({
-  type: actions.SEARCH_STRUCTS_PDBID,
-  payload: pdbid
-})
 
 export const requestAllStructuresDjango =  () => {
   return async (dispatch: Dispatch<actions.StructActionTypes>) => {
@@ -85,16 +89,29 @@ export const StructuresReducer = (
       return { ...state, Loading: false, Error: action.error };
     case "REQUEST_STRUCTS_SUCCESS":
       return { ...state, StructuresResponse: [...action.payload], filteredStructs_derived:[...action.payload], Loading: false };
-
     case "FILTER_ON_PDBID":
-      console.log("got filterchagne", action.payload);
-      
       var filtered = state.filteredStructs_derived.filter(r=>r.struct.rcsb_id.includes( action.payload ))
       return {...state, filteredStructs_derived:filtered}
-
-    case  "FILTER_ON_SPECIES":
-      var filtered = state.filteredStructs_derived.filter(r=>r.struct._organismId.includes(action.payload))
-      return {...state, filteredStructs_derived:filtered}
+    // case  "FILTER_ON_SPECIES":
+    //   var filtered = state.filteredStructs_derived.filter(r=>r.struct._organismId.includes(action.payload))
+    //   return {...state, filteredStructs_derived:filtered}
+    
+    case "FILTER_ON_RANGE_CHANGE":
+      console.log(action.newrange)
+      switch (action.slidertype){
+        case "PROTCOUNT":
+          var filtered = state.filteredStructs_derived.filter(x=> x.rps.length >= action.newrange[0] && action.newrange[1]>=x.struct.resolution)
+          return {...state, filteredStructs_derived:filtered}
+        case "YEAR":
+          var filtered = state.filteredStructs_derived.filter(x=> x.struct.citation_year >= action.newrange[0] && action.newrange[1]>=x.struct.resolution)
+          return {...state, filteredStructs_derived:filtered}
+        case "RESOLUTION":
+          var filtered = state.filteredStructs_derived.filter(x=> x.struct.resolution >= action.newrange[0] && action.newrange[1]>=x.struct.resolution)
+          return {...state, filteredStructs_derived:filtered}
+        default:
+          return state
+      }
+      
     default:
       return state;
   }

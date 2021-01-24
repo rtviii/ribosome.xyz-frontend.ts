@@ -34,7 +34,7 @@ interface ReduxProps {
 interface DispatchProps {
   __rx_requestStructures: () => void;
   filterOnPdbid         : (x:string)=>void;
-  filterOnSpeciesId     : (x:number)=>void;
+  filterOnSpeciesId     : (x:number[])=>void;
 }
 type HomeProps = DispatchProps & OwnProps & ReduxProps;
 
@@ -255,6 +255,6 @@ const mapdispatch = (
   ownprops: OwnProps): DispatchProps => ({
   __rx_requestStructures: () => dispatch(redux.requestAllStructuresDjango()),
   filterOnPdbid         : (pdbid:string) => dispatch(redux.filterOnPdbid(pdbid)),
-  filterOnSpeciesId     : (q:number) => dispatch(redux.filterOnSpeciesId(q))});
+  filterOnSpeciesId     : (q:number[]) => dispatch(redux.filterOnSpeciesId(q))});
 
 export default connect(mapstate, mapdispatch)(Home);

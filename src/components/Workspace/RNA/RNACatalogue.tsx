@@ -26,7 +26,6 @@ const truncate = (str:string) =>{
     return str.length > 20 ? str.substring(0, 15) + "..." : str;
 }
 const RNACatalogue = () => {
-  // const [baserna, setbaserna]     = useState<RNAProfile[]>([]);
   const [rnas, setrnas]           = useState<RNAProfile[]>([]);
   const [trnas, settrna]          = useState<RNAProfile[]>([]);
   const [mrnas, setmrna]          = useState<RNAProfile[]>([]);
