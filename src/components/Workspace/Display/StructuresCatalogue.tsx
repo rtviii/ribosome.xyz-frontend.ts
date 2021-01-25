@@ -179,10 +179,7 @@ const _SpeciesList:React.FC<SpeciesFilterProps> = (prop)=> {
       // -------
       
       var newarr = prop.value
-      // console.log("On checking(value should be IN at this point), filter value", newarr)
-      // console.log(`Now filter it basedo on specKyes ${SpeciesGroupings[ speckey ]}`, ( newarr as number[]).filter((n:number)=>!(SpeciesGroupings[speckey].includes(n))))
       newarr =( newarr as number[]).filter((n:number)=>!(SpeciesGroupings[speckey].includes(n)))
-
       prop.handleChange(newarr)
     } else {
       newChecked.splice(currentIndex, 1);

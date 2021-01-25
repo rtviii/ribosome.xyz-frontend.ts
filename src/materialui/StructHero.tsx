@@ -11,6 +11,7 @@ import hero from './../static/sample-hero.png'
 import { Grid, TextareaAutosize } from '@material-ui/core';
 import { NeoStruct } from '../redux/reducers/Data/StructuresReducer/StructuresReducer';
 import { truncate } from '../components/Main';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles({
   card: {
@@ -18,16 +19,14 @@ const useStyles = makeStyles({
   },
   title:{
     fontSize:14,
-    height:70
+    height:60
   },
   heading: {
     fontSize     : 12,
-    // paddingBottom: 5,
     paddingTop   : 5,
   },
   annotation: {
     fontSize: 12,
-    // color: "black",
   },
 
 });
@@ -68,16 +67,19 @@ const StructHero=(d:NeoStruct)=> {
   // 
   return (
     <Card className={classes.card}>
+      
       <CardActionArea >
         <CardContent>
+      <Link to={`/structs/${d.struct.rcsb_id}` }>
           <CardMedia
             component="img"
             alt="Ribosome Banner"
-            height="120"
-            image={hero}
+            height="150"
+            image={`ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`}
             title="Ribosome Banner"
           />
 
+      </Link>
 
 
           <Grid
@@ -123,16 +125,15 @@ const StructHero=(d:NeoStruct)=> {
 
         </CardContent>
       </CardActionArea>
-
 {/* ----------------------------- */}
       <CardActions>
-        <Button size="small" color="primary">
+        <Button href={`https://www.rcsb.org/structure/${d.struct.rcsb_id}`} size="small" color="primary">
           PDB
         </Button>
-        <Button size="small" color="primary">
+        <Button href={`https://doi.org/${d.struct.citation_pdbx_doi}`} size="small" color="primary">
           DOI
         </Button>
-        <Button size="small" color="primary">
+        <Button href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
           EMDB
         </Button>
       </CardActions>
