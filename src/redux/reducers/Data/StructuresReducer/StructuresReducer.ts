@@ -3,7 +3,6 @@ import { getNeo4jData } from "./../../../Actions/getNeo4jData";
 import { Dispatch } from "redux";
 import { RibosomeStructure } from "../../../RibosomeTypes";
 import { flattenDeep  } from "lodash";
-import { Filter } from "@material-ui/icons";
 
 export interface NeoStruct{
   struct   :  RibosomeStructure;
@@ -12,15 +11,22 @@ export interface NeoStruct{
   rnas     :  string[];
 }
 export interface StructReducerState {
+  // data
   neo_response    : NeoStruct[]
+  // filters
   derived_filtered: NeoStruct[],
   applied_filters : actions.FilterType[],
   filters         : Record<actions.FilterType, actions.FilterData>
   Loading         : boolean;
   Error           : null | Error;
+  // pagination
+  current_page: number;
+  pages_total : number
+  
 }
 
 
+// THESE NEED TO BE MEMOIZED
 
 const FilterPredicates : Record<actions.FilterType,actions.FilterPredicate> ={
 "PROTEIN_COUNT"   :(value ) =>(struct:NeoStruct) => struct.rps.length >= ( value as number[] )[0] && struct.rps.length<= ( value as number[] )[1],
@@ -36,6 +42,8 @@ const structReducerDefaultState: StructReducerState = {
   Loading         : false,
   Error           : null,
   neo_response    : [],
+  current_page    : 1,
+  pages_total     : 1,
   derived_filtered: [],
   applied_filters : [],
   filters         : {
@@ -77,24 +85,32 @@ export const StructuresReducer = (
       console.log('Errored out requesting structs')
       return { ...state, Loading: false, Error: action.error };
     case "REQUEST_STRUCTS_SUCCESS":
-      console.log("got success payload", action.payload)
         return { ...state,
                   neo_response    : [...action.payload],
                   derived_filtered: [...action.payload],
+                  pages_total     : Math.ceil(action.payload.length/20),
                   Loading         : false };
+    case "NEXT_PAGE":
+      if (state.current_page+1 === state.pages_total){
+        return state
+      }
+      return {...state, current_page:state.current_page+1}
+    case "PREV_PAGE":
+      if (state.current_page-1 < 1){
+        return state
+      }
+      return {...state, current_page:state.current_page-1}
 
     case "FILTER_CHANGE":
       var filtIndex = state.applied_filters.indexOf(action.filttype)
       // shallow copy
       var appliedFilters = state.applied_filters;
-
       if ( filtIndex === -1  && action.set) {
         appliedFilters.push(action.filttype);
       }
       if (!( filtIndex===-1 )&&  !action.set) {
         appliedFilters.splice(filtIndex, 1);
       }
-
       var derived_state = {
         ...state,
         filters: {
@@ -103,8 +119,6 @@ export const StructuresReducer = (
         },
         applied_filters: appliedFilters,
       };
-
-      // apply >>>>memoized<<<< filter functions based on applied_filters
       var filtered_structs =
         appliedFilters.length === 0
           ? state.neo_response
@@ -116,15 +130,16 @@ export const StructuresReducer = (
               },
               state.neo_response
             );
-      derived_state = {...derived_state, derived_filtered:filtered_structs}
+      derived_state = {...derived_state, derived_filtered:filtered_structs, pages_total: Math.ceil(filtered_structs.length/20)}
       return derived_state
-
     default:
       return state;
   }
 };
 
+
 // --------------------------------- Action Creators
+
 
 export const requestAllStructuresDjango =  () => {
   return async (dispatch: Dispatch<actions.StructActionTypes>) => {
@@ -174,4 +189,18 @@ export const filterChange = (filttype:actions.FilterType, newval: any):actions.f
   filttype,
   newval,
   set
-} }
+}}
+
+// ---------------------------------------Pagination
+
+
+export const gotopage = (pid: number): actions.gotopage => ({
+  type: actions.GOTO_PAGE,
+  page_id: pid,
+});
+export const nextpage = (): actions.nextpage => ({
+  type: actions.NEXT_PAGE,
+});
+export const prevpage = (): actions.prevpage => ({
+  type: actions.PREV_PAGE,
+});

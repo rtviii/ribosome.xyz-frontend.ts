@@ -33,8 +33,18 @@ import { FilterData, FilterType } from "../../../redux/reducers/Data/StructuresR
 
 
 // Workspace itself
-interface ReduxProps {structures  : redux.NeoStruct[];loading     : boolean;}
-type WorkspaceCatalogueProps =  ReduxProps;
+interface StateProps {
+  structures  : redux.NeoStruct[];
+  loading     : boolean;
+  current_page: number;
+  }
+
+interface DispatchProps{
+  next_page: ()=>void;
+  prev_page: ()=>void;
+  goto_page: (pid:number)=>void;
+}
+type WorkspaceCatalogueProps =  StateProps & DispatchProps;
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCatalogueProps) => {
   useEffect(() => {
   console.log(prop.structures)
@@ -47,22 +57,34 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCa
       <div className="wspace-catalogue-filters-tools">
         <StructureFilters />
       </div>
-      {/* <Grid container item xs={12} spacing={3}>
-        {prop.structures.map((x, i) => (
+      <button onClick={()=>{prop.next_page()}}>Nextpage</button>
+      <button onClick={()=>{prop.prev_page()}}>Prevpage</button>
+      <Grid container item xs={12} spacing={3}>
+        {
+          prop.structures.slice(prop.current_page * 20, prop.current_page*20+20).map((x, i) => (
           <Grid item>
             <StructHero {...x} key={i} />
           </Grid>))}
-      </Grid> */}
+      </Grid>
     </div>
   ) : (
     <LoadingSpinner annotation="Fetching data..." />
   );
 };
-const mapstate = (state: AppState, ownprops: {}): ReduxProps => ({
-  structures: state.structures.derived_filtered,
-  loading        : state.structures.Loading,
+const mapstate = (state: AppState, ownprops: {}): StateProps => ({
+  structures  : state.structures.derived_filtered,
+  loading     : state.structures.Loading,
+  current_page: state.structures.current_page
 });
-export default connect(mapstate, null)(WorkspaceCatalogue);
+const mapdispatch =(
+  dispatch:Dispatch<AppActions>,
+  ownProps:any):DispatchProps=>({
+    goto_page: (pid)=>dispatch( redux.gotopage(pid)),
+    next_page: ()=>dispatch( redux.nextpage()),
+    prev_page: ()=>dispatch( redux.prevpage()),
+  })
+
+export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
 
 
 // Filter -----------------------------------------------------------------------------------------------
