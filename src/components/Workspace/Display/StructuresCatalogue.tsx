@@ -3,13 +3,18 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { ListSubheader, TextField } from "@material-ui/core";
 import Slider from '@material-ui/core/Slider';
-import { connect  } from "react-redux";
+import { connect, useStore  } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { AppState } from "../../../redux/store";
 // import StructHero from "../StructureHero/StructHero";
 import { AppActions } from "../../../redux/AppActions";
 import LoadingSpinner  from '../../Other/LoadingSpinner'
-import SpeciesFilter from './../../../materialui/SpeciesFilter'
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import CommentIcon from '@material-ui/icons/Comment';
 import SelectProteins from './../../../materialui/SelectProteins'
 import {md_files, ReactMarkdownElement } from './../../Other/ReactMarkdownElement'
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
@@ -28,12 +33,18 @@ import * as redux from '../../../redux/reducers/Data/StructuresReducer/Structure
 import { Dispatch } from 'redux';
 import {useDebounce} from 'use-debounce'
 import {transformToShortTax} from './../../Main'
-import { FilterData, FilterType } from "../../../redux/reducers/Data/StructuresReducer/ActionTypes";
+import { filterChange, FilterData, FilterType } from "../../../redux/reducers/Data/StructuresReducer/ActionTypes";
+import {SpeciesGroupings} from './taxid_map'
 import Pagination from '@material-ui/lab/Pagination';
-import _ from "lodash";
+import _, { includes, propertyOf } from "lodash";
 
 
-const useStyles = makeStyles((theme) =>
+
+export const PaginationRounded=({gotopage, pagecount}:{
+  gotopage : (pid:number)=>void;
+  pagecount: number
+})=> {
+const usePaginationStyles = makeStyles((theme) =>
   createStyles({
     root: {
       '& > *': {
@@ -42,13 +53,7 @@ const useStyles = makeStyles((theme) =>
     },
   }),
 );
-
-export const PaginationRounded=({gotopage, pagecount}:{
-  gotopage : (pid:number)=>void;
-  pagecount: number
-})=> {
-  const classes = useStyles();
-
+  const classes = usePaginationStyles();
   return (
     <div className={classes.root}>
       <Pagination count={pagecount} onChange={(_,page)=>{ 
@@ -76,19 +81,11 @@ type WorkspaceCatalogueProps =  StateProps & DispatchProps;
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
-  useEffect(() => {
-    console.log(prop.structures);
-    return () => {};
-  }, [prop.structures]);
-
-
-
 
 const specs =_.uniq(prop.structures.map((e)=>e.struct._organismId).reduce((accumulator,specarr:number[])=>{
   return [...accumulator, ...specarr]
 }, []))
 
-console.log(specs);
 
   return !prop.loading ? (
     <div className="workspace-catalogue-grid">
@@ -104,7 +101,7 @@ console.log(specs);
         </Grid>
         <Grid container item xs={12} spacing={3}  alignItems="flex-start">
           {prop.structures
-            .slice(( prop.current_page-1 ) * 20, prop.current_page * 20 + 20)
+            .slice(( prop.current_page-1 ) * 20, prop.current_page * 20 )
             .map((x, i) => (
               <Grid item>
                 <StructHero {...x} key={i} />
@@ -138,10 +135,110 @@ const mapdispatch =(
 
 export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
 
+// SPECIES 
 
 
 
 
+interface OwnSpecFilterProps{}
+type SpeciesFilterProps = OwnSpecFilterProps & handleFilterChange & FilterData 
+const _SpeciesList:React.FC<SpeciesFilterProps> = (prop)=> {
+  const useSpeciesListStyles = makeStyles((theme: Theme) =>
+    createStyles({
+    item: {
+      // color: theme.palette.secondary.main,
+      '& span, & svg': {
+        fontSize: '12px'
+      }
+    },
+      root: {
+        width: '100%',
+        maxWidth: 360,
+        fontSize:12,
+        backgroundColor: theme.palette.background.paper,
+      }
+    }),
+  );
+
+  const classes = useSpeciesListStyles();
+  // ----------------
+  const taxIdMap = Object.entries(SpeciesGroupings);
+
+  var inxs = taxIdMap.map((val, index) => index);
+  const [checked, setChecked] = React.useState(inxs);
+
+
+  const handleToggle = (value: number, speckey:string) => () => {
+      
+    
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+      // -------
+      
+      var newarr = prop.value
+      // console.log("On checking(value should be IN at this point), filter value", newarr)
+      // console.log(`Now filter it basedo on specKyes ${SpeciesGroupings[ speckey ]}`, ( newarr as number[]).filter((n:number)=>!(SpeciesGroupings[speckey].includes(n))))
+      newarr =( newarr as number[]).filter((n:number)=>!(SpeciesGroupings[speckey].includes(n)))
+
+      prop.handleChange(newarr)
+    } else {
+      newChecked.splice(currentIndex, 1);
+
+      var newvalue  = SpeciesGroupings[speckey].reduce( ( acc,e:number ) => [ ...acc,e ], ( prop.value as number[] ))
+      prop.handleChange(newvalue)
+      
+
+      
+    
+    }
+
+    
+    setChecked(newChecked);
+  };
+
+
+
+  const store =useStore()
+
+  var s:AppState =store.getState()
+  console.log(s.structures.filters.SPECIES)
+  return (
+    <List className={classes.root}>
+      {Object.entries(SpeciesGroupings).map((value,index) => {
+        const labelId = `checkbox-list-label-${value}`;
+
+        return (
+          <ListItem
+            key={value[0]}
+            button
+            onClick={handleToggle(index,value[0])}
+          >
+            <ListItemText
+              className = { classes.item }
+              id        = {labelId}
+              primary   = {value[0]}
+
+            />
+
+            <ListItemIcon>
+              <Checkbox
+                edge="start"
+                checked={checked.indexOf(index) !== -1}
+                tabIndex={-1}
+                disableRipple
+                color={"primary"}
+                inputProps={{ "aria-labelledby": labelId }}
+              />
+            </ListItemIcon>
+          </ListItem>
+        );
+      })}
+    </List>
+  );
+}
 
 
 
@@ -232,6 +329,7 @@ const YearSlider       = connect(mapStateFilter("YEAR"),          mapDispatchFil
 const ProtcountSlider  = connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
 const ResolutionSlider = connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
 const SearchField      = connect(mapStateFilter("SEARCH"), mapDispatchFilter("SEARCH"))(_SearchField)
+const SpeciesList      = connect(mapStateFilter("SPECIES"), mapDispatchFilter("SPECIES"))(_SpeciesList)
 
 // Filters component
 const StructureFilters = () => {
@@ -304,9 +402,9 @@ const StructureFilters = () => {
       <Divider />
       <List>
         <ListSubheader> Species</ListSubheader>
-        <SpeciesFilter species={['Kluyveromyces Lactis','Escherichia Coli','Homo Sapiens','Tetrahymena Thermophila','Deinococcus Radiodurans'
-        
-        ]}/>
+        {/* <SpeciesFilter species={['Kluyveromyces Lactis','Escherichia Coli','Homo Sapiens','Tetrahymena Thermophila','Deinococcus Radiodurans']}/> */}
+
+      <SpeciesList/>
 
       </List>
     </Drawer>

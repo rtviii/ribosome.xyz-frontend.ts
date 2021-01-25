@@ -33,9 +33,18 @@ const FilterPredicates : Record<actions.FilterType,actions.FilterPredicate> ={
 "PROTEIN_COUNT"   :(value ) =>(struct:NeoStruct) => struct.rps.length >= ( value as number[] )[0] && struct.rps.length<= ( value as number[] )[1],
 "YEAR"            :(value ) =>(struct:NeoStruct) => struct.struct.citation_year >= ( value as number[] ) [0]  && struct.struct.citation_year <= (value as number[])[1],
 "RESOLUTION"      :(value ) =>(struct:NeoStruct) => struct.struct.resolution >=( value as number[] ) [0]  && struct.struct.resolution <= (value as number[])[1],
+"SPECIES"         :(value ) =>(struct:NeoStruct) => {
+  // Structures frequently have more than one taxid associated with them. 
+  // InSelected species cheks whether a particular taxid figures in the list of selecte fitlers
+  const inSelectedSpecies = (taxid:number) => !( (value as number[]).includes(taxid)   )
+  //  Collapse each of a struct's taxids to boolean based on the predicate. ANDQ all.
+  return struct.struct._organismId.reduce((accumulator:boolean,taxid)=> { return inSelectedSpecies(taxid) || accumulator }, false)
+},
+
+
+
 // To implement:
 "PROTEINS_PRESENT":(value ) =>(struct:NeoStruct) => struct.rps.length >= ( value as number[] )[0] && struct.rps.length<= ( value as number[] )[1],
-"SPECIES"         :(value ) =>(struct:NeoStruct) => struct.rps.length >= ( value as number[] )[0] && struct.rps.length<= ( value as number[] )[1],
 }
 
 const structReducerDefaultState: StructReducerState = {

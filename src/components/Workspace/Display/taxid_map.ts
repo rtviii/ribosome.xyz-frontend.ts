@@ -1,8 +1,7 @@
 
 
 
-export const SpeciesGroupings = {
-
+export const SpeciesGroupings:Record<string, number[]> = {
 "Rhizobium sp. Pop5"         : [1223565],
 "Saccharolobus solfataricus" : [2287],
 "Thermococcus celer "        : [1293037,311400],
@@ -55,7 +54,7 @@ export const SpeciesGroupings = {
 
 
 
-export const Taxonomy ={// 93062  : "Staphylococcus aureus subsp. aureus COL",
+// export const Taxonomy ={// 93062  : "Staphylococcus aureus subsp. aureus COL",
 // 285006 : "Saccharomyces cerevisiae RM11-1a",
 // 10665  : "Escherichia virus T4//",
 // 663    : "Vibrio alginolyticus",
