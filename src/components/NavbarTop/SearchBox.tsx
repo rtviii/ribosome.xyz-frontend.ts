@@ -37,7 +37,7 @@ const SearchBox: React.FC<SearchBoxProps> = (props: SearchBoxProps) => {
 };
 
 const mapstate = (state: AppState, ownState: OwnProps): ReduxProps => ({
-  PagewideFilter: state.UI.state_Filter.filterValue,
+  PagewideFilter: ""
 });
 const mapdispatch = (
   dispatch: ThunkDispatch<any, any, AppActions>,

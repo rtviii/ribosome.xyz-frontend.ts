@@ -29,47 +29,11 @@ import * as redux from '../../../redux/reducers/Data/StructuresReducer/Structure
 import { Dispatch } from 'redux';
 import {useDebounce} from 'use-debounce'
 import {transformToShortTax} from './../../Main'
-import { SliderFilterType } from "../../../redux/reducers/Data/StructuresReducer/ActionTypes";
-import { FilterData, FilterType } from "../../../redux/reducers/Data/StructuresReducer/StructuresReducer";
+import { FilterData, FilterType } from "../../../redux/reducers/Data/StructuresReducer/ActionTypes";
 
 
-interface filterchangeProp {handleChange: (newval:string)=>void;}
-
-export const mapdispatch = (
-  dispatch: Dispatch<AppActions>,
-  ownprops: {}
-): filterchangeProp => ({
-  handleChange: (inputval: string) => dispatch(redux.filterOnPdbid(inputval)),
-});
-
-
-// Search
-const _SearchField:React.FC<filterchangeProp> = (prop:filterchangeProp)=> {
-  const [name, setName] = React.useState("");
-  const [value] = useDebounce(name, 500)
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    var newval = event.target.value
-    setName(newval);
-  };
-
-  useEffect(() => {
-    prop.handleChange(value)
-  }, [value])
-
-  return (
-    <form  noValidate autoComplete="off">
-      <FormControl>
-        <InputLabel htmlFor="component-simple">Search</InputLabel>
-        <Input id="component-simple" value={name} onChange={handleChange} />
-      </FormControl>
-    </form>
-  );
-}
-const SearchField = connect(null, mapdispatch)(_SearchField);
-
-
-interface ReduxProps {structures  : redux.NeoStruct[];globalFilter: string;loading     : boolean;}
+// Workspace itself
+interface ReduxProps {structures  : redux.NeoStruct[];loading     : boolean;}
 type WorkspaceCatalogueProps =  ReduxProps;
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCatalogueProps) => {
   useEffect(() => {
@@ -95,61 +59,54 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCa
   );
 };
 const mapstate = (state: AppState, ownprops: {}): ReduxProps => ({
-  structures: state.Data.RibosomeStructures.derived_filtered,
-  loading        : state.Data.RibosomeStructures.Loading,
-  globalFilter   : state.UI.state_Filter.filterValue,
+  structures: state.structures.derived_filtered,
+  loading        : state.structures.Loading,
 });
 export default connect(mapstate, null)(WorkspaceCatalogue);
 
 
+// Filter -----------------------------------------------------------------------------------------------
 
 interface handleFilterChange {
   handleChange: (newavalue:number|string|number[]|string[]) => void;
 }
 
-
 export const mapStateFilter=(filttype:FilterType)=>(appstate:AppState, ownprops:any):FilterData =>({
-  set    :  appstate.Data.RibosomeStructures.filters[filttype].set,
-  value  :  appstate.Data.RibosomeStructures.filters[filttype].value
+  set    :  appstate.structures.filters[filttype].set,
+  value  :  appstate.structures.filters[filttype].value
 })
 
 export const mapDispatchFilter = (filttype: FilterType)=>(
   dispatch:Dispatch<AppActions>,
   ownProps:any
 ):handleFilterChange =>({
-  handleChange: ( newrange ) => dispatch(redux.filterChange(filttype, newvalue))
+  handleChange: ( newrange ) => dispatch(redux.filterChange(filttype, newrange))
 })
 
-// export const mapRangeFilter =(filttype:FilterType) => (
-//   dispatch:Dispatch<AppActions>,
-//   ownProps:any,
-// ):rangeFilterChange=>({
-//    handleSliderChange:(newrange)=>dispatch(redux.filterOnRangeChange(filttype, newrange))
-// })
-
-interface OwnProps {
+interface OwnFilterProps {
   name               :  string;
   max                :  number;
   min                :  number;
   step               :  number;
 }
-type SliderProps = rangeFilterChange & OwnProps;
-const _ValueSlider:React.FC<SliderProps> = (prop:SliderProps) => {
+
+const _ValueSlider: React.FC<OwnFilterProps & FilterData & handleFilterChange>
+ = (prop:OwnFilterProps & FilterData & handleFilterChange) => {
   const useSliderStyles = makeStyles({
     root: {
       width: 300,
     },
   });
-  const classes = useSliderStyles();
+
+  const classes           = useSliderStyles();
   const [value, setValue] = React.useState<number[]>([prop.min, prop.max]);
-  const [debounced_val] = useDebounce(value,500)
+  const [debounced_val]   = useDebounce(value,500)
 
   const handleChange = (event: any, newValue: number | number[]) => {
     setValue(newValue as number[]);
   };
-
-    useEffect(() => {
-    prop.handleSliderChange(debounced_val as number[])
+  useEffect(() => {
+      prop.handleChange(debounced_val)
   }, [debounced_val])
 
   return (
@@ -159,24 +116,25 @@ const _ValueSlider:React.FC<SliderProps> = (prop:SliderProps) => {
       </Typography>
 
       <Slider
-        min={prop.min}
-        max={prop.max}
         marks
-        step={prop.step}
-        value={value}
-        onChange={handleChange}
-        valueLabelDisplay="auto"
-        aria-labelledby="range-slider"
+        min               = {prop.min}
+        max               = {prop.max}
+        step              = {prop.step}
+        value             = {value as any}
+        onChange          = {handleChange}
+        valueLabelDisplay = "auto"
+        aria-labelledby   = "range-slider"
       />
     </div>
   );
 };
 
+// Filter -----------------------------------------------------------------------------------------------
 
 
-const YearSlider        =  connect(null,mapRangeFilter("YEAR"))(_ValueSlider)
-const ProtcountSlider   =  connect(null,mapRangeFilter("PROTEIN_COUNT"))(_ValueSlider)
-const ResolutionSlider  =  connect(null,mapRangeFilter("RESOLUTION"))(_ValueSlider)
+const YearSlider       = connect(mapStateFilter("YEAR"),          mapDispatchFilter("YEAR"))(_ValueSlider)
+const ProtcountSlider  = connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
+const ResolutionSlider = connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
 
 
 
@@ -228,7 +186,7 @@ const StructureFilters = () => {
         <ListSubheader>Search and Filter</ListSubheader>
       <Divider />
         <ListItem key={"search"}>
-          <SearchField  />
+          {/* <SearchField  /> */}
         </ListItem>
         <ListItem key={"year"}>
           <YearSlider min={2012} max={2021}  name={"Deposition Date"} step={1}/> 

@@ -30,9 +30,8 @@ const Main: React.FC<MainProps> = (prop:MainProps) => {
 };
 
 const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
-  __rx_structures: state.Data.RibosomeStructures.StructuresResponse,
-  loading        : state.Data.RibosomeStructures.Loading,
-  globalFilter   : state.UI.state_Filter.filterValue,
+  __rx_structures: state.structures.neo_response,
+  loading        : state.structures.Loading,
 });
 
 const mapdispatch = (

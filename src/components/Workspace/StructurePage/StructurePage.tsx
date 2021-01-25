@@ -268,7 +268,7 @@ const StructurePage: React.FC<StructurePageProps> = (
 };
 
 const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
-  globalFilter: state.UI.state_Filter.filterValue.toLowerCase(),
+  globalFilter: ""
 });
 const mapdispatch = (
   dispatch: ThunkDispatch<any, any, AppActions>,

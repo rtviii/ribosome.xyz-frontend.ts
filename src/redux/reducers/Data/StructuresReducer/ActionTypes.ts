@@ -1,13 +1,16 @@
+import { NeoStruct } from "./StructuresReducer";
+
 export const REQUEST_STRUCTS_GO       =  "REQUEST_STRUCTS_GO";
 export const REQUEST_STRUCTS_SUCCESS  =  "REQUEST_STRUCTS_SUCCESS";
 export const REQUEST_STRUCTS_ERR      =  "REQUEST_STRUCTS_ERR";
 export const FILTER_ON_SPECIES        =  "FILTER_ON_SPECIES"
 export const FILTER_CHANGE            =  "FILTER_CHANGE"
 
-export type FilterType                =  "PROTEIN_COUNT" | "YEAR" | "RESOLUTION" | "PROTEINS_PRESENT" | "SEARCH" | "SPECIES" }
-export type FilterData = {
-  set    :  boolean;
-  value  :  string[] | string | number[] | number;
+export type FilterType      = "PROTEIN_COUNT" | "YEAR" | "RESOLUTION" | "PROTEINS_PRESENT" | "SEARCH" | "SPECIES"
+export type FilterPredicate = ( value: string[] | string | number[] | number ) =>(struct:NeoStruct) => boolean;
+export type FilterData      = {
+  set            : boolean;
+  value          : string[] | string | number[] | number;
 }
 
 

@@ -12,19 +12,18 @@ const collapsFilter = (action: any) => {
 };
 const logger = createLogger({ collapsed: collapsFilter });
 
-export const UIReducer = combineReducers({
-  // state_Toolbar: toolbarReducer,
-  state_WorkspaceCatalogue: workspaceCatalogueReducer,
-  state_Filter: PagewideFilterReducer
-});
+// export const UIReducer = combineReducers({
+//   // state_Toolbar: toolbarReducer,
+//   state_WorkspaceCatalogue: workspaceCatalogueReducer,
+//   state_Filter: PagewideFilterReducer
+// });
 
-export const DataReducer = combineReducers({
-  RibosomeStructures: StructuresReducer,
-});
+// export const DataReducer = combineReducers({
+//   RibosomeStructures: StructuresReducer,
+// });
 
 export const rootReducer = combineReducers({
-  Data: DataReducer,
-  UI: UIReducer,
+structures:StructuresReducer
 });
 
 export type AppState = ReturnType<typeof rootReducer>;

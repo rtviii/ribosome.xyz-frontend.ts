@@ -246,14 +246,13 @@ const ModsCard: React.FC<{ togglename: string; activekey: string }> = ({
 };
 
 const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
-  __rx_structures: state.Data.RibosomeStructures.neo_response,
+  __rx_structures: state.structures.derived_filtered
 });
 
 const mapdispatch = (
   dispatch: ThunkDispatch<any, any, AppActions>,
   ownprops: OwnProps): DispatchProps => ({
   __rx_requestStructures: () => dispatch(redux.requestAllStructuresDjango()),
-  filterOnPdbid         : (pdbid:string) => dispatch(redux.filterOnPdbid(pdbid)),
-  filterOnSpeciesId     : (q:number[]) => dispatch(redux.filterOnSpeciesId(q))});
+});
 
 export default connect(mapstate, mapdispatch)(Home);
