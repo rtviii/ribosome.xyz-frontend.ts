@@ -32,15 +32,14 @@ interface ReduxProps {
   __rx_structures: NeoStruct[];
 }
 interface DispatchProps {
-  __rx_requestStructures: () => void;
-  filterOnPdbid         : (x:string)=>void;
-  filterOnSpeciesId     : (x:number[])=>void;
+  // __rx_requestStructures: () => void;
+  // filterOnPdbid         : (x:string)=>void;
+  // filterOnSpeciesId     : (x:number[])=>void;
 }
 type HomeProps = DispatchProps & OwnProps & ReduxProps;
 
 const Home: React.FC<HomeProps> = (prop: HomeProps) => {
 
-  useEffect(() => {prop.__rx_requestStructures()}, []);
 
   var [structn, setstructn] = useState<number>(0);
   var [protn, setProtn]     = useState<number>(0);
@@ -247,7 +246,7 @@ const ModsCard: React.FC<{ togglename: string; activekey: string }> = ({
 };
 
 const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
-  __rx_structures: state.Data.RibosomeStructures.StructuresResponse,
+  __rx_structures: state.Data.RibosomeStructures.neo_response,
 });
 
 const mapdispatch = (

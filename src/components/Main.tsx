@@ -1,16 +1,13 @@
-import React, {  createContext } from "react";
+import React, {  createContext, useEffect } from "react";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../redux/AppActions";
 import { AppState } from "../redux/store";
 import "./Main.css";
-import Navbar from "./NavbarTop/Navbar";
 import Display from "./Workspace/Display/Display";
 import * as redux from './../redux/reducers/Data/StructuresReducer/StructuresReducer'
 import { connect } from "react-redux";
 import Dashboard from './../materialui/Dashboard/Dashboard'
 
-// Some other comment to conflict. mdfields it is.lgtm
-// diverge from mdfields
 
 
 interface OwnProps {}
@@ -19,6 +16,10 @@ interface DispatchProps {__rx_requestStructures: () => void}
 
 type MainProps = DispatchProps & OwnProps & ReduxProps;
 const Main: React.FC<MainProps> = (prop:MainProps) => {
+
+  useEffect(() => {
+    prop.__rx_requestStructures()
+  }, [])
 
   return (
     <div className="main">

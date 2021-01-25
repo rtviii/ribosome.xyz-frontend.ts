@@ -30,6 +30,7 @@ import { Dispatch } from 'redux';
 import {useDebounce} from 'use-debounce'
 import {transformToShortTax} from './../../Main'
 import { SliderFilterType } from "../../../redux/reducers/Data/StructuresReducer/ActionTypes";
+import { FilterData, FilterType } from "../../../redux/reducers/Data/StructuresReducer/StructuresReducer";
 
 
 interface filterchangeProp {handleChange: (newval:string)=>void;}
@@ -45,7 +46,7 @@ export const mapdispatch = (
 // Search
 const _SearchField:React.FC<filterchangeProp> = (prop:filterchangeProp)=> {
   const [name, setName] = React.useState("");
-  const [value] = useDebounce(name, 250)
+  const [value] = useDebounce(name, 500)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     var newval = event.target.value
@@ -80,147 +81,21 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCa
   return !prop.loading ? (
     <div className="workspace-catalogue-grid">
       <div className="wspace-catalogue-filters-tools">
-
-        {/* <div className="wspace-search">
-            <input
-              value={pdbidFilter}
-              onChange={e => {
-                var value = e.target.value;
-                setPbidFilter(value);
-              }}
-            />
-          </div>
-          <br />
-          <div className="match-structs">
-             Find by proteins:
-            <Select
-              options={protopts}
-              value={protopts.filter(( obj ) => selectedProteins.includes(obj.value))}
-              onChange={handleChange} 
-              isMulti
-              isClearable
-            />
-
-          <Button onClick={()=>{requestByProtein()}}>
-          Find
-          </Button>
-
-
-          </div>
-
-          <div className="wspace-method-filter">
-            <div className="method-instance">
-              <span>ELECTRON MICROSCOPY</span>
-              <input
-                id="ELECTRON MICROSCOPY"
-                onChange={e => {
-                  var id = e.target.id;
-                  console.log(e.target.checked);
-                  if (e.target.checked) {
-                    setmethodFilter([...methodFilter, id]);
-                  } else {
-                    setmethodFilter(methodFilter.filter(str => str !== id));
-                  }
-                }}
-                type="checkbox"
-              />
-            </div>
-            <div className="method-instance">
-              <span>X-RAY DIFFRACTION</span>
-              <input
-                id="X-RAY DIFFRACTION"
-                type="checkbox"
-                onChange={e => {
-                  var id = e.target.id;
-                  if (e.target.checked) {
-                    setmethodFilter([...methodFilter, id]);
-                  } else {
-                    setmethodFilter(methodFilter.filter(str => str !== id));
-                  }
-                }}
-              />
-            </div>
-          </div>
-          <br />
-
-          <Accordion defaultActiveKey="0">
-            <Card>
-              <Card.Header>
-                <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                  Species
-                </Accordion.Toggle>
-              </Card.Header>
-
-              <Accordion.Collapse eventKey="0">
-                <Card.Body>
-                  <div className="wspace-species">
-                    <li>
-                      <div className="species-filter">
-                        <div></div>
-                        <div>Tax</div>
-                        <div>Total</div>
-                      </div>
-                    </li>
-                    {Object.entries(organismsAvailable).map((tpl: any) => {
-                      transformToShortTax(tpl[1].names[0]);
-                      return (
-                        <li>
-                          <div className="species-filter">
-                            <input
-                              onChange={e => {
-                                var checked = e.target.checked;
-                                var id = e.target.id;
-                                if (!checked) {
-                                  setorganismFilter(
-                                    organismFilter.filter(
-                                      str => !(str.toString() === id)
-                                    )
-                                  );
-                                } else {
-                                  setorganismFilter([
-                                    ...organismFilter,
-                                    id.toString(),
-                                  ]);
-                                }
-                              }}
-                              type="checkbox"
-                              id={tpl[0]}
-                            />
-                            <div>
-                              {truncate(transformToShortTax(tpl[1].names[0]))}{" "}
-                              (id:{tpl[0]})
-                            </div>
-                            <div>{tpl[1].count}</div>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </div>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion> */}
         <StructureFilters />
       </div>
-
-      <Grid container item xs={12} spacing={3}>
-        {/* {
-        
-        structures.map((x, i) => (
-
+      {/* <Grid container item xs={12} spacing={3}>
+        {prop.structures.map((x, i) => (
           <Grid item>
             <StructHero {...x} key={i} />
-          </Grid>
-
-        ))} */}
-      </Grid>
+          </Grid>))}
+      </Grid> */}
     </div>
   ) : (
     <LoadingSpinner annotation="Fetching data..." />
   );
 };
 const mapstate = (state: AppState, ownprops: {}): ReduxProps => ({
-  structures: state.Data.RibosomeStructures.StructuresResponse,
+  structures: state.Data.RibosomeStructures.derived_filtered,
   loading        : state.Data.RibosomeStructures.Loading,
   globalFilter   : state.UI.state_Filter.filterValue,
 });
@@ -228,21 +103,29 @@ export default connect(mapstate, null)(WorkspaceCatalogue);
 
 
 
+interface handleFilterChange {
+  handleChange: (newavalue:number|string|number[]|string[]) => void;
+}
 
 
-
-interface rangeFilterChange {
-  handleSliderChange:(
-  newrange    :  number[])=>void;}
-
-
-
-export const mapRangeFilter =(tp:SliderFilterType) => (
-  dispatch:Dispatch<AppActions>,
-  ownProps:any,
-):rangeFilterChange=>({
-   handleSliderChange:(newrange)=>dispatch(redux.filterOnRangeChange(tp, newrange))
+export const mapStateFilter=(filttype:FilterType)=>(appstate:AppState, ownprops:any):FilterData =>({
+  set    :  appstate.Data.RibosomeStructures.filters[filttype].set,
+  value  :  appstate.Data.RibosomeStructures.filters[filttype].value
 })
+
+export const mapDispatchFilter = (filttype: FilterType)=>(
+  dispatch:Dispatch<AppActions>,
+  ownProps:any
+):handleFilterChange =>({
+  handleChange: ( newrange ) => dispatch(redux.filterChange(filttype, newvalue))
+})
+
+// export const mapRangeFilter =(filttype:FilterType) => (
+//   dispatch:Dispatch<AppActions>,
+//   ownProps:any,
+// ):rangeFilterChange=>({
+//    handleSliderChange:(newrange)=>dispatch(redux.filterOnRangeChange(filttype, newrange))
+// })
 
 interface OwnProps {
   name               :  string;
@@ -259,12 +142,15 @@ const _ValueSlider:React.FC<SliderProps> = (prop:SliderProps) => {
   });
   const classes = useSliderStyles();
   const [value, setValue] = React.useState<number[]>([prop.min, prop.max]);
+  const [debounced_val] = useDebounce(value,500)
 
   const handleChange = (event: any, newValue: number | number[]) => {
     setValue(newValue as number[]);
-    prop.handleSliderChange(newValue as number[])
-    
   };
+
+    useEffect(() => {
+    prop.handleSliderChange(debounced_val as number[])
+  }, [debounced_val])
 
   return (
     <div className={classes.root}>
@@ -289,7 +175,7 @@ const _ValueSlider:React.FC<SliderProps> = (prop:SliderProps) => {
 
 
 const YearSlider        =  connect(null,mapRangeFilter("YEAR"))(_ValueSlider)
-const ProtcountSlider   =  connect(null,mapRangeFilter("PROTCOUNT"))(_ValueSlider)
+const ProtcountSlider   =  connect(null,mapRangeFilter("PROTEIN_COUNT"))(_ValueSlider)
 const ResolutionSlider  =  connect(null,mapRangeFilter("RESOLUTION"))(_ValueSlider)
 
 
@@ -345,17 +231,17 @@ const StructureFilters = () => {
           <SearchField  />
         </ListItem>
         <ListItem key={"year"}>
-          <YearSlider max={2021} min={2015} name={"Deposition Date"} step={1}/> 
+          <YearSlider min={2012} max={2021}  name={"Deposition Date"} step={1}/> 
         </ListItem>
         <ListItem key={"number-of-proteins"}>
-          <ProtcountSlider max={150} min={25} name={"Protein Count"} step={1}/> 
+          <ProtcountSlider min={25} max={150}  name={"Protein Count"} step={1}/> 
         </ListItem>
         <ListItem key={"resolution"}>
-          <ResolutionSlider max={6} min={1} name={"Resolution(A)"} step={0.1}/> 
+          <ResolutionSlider min={1} max={6}  name={"Resolution(A)"} step={0.1}/> 
         </ListItem>
 
       <Divider />
-        <ListItem key={"select-proteins"}>
+        <ListItem key={"select-proteins-typography"}>
           <Typography id="range-slider">Proteins Present</Typography>
         </ListItem>
         <ListItem key={"select-proteins"}>
