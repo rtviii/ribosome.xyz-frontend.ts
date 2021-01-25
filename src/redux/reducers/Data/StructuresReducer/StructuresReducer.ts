@@ -29,12 +29,12 @@ export interface StructReducerState {
 // THESE NEED TO BE MEMOIZED
 
 const FilterPredicates : Record<actions.FilterType,actions.FilterPredicate> ={
+"SEARCH"          :(value ) =>(struct:NeoStruct) => ( struct.struct.rcsb_id+struct.struct.citation_title+ struct.struct.citation_year+ struct.struct.citation_rcsb_authors+ struct.struct._organismName  ).toLowerCase().includes(value as string) ,
 "PROTEIN_COUNT"   :(value ) =>(struct:NeoStruct) => struct.rps.length >= ( value as number[] )[0] && struct.rps.length<= ( value as number[] )[1],
 "YEAR"            :(value ) =>(struct:NeoStruct) => struct.struct.citation_year >= ( value as number[] ) [0]  && struct.struct.citation_year <= (value as number[])[1],
 "RESOLUTION"      :(value ) =>(struct:NeoStruct) => struct.struct.resolution >=( value as number[] ) [0]  && struct.struct.resolution <= (value as number[])[1],
 // To implement:
 "PROTEINS_PRESENT":(value ) =>(struct:NeoStruct) => struct.rps.length >= ( value as number[] )[0] && struct.rps.length<= ( value as number[] )[1],
-"SEARCH"          :(value ) =>(struct:NeoStruct) => struct.rps.length >= ( value as number[] )[0] && struct.rps.length<= ( value as number[] )[1],
 "SPECIES"         :(value ) =>(struct:NeoStruct) => struct.rps.length >= ( value as number[] )[0] && struct.rps.length<= ( value as number[] )[1],
 }
 
@@ -100,6 +100,11 @@ export const StructuresReducer = (
         return state
       }
       return {...state, current_page:state.current_page-1}
+    case "GOTO_PAGE":
+      if (action.page_id <= state.pages_total && action.page_id >=1) {
+        return {...state, current_page: action.page_id}
+      }
+      else return state
 
     case "FILTER_CHANGE":
       var filtIndex = state.applied_filters.indexOf(action.filttype)

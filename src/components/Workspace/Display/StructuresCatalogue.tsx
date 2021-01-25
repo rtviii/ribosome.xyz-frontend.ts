@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";import "./StructuresCatalogue.css";
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { ListSubheader } from "@material-ui/core";
+import { ListSubheader, TextField } from "@material-ui/core";
 import Slider from '@material-ui/core/Slider';
 import { connect  } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -11,7 +11,6 @@ import { AppActions } from "../../../redux/AppActions";
 import LoadingSpinner  from '../../Other/LoadingSpinner'
 import SpeciesFilter from './../../../materialui/SpeciesFilter'
 import SelectProteins from './../../../materialui/SelectProteins'
-import { Button } from "react-bootstrap";
 import {md_files, ReactMarkdownElement } from './../../Other/ReactMarkdownElement'
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import {large_subunit_map} from './../../../static/large-subunit-map'
@@ -30,6 +29,34 @@ import { Dispatch } from 'redux';
 import {useDebounce} from 'use-debounce'
 import {transformToShortTax} from './../../Main'
 import { FilterData, FilterType } from "../../../redux/reducers/Data/StructuresReducer/ActionTypes";
+import Pagination from '@material-ui/lab/Pagination';
+import _ from "lodash";
+
+
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      '& > *': {
+        marginTop: theme.spacing(2),
+      },
+    },
+  }),
+);
+
+export const PaginationRounded=({gotopage, pagecount}:{
+  gotopage : (pid:number)=>void;
+  pagecount: number
+})=> {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <Pagination count={pagecount} onChange={(_,page)=>{ 
+        gotopage(page)
+        }} variant="outlined" shape="rounded" />
+    </div>
+  );
+}
 
 
 // Workspace itself
@@ -37,6 +64,7 @@ interface StateProps {
   structures  : redux.NeoStruct[];
   loading     : boolean;
   current_page: number;
+  pages_total : number
   }
 
 interface DispatchProps{
@@ -45,26 +73,49 @@ interface DispatchProps{
   goto_page: (pid:number)=>void;
 }
 type WorkspaceCatalogueProps =  StateProps & DispatchProps;
-const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCatalogueProps) => {
+const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
+  prop: WorkspaceCatalogueProps
+) => {
   useEffect(() => {
-  console.log(prop.structures)
-    return () => {
-    }
-  }, [prop.structures])
+    console.log(prop.structures);
+    return () => {};
+  }, [prop.structures]);
+
+
+
+
+const specs =_.uniq(prop.structures.map((e)=>e.struct._organismId).reduce((accumulator,specarr:number[])=>{
+  return [...accumulator, ...specarr]
+}, []))
+
+console.log(specs);
 
   return !prop.loading ? (
     <div className="workspace-catalogue-grid">
       <div className="wspace-catalogue-filters-tools">
         <StructureFilters />
       </div>
-      <button onClick={()=>{prop.next_page()}}>Nextpage</button>
-      <button onClick={()=>{prop.prev_page()}}>Prevpage</button>
+
       <Grid container item xs={12} spacing={3}>
-        {
-          prop.structures.slice(prop.current_page * 20, prop.current_page*20+20).map((x, i) => (
-          <Grid item>
-            <StructHero {...x} key={i} />
-          </Grid>))}
+        <Grid item xs={12}>
+          <PaginationRounded
+            {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}
+          />
+        </Grid>
+        <Grid container item xs={12} spacing={3}  alignItems="flex-start">
+          {prop.structures
+            .slice(( prop.current_page-1 ) * 20, prop.current_page * 20 + 20)
+            .map((x, i) => (
+              <Grid item>
+                <StructHero {...x} key={i} />
+              </Grid>
+            ))}
+        </Grid>
+        <Grid item xs={12}>
+          <PaginationRounded
+            {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}
+          />
+        </Grid>
       </Grid>
     </div>
   ) : (
@@ -72,9 +123,10 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (prop: WorkspaceCa
   );
 };
 const mapstate = (state: AppState, ownprops: {}): StateProps => ({
-  structures  : state.structures.derived_filtered,
-  loading     : state.structures.Loading,
-  current_page: state.structures.current_page
+  structures: state.structures.derived_filtered,
+  loading: state.structures.Loading,
+  current_page: state.structures.current_page,
+  pages_total: state.structures.pages_total,
 });
 const mapdispatch =(
   dispatch:Dispatch<AppActions>,
@@ -87,12 +139,20 @@ const mapdispatch =(
 export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
 
 
-// Filter -----------------------------------------------------------------------------------------------
 
+
+
+
+
+
+
+
+
+
+// Filter Generics-----------------------------------------------------------------------------------------------
 interface handleFilterChange {
   handleChange: (newavalue:number|string|number[]|string[]) => void;
 }
-
 export const mapStateFilter=(filttype:FilterType)=>(appstate:AppState, ownprops:any):FilterData =>({
   set    :  appstate.structures.filters[filttype].set,
   value  :  appstate.structures.filters[filttype].value
@@ -105,15 +165,31 @@ export const mapDispatchFilter = (filttype: FilterType)=>(
   handleChange: ( newrange ) => dispatch(redux.filterChange(filttype, newrange))
 })
 
-interface OwnFilterProps {
+
+const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
+{
+  const [value, setValue] = useState('')
+  const [debounced] = useDebounce(value,250)
+
+  const handleChange = (e:any)=>{
+    setValue(e.target.value)
+  }
+  useEffect(() => {
+    props.handleChange(debounced)
+  }, [debounced])
+  return(
+      <TextField id="standard-basic" label="Search" value={value}  onChange={handleChange}/>
+  )
+}
+
+interface OwnSliderFilterProps {
   name               :  string;
   max                :  number;
   min                :  number;
   step               :  number;
 }
-
-const _ValueSlider: React.FC<OwnFilterProps & FilterData & handleFilterChange>
- = (prop:OwnFilterProps & FilterData & handleFilterChange) => {
+const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterChange>
+ = (prop:OwnSliderFilterProps & FilterData & handleFilterChange) => {
   const useSliderStyles = makeStyles({
     root: {
       width: 300,
@@ -151,15 +227,11 @@ const _ValueSlider: React.FC<OwnFilterProps & FilterData & handleFilterChange>
   );
 };
 
-// Filter -----------------------------------------------------------------------------------------------
-
 
 const YearSlider       = connect(mapStateFilter("YEAR"),          mapDispatchFilter("YEAR"))(_ValueSlider)
 const ProtcountSlider  = connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
 const ResolutionSlider = connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
-
-
-
+const SearchField      = connect(mapStateFilter("SEARCH"), mapDispatchFilter("SEARCH"))(_SearchField)
 
 // Filters component
 const StructureFilters = () => {
@@ -205,10 +277,9 @@ const StructureFilters = () => {
     >
       <div className={filterClasses.toolbar} />
       <List>
-        <ListSubheader>Search and Filter</ListSubheader>
       <Divider />
         <ListItem key={"search"}>
-          {/* <SearchField  /> */}
+          <SearchField/>
         </ListItem>
         <ListItem key={"year"}>
           <YearSlider min={2012} max={2021}  name={"Deposition Date"} step={1}/> 
