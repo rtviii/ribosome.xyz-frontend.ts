@@ -11,7 +11,7 @@ import hero from './../static/sample-hero.png'
 import { Grid, TextareaAutosize } from '@material-ui/core';
 import { NeoStruct } from '../redux/reducers/Data/StructuresReducer/StructuresReducer';
 import { truncate } from '../components/Main';
-import { Link } from 'react-router-dom';
+import { Link,useHistory} from 'react-router-dom';
 
 const useStyles = makeStyles({
   card: {
@@ -64,13 +64,12 @@ className={classes.annotation}
 const StructHero=(d:NeoStruct)=> {
   const classes = useStyles();
 
-  // 
+  const history = useHistory();
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} >
       
-      <CardActionArea >
-        <CardContent>
-      <Link to={`/structs/${d.struct.rcsb_id}` }>
+      <CardActionArea onClick={()=>history.push(`/structs/${d.struct.rcsb_id}`)}>
+        <CardContent >
           <CardMedia
             component="img"
             alt="Ribosome Banner"
@@ -79,7 +78,6 @@ const StructHero=(d:NeoStruct)=> {
             title="Ribosome Banner"
           />
 
-      </Link>
 
 
           <Grid

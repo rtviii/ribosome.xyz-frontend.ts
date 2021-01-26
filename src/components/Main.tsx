@@ -9,7 +9,6 @@ import { connect } from "react-redux";
 import Dashboard from './../materialui/Dashboard/Dashboard'
 
 
-
 interface OwnProps {}
 interface ReduxProps {}
 interface DispatchProps {__rx_requestStructures: () => void}
@@ -22,7 +21,7 @@ const Main: React.FC<MainProps> = (prop:MainProps) => {
   }, [])
 
   return (
-    <div className="main">
+    <div>
       <Dashboard/>
       <Display />
      </div> 

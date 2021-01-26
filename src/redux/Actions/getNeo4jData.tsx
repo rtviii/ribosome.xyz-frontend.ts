@@ -23,10 +23,16 @@ type  Neo4jEndpoints =
   | getLigandsByStruct
   | get_ligand_nbhd
   | match_structs_by_proteins
-
+  | get_surface_ratios
 
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
+interface get_surface_ratios{
+  endpoint:'get_surface_ratios',
+  params:{
+    pdbid: string
+  }
+}
 
 interface pairwise_align{
   endpoint:"pairwise_align",

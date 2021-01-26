@@ -39,19 +39,15 @@ const MenuItem = (d:MenuItemData
 )=>{
 
   return (
-          <ListItem button key={d.key} >
-            <ListItemIcon>
-              {
-                <img src={enzymes} style={{height:"20px",width:"20px"}}/>
-              }
-
-
-            </ListItemIcon>
-            <Link key='proteins-link' to={d.linkto}>
-            <ListItemText primary={d.menutext} />
-              </Link>
-          </ListItem>
-  )
+    <ListItem button key={d.key}>
+      <ListItemIcon>
+        {<img src={enzymes} style={{ height: "20px", width: "20px" }} />}
+      </ListItemIcon>
+      <Link key="proteins-link" to={d.linkto}>
+        <ListItemText primary={d.menutext} />
+      </Link>
+    </ListItem>
+  );
 }
 
 export default function TemporaryDrawer() {
@@ -93,7 +89,7 @@ export default function TemporaryDrawer() {
       <List>
         <ListSubheader>Tools</ListSubheader>
         <MenuItem key='new1' menutext="Binding Interfaces" linkto='/interfaces'/>
-        <MenuItem key='new1' menutext="Protein Classification" linkto='/classify'/>
+        <MenuItem key='new1' menutext="Protein Classification" linkto='/rpclassification'/>
         <MenuItem key='new1' menutext="Protein Alignment" linkto='/rpalign'/>
         <MenuItem key='new1' menutext="Exit Tunnel" linkto='/tunnel'/>
       </List>
@@ -101,21 +97,25 @@ export default function TemporaryDrawer() {
   );
 
   return (
-     
     <div
-style={{position:"absolute", left:"20px", top:"20px", zIndex:4000}}
+      style={{ position: "absolute", left: "20px", bottom: "20px", zIndex: 4000 }}
     >
-
-        <React.Fragment key={'left'} >
-          <Button onClick={toggleDrawer('left', true)} className={classes.root} >
-            <img src={gear} style={{width:"40px", height:"40px" }} className={classes.root}/>
-
-
-          </Button>
-          <Drawer anchor={'left'} open={state['left']} onClose={toggleDrawer('left', false)}>
-            {list('left')}
-          </Drawer>
-        </React.Fragment>
+      <React.Fragment key={"left"}>
+       {!state.left ? <Button onClick={toggleDrawer("left", true)} className={classes.root}>
+          <img
+            src={gear}
+            style={{ width: "100px", opacity:"0.5", height: "100px" }}
+            className={classes.root}
+          />
+        </Button> : <></>} 
+        <Drawer
+          anchor={"left"}
+          open={state["left"]}
+          onClose={toggleDrawer("left", false)}
+        >
+          {list("left")}
+        </Drawer>
+      </React.Fragment>
     </div>
   );
 }

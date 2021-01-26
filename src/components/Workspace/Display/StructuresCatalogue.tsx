@@ -177,19 +177,14 @@ const _SpeciesList:React.FC<SpeciesFilterProps> = (prop)=> {
     if (currentIndex === -1) {
       newChecked.push(value);
       // -------
-      
       var newarr = prop.value
-      newarr =( newarr as number[]).filter((n:number)=>!(SpeciesGroupings[speckey].includes(n)))
+      newarr = ( newarr as number[]).filter((n:number)=>!(SpeciesGroupings[speckey].includes(n)))
       prop.handleChange(newarr)
     } else {
       newChecked.splice(currentIndex, 1);
 
       var newvalue  = SpeciesGroupings[speckey].reduce( ( acc,e:number ) => [ ...acc,e ], ( prop.value as number[] ))
       prop.handleChange(newvalue)
-      
-
-      
-    
     }
 
     
@@ -197,11 +192,6 @@ const _SpeciesList:React.FC<SpeciesFilterProps> = (prop)=> {
   };
 
 
-
-  const store =useStore()
-
-  var s:AppState =store.getState()
-  console.log(s.structures.filters.SPECIES)
   return (
     <List className={classes.root}>
       {Object.entries(SpeciesGroupings).map((value,index) => {
