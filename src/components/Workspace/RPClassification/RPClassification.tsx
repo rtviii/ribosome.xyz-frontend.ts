@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react'
 import {getNeo4jData} from './../../../redux/Actions/getNeo4jData'
 
+
+const surface_structs  = ['']
+
+
 const RPClassification = () => {
   getNeo4jData("neo4j", {
     endpoint: "get_surface_ratios",

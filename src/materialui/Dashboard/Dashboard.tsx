@@ -98,7 +98,7 @@ export default function TemporaryDrawer() {
 
   return (
     <div
-      style={{ position: "absolute", left: "20px", bottom: "20px", zIndex: 4000 }}
+      style={{ position: "fixed", left: "20px", bottom: "20px", zIndex: 4000 }}
     >
       <React.Fragment key={"left"}>
        {!state.left ? <Button onClick={toggleDrawer("left", true)} className={classes.root}>
