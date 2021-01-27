@@ -7,7 +7,7 @@ import { flattenDeep  } from "lodash";
 export interface NeoStruct{
   struct   :  RibosomeStructure;
   ligands  :  string[];
-  rps      :  Array<{ noms: string[]; strands: string }>;
+  rps      :  Array<{ noms: string[]; surface_ratio:number|null,strands: string }>;
   rnas     :  string[];
 }
 export interface StructReducerState {
