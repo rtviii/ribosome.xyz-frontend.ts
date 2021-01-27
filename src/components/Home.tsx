@@ -13,7 +13,7 @@ import ubc from "./../static/ubc-logo.png";
 import gatech from "./../static/gatech.png";
 import InlineSpinner from "./Other/InlineSpinner";
 
-import { Accordion, Card } from "react-bootstrap";
+// import { Accordion, Card } from "react-bootstrap";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -25,6 +25,7 @@ import CardContent from "@material-ui/core/CardContent";
 
 import {
   Button,
+  Card,
   createStyles,
   makeStyles,
   responsiveFontSizes,
@@ -215,22 +216,21 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
   return (
     <Card className={classes.root}>
       <CardContent>
-
         <Grid
           container
           xs={12}
           justify="space-between"
           alignItems="flex-start"
-          spacing={1}>
-
+          spacing={1}
+        >
           <Grid
             justify="center"
             alignContent="center"
             alignItems="center"
             container
             item
-            xs={4}>
-
+            xs={4}
+          >
             <img src={raylogo} className={classes.logoimg} />
           </Grid>
 
@@ -241,7 +241,6 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
               </div>
             </div>
           </Grid>
-
         </Grid>
         <Typography className={classes.cardtitle} variant="h5">
           Comprehensive Resource for Ribosomal Structures
@@ -251,7 +250,13 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
       <CardActions>
         <Grid container xs={12} spacing={2}>
           <Grid item xs={12}>
-            <Paper onClick={()=>{history.push(`/structs`)}} className={classes.section} variant="outlined">
+            <Paper
+              onClick={() => {
+                history.push(`/structs`);
+              }}
+              className={classes.section}
+              variant="outlined"
+            >
               <Typography variant="h5">Ribosome Structures</Typography>
               <Typography variant="body2">
                 This database presents a catalogue of all the ribosome
@@ -264,7 +269,13 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
           </Grid>
 
           <Grid item xs={12}>
-            <Paper onClick={()=>{history.push(`/rps`)}}   className={classes.section} variant="outlined">
+            <Paper
+              onClick={() => {
+                history.push(`/rps`);
+              }}
+              className={classes.section}
+              variant="outlined"
+            >
               <Typography variant="h5">Ribosomal Proteins</Typography>
               <Typography variant="body2">
                 To enable comprehensive comparison of structures deposited by
@@ -278,7 +289,13 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
           </Grid>
 
           <Grid item xs={12}>
-            <Paper onClick={()=>{history.push(`/ligands`)}} className={classes.section} variant="outlined">
+            <Paper
+              onClick={() => {
+                history.push(`/ligands`);
+              }}
+              className={classes.section}
+              variant="outlined"
+            >
               <Typography variant="h5">
                 Ligands, Antibiotics and Small Molecules
               </Typography>
@@ -292,7 +309,13 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            <Paper onClick={()=>{history.push(`/tunnel`)}} className={classes.section} variant="outlined">
+            <Paper
+              onClick={() => {
+                history.push(`/tunnel`);
+              }}
+              className={classes.section}
+              variant="outlined"
+            >
               <Typography variant="h5">Ribosome Exit Tunnel</Typography>
               <Typography variant="body2">
                 The database contains ribosome exit-tunnel models from some
@@ -310,7 +333,13 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            <Paper onClick={()=>{history.push(`/rnas`)}} className={classes.section} variant="outlined">
+            <Paper
+              onClick={() => {
+                history.push(`/rnas`);
+              }}
+              className={classes.section}
+              variant="outlined"
+            >
               <Typography variant="h5">Ribosomal RNA, tRNA and mRNA</Typography>
               <Typography variant="body2">
                 This database presents a catalogue of all the ribosome
@@ -322,10 +351,8 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            <Paper  className={classes.section} variant="outlined">
-              <Typography variant="h5">
-                Current Limitations/Work in progress
-              </Typography>
+            <Paper className={classes.section} variant="outlined">
+              <Typography variant="h5">Current Limitations</Typography>
               <Typography variant="body2">
                 Due to the additional peculiarities of the mitochonodrial
                 ribosome structrue, the current version of the database makes no
@@ -333,15 +360,29 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                 ribosomes. Hence, the corresponding nomenclature classes (i.e.
                 uL4m or uL4c) are also absent from the proteins repository. The
                 species classes of certain structures are somewhat ambiguous due
-                to the fact that PDB marks individual proteins, not whole
-                structures as belonging to a certain species. if some structures
+                to the fact that PDB marks individual proteins(not whole
+                structures as belonging to a certain species if some structures
                 contain proteins from multiple species, multiple species figure
-                in this structure 's profile(ex.) Classification of structures
-                according to following charateristics is desirable, but is not
-                yet implemneted: Stages of translation cycle Large/Small
-                subunits presence Classification for ribosomal proteins based
-                on: Buried/solvent-exposed/PTC-interfacing position Neighboring
-                proteins
+                in this structure 's profile)
+              </Typography>
+              <Typography variant="h5">Future Work</Typography>
+              <Typography variant="body2">
+                Classification of structures according to following
+                charateristics is desirable:
+                <ul>
+                  <li>Stage of translation cycle</li>
+                  <li>Large/Small subunits presence</li>
+                </ul>
+                Analytical modules to be implemented next:
+                <ul>
+                  <li>
+                    Protein-contact maps
+                  </li>
+                  <li>
+                    Class-based clustering of proteins across a set of structures
+                  </li>
+
+                </ul>
               </Typography>
             </Paper>
           </Grid>

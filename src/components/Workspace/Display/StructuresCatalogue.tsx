@@ -37,6 +37,8 @@ import { filterChange, FilterData, FilterType } from "../../../redux/reducers/Da
 import {SpeciesGroupings} from './taxid_map'
 import Pagination from '@material-ui/lab/Pagination';
 import _, { includes, propertyOf } from "lodash";
+import Home from "../../Home";
+import {useHistory} from "react-router-dom";
 
 
 
@@ -345,10 +347,18 @@ const StructureFilters = () => {
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing(3),
       },
+      home:{
+        cursor:"pointer",
+        fontSize:20,
+        "&:hover":{
+          background:"gray"
+        }
+      }
     })
   );
 
   const filterClasses = useFiltersStyles();
+  const history = useHistory();
 
   return (
     <Drawer
@@ -362,6 +372,14 @@ const StructureFilters = () => {
     >
       <div className={filterClasses.toolbar} />
       <List>
+      <Divider />
+        <ListItem className={filterClasses.home} >
+          <ListItemText  onClick={()=>{
+
+          history.push(`/home`)
+
+          }} primary={"Home"} />
+        </ListItem>
       <Divider />
         <ListItem key={"search"}>
           <SearchField/>
