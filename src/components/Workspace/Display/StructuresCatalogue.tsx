@@ -243,7 +243,6 @@ export const mapStateFilter=(filttype:FilterType)=>(appstate:AppState, ownprops:
   set    :  appstate.structures.filters[filttype].set,
   value  :  appstate.structures.filters[filttype].value
 })
-
 export const mapDispatchFilter = (filttype: FilterType)=>(
   dispatch:Dispatch<AppActions>,
   ownProps:any
@@ -252,7 +251,7 @@ export const mapDispatchFilter = (filttype: FilterType)=>(
 })
 
 
-const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
+ const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
 {
   const [value, setValue] = useState('')
   const [debounced] = useDebounce(value,250)
@@ -314,14 +313,14 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
 };
 
 
-const YearSlider       = connect(mapStateFilter("YEAR"),          mapDispatchFilter("YEAR"))(_ValueSlider)
-const ProtcountSlider  = connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
-const ResolutionSlider = connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
-const SearchField      = connect(mapStateFilter("SEARCH"), mapDispatchFilter("SEARCH"))(_SearchField)
-const SpeciesList      = connect(mapStateFilter("SPECIES"), mapDispatchFilter("SPECIES"))(_SpeciesList)
+export const YearSlider       = connect(mapStateFilter("YEAR"),          mapDispatchFilter("YEAR"))(_ValueSlider)
+export const ProtcountSlider  = connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
+export const ResolutionSlider = connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
+export const SearchField      = connect(mapStateFilter("SEARCH"), mapDispatchFilter("SEARCH"))(_SearchField)
+export const SpeciesList      = connect(mapStateFilter("SPECIES"), mapDispatchFilter("SPECIES"))(_SpeciesList)
 
 // Filters component
-const StructureFilters = () => {
+export const StructureFilters = () => {
   const drawerWidth = 240;
   const useFiltersStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -342,11 +341,11 @@ const StructureFilters = () => {
       },
       // necessary for content to be below app bar
       toolbar: theme.mixins.toolbar,
-      content: {
-        flexGrow: 1,
-        backgroundColor: theme.palette.background.default,
-        padding: theme.spacing(3),
-      },
+      // content: {
+      //   flexGrow: 1,
+      //   backgroundColor: theme.palette.background.default,
+      //   padding: theme.spacing(3),
+      // },
       home:{
         cursor:"pointer",
         fontSize:20,

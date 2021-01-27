@@ -15,20 +15,95 @@ import SendIcon from '@material-ui/icons/Send';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
-import { Grid } from '@material-ui/core';
+import { AppBar, Grid } from '@material-ui/core';
 import { Typography } from '@material-ui/core'
 import { useHistory } from 'react-router-dom';
+import {SearchField, YearSlider, ProtcountSlider, SpeciesList, ResolutionSlider}  from './../../Workspace/Display/StructuresCatalogue'
+import { Divider } from '@material-ui/core';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Box from '@material-ui/core/Box';
+
 
 const surface_structs  = ['3J7Z',"3J9M","3J79","5JVG","5NRG","5X8T","5XY3"]
+
+const ProteinCategories=() =>{
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index    : any;
+  value    : any;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+const useProteinCategoriesStyles = makeStyles((theme: Theme) => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: "white",
+  },
+}));
+  const classes = useProteinCategoriesStyles();
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setValue(newValue);
+  };
+
+function a11yProps(index: any) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
+  return (
+    <div className={classes.root}>
+
+        <Tabs value={value} onChange={handleChange} >
+          <Tab label="Penetration Ratios" {...a11yProps(0)} />
+          <Tab label="Exit Tunnel Distance" {...a11yProps(1)} />
+          <Tab label="PTC Distance" {...a11yProps(2)} />
+        </Tabs>
+
+      <TabPanel value={value} index={0}>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+      </TabPanel>
+    </div>
+  );
+}
+
 const RPClassificationStructAvatar=() =>{
 
 const useClassificationAvatarStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      outline:"1px solid gray",
       width: '100%',
       fontSize:20,
       borderRadius: "5px",
-      // fontSize:"20px",
       maxWidth: 300,
       "> element":{
         fontSize:8
@@ -65,7 +140,10 @@ const useClassificationAvatarStyles = makeStyles((theme: Theme) =>
         cursor:"pointer",
       },
     },
-    struct:{
+    structSubheader:{
+      fontSize:20,
+      fontWeight:"bold",
+      borderBottom:"1px solid black"
     }
   }),
 );
@@ -80,7 +158,6 @@ const useClassificationAvatarStyles = makeStyles((theme: Theme) =>
 
 
   const ProteinRow = ({measure,strand}:{measure:number, strand:string}) =>{
-
     return (
           <ListItem className={classes.listItem}>
             <Grid container direction='row' justify='space-between'>
@@ -99,49 +176,72 @@ const useClassificationAvatarStyles = makeStyles((theme: Theme) =>
       aria-labelledby="nested-list-subheader"
       className={classes.root}
       subheader={
-        <ListSubheader className={classes.root}>3J9M</ListSubheader>
+        <ListSubheader className={classes.structSubheader}>
+          <Grid direction="row">            
+         3J9M {"                 "}
+            {/* <Grid item> */}
+              <Typography variant="caption">Species</Typography>
+            {/* </Grid> */}
+            {/* <Grid item> */}
+              {/* <Typography variant="caption">Assembly Phase</Typography> */}
+            {/* </Grid> */}
+          </Grid>
+        </ListSubheader>
       }
     >
-      <ListItem className={classes.root} button onClick={()=>{ handleClick('lsu') }}>
+      <ListItem
+        className={classes.root}
+        button
+        onClick={() => {
+          handleClick("lsu");
+        }}
+      >
         <ListItemText secondary="LSU" />
         {lsuOpen ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
 
       <Collapse in={lsuOpen} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-
-{[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9].map(r=>
-  
-  <ProteinRow {...{measure:r, strand:"uL4"}}/>
-
-
-  )}
-
+          {[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9].map(r => (
+            <ProteinRow {...{ measure: r, strand: "uL4" }} />
+          ))}
         </List>
       </Collapse>
 
-
-
-
-      <ListItem button onClick={()=>{ handleClick('ssu') }}>
+      <ListItem
+        button
+        onClick={() => {
+          handleClick("ssu");
+        }}
+      >
         <ListItemText secondary="SSU" />
         {ssuOpen ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
 
       <Collapse in={ssuOpen} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-
-{[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9].map(r=>
-  
-
-          <ListItem className={classes.listItem}>
-            <Grid container direction='row' justify='space-between'>
-            <ListItemText  disableTypography children={<Typography className={classes.protein}>uL4</Typography>} />
-            <div style={{zIndex:20, minWidth:`${r*60}%`, alignSelf:"center",minHeight:"8px", height:"8px", backgroundColor:"rgba(243,221,74,0.45)"}} /> 
-
-            </Grid>
-          </ListItem>
-  )}
+          {[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9].map(r => (
+            <ListItem className={classes.listItem}>
+              <Grid container direction="row" justify="space-between">
+                <ListItemText
+                  disableTypography
+                  children={
+                    <Typography className={classes.protein}>uL4</Typography>
+                  }
+                />
+                <div
+                  style={{
+                    zIndex: 20,
+                    minWidth: `${r * 60}%`,
+                    alignSelf: "center",
+                    minHeight: "8px",
+                    height: "8px",
+                    backgroundColor: "rgba(243,221,74,0.45)",
+                  }}
+                />
+              </Grid>
+            </ListItem>
+          ))}
         </List>
       </Collapse>
     </List>
@@ -158,38 +258,47 @@ const RPClassification = () => {
   const [structs, setStructs] = useState<RibosomeStructure[]>([])
   const style = makeStyles({
     root:{
-      backgroundColor:"gray",
       // background:"black"
     }
   })()
   return (
-   <Grid item container className={style.root} xs={12}>
-     <Grid item container >
-    -"in constructon" chip
-    -explanation
-     </Grid>
+    <Grid item container className={style.root} xs={12}>
+      <Grid item container>
+        -"in constructon" chip -explanation
+      </Grid>
 
-     <Grid item container xs={12} >
-
-{/* [ ]                       |struct filters row */}
-<Grid item container xs={12} justify="flex-end" >
-  <Grid item xs={8}> ffiltersfiltersfiltersfiltersfiltersfiltersilters</Grid>
-</Grid>
-{/* protein filters,categories|struct cards*/}
-<Grid item container xs={12} justify="flex-end" >
-  <Grid item xs={4}> filters</Grid>
-  <Grid item xs={8}>
-
-<RPClassificationStructAvatar/>
-
-
-  </Grid>
-</Grid>
-     </Grid>
-
-
-
-   </Grid> 
+      <Grid item container xs={12}>
+        <Grid item container xs={12} justify="flex-end">
+          <Grid item xs={3}></Grid>
+          <Grid item xs={9}><ProteinCategories/></Grid>
+        </Grid>
+        <Grid item container xs={12} justify="flex-end">
+          <Grid item container direction="column" xs={3}>
+            <List>
+              <ListItem>
+                <Typography variant="h5">Structure Filters</Typography>
+              </ListItem>
+              <Divider/>
+              <ListItem>
+                <SearchField />
+              </ListItem>
+              <ListItem>
+                <ProtcountSlider min={25} max={150}  name={"Protein Count"} step={1}/>
+              </ListItem>
+              <ListItem>
+                <ResolutionSlider min={1} max={6}  name={"Resolution(A)"} step={0.1}/>
+              </ListItem>
+              <ListItem>
+                <YearSlider min={2012} max={2021}  name={"Deposition Date"} step={1}/>
+              </ListItem>
+            </List>
+          </Grid>
+          <Grid item xs={9}>
+            <RPClassificationStructAvatar />
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 
