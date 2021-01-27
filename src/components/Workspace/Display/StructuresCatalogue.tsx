@@ -39,6 +39,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import _, { includes, propertyOf } from "lodash";
 import Home from "../../Home";
 import {useHistory} from "react-router-dom";
+import PageAnnotation from './PageAnnotation'
 
 
 
@@ -96,6 +97,7 @@ const specs =_.uniq(prop.structures.map((e)=>e.struct._organismId).reduce((accum
       </div>
 
       <Grid container item xs={12} spacing={3}>
+        <PageAnnotation/>
         <Grid item xs={12}>
           <PaginationRounded
             {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}
@@ -140,6 +142,24 @@ export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
 // SPECIES 
 
 
+
+
+
+
+// Filter Generics-----------------------------------------------------------------------------------------------
+interface handleFilterChange {
+  handleChange: (newavalue:number|string|number[]|string[]) => void;
+}
+export const mapStateFilter=(filttype:FilterType)=>(appstate:AppState, ownprops:any):FilterData =>({
+  set    :  appstate.structures.filters[filttype].set,
+  value  :  appstate.structures.filters[filttype].value
+})
+export const mapDispatchFilter = (filttype: FilterType)=>(
+  dispatch:Dispatch<AppActions>,
+  ownProps:any
+):handleFilterChange =>({
+  handleChange: ( newrange ) => dispatch(redux.filterChange(filttype, newrange))
+})
 
 
 interface OwnSpecFilterProps{}
@@ -230,27 +250,6 @@ const _SpeciesList:React.FC<SpeciesFilterProps> = (prop)=> {
 }
 
 
-
-
-
-
-
-// Filter Generics-----------------------------------------------------------------------------------------------
-interface handleFilterChange {
-  handleChange: (newavalue:number|string|number[]|string[]) => void;
-}
-export const mapStateFilter=(filttype:FilterType)=>(appstate:AppState, ownprops:any):FilterData =>({
-  set    :  appstate.structures.filters[filttype].set,
-  value  :  appstate.structures.filters[filttype].value
-})
-export const mapDispatchFilter = (filttype: FilterType)=>(
-  dispatch:Dispatch<AppActions>,
-  ownProps:any
-):handleFilterChange =>({
-  handleChange: ( newrange ) => dispatch(redux.filterChange(filttype, newrange))
-})
-
-
  const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
 {
   const [value, setValue] = useState('')
@@ -339,13 +338,7 @@ export const StructureFilters = () => {
       drawerPaper: {
         width: drawerWidth,
       },
-      // necessary for content to be below app bar
       toolbar: theme.mixins.toolbar,
-      // content: {
-      //   flexGrow: 1,
-      //   backgroundColor: theme.palette.background.default,
-      //   padding: theme.spacing(3),
-      // },
       home:{
         cursor:"pointer",
         fontSize:20,

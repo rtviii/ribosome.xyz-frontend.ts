@@ -10,7 +10,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
-import { ListSubheader } from '@material-ui/core';
+import { ListSubheader, Tooltip } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import gear from './../../static/gear.png'
 import enzymes from './../../static/enzymes-icon.png'
@@ -35,7 +35,7 @@ type MenuItemData = {
   linkto  : string
   menutext: string
 }
-const MenuItem = (d:MenuItemData
+const MenuItem = (d:MenuItemData, tooltip:boolean
 )=>{
 
   return (
@@ -43,11 +43,11 @@ const MenuItem = (d:MenuItemData
       <ListItemIcon>
         {<img src={enzymes} style={{ height: "20px", width: "20px" }} />}
       </ListItemIcon>
+
       <Link key="proteins-link" to={d.linkto}>
         <ListItemText primary={d.menutext} />
       </Link>
-    </ListItem>
-  );
+    </ListItem>)
 }
 
 export default function TemporaryDrawer() {

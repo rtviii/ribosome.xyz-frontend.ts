@@ -125,7 +125,6 @@ const useClassificationAvatarStyles = makeStyles((theme: Theme) =>
             <Grid container direction='row' justify='space-between'>
             <ListItemText  onClick={()=>{
               proteinSelected(strand)
-              // history.push(`/rps/${strand}`)
               }} disableTypography children={<Typography className={classes.protein}>{strand}</Typography>} />
             <div style={{zIndex:20, minWidth:`${measure*60}%`, alignSelf:"center",minHeight:"8px", height:"8px", backgroundColor:"rgba(243,221,74,0.45)"}} /> 
             </Grid>
@@ -268,7 +267,7 @@ useEffect(() => {
     params: null
   }).then(l => {
     setStructs(l.data)
-    console.log(l.data);
+    setFilteredLocalStructs(l.data)
   });
 }, [])
 
