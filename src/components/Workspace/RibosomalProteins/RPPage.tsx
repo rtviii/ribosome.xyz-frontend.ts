@@ -6,7 +6,6 @@ import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import RibosomalProteinHero from "./RibosomalProteinHero";
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import axios from 'axios'
-import { PageContext } from "../../Main";
 
 interface NeoHomolog {
   parent : string;
@@ -67,10 +66,8 @@ const RPPage = () => {
 
 
   return params!.nom ? (
-    <PageContext.Provider value="RibosomalProteinPage">
-  {/* <button   onClick={()=>RiboVisionRequest()} >Ribvosion</button> */}
-    <h1>Ribosomal Proteins</h1>
       <div className="rp-page">
+    <h1>Ribosomal Proteins</h1>
         <h1>{params.nom}</h1>
           {homologs.map((e: NeoHomolog) => {
             return (
@@ -99,7 +96,6 @@ const RPPage = () => {
           })}
 
       </div>
-    </PageContext.Provider>
   ) : (
     <div>"Fetching..."</div>
   );

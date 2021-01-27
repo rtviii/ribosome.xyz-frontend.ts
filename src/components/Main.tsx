@@ -1,23 +1,13 @@
-import React, {  createContext } from "react";
+import React, {  createContext, useEffect } from "react";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../redux/AppActions";
 import { AppState } from "../redux/store";
 import "./Main.css";
-import Navbar from "./NavbarTop/Navbar";
 import Display from "./Workspace/Display/Display";
 import * as redux from './../redux/reducers/Data/StructuresReducer/StructuresReducer'
 import { connect } from "react-redux";
+import Dashboard from './../materialui/Dashboard/Dashboard'
 
-// Some other comment to conflict. mdfields it is.lgtm
-// diverge from mdfields
-
-export type PageContexts =
-  | "RibosomalProteinPage"
-  | "ProteinCatalogue"
-  | "StructurePage"
-  | "Main"
-  | "WorkspaceCatalogue";
-export const PageContext = createContext<PageContexts>("Main");
 
 interface OwnProps {}
 interface ReduxProps {}
@@ -26,18 +16,21 @@ interface DispatchProps {__rx_requestStructures: () => void}
 type MainProps = DispatchProps & OwnProps & ReduxProps;
 const Main: React.FC<MainProps> = (prop:MainProps) => {
 
+  useEffect(() => {
+    prop.__rx_requestStructures()
+  }, [])
+
   return (
-    <div className="main">
-      <Navbar />
+    <div>
+      <Dashboard/>
       <Display />
-    </div>
+     </div> 
   );
 };
 
 const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
-  __rx_structures: state.Data.RibosomeStructures.StructuresResponse,
-  loading        : state.Data.RibosomeStructures.Loading,
-  globalFilter   : state.UI.state_Filter.filterValue,
+  __rx_structures: state.structures.neo_response,
+  loading        : state.structures.Loading,
 });
 
 const mapdispatch = (
@@ -49,3 +42,25 @@ const mapdispatch = (
 
 export default connect(mapstate, mapdispatch)(Main);
 
+
+export const truncate = (str:string, charlim:number, truncateto:number) =>{
+  if (typeof str === 'undefined'){
+    return str
+  }
+    return str.length > 20 ? str.substring(0, 15) + "..." : str;
+}
+export const transformToShortTax = (taxname:string) =>{
+  if (typeof taxname === 'string'){
+    var words = taxname.split(' ') 
+    if ( words.length>1 ){
+    var fl =words[0].slice(0,1)
+    var full = fl.toLocaleUpperCase() + '. ' + words[1]
+    return full
+    }
+    else
+    {
+      return words[0]
+    }
+  }
+  else return taxname
+}

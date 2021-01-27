@@ -1,326 +1,418 @@
 import React, { useEffect, useState } from "react";import "./StructuresCatalogue.css";
-import { connect  } from "react-redux";
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import { ListSubheader, TextField } from "@material-ui/core";
+import Slider from '@material-ui/core/Slider';
+import { connect, useStore  } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { AppState } from "../../../redux/store";
-import StructHero from "../StructureHero/StructHero";
-import { PageContext } from "../../Main";
+// import StructHero from "../StructureHero/StructHero";
 import { AppActions } from "../../../redux/AppActions";
 import LoadingSpinner  from '../../Other/LoadingSpinner'
-import * as redux from '../../../redux/reducers/Data/StructuresReducer/StructuresReducer'
-import { Accordion, Card } from "react-bootstrap";
-import { Button } from "react-bootstrap";
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import CommentIcon from '@material-ui/icons/Comment';
+import SelectProteins from './../../../materialui/SelectProteins'
 import {md_files, ReactMarkdownElement } from './../../Other/ReactMarkdownElement'
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import {large_subunit_map} from './../../../static/large-subunit-map'
 import {small_subunit_map} from './../../../static/small-subunit-map'
-import Select from 'react-select'
-import { getOptionValue } from "react-select/src/builtins";
+import StructHero from './../../../materialui/StructHero'
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import * as redux from '../../../redux/reducers/Data/StructuresReducer/StructuresReducer'
+import { Dispatch } from 'redux';
+import {useDebounce} from 'use-debounce'
+import {transformToShortTax} from './../../Main'
+import { filterChange, FilterData, FilterType } from "../../../redux/reducers/Data/StructuresReducer/ActionTypes";
+import {SpeciesGroupings} from './taxid_map'
+import Pagination from '@material-ui/lab/Pagination';
+import _, { includes, propertyOf } from "lodash";
+import Home from "../../Home";
+import {useHistory} from "react-router-dom";
+import PageAnnotation from './PageAnnotation'
 
-interface OwnProps {}
-interface ReduxProps {
-  __rx_structures: redux.NeoStructResp[]
-  globalFilter   : string;
-  loading        : boolean;
-
+const pageData ={
+  title:"Whole Ribosome Structures",
+  text:'This database presents a catalogue of all the ribosome structures deposited to the RCSB/PDB.\
+   These structures are processed here for an easy search and access of the structures and their components\
+   (listed below). Various modules (gear icon) are also available to process and analyze the structures'
 }
-interface DispatchProps {
-  __rx_requestStructures: () => void,
+
+
+export const PaginationRounded=({gotopage, pagecount}:{
+  gotopage : (pid:number)=>void;
+  pagecount: number
+})=> {
+const usePaginationStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      '& > *': {
+        marginTop: theme.spacing(2),
+      },
+    },
+  }),
+);
+  const classes = usePaginationStyles();
+  return (
+    <div className={classes.root}>
+      <Pagination count={pagecount} onChange={(_,page)=>{ 
+        gotopage(page)
+        }} variant="outlined" shape="rounded" />
+    </div>
+  );
 }
-type WorkspaceCatalogueProps = DispatchProps & OwnProps & ReduxProps;
 
-export   const transformToShortTax = (taxname:string) =>{
-  if (typeof taxname === 'string'){
-    var words = taxname.split(' ') 
-    if ( words.length>1 ){
-    var fl =words[0].slice(0,1)
-    var full = fl.toLocaleUpperCase() + '. ' + words[1]
-    return full
-    }else{
-      return words[0]
-    }
-  }
-  else return taxname
+
+// Workspace itself
+interface StateProps {
+  structures  : redux.NeoStruct[];
+  loading     : boolean;
+  current_page: number;
+  pages_total : number
   }
 
-// Want to find structure by presence of multiple proteins
-
-
+interface DispatchProps{
+  next_page: ()=>void;
+  prev_page: ()=>void;
+  goto_page: (pid:number)=>void;
+}
+type WorkspaceCatalogueProps =  StateProps & DispatchProps;
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
 
-  useEffect(() => {
-    prop.__rx_requestStructures()
-  }, [])
+const specs =_.uniq(prop.structures.map((e)=>e.struct._organismId).reduce((accumulator,specarr:number[])=>{
+  return [...accumulator, ...specarr]
+}, []))
 
-  // This has to be all moved to the reducer
-  const [structures, setstructures] = useState<redux.NeoStructResp[]>([])
-  useEffect(()=>{
-    setstructures(prop.__rx_structures)
-  },[prop.__rx_structures])
-
-  const [organismsAvailable, setorganismsAvailable] = useState({})
-  useEffect(() => {
-    var organisms = structures.map(str => {
-      return {
-        name: str.struct._organismName.map(x => x.toLowerCase()),
-        id: str.struct._organismId,
-      };
-    });
-    const orgsdict: { [id: string]: { names:string[], count:number } } = {};
-    organisms.map(org => {
-      org.id.forEach((id, index) => {
-        if (!Object.keys(orgsdict).includes(id.toString())) {
-          orgsdict[id] = {
-            names:[],
-            count:1
-          }
-          orgsdict[id].names.push(org.name[index])
-        }else{
-          orgsdict[id].names.push(org.name[index])
-          orgsdict[id].count+=1
-        }
-      });
-    });
-    setorganismsAvailable(orgsdict)
-  }, [structures]);
-
-
-
-
-  const filterByProteinPresence=(structs: redux.NeoStructResp[], filter: string[])=>{
-    if (filter.length ==0){
-      return structs
-    }
-    return structs.filter(str=>filter.includes(str.struct.rcsb_id) )
-  }
-
-  const [methodFilter, setmethodFilter] = useState<string[]>([])
-  useEffect(() => {
-  if (methodFilter.length ===0){
-    setstructures(prop.__rx_structures)
-    return
-  }
-
-  var filtered = structures.filter(struct => methodFilter.includes(struct.struct.expMethod));
-    setstructures(filtered)
-  }, [methodFilter]);
-
-  const [organismFilter, setorganismFilter] = useState<string[]>([]);
-  const filterByOrganism = (struct: redux.NeoStructResp) => {
-    if (organismFilter.length <1 ) return true
-    for (var id of struct.struct._organismId) {
-      if (organismFilter.includes(id.toString())) {
-        return true;
-      }
-    }
-    return false;
-  };
-  useEffect(() => {
-    console.log(organismFilter)
-  }, [organismFilter])
-
-const truncate = (str:string) =>{
-  if (typeof str === 'undefined'){
-    return str
-  }
-    return str.length > 20 ? str.substring(0, 15) + "..." : str;
-}
-
-  const filterByPdbId = (structs: redux.NeoStructResp[], filter: string) => {
-    return structs.filter(x => {
-      var concated =
-        x.struct.rcsb_id.toLowerCase() +
-        x.struct.citation_title.toLocaleLowerCase() +
-        x.struct._organismName.reduce((acc:string, curr:string)=> acc.concat(curr.toLocaleLowerCase()), '' )
-      return concated.includes(filter);
-    });
-  };
-
-
-  const [pdbidFilter, setPbidFilter] = useState<string>("");
-  const [structsWithProteins, setstructsWithProteins] = useState<string[]>([])
-
-  const requestByProtein = ()=>{
-  getNeo4jData("neo4j", {
-    endpoint: "match_structs",
-    params  : { proteins: selectedProteins.join(",") },
-  }).then(r => {
-    setstructsWithProteins(r.data)
-    console.log(r.data);
-  });
-}
-
-  var protopts: {
-    value: string;
-    label: string;
-  }[] = [
-    ...Object.keys(large_subunit_map),
-    ...Object.keys(small_subunit_map),
-  ].map(name => {
-    return { value: name, label: name };
-  });
-
-  const [selectedProteins, setselectedProteins] = useState<string[]>([]);
-  const handleChange = (e: any) => {setselectedProteins(Array.isArray(e) ? e.map(x => x.value) : []);};
- 
-  useEffect(() => {
-    requestByProtein()
-  }, [selectedProteins])
 
   return !prop.loading ? (
-    <PageContext.Provider value="WorkspaceCatalogue">
-      <div className="workspace-catalogue-grid">
-        <div className="wspace-catalogue-filters-tools">
-          <div className="wspace-search">
-            <input
-              value={pdbidFilter}
-              onChange={e => {
-                var value = e.target.value;
-                setPbidFilter(value);
-              }}
-            />
-          </div>
-          <br />
-          <div className="match-structs">
-             Find by proteins:
-            <Select
-              options={protopts}
-              value={protopts.filter(( obj ) => selectedProteins.includes(obj.value))}
-              onChange={handleChange} 
-              isMulti
-              isClearable
-            />
-
-          <Button onClick={()=>{requestByProtein()}}>
-          Find
-          </Button>
-
-
-
-
-          </div>
-
-          <div className="wspace-method-filter">
-            <div className="method-instance">
-              <span>ELECTRON MICROSCOPY</span>
-              <input
-                id="ELECTRON MICROSCOPY"
-                onChange={e => {
-                  var id = e.target.id;
-                  console.log(e.target.checked);
-                  if (e.target.checked) {
-                    setmethodFilter([...methodFilter, id]);
-                  } else {
-                    setmethodFilter(methodFilter.filter(str => str !== id));
-                  }
-                }}
-                type="checkbox"
-              />
-            </div>
-            <div className="method-instance">
-              <span>X-RAY DIFFRACTION</span>
-              <input
-                id="X-RAY DIFFRACTION"
-                type="checkbox"
-                onChange={e => {
-                  var id = e.target.id;
-                  if (e.target.checked) {
-                    setmethodFilter([...methodFilter, id]);
-                  } else {
-                    setmethodFilter(methodFilter.filter(str => str !== id));
-                  }
-                }}
-              />
-            </div>
-          </div>
-          <br />
-
-          <Accordion defaultActiveKey="0">
-            <Card>
-              <Card.Header>
-                <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                  Species
-                </Accordion.Toggle>
-              </Card.Header>
-
-              <Accordion.Collapse eventKey="0">
-                <Card.Body>
-                  <div className="wspace-species">
-                    <li>
-                      <div className="species-filter">
-                        <div></div>
-                        <div>Tax</div>
-                        <div>Total</div>
-                      </div>
-                    </li>
-                    {Object.entries(organismsAvailable).map((tpl: any) => {
-                      transformToShortTax(tpl[1].names[0]);
-                      return (
-                        <li>
-                          <div className="species-filter">
-                            <input
-                              onChange={e => {
-                                var checked = e.target.checked;
-                                var id = e.target.id;
-                                if (!checked) {
-                                  setorganismFilter(
-                                    organismFilter.filter(
-                                      str => !(str.toString() === id)
-                                    )
-                                  );
-                                } else {
-                                  setorganismFilter([
-                                    ...organismFilter,
-                                    id.toString(),
-                                  ]);
-                                }
-                              }}
-                              type="checkbox"
-                              id={tpl[0]}
-                            />
-                            <div>
-                              {truncate(transformToShortTax(tpl[1].names[0]))}{" "}
-                              (id:{tpl[0]})
-                            </div>
-                            <div>{tpl[1].count}</div>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </div>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
-        </div>
-
-        <div className="workspace-catalogue-structs">
-          <ReactMarkdownElement md={md_files.all.structs.structures} />
-          {filterByPdbId(filterByProteinPresence( structures, structsWithProteins ).filter(filterByOrganism), pdbidFilter).map(
-            (x, i) => (
-              <StructHero {...x} key={i} />
-            )
-          )}
-        </div>
+    <div className="workspace-catalogue-grid">
+      <div className="wspace-catalogue-filters-tools">
+        <StructureFilters />
       </div>
-    </PageContext.Provider>
+
+      <Grid container item xs={12} spacing={3}>
+        <PageAnnotation {...pageData}/>
+        <Grid item xs={12}>
+          <PaginationRounded
+            {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}
+          />
+        </Grid>
+        <Grid container item xs={12} spacing={3}  alignItems="flex-start">
+          {prop.structures
+            .slice(( prop.current_page-1 ) * 20, prop.current_page * 20 )
+            .map((x, i) => (
+              <Grid item>
+                <StructHero {...x} key={i} />
+              </Grid>
+            ))}
+        </Grid>
+        <Grid item xs={12}>
+          <PaginationRounded
+            {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}
+          />
+        </Grid>
+      </Grid>
+    </div>
   ) : (
     <LoadingSpinner annotation="Fetching data..." />
   );
 };
-
-const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
-  __rx_structures: state.Data.RibosomeStructures.StructuresResponse,
-  loading        : state.Data.RibosomeStructures.Loading,
-  globalFilter   : state.UI.state_Filter.filterValue,
+const mapstate = (state: AppState, ownprops: {}): StateProps => ({
+  structures: state.structures.derived_filtered,
+  loading: state.structures.Loading,
+  current_page: state.structures.current_page,
+  pages_total: state.structures.pages_total,
 });
-
-const mapdispatch = (
-  dispatch: ThunkDispatch<any, any, AppActions>,
-  ownprops: OwnProps
-): DispatchProps => ({
-  __rx_requestStructures: ()=> dispatch(redux.requestAllStructuresDjango())
-});
+const mapdispatch =(
+  dispatch:Dispatch<AppActions>,
+  ownProps:any):DispatchProps=>({
+    goto_page: (pid)=>dispatch( redux.gotopage(pid)),
+    next_page: ()=>dispatch( redux.nextpage()),
+    prev_page: ()=>dispatch( redux.prevpage()),
+  })
 
 export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
+
+// SPECIES 
+
+
+
+
+
+
+// Filter Generics-----------------------------------------------------------------------------------------------
+interface handleFilterChange {
+  handleChange: (newavalue:number|string|number[]|string[]) => void;
+}
+export const mapStateFilter=(filttype:FilterType)=>(appstate:AppState, ownprops:any):FilterData =>({
+  set    :  appstate.structures.filters[filttype].set,
+  value  :  appstate.structures.filters[filttype].value
+})
+export const mapDispatchFilter = (filttype: FilterType)=>(
+  dispatch:Dispatch<AppActions>,
+  ownProps:any
+):handleFilterChange =>({
+  handleChange: ( newrange ) => dispatch(redux.filterChange(filttype, newrange))
+})
+
+
+interface OwnSpecFilterProps{}
+type SpeciesFilterProps = OwnSpecFilterProps & handleFilterChange & FilterData 
+const _SpeciesList:React.FC<SpeciesFilterProps> = (prop)=> {
+  const useSpeciesListStyles = makeStyles((theme: Theme) =>
+    createStyles({
+    item: {
+      // color: theme.palette.secondary.main,
+      '& span, & svg': {
+        fontSize: '12px'
+      }
+    },
+      root: {
+        width: '100%',
+        maxWidth: 360,
+        fontSize:12,
+        backgroundColor: theme.palette.background.paper,
+      }
+    }),
+  );
+
+  const classes = useSpeciesListStyles();
+  // ----------------
+  const taxIdMap = Object.entries(SpeciesGroupings);
+
+  var inxs = taxIdMap.map((val, index) => index);
+  const [checked, setChecked] = React.useState(inxs);
+
+
+  const handleToggle = (value: number, speckey:string) => () => {
+      
+    
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+      // -------
+      var newarr = prop.value
+      newarr = ( newarr as number[]).filter((n:number)=>!(SpeciesGroupings[speckey].includes(n)))
+      prop.handleChange(newarr)
+    } else {
+      newChecked.splice(currentIndex, 1);
+
+      var newvalue  = SpeciesGroupings[speckey].reduce( ( acc,e:number ) => [ ...acc,e ], ( prop.value as number[] ))
+      prop.handleChange(newvalue)
+    }
+
+    
+    setChecked(newChecked);
+  };
+
+
+  return (
+    <List className={classes.root}>
+      {Object.entries(SpeciesGroupings).map((value,index) => {
+        const labelId = `checkbox-list-label-${value}`;
+
+        return (
+          <ListItem
+            key={value[0]}
+            button
+            onClick={handleToggle(index,value[0])}
+          >
+            <ListItemText
+              className = { classes.item }
+              id        = {labelId}
+              primary   = {value[0]}
+
+            />
+
+            <ListItemIcon>
+              <Checkbox
+                edge="start"
+                checked={checked.indexOf(index) !== -1}
+                tabIndex={-1}
+                disableRipple
+                color={"primary"}
+                inputProps={{ "aria-labelledby": labelId }}
+              />
+            </ListItemIcon>
+          </ListItem>
+        );
+      })}
+    </List>
+  );
+}
+
+
+ const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
+{
+  const [value, setValue] = useState('')
+  const [debounced] = useDebounce(value,250)
+
+  const handleChange = (e:any)=>{
+    setValue(e.target.value)
+  }
+  useEffect(() => {
+    props.handleChange(debounced)
+  }, [debounced])
+  return(
+      <TextField id="standard-basic" label="Search" value={value}  onChange={handleChange}/>
+  )
+}
+
+interface OwnSliderFilterProps {
+  name               :  string;
+  max                :  number;
+  min                :  number;
+  step               :  number;
+}
+const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterChange>
+ = (prop:OwnSliderFilterProps & FilterData & handleFilterChange) => {
+  const useSliderStyles = makeStyles({
+    root: {
+      width: 300,
+    },
+  });
+
+  const classes           = useSliderStyles();
+  const [value, setValue] = React.useState<number[]>([prop.min, prop.max]);
+  const [debounced_val]   = useDebounce(value,500)
+
+  const handleChange = (event: any, newValue: number | number[]) => {
+    setValue(newValue as number[]);
+  };
+  useEffect(() => {
+      prop.handleChange(debounced_val)
+  }, [debounced_val])
+
+  return (
+    <div className={classes.root}>
+      <Typography id="range-slider" gutterBottom>
+        {prop.name}
+      </Typography>
+
+      <Slider
+        marks
+        min               = {prop.min}
+        max               = {prop.max}
+        step              = {prop.step}
+        value             = {value as any}
+        onChange          = {handleChange}
+        valueLabelDisplay = "auto"
+        aria-labelledby   = "range-slider"
+      />
+    </div>
+  );
+};
+
+
+export const YearSlider       = connect(mapStateFilter("YEAR"),          mapDispatchFilter("YEAR"))(_ValueSlider)
+export const ProtcountSlider  = connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
+export const ResolutionSlider = connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
+export const SearchField      = connect(mapStateFilter("SEARCH"), mapDispatchFilter("SEARCH"))(_SearchField)
+export const SpeciesList      = connect(mapStateFilter("SPECIES"), mapDispatchFilter("SPECIES"))(_SpeciesList)
+
+// Filters component
+export const StructureFilters = () => {
+  const drawerWidth = 240;
+  const useFiltersStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      root: {
+        display: "flex",
+        zIndex: -1,
+      },
+      appBar: {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: drawerWidth,
+      },
+      drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+      },
+      drawerPaper: {
+        width: drawerWidth,
+      },
+      toolbar: theme.mixins.toolbar,
+      home:{
+        cursor:"pointer",
+        fontSize:20,
+        "&:hover":{
+          background:"gray"
+        }
+      }
+    })
+  );
+
+  const filterClasses = useFiltersStyles();
+  const history = useHistory();
+
+  return (
+    <Drawer
+      style={{ zIndex: -20 }}
+      className={filterClasses.drawer}
+      variant="permanent"
+      classes={{
+        paper: filterClasses.drawerPaper,
+      }}
+      anchor="left"
+    >
+      <div className={filterClasses.toolbar} />
+      <List>
+      <Divider />
+        <ListItem className={filterClasses.home} >
+          <ListItemText  onClick={()=>{
+
+          history.push(`/home`)
+
+          }} primary={"Home"} />
+        </ListItem>
+      <Divider />
+        <ListItem key={"search"}>
+          <SearchField/>
+        </ListItem>
+        <ListItem key={"year"}>
+          <YearSlider min={2012} max={2021}  name={"Deposition Date"} step={1}/> 
+        </ListItem>
+        <ListItem key={"number-of-proteins"}>
+          <ProtcountSlider min={25} max={150}  name={"Protein Count"} step={1}/> 
+        </ListItem>
+        <ListItem key={"resolution"}>
+          <ResolutionSlider min={1} max={6}  name={"Resolution(A)"} step={0.1}/> 
+        </ListItem>
+
+      <Divider />
+        <ListItem key={"select-proteins-typography"}>
+          <Typography id="range-slider">Proteins Present</Typography>
+        </ListItem>
+        <ListItem key={"select-proteins"}>
+          <SelectProteins />
+        </ListItem>
+
+      </List>
+
+      <Divider />
+      <List>
+        <ListSubheader> Species</ListSubheader>
+        {/* <SpeciesFilter species={['Kluyveromyces Lactis','Escherichia Coli','Homo Sapiens','Tetrahymena Thermophila','Deinococcus Radiodurans']}/> */}
+
+      <SpeciesList/>
+
+      </List>
+    </Drawer>
+  );
+};
+
+
+

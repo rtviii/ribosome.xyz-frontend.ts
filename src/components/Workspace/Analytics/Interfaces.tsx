@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
+// import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
 import { Ligand, rRNA } from "../../../redux/RibosomeTypes";
 import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import { Button, Card, Col, Form } from "react-bootstrap";

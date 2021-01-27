@@ -2,18 +2,18 @@
   /* grid-area: display; */
   /* position: relative; */
   /* background-color: teal(0, 0, 0, 0.85); */
-  width: 100%;
-  height: 100%;
+  /* width: 100%;
+  height: 100%; */
 
-  overflow: hidden; 
-  overflow-y: scroll; 
-  grid-column-start: 1;
+  /* overflow: hidden;  */
+  /* overflow-y: scroll;  */
+  /* grid-column-start: 1;
   grid-column-end: 3;
 
 
 
   display: grid;
-  gap: 10px;
+  gap: 10px; */
 
 
 }

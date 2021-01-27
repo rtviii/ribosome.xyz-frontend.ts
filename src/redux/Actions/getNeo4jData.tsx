@@ -8,8 +8,9 @@ type  StaticFilesEndpoints =
   | downloadCifChain
   | download_ligand_nbhd
   | get_tunnel
+  | pairwise_align
 
-type  Neo4jEndpoints = 
+type Neo4jEndpoints =
   | getStructure
   | getAllStructures
   | getHomologs
@@ -22,11 +23,32 @@ type  Neo4jEndpoints =
   | getLigandsByStruct
   | get_ligand_nbhd
   | match_structs_by_proteins
-
+  | get_surface_ratios
+  | TEMP_classification_sample;
 
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
+interface TEMP_classification_sample{
+  endpoint:'TEMP_classification_sample',
+  params:null
+}
+interface get_surface_ratios{
+  endpoint:'get_surface_ratios',
+  params:{
+    pdbid: string
+  }
+}
 
+interface pairwise_align{
+  endpoint:"pairwise_align",
+  params:{
+      struct1: string,
+      struct2: string,
+      strand1: string,
+      strand2: string
+  }
+
+}
 interface match_structs_by_proteins{
   endpoint:"match_structs",
   params:{

@@ -10,7 +10,6 @@ import "./StructurePage.css";
 import RNAHero from "./../RNA/RNAHero";
 import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
 import { flattenDeep } from "lodash";
-import { PageContext } from "../../Main";
 import { connect } from "react-redux";
 import { AppState } from "../../../redux/store";
 import { ThunkDispatch } from "redux-thunk";
@@ -70,6 +69,7 @@ type StructurePageProps = OwnProps & ReduxProps & DispatchProps;
 const StructurePage: React.FC<StructurePageProps> = (
   props: StructurePageProps
 ) => {
+
   const { pdbid }: { pdbid: string } = useParams();
   const [structdata, setstruct]      = useState<RibosomeStructure>();
   const [protdata, setprots]         = useState<RibosomalProtein[]>([]);
@@ -175,7 +175,6 @@ const StructurePage: React.FC<StructurePageProps> = (
   };
 
   return structdata ? (
-    <PageContext.Provider value="StructurePage">
       <div className="structure-page">
         <div className="structure-page--main">
           <h2 className="title">{pdbid}</h2>
@@ -263,14 +262,13 @@ const StructurePage: React.FC<StructurePageProps> = (
           {renderSwitch(activecat)}
         </div>
       </div>
-    </PageContext.Provider>
   ) : (
     <LoadingSpinner annotation='Loading structure...' />
   );
 };
 
 const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
-  globalFilter: state.UI.state_Filter.filterValue.toLowerCase(),
+  globalFilter: ""
 });
 const mapdispatch = (
   dispatch: ThunkDispatch<any, any, AppActions>,

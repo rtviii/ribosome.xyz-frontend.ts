@@ -1,0 +1,257 @@
+synthetic construct
+-----------------------------------
+Viruses
++-Orthornavirae
+| \-Pisuviricota
+|   \-Pisoniviricetes
+|     \-Nidovirales
+|       \-Coronaviridae
+|         \-Betacoronavirus
+|           \-Severe acute respiratory syndrome-related coronavirus
+|             \-Severe acute respiratory syndrome coronavirus 2
+\-Uroviricota
+  \-Caudoviricetes
+    \-Caudovirales
+      +-Autographiviridae
+      | \-Zindervirus
+      |   \-Salmonella virus SP6
+      \-Myoviridae
+        \-Tequatrovirus
+          \-Escherichia virus T4
+-----------------------------------
+Eukaryota
++-Ciliophora
+| \-Oligohymenophorea
+|   \-Hymenostomatida
+|     \-Tetrahymenidae
+|       \-Tetrahymena
+|         \-Tetrahymena thermophila
+|           \-Tetrahymena thermophila SB210
++-Metazoa
+| +-Chordata
+| | \-Mammalia
+| |   +-Lagomorpha
+| |   | \-Leporidae
+| |   |   \-Oryctolagus
+| |   |     \-Oryctolagus cuniculus
+| |   +-Artiodactyla
+| |   | +-Bovidae
+| |   | | \-Bos
+| |   | |   \-Bos taurus
+| |   | +-Suidae
+| |   | | \-Sus
+| |   | |   \-Sus scrofa
+| |   | \-Delphinidae
+| |   |   \-Tursiops
+| |   |     \-Tursiops truncatus
+| |   +-Carnivora
+| |   | \-Canidae
+| |   |   \-Canis
+| |   |     \-Canis lupus
+| |   |       \-Canis lupus familiaris
+| |   \-Primates
+| |     \-Hominidae
+| |       \-Homo
+| |         \-Homo sapiens
+| \-Arthropoda
+|   \-Insecta
+|     +-Hemiptera
+|     | +-Pentatomidae
+|     | | \-Palomena
+|     | |   \-Palomena prasina
+|     | +-Pyrrhocoridae
+|     | | \-Pyrrhocoris
+|     | |   \-Pyrrhocoris apterus
+|     | \-Lygaeidae
+|     |   \-Oncopeltus
+|     |     \-Oncopeltus fasciatus
+|     \-Hymenoptera
+|       \-Apidae
+|         \-Apis
+|           \-Apis mellifera
++-Apicomplexa
+| +-Aconoidasida
+| | \-Haemosporida
+| |   \-Plasmodiidae
+| |     \-Plasmodium
+| |       \-Plasmodium falciparum
+| |         \-Plasmodium falciparum 3D7
+| \-Conoidasida
+|   \-Eucoccidiorida
+|     \-Sarcocystidae
+|       \-Toxoplasma
+|         \-Toxoplasma gondii
++-Parabasalia
+| \-Trichomonadida
+|   \-Trichomonadidae
+|     \-Trichomonas
+|       \-Trichomonas vaginalis
++-Fungi
+| +-Microsporidia
+| | +-Nosematidae
+| | | \-Paranosema
+| | |   \-Paranosema locustae
+| | \-Burenellidae
+| |   \-Vairimorpha
+| |     \-Vairimorpha necatrix
+| \-Ascomycota
+|   +-Sordariomycetes
+|   | \-Sordariales
+|   |   \-Chaetomiaceae
+|   |     \-Chaetomium
+|   |       \-Chaetomium thermophilum
+|   |         \-Chaetomium thermophilum var. thermophilum DSM 1495
+|   \-Saccharomycetes
+|     \-Saccharomycetales
+|       \-Saccharomycetaceae
+|         +-Kluyveromyces
+|         | \-Kluyveromyces lactis
+|         |   \-Kluyveromyces lactis NRRL Y-1140
+|         \-Saccharomyces
+|           \-Saccharomyces cerevisiae
+|             +-Saccharomyces cerevisiae BY4741
+|             +-Saccharomyces cerevisiae P283
+|             +-Saccharomyces cerevisiae S288C
+|             \-Saccharomyces cerevisiae RM11-1a
++-Viridiplantae
+| \-Streptophyta
+|   \-Magnoliopsida
+|     +-Brassicales
+|     | \-Brassicaceae
+|     |   \-Arabidopsis
+|     |     \-Arabidopsis thaliana
+|     \-Caryophyllales
+|       \-Chenopodiaceae
+|         \-Spinacia
+|           \-Spinacia oleracea
+\-Euglenozoa
+  +-Kinetoplastea
+  | \-Trypanosomatida
+  |   \-Trypanosomatidae
+  |     +-Trypanosoma
+  |     | +-Trypanosoma brucei
+  |     | | \-Trypanosoma brucei brucei
+  |     | \-Trypanosoma cruzi
+  |     \-Leishmania
+  |       \-Leishmania donovani
+  \-Euglenida
+    \-Euglenales
+      \-Euglenaceae
+        \-Euglena
+          \-Euglena gracilis
+-----------------------------------
+Archaea
++-Euryarchaeota
+| \-Thermococci
+|   \-Thermococcales
+|     \-Thermococcaceae
+|       +-Pyrococcus
+|       | \-Pyrococcus abyssi
+|       |   \-Pyrococcus abyssi GE5
+|       \-Thermococcus
+|         +-Thermococcus celer
+|         | \-Thermococcus celer Vu 13 = JCM 8558
+|         \-Thermococcus kodakarensis
+|           \-Thermococcus kodakarensis KOD1
+\-Crenarchaeota
+  \-Thermoprotei
+    \-Sulfolobales
+      \-Sulfolobaceae
+        \-Saccharolobus
+          \-Saccharolobus solfataricus
+            \-Saccharolobus solfataricus P2
+-----------------------------------
+Bacteria
++-Actinobacteria
+| \-Actinobacteria
+|   +-Streptomycetales
+|   | \-Streptomycetaceae
+|   |   \-Streptomyces
+|   |     \-Streptomyces sp.
+|   \-Corynebacteriales
+|     \-Mycobacteriaceae
+|       +-Mycobacterium
+|       | \-Mycobacterium tuberculosis
+|       \-Mycolicibacterium
+|         \-Mycolicibacterium smegmatis
+|           \-Mycolicibacterium smegmatis MC2 155
++-Firmicutes
+| \-Bacilli
+|   +-Lactobacillales
+|   | \-Enterococcaceae
+|   |   \-Enterococcus
+|   |     \-Enterococcus faecalis
+|   |       \-Enterococcus faecalis OG1RF
+|   \-Bacillales
+|     +-Bacillaceae
+|     | \-Bacillus
+|     |   \-Bacillus subtilis
+|     |     \-Bacillus subtilis subsp. subtilis str. 168
+|     \-Staphylococcaceae
+|       \-Staphylococcus
+|         \-Staphylococcus aureus
+|           +-Staphylococcus aureus subsp. aureus USA300
+|           +-Staphylococcus aureus subsp. aureus COL
+|           \-Staphylococcus aureus subsp. aureus NCTC 8325
++-Proteobacteria
+| +-Alphaproteobacteria
+| | \-Rhizobiales
+| |   \-Rhizobiaceae
+| |     \-Rhizobium
+| |       \-Rhizobium sp. Pop5
+| \-Gammaproteobacteria
+|   +-Vibrionales
+|   | \-Vibrionaceae
+|   |   \-Vibrio
+|   |     \-Vibrio alginolyticus
+|   +-Enterobacterales
+|   | +-Morganellaceae
+|   | | \-Proteus
+|   | |   \-Proteus vulgaris
+|   | \-Enterobacteriaceae
+|   |   +-Klebsiella
+|   |   | \-Klebsiella pneumoniae
+|   |   |   \-Klebsiella pneumoniae subsp. ozaenae
+|   |   \-Escherichia
+|   |     \-Escherichia coli
+|   |       +-Escherichia coli S88
+|   |       +-Escherichia coli O139:H28 str. E24377A
+|   |       +-Escherichia coli O157:H7
+|   |       | \-Escherichia coli O157:H7 str. TW14359
+|   |       \-Escherichia coli K-12
+|   |         \-Escherichia coli BW25113
+|   \-Pseudomonadales
+|     +-Moraxellaceae
+|     | \-Acinetobacter
+|     |   +-Acinetobacter sp. ANC 4470
+|     |   +-Acinetobacter sp. ANC 5600
+|     |   +-Acinetobacter sp. 263903-1
+|     |   +-Acinetobacter sp. 809848
+|     |   +-Acinetobacter sp. NIPH 899
+|     |   +-Acinetobacter beijerinckii
+|     |   | \-Acinetobacter beijerinckii ANC 3835
+|     |   +-Acinetobacter sp. CIP 51.11
+|     |   +-Acinetobacter sp. CIP 102082
+|     |   +-Acinetobacter rudis
+|     |   | \-Acinetobacter rudis CIP 110305
+|     |   +-Acinetobacter venetianus
+|     |   \-Acinetobacter baumannii
+|     |     +-Acinetobacter baumannii ATCC 19606 = CIP 70.34 = JCM 6841
+|     |     \-Acinetobacter baumannii AB0057
+|     \-Pseudomonadaceae
+|       \-Pseudomonas
+|         \-Pseudomonas aeruginosa
+\-Deinococcus-Thermus
+  \-Deinococci
+    +-Deinococcales
+    | \-Deinococcaceae
+    |   \-Deinococcus
+    |     \-Deinococcus radiodurans
+    |       \-Deinococcus radiodurans R1
+    \-Thermales
+      \-Thermaceae
+        \-Thermus
+          \-Thermus thermophilus
+            +-Thermus thermophilus HB8
+            \-Thermus thermophilus HB27
+-----------------------------------

@@ -11,15 +11,20 @@ import Interfaces from './../Analytics/Interfaces'
 import Home from './../../Home'
 import ExitTunnelPage from './../ExitTunnel/ExitTunnelPage'
 import WorkInProgress from './../WorkInProgress'
+import  ProteinAlignment from './../ProteinAlign/ProteinAlignment'
+import RPClassification from './../RPClassification/RPClassification'
+import StructuresPage from './../../../materialui/StructuresPage/StructuresPage'
 
 const Display = () => {
   return (
-    <div className="display">
+    <div>
       <Route exact path="/">
         <Redirect to="/home" />
       </Route>
 
       <Switch>
+        <Route exact path = "/mat_structs" component                         = {StructuresPage} />
+        <Route exact path = "/rpalign" component                      = {ProteinAlignment} />
         <Route exact path = "/home" component                         = {Home} />
 
         <Route exact path = "/structs" component                      = {WorkspaceCatalogue} />
@@ -38,10 +43,9 @@ const Display = () => {
 
         <Route exact path = "/tunnel"                      component  = {ExitTunnelPage} />
 
-        <Route exact path = "/classify"                     component= {WorkInProgress} />
+        <Route exact path = "/rpclassification"                     component= {RPClassification} />
         <Route exact path = "/rpnomenclature"               component= {WorkInProgress} />
-        <Route exact path = "/conservation"                 component= {WorkInProgress} />
-        <Route exact path = "/rxzgraph"                     component= {WorkInProgress} />
+
       </Switch>
     </div>
   );

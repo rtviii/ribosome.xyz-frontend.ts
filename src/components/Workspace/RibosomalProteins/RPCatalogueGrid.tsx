@@ -5,7 +5,6 @@ import './RPCatalogueGrid.css'
 
 
 const RPCatalogueGrid = (proteins:[]) => {
-    console.log(proteins);
     
         
         return proteins ? (

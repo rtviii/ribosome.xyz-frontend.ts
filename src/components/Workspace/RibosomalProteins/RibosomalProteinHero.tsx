@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef} from "react";
 import "./RibosomalProteinHero.css";
 import { Link } from "react-router-dom";
 import downicon from "./../../../static/download.png"

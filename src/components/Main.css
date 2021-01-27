@@ -1,25 +1,5 @@
 .main {
 
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-rows: 10vh 90vh;
-  grid-template-areas:
-    "nav nav "
-    "display display ";
-}
-/* 
-.toolbar {
-  grid-area: toolbar;
-} */
-
-.link{
-
-  width: min-content;
-  height: min-content;
-  margin: 0;
-
-  padding: 0;
-
+  /* width: 100%;
+  height: 100%; */
 }
