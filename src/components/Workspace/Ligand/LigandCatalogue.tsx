@@ -13,6 +13,13 @@ import { Button } from "react-bootstrap";
 import {md_files, ReactMarkdownElement } from '../../Other/ReactMarkdownElement'
 
 import download from './../../../static/download.png'
+import PageAnnotation from "../Display/PageAnnotation";
+import Grid from "@material-ui/core/Grid";
+const pageData= {
+  title:"Ligands, Antibiotics and Small Molecules",
+  text:"We provide a residue-level catalogue of ligands, small molecules and antibiotics that are solved with ribosome structures.\
+   Additional tools allow to visualize their physical neighborhood and search for similar molecules across other structures in the database."
+}
 
 type LigandAssocStruct ={
     struct : string;
@@ -218,15 +225,6 @@ const LigandCatalogue = () => {
   }
 
 
-  // useEffect(() => {
-  // var params:any = useParams()
-  // const lig = params.lig
-  // if (lig!==undefined){
-
-
-  // }
-  // }, [])
-
   return (
     <div className="ligand-catalogue">
 
@@ -304,20 +302,41 @@ const LigandCatalogue = () => {
         
       </div>
 
-      <div className="ligand-catalogue-grid">
-        <ReactMarkdownElement 
-        md={md_files.all.ligands.ligands_page}/>
+        <Grid container xs={12} spacing={3}>
+          <Grid item xs={12}>
+                    <PageAnnotation {...pageData}/>
+          </Grid>
+          <Grid item xs={12} container spacing={1}>
+
         {ligs.length > 0 ? (
           ionsOn ? (
-            searchByName( filterByOrg(ligs, organismFilter), ligfilter).map((l: LigandResponseShape) => <LigandHero data={l} speciesFilter={organismFilter} />)
+            searchByName( filterByOrg(ligs, organismFilter), ligfilter).map((l: LigandResponseShape) => 
+
+            <Grid item>
+
+            <LigandHero data={l} speciesFilter={organismFilter} />
+            </Grid>
+            )
           ) : (
             searchByName(filterByOrg(ligs, organismFilter), ligfilter).filter(l => !l.ligand.chemicalName.toLocaleLowerCase().includes("ion"))
-                .map((l: LigandResponseShape) => <LigandHero data={l} speciesFilter={organismFilter} />)
+                .map((l: LigandResponseShape) => 
+                
+                
+            <Grid item>
+
+            <LigandHero data={l} speciesFilter={organismFilter} />
+            </Grid>
+                // <LigandHero data={l} speciesFilter={organismFilter} />)
               )
-          ) : (
+          )) : (
           <LoadingSpinner annotation='Fetching data...' />
         )}
-      </div>
+          </Grid>
+
+        </Grid>
+
+
+
     </div>
   );
 };

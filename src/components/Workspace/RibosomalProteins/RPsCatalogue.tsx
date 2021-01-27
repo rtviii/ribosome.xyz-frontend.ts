@@ -12,6 +12,18 @@ import {large_subunit_map} from './../../../static/large-subunit-map'
 import {small_subunit_map} from './../../../static/small-subunit-map'
 import LoadingSpinner from "../../Other/LoadingSpinner";
 import {ReactMarkdownElement, md_files} from './../../Other/ReactMarkdownElement'
+import PageAnnotation from "../Display/PageAnnotation";
+import Grid from "@material-ui/core/Grid";
+
+
+const pageData={
+
+  title:"Ribosomal Proteins",
+  text:"To enable comprehensive comparison of structures deposited by the community in to the RCSB/PDB,\
+   we have provided a common ontology that allows to get access to the structure of ribosomal proteins across\
+    multiple files, by refering to their standard names (Fig. 1).\
+   This ontology is notably based on a nomenclature that was recently adopted for naming ribosomal proteins."
+}
 
 // endpoint response shape
 export interface ERS {
@@ -97,10 +109,11 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
     }, [prots]);
 
     return (
-      <div className="subunit-members">
-        <ReactMarkdownElement 
-        md={md_files.all.rps.rps_page}/>
+        <Grid container xs={12}>
+
+        <PageAnnotation  {...pageData}/>
         
+        <Grid item xs={4} container>
         <div id="e">
           <h4>Eukaryotic</h4>
           <div className="kingdom-tray">
@@ -109,6 +122,9 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
             })}
           </div>
         </div>
+
+        </Grid>
+        <Grid item xs={4} container>
         <div id="b">
           <h4>Bacterial</h4>
           <div className="kingdom-tray">
@@ -117,6 +133,10 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
             })}{" "}
           </div>
         </div>
+
+        </Grid>
+        <Grid item xs={4} container>
+
         <div id="u">
           <h4>Universal</h4>
           <div className="kingdom-tray">
@@ -125,7 +145,8 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
             })}{" "}
           </div>
         </div>
-      </div>
+        </Grid>
+        </Grid>
     );
   };
 

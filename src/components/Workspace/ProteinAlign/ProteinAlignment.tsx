@@ -9,6 +9,10 @@ import { getNeo4jData } from '../../../redux/Actions/getNeo4jData';
 import { RibosomalProtein, RibosomeStructure } from '../../../redux/RibosomeTypes';
 import Button from '@material-ui/core/Button';
 import fileDownload from 'js-file-download';
+import Grid from '@material-ui/core/Grid';
+import PageAnnotation from '../Display/PageAnnotation';
+import {WarningPopover} from './../WorkInProgressChip'
+
 
 const useScript = ( url:string ) => {
   useEffect(() => {
@@ -25,14 +29,6 @@ const useScript = ( url:string ) => {
   }, [url]);
 };
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-  }),
-);
 
 type StructRespone = {
     struct : RibosomeStructure,
@@ -42,6 +38,16 @@ type StructRespone = {
 }
 
 export default function ProteinAlignment() {
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+      marginLeft:20
+    }
+
+  })
+);
   const classes = useStyles();
 
   const [structs, setStructs] = useState<StructRespone[]>([])
@@ -95,15 +101,23 @@ export default function ProteinAlignment() {
   }, [])
 
 
+  const pageData={
+    title:"Subcomponents Alignment",
+    text:"Multiple individual components (sets of protein- and RNA-strands, protein-ion clusters, etc. ) belonging to different structures can be extracted according and superimposed here\
+     for further processing and structural analyses."}
 
-  // useEffect(() => {
-  //   // (window as any).test()
-  //   (window as any).renderNGL()
-  // }, [])
-
-
-  return (
+  return ( 
 <div>
+    <Grid container xs={12} direction="column">
+      <Grid item xs={1} style={{margin:20}}>
+        <WarningPopover content="This module is at proof-of-concept stage and is still in construction. Pairwise alignmnet and download of proteins from different structures is available."/>
+      </Grid>
+      <Grid item xs={12}>
+        <PageAnnotation {...pageData}/>
+      </Grid>
+      <Grid item xs={12}>
+
+
     <div>
       <FormControl className={classes.formControl}>
         <InputLabel htmlFor="grouped-native-select">Structure 1</InputLabel>
@@ -132,7 +146,20 @@ export default function ProteinAlignment() {
 
     </div>
 
-    <div>
+
+
+      <Grid container direction="column" xs={4} item>
+      <Grid  direction="column" xs={4} item>
+
+      </Grid>
+      <Grid  direction="column" xs={4} item>
+
+      </Grid>
+
+      <Grid  direction="column" xs={4} item>
+
+      </Grid>
+      </Grid>
       <FormControl className={classes.formControl}>
         <InputLabel htmlFor="grouped-native-select">Structure 2</InputLabel>
 
@@ -155,21 +182,17 @@ export default function ProteinAlignment() {
 
         </Select>
       </FormControl>
-    <Button variant="outlined"
-    onClick={
-        ()=>{
-            console.log("requesting ", struct1,struct2,strand1,strand2)
+
+      </Grid>
+    <Button variant="outlined" onClick={()=>{
+      console.log("requesting ", struct1,struct2,strand1,strand2)
             requestAlignment({
                 struct1:struct1,
                 struct2:struct2,
                 strand1:strand1,
-                strand2:strand2
-            })
+                strand2:strand2})}}>Align</Button>
 
-        }
-    }
-    >Align</Button>
-    </div>
+    </Grid>
 
 
 

@@ -41,6 +41,12 @@ import Home from "../../Home";
 import {useHistory} from "react-router-dom";
 import PageAnnotation from './PageAnnotation'
 
+const pageData ={
+  title:"Whole Ribosome Structures",
+  text:'This database presents a catalogue of all the ribosome structures deposited to the RCSB/PDB.\
+   These structures are processed here for an easy search and access of the structures and their components\
+   (listed below). Various modules (gear icon) are also available to process and analyze the structures'
+}
 
 
 export const PaginationRounded=({gotopage, pagecount}:{
@@ -97,7 +103,7 @@ const specs =_.uniq(prop.structures.map((e)=>e.struct._organismId).reduce((accum
       </div>
 
       <Grid container item xs={12} spacing={3}>
-        <PageAnnotation/>
+        <PageAnnotation {...pageData}/>
         <Grid item xs={12}>
           <PaginationRounded
             {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}

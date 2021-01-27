@@ -25,6 +25,7 @@ import { AppState } from '../../../redux/store';
 import { NeoStruct } from '../../../redux/reducers/Data/StructuresReducer/StructuresReducer';
 import { connect } from 'react-redux';
 import { truncate } from '../../Main';
+import PageAnnotation from '../Display/PageAnnotation';
 
 
 
@@ -42,7 +43,6 @@ const ProteinSortingFunctions =  {
 
 }
 
-// const surface_structs  = ['3J7Z',"3J9M","3J79","5JVG","5NRG","5X8T","5XY3"]
 
 const RPClassificationStructAvatar=({r,proteinSelected, protNameFilter}:{r:NeoStruct,protNameFilter:string,  proteinSelected:(uid:string)=>void}) =>{
 
@@ -242,7 +242,7 @@ function TabPanel(props: TabPanelProps) {
 
 const useProteinCategoriesStyles = makeStyles((theme: Theme) => ({
   root: {
-    outline:"1px solid black",
+    outline:"1px solid gray",
     flexGrow: 1,
     backgroundColor: "white",
   },
@@ -298,6 +298,7 @@ useEffect(() => {
         <Tab label="Exit Tunnel Contact" {...a11yProps(1)} />
         <Tab label="PTC Distance" {...a11yProps(2)} />
         <Tab label="Intersubunit Region" {...a11yProps(3)} />
+        <Tab label="Conservation" {...a11yProps(4)} />
       </Tabs>
 
       <TabPanel value={value} index={0}>
@@ -310,13 +311,16 @@ useEffect(() => {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <WarningPopover content="This feature is under construction" />
+        <WarningPopover content="This feature is under construction. Proteins are compared according to their contact with the exit tunnel." />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <WarningPopover content="This feature is under construction" />
+        <WarningPopover content="This feature is under construction. Proteins are characterized by their distance from the PTC." />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <WarningPopover content="This feature is under construction" />
+        <WarningPopover content="This feature is under construction. Proteins are characterized by their distance to the inter-subunit region." />
+      </TabPanel>
+      <TabPanel value={value} index={4}>
+        <WarningPopover content="This feature is under construction. Residue-wise conservation scores are provided by ProteoVision." />
       </TabPanel>
     </div>
   );
@@ -335,9 +339,21 @@ const RPClassification = () => {
     root:{
     }
   })()
+  const pageData={
+
+    title:"Protein Classificaiton and Localization",
+    text:"The absence of standardized naming scheme for ribosomal proteins has been an obstacle to investigation of compositional heterogeneity. We implement the recently proposed nomenclature in code and with reference to sequence-derived protein families (PFAM, Interpro).This makes possible investigation of protein-classes across structures and species.\
+    \n These data allow to classify proteins according to their degree of penetration.\
+     There are other ways to identify proteins according to their spatial localization:\
+    Regions of interest can be highlighted, i.e. inter-subunit or elongation factor."
+  }
   return (
     <Grid item container className={style.root} xs={12}>
       <Grid item container>
+        <PageAnnotation {...pageData}/>
+
+
+
       </Grid>
 
       <Grid item container xs={12} direction="row">
@@ -365,6 +381,7 @@ const RPClassification = () => {
               <ListItem>
                 <Typography variant="overline">Protein Control</Typography>
               </ListItem>
+              <Divider/>
 
 
             </List>
