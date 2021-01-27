@@ -282,7 +282,7 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                 the community in to the RCSB/PDB, we have provided a common
                 ontology that allows to get access to the structure of ribosomal
                 proteins across multiple files, by refering to their standard
-                names (Fig. 1). This ontology is notably based on a nomenclature
+                names. This ontology is notably based on a nomenclature
                 that was recently adopted for naming ribosomal proteins.
               </Typography>
             </Paper>
