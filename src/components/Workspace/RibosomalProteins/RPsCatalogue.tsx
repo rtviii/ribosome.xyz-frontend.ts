@@ -21,7 +21,7 @@ const pageData={
   title:"Ribosomal Proteins",
   text:"To enable comprehensive comparison of structures deposited by the community in to the RCSB/PDB,\
    we have provided a common ontology that allows to get access to the structure of ribosomal proteins across\
-    multiple files, by refering to their standard names (Fig. 1).\
+    multiple files, by refering to their standard names \
    This ontology is notably based on a nomenclature that was recently adopted for naming ribosomal proteins."
 }
 

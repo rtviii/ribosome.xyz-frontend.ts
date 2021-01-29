@@ -24,11 +24,10 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 
 import {
-  Button,
   Card,
+  Container,
   createStyles,
   makeStyles,
-  responsiveFontSizes,
   Theme,
 } from "@material-ui/core";
 
@@ -200,12 +199,20 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
       padding: 10,
       transition: "0.1s all",
       "&:hover": {
-        background: "rgba(223,223,223,1)",
+        background: "rgba(223,223,223,0.5)",
         cursor: "pointer",
       },
     },
     cardtitle:{
       fontWeight:"bold"
+    },
+    tool:{
+      transition: "0.1s all",
+      "&:hover": {
+        background: "rgba(171,243,255,0.75)",
+        cursor: "pointer",
+      },
+
     }
 
   });
@@ -213,6 +220,9 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
   const classes = useMainContentCardStyles();
   const history = useHistory();
 
+  const gotoonclick = (page:string)=>{
+    history.push(`/${page}`)
+  }
   return (
     <Card className={classes.root}>
       <CardContent>
@@ -243,7 +253,7 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
           </Grid>
         </Grid>
         <Typography className={classes.cardtitle} variant="h5">
-          Comprehensive Resource for Ribosomal Structures
+          A Comprehensive Resource for Ribosome Structures
         </Typography>
       </CardContent>
 
@@ -282,8 +292,26 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                 the community in to the RCSB/PDB, we have provided a common
                 ontology that allows to get access to the structure of ribosomal
                 proteins across multiple files, by refering to their standard
-                names (Fig. 1). This ontology is notably based on a nomenclature
-                that was recently adopted for naming ribosomal proteins.
+                names. This ontology is notably based on a nomenclature that was
+                recently adopted for naming ribosomal proteins.
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12}>
+            <Paper
+              onClick={() => {
+                history.push(`/rnas`);
+              }}
+              className={classes.section}
+              variant="outlined"
+            >
+              <Typography variant="h5">Ribosomal RNA, tRNA and mRNA</Typography>
+              <Typography variant="body2">
+                This database presents a catalogue of all the ribosome
+                structures deposited to the RCSB/PDB. These structures are
+                processed here for an easy search and access of the structures
+                and their components (listed below). Various modules are also
+                available to process and analyze the structures
               </Typography>
             </Paper>
           </Grid>
@@ -309,81 +337,77 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            <Paper
-              onClick={() => {
-                history.push(`/tunnel`);
-              }}
-              className={classes.section}
-              variant="outlined"
-            >
-              <Typography variant="h5">Ribosome Exit Tunnel</Typography>
-              <Typography variant="body2">
-                The database contains ribosome exit-tunnel models from some
-                selected structures in the current version, which will be
-                extended to more structures in the future. Data export is
-                available, focusing on the three following main features:
-                Residue profile of the RPs that interface with the tunnel. (Each
-                protein is identified by its new nomenclature (ex. uL4) where is
-                possible and can thus be compared against homologous chains in
-                other structures. The in-chain IDs of the tunnel-interfacing
-                residues are provided for each protein.) Nucleotides of the RNA
-                that interface with the tunnel. Ligands, ions or small molecules
-                if any are found embedded in the walls of the tunnel.
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={12}>
-            <Paper
-              onClick={() => {
-                history.push(`/rnas`);
-              }}
-              className={classes.section}
-              variant="outlined"
-            >
-              <Typography variant="h5">Ribosomal RNA, tRNA and mRNA</Typography>
-              <Typography variant="body2">
-                This database presents a catalogue of all the ribosome
-                structures deposited to the RCSB/PDB. These structures are
-                processed here for an easy search and access of the structures
-                and their components (listed below). Various modules are also
-                available to process and analyze the structures
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={12}>
-            <Paper className={classes.section} variant="outlined">
-              <Typography variant="h5">Current Limitations</Typography>
-              <Typography variant="body2">
-                Due to the additional peculiarities of the mitochonodrial
-                ribosome structrue, the current version of the database makes no
-                distinction between cystosolic and mitochondiral, chloroplast
-                ribosomes. Hence, the corresponding nomenclature classes (i.e.
-                uL4m or uL4c) are also absent from the proteins repository. The
-                species classes of certain structures are somewhat ambiguous due
-                to the fact that PDB marks individual proteins(not whole
-                structures as belonging to a certain species if some structures
-                contain proteins from multiple species, multiple species figure
-                in this structure 's profile)
-              </Typography>
-              <Typography variant="h5">Future Work</Typography>
-              <Typography variant="body2">
-                Classification of structures according to following
-                charateristics is desirable:
-                <ul>
-                  <li>Stage of translation cycle</li>
-                  <li>Large/Small subunits presence</li>
-                </ul>
-                Analytical modules to be implemented next:
-                <ul>
-                  <li>
-                    Protein-contact maps
-                  </li>
-                  <li>
-                    Class-based clustering of proteins across a set of structures
-                  </li>
+            <Paper className={classes.section} elevation={2} variant="outlined">
+              <Typography variant="h5">Tools & Analytics</Typography>
 
-                </ul>
-              </Typography>
+              <Container
+                onClick={() => {
+                  gotoonclick("rpclassification");
+                }}
+                className={classes.tool}
+              >
+                <Typography variant="h6" className={classes.tool}>
+                  Protein Classification
+                </Typography>
+                <Typography variant="body2">
+                  A tool to filter and compare r-proteins present according to
+                  their classes, spatial localization, conservation profiles and
+                  contact sites with crucial components of the ribosome like the
+                  PTC.
+                </Typography>
+              </Container>
+              <Container
+                onClick={() => {
+                  gotoonclick("rpalign");
+                }}
+                className={classes.tool}
+              >
+                <Typography variant="h6" className={classes.tool}>
+                  Subcomponent Alignment
+                </Typography>
+                <Typography variant="body2">
+                  A tool is to spatially align, superimpose and export sets of
+                  sub-components from different ribosomal structures.
+                </Typography>
+              </Container>
+              <Container
+                onClick={() => {
+                  gotoonclick("interfaces");
+                }}
+                className={classes.tool}
+              >
+                <Typography variant="h6" className={classes.tool}>
+                  Ligand Binding Sites
+                </Typography>
+                <Typography variant="body2">
+                  A interface to navigate and export ligands present across the
+                  deposited strucutres and their binding sites.
+                </Typography>
+              </Container>
+              <Container
+                onClick={() => {
+                  gotoonclick("tunnel");
+                }}
+                className={classes.tool}
+              >
+                <Typography variant="h6" className={classes.tool}>
+                  Exit Tunnel
+                </Typography>
+                <Typography variant="body2">
+                  The database contains ribosome exit-tunnel models from some
+                  selected structures in the current version, which will be
+                  extended to more structures in the future. Data export is
+                  available, focusing on the three following main features:
+                  Residue profile of the RPs that interface with the tunnel.
+                  (Each protein is identified by its new nomenclature (ex. uL4)
+                  where is possible and can thus be compared against homologous
+                  chains in other structures. The in-chain IDs of the
+                  tunnel-interfacing residues are provided for each protein.)
+                  Nucleotides of the RNA that interface with the tunnel.
+                  Ligands, ions or small molecules if any are found embedded in
+                  the walls of the tunnel.
+                </Typography>
+              </Container>
             </Paper>
           </Grid>
         </Grid>
@@ -435,11 +459,10 @@ const AcknowlegementsList = () => {
     },
     cardmedia: {
       maxWidth: 100,
-      // width: "100%",
-      // height: "100%"
     },
   })();
   return (
+
     <Grid item className={plugstyles.acknlist}>
       <Typography variant="overline"> Acknowledgements</Typography>
       <Grid container xs={12} spacing={1}>
@@ -499,7 +522,7 @@ const AcknowlegementsList = () => {
             <Grid container direction="row">
               <Typography variant="caption">
                 <p>
-                  Developed by the <a href="https://kdaoduc.com/">KDD group</a>{" "}
+                  Developed by the <a href="https://kdaoduc.com/">Khanh Dao-Duc's group</a>{" "}
                   at the University of British Columbia.
                 </p>
                 <p>
@@ -509,12 +532,11 @@ const AcknowlegementsList = () => {
                   </a>{" "}
                   at Georgia Institute of Technology.
                 </p>
-                <p className="in-dev">
+                {/* <p className="in-dev"> */}
                   This is still in active development phase. All usability and
                   conceptual suggestions would be very much appreciated. Thanks
-                  for getting in touch at{" "}
-                  <a href="mailto:rtkushner@gmail.com">rtkushner@gmail.com</a>!
-                </p>
+                  for <a href="mailto:rtkushner@gmail.com">getting in touch</a>!
+                {/* </p> */}
 
                 <Grid justify="space-between" container direction="row">
                   <img src={ubc} className={plugstyles.cardmedia} />
@@ -550,7 +572,6 @@ const Home: React.FC<ReduxProps> = prop => {
       container
       justify="space-evenly"
       alignContent="center"
-      // alignItems   = "center"
       xs={12}
     >
       <Grid item xs={2} className={classes.gridItem}>
