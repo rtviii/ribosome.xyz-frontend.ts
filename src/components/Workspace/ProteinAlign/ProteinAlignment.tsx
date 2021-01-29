@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef} from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { getNeo4jData } from '../../../redux/Actions/getNeo4jData';
@@ -54,8 +53,6 @@ const useStyles = makeStyles((theme: Theme) =>
   const [prots1, setProts1]   = useState<{nomenclature:string[],strandid:string}[]>([])
   const [prots2, setProts2]   = useState<{nomenclature:string[],strandid:string}[]>([])
 
-
-
   const [struct1,setstruct1] = useState<string>('')
   const [struct2,setstruct2] = useState<string>('')
   const [strand1,setstrand1] = useState<string>('')
@@ -67,12 +64,22 @@ const useStyles = makeStyles((theme: Theme) =>
     strand1: string;
     strand2: string;
   }) => {
+
+    if (strand1.includes(',')){
+      alert(`Please select two single-chain proteins for now: \n ${strand1} is a duplicated chain (as per ${struct1}-PDB deposition). Working on parsing this. `)
+      return
+    }
+    if (strand1.includes(',')){
+      alert(`Please select two single-chain proteins for now: \n ${strand1} is a duplicated chain (as per ${struct1}-PDB deposition). Working on parsing this. `)
+      return
+    }
+
     getNeo4jData("static_files", {
       endpoint: "pairwise_align",
       params: parameters,
     }).then(
         resp=>{
-            fileDownload(resp.data, `${parameters.struct1}-${parameters.strand1}_over_${parameters.struct2}-${parameters.strand2}`)
+            fileDownload(resp.data, `${parameters.struct1}-${parameters.strand1}_over_${parameters.struct2}-${parameters.strand2}.cif`)
         },
         e=>console.log(e)
     )
@@ -103,7 +110,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
   const pageData={
     title:"Subcomponents Alignment",
-    text:"Multiple individual components (sets of protein- and RNA-strands, protein-ion clusters, etc. ) belonging to different structures can be extracted according and superimposed here\
+    text:"Multiple individual components (sets of protein- and RNA-strands, protein-ion clusters, etc. ) belonging to different structures can be extracted, superimposed and exported here\
      for further processing and structural analyses."}
 
   return ( 

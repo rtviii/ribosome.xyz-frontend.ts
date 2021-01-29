@@ -4,36 +4,24 @@ import Grid from '@material-ui/core/Grid';
 import { ListSubheader, TextField } from "@material-ui/core";
 import Slider from '@material-ui/core/Slider';
 import { connect, useStore  } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
 import { AppState } from "../../../redux/store";
 // import StructHero from "../StructureHero/StructHero";
 import { AppActions } from "../../../redux/AppActions";
 import LoadingSpinner  from '../../Other/LoadingSpinner'
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import CommentIcon from '@material-ui/icons/Comment';
 import SelectProteins from './../../../materialui/SelectProteins'
-import {md_files, ReactMarkdownElement } from './../../Other/ReactMarkdownElement'
-import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
-import {large_subunit_map} from './../../../static/large-subunit-map'
-import {small_subunit_map} from './../../../static/small-subunit-map'
 import StructHero from './../../../materialui/StructHero'
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import * as redux from '../../../redux/reducers/Data/StructuresReducer/StructuresReducer'
 import { Dispatch } from 'redux';
 import {useDebounce} from 'use-debounce'
-import {transformToShortTax} from './../../Main'
-import { filterChange, FilterData, FilterType } from "../../../redux/reducers/Data/StructuresReducer/ActionTypes";
+import {  FilterData, FilterType } from "../../../redux/reducers/Data/StructuresReducer/ActionTypes";
 import {SpeciesGroupings} from './taxid_map'
 import Pagination from '@material-ui/lab/Pagination';
 import _, { includes, propertyOf } from "lodash";

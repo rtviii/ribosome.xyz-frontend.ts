@@ -10,7 +10,6 @@ import {ReactMarkdownElement,md_files} from './../../Other/ReactMarkdownElement'
 import {tunnels} from './../../../static/tunnels'
 
 
-
 const getfile = (pdbid:string,ftype:"report"|"centerline")=>{
   var pdbid = pdbid.toUpperCase()
   getNeo4jData("static_files", {
@@ -24,8 +23,8 @@ const getfile = (pdbid:string,ftype:"report"|"centerline")=>{
       fileDownload(
         JSON.stringify(r.data),
         ftype === "report"
-          ? `${pdbid}_tunnel_report.json`
-          : `${pdbid}_tunnel_centerline.csv`
+          ? `${pdbid}_tunnel_walls_report.json`
+          : `${pdbid}_tunnel_shape.csv`
       );
     } else {
       fileDownload(r.data, `${pdbid}_tunnel_centerline.csv`);
@@ -59,6 +58,7 @@ type StructResponseShape = {
   rnas     : rRNA[],
   rps      : RibosomalProtein[]
 }
+
         
 const TunnelWallProfile:React.FC = ({children})=>{
 
@@ -253,78 +253,7 @@ const WallChain:React.FC<{banid:string|null, chain:string, resids:ResidueProfile
 
 const ExitTunnelPage = () => {
     return (
-      <div className="exit-tunnel-page">
-        <div className="tip-and-filters">
-          <Accordion defaultActiveKey="0" className="expose">
-            <Card>
-              <Card.Header>
-                <Accordion.Toggle
-                  id="card-head"
-                  as={Button}
-                  variant="link"
-                  eventKey="1"
-                >
-                  + Filters & Search
-                </Accordion.Toggle>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
-                <Card.Body>
-                  <div className="tools">
-                    <p>
-                      {" "}
-                      These things are being implemented at the moment. Thanks
-                      for checking back in later!
-                    </p>
-                    <div className="filler">
-                      <span>Filter by species:</span>
-                      <input type="text" />
-                    </div>
-                    <div className="filler">
-                      <span>Filter by translation cycle state:</span>
-                      <input type="text" />
-                    </div>
-                    <div className="filler">
-                      <span>Filter by RP:</span>
-                      <input type="text" />
-                    </div>
-                    <input type="checkbox" name="" id="" />
-                    <input type="checkbox" name="" id="" />
-                    <input type="checkbox" name="" id="" />
-                    <input type="checkbox" name="" id="" />
-                  </div>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
-
-          <Accordion defaultActiveKey="1" className="expose">
-            <Card>
-              <Card.Header>
-                <Accordion.Toggle
-                  id="card-head"
-                  as={Button}
-                  variant="link"
-                  eventKey="1"
-                >
-                  + How does this work?
-                </Accordion.Toggle>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
-                <Card.Body>
-                  
-                  <ReactMarkdownElement
-                  md={md_files.all.tunnel.tunnel_page}
-                  
-                  />
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
-
-        </div>
-
         <TunnelWallProfile />
-      </div>
     );
 }
 
