@@ -7,7 +7,7 @@ import './ExitTunnelPage.css'
 import downicon from './../../../static/download.png'
 import { Ligand, RibosomalProtein, RibosomeStructure, rRNA } from '../../../redux/RibosomeTypes'
 import {ReactMarkdownElement,md_files} from './../../Other/ReactMarkdownElement'
-import {tunnels} from './../../../static/tunnels'
+import {resolved_tunnels} from './../../../static/tunnel/resolved_tunnels'
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import {  Button,FormControl, FormHelperText, InputLabel, List, ListItemText, Select, Typography } from "@material-ui/core";
@@ -15,6 +15,7 @@ import tunneldemogif from './../../../static/tunnel/tunneldemo.gif'
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import { withStyles  } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
+import {WarningPopover} from './../WorkInProgressChip'
 
 const getfile = (pdbid:string,ftype:"report"|"centerline")=>{
   var pdbid = pdbid.toUpperCase()
@@ -160,9 +161,9 @@ const ExitTunnel = () => {
         }
       },
     formControl: {
-      minWidth  : 120,
-      maxWidth  : 1000,
-      marginLeft:10,
+      // minWidth  : 120,
+      // maxWidth  : 1000,
+      // marginLeft:10,
       width     : "100%",
     },
     downButton:{
@@ -186,11 +187,10 @@ const ExitTunnel = () => {
         ligands      :  [],
         nomMap       :  {}
     })
-    const [structState, setstruct] = useState<StructResponseShape[]>([] as StructResponseShape[])
+    const [structState, setstruct] = useState<StructResponseShape>({} as StructResponseShape)
 
     useEffect(() => {
       setselectedStruct('4UG0')
-      setstruct([])
     }, [])
     
     useEffect(() => {
@@ -198,7 +198,7 @@ const ExitTunnel = () => {
         pdbid:selectedStruct
       }}).then(re=>{ 
         console.log("GOT STRUCT ,", re.data);
-        setstruct(re.data) 
+        setstruct(re.data[0]) 
       }
       )
     }, [ selectedStruct])
@@ -216,13 +216,17 @@ const ExitTunnel = () => {
     <Grid container xs={12}>
       <Grid item container xs={12}>
         <Paper variant="outlined" square className={classes.pageAnnotation}>
+      {/* <Grid item xs={1} style={{margin:20}}> */}
+      {/* </Grid> */}
+      <Grid container alignItems='center' justify='space-between'>
           <Typography variant="h5">Ribosome Exit Tunnel</Typography>
+          <WarningPopover content={"We will extend this dataset from overrepresented E.coli to other species in the near future. Working on better export options."}/>
+      </Grid>
           <Typography variant="body1">
             Here you can search and export some preliminary data about the
             <b> location and shape</b> of the ribosome exit tunnel as is
             caputured in a given model. <br />
-            The <b>tunnel walls</b> report provided contains three main features
-            are provided at the moment that characterize tunnel walls:
+            The <b>tunnel walls report </b>provided contains three main features that characterize tunnel walls:
             <TunnelDemoTooltip
               placement="top"
               title={
@@ -268,34 +272,37 @@ const ExitTunnel = () => {
         </Paper>
       </Grid>
       <Grid container item xs={12} >
-        <Grid container item spacing={1} xs={6}>
-          <Grid item container xs={12}>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="grouped-native-select">
-                Ribosome Structure
-              </InputLabel>
-              <Select 
-              onChange={(e)=>setselectedStruct(e.target.value as string)} value={selectedStruct} defaultValue="" id="TunnelStructure">
-                {tunnels.map(tunnelstruct=> 
-                <option aria-label="None" value={tunnelstruct}>
-                  {tunnelstruct}
-                </option>
+        <Grid container item spacing={1} xs={12}>
+          <Grid item container xs={12} style={{padding:20}}  spacing={1} justify="flex-start">
 
-                  )}
+
+              {/* <Grid item xs={1} alignItems="center" justify="center" alignContent="center"><Typography variant="body1" align="center">Structure:</Typography></Grid> */}
+              <Grid item xs={6}>
+            <FormControl className={classes.formControl}>
+              <Select onChange={(e)=>setselectedStruct(e.target.value as string)} value={selectedStruct}  id="TunnelStructure">
+                {resolved_tunnels.map(tunnelstruct=> <option aria-label="hey" value={tunnelstruct.pdbid}>{tunnelstruct.pdbid + " " + tunnelstruct.organism[0]}
+                 </option>)}
               </Select>
-            </FormControl>
-            <Grid container direction="row" item xs={12}>
-              <Grid item xs={6}>
-                <Button className={classes.downButton} onClick={() => getfile(wall.pdbid, "report")}> Download Walls Report</Button>
+              <Grid container xs={12}>
+                {/* <Grid item xs={6}>
+
+<Typography variant={"caption"}>{
+  structState ?  structState.structure && structState.structure._organismName[0] + " " :""
+}</Typography></Grid> */}
+
+                {/* <Grid item xs={6}> */}
+<Typography variant={"caption"}>{
+  structState ?  structState.structure && structState.structure.citation_title+ " " :""
+}</Typography>
               </Grid>
-              <Grid item xs={6}>
-                <Button className={classes.downButton}
-            onClick={() => getfile(wall.pdbid, "centerline")}
-                >
+            </FormControl>
+              </Grid>
+              <Grid item xs={6} >
+                <Button className={classes.downButton} onClick={() => getfile(wall.pdbid, "report")}> Download Walls Report</Button>
+                <Button className={classes.downButton}onClick={() => getfile(wall.pdbid, "centerline")}>
                   Download Tunnel Shape
                 </Button>
               </Grid>
-            </Grid>
           </Grid>
         </Grid>
 

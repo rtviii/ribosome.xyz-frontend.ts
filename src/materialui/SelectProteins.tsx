@@ -7,6 +7,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
+import {large_subunit_map} from './../static/large-subunit-map'
+import {small_subunit_map} from './../static/small-subunit-map'
 import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
 
@@ -37,17 +39,19 @@ const MenuProps = {
   },
 };
 
-const names = [
-    'uL2',
-    'uL5',
-    'bL24',
-    'uL15',
-    'uL16',
-    'uL10',
-    'uL121',
-    'ar231',
+
+const names=Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
+
+// const names = [
+//     'uL2',
+//     'uL5',
+//     'bL24',
+//     'uL15',
+//     'uL16',
+//     'uL10',
+//     'uL121',
+//     'ar231',
     
-];
 
 function getStyles(name: string, personName: string[], theme: Theme) {
   return {
@@ -70,6 +74,7 @@ export default function SelectProteins() {
 
   return (
         <Select
+        disabled={true}
           labelId="demo-mutiple-chip-label"
           id="demo-mutiple-chip"
           multiple

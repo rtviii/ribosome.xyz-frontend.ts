@@ -7,7 +7,7 @@ import './ExitTunnelPage.css'
 import downicon from './../../../static/download.png'
 import { Ligand, RibosomalProtein, RibosomeStructure, rRNA } from '../../../redux/RibosomeTypes'
 import {ReactMarkdownElement,md_files} from './../../Other/ReactMarkdownElement'
-import {tunnels} from './../../../static/tunnels'
+import {tunnels} from '../../../static/tunnel/tunnels'
 
 
 
@@ -104,7 +104,8 @@ const TunnelWallProfile:React.FC = ({children})=>{
     return (
       <div>
         <div className="tunnel-head">
-          <DropdownButton id="dropdown-basic-button" title={structState[0] ? `${structState[0].structure.rcsb_id}` + " " +`${structState[0].structure.citation_title}` :" "}>
+          <DropdownButton id="dropdown-basic-button" 
+          title={structState[0] ? `${structState[0].structure.rcsb_id}` + " " +`${structState[0].structure.citation_title}` :" "}>
           {tunnels.map(t => <Dropdown.Item onSelect={()=>{setselectedStruct(t)}}>{ t }</Dropdown.Item>)}
           </DropdownButton>
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";import "./StructuresCatalogue.css";
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { ListSubheader, TextField } from "@material-ui/core";
+import { ListSubheader, TextField, Tooltip } from "@material-ui/core";
 import Slider from '@material-ui/core/Slider';
 import { connect, useStore  } from "react-redux";
 import { AppState } from "../../../redux/store";
@@ -381,13 +381,15 @@ export const StructureFilters = () => {
         </ListItem>
 
       <Divider />
-        <ListItem key={"select-proteins-typography"}>
+
+        <ListItem key={"select-proteins-typography"} >
           <Typography id="range-slider">Proteins Present</Typography>
         </ListItem>
-        <ListItem key={"select-proteins"}>
+        <Tooltip title={"This will be implemented shortly."}> 
+        <ListItem key={"select-proteins"} disabled={true}>
           <SelectProteins />
         </ListItem>
-
+</Tooltip>
       </List>
 
       <Divider />

@@ -126,6 +126,7 @@ const useClassificationAvatarStyles = makeStyles((theme: Theme) =>
             <ListItemText  onClick={()=>{
               proteinSelected(strand)
               }} disableTypography children={<Typography className={classes.protein}>{strand}</Typography>} />
+              {Math.round( measure * Math.pow( 10,2 ) )/100}
             <div style={{zIndex:20, minWidth:`${measure*60}%`, alignSelf:"center",minHeight:"8px", height:"8px", backgroundColor:"rgba(243,221,74,0.45)"}} /> 
             </Grid>
           </ListItem>
@@ -342,10 +343,9 @@ const RPClassification = () => {
   const pageData={
 
     title:"Protein Classification and Localization",
-    text:"The absence of standardized naming scheme for ribosomal proteins has been an obstacle to investigation of compositional heterogeneity. We implement the recently proposed nomenclature in code and with reference to sequence-derived protein families (PFAM, Interpro).This makes possible investigation of protein-classes across structures and species.\
-    \n These data allow to classify proteins according to their degree of penetration.\
-     There are other ways to identify proteins according to their spatial localization:\
-    Regions of interest can be highlighted, i.e. inter-subunit or elongation factor."
+    text:"\nWe implement the recently proposed nomenclature for r-proteins in code and with reference to sequence-derived protein families (PFAM, Interpro).\nThis makes possible investigation of protein-classes across structures and species.\
+    \n These data allow to classify proteins according to their structural characteristics ( ex. degree of penetration ) and\
+      spatial localization:\ i.e. distance from inter-subunit region or elongation factor."
   }
   return (
     <Grid item container className={style.root} xs={12}>
