@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import fileDownload from 'js-file-download'
+import { Accordion, Card, Dropdown, DropdownButton, ListGroup } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import { getNeo4jData } from '../../../redux/Actions/getNeo4jData'
+import './ExitTunnelPage.css'
+import downicon from './../../../static/download.png'
+import { Ligand, RibosomalProtein, RibosomeStructure, rRNA } from '../../../redux/RibosomeTypes'
+import {ReactMarkdownElement,md_files} from './../../Other/ReactMarkdownElement'
+import {tunnels} from './../../../static/tunnels'
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import { Button, FormControl, FormHelperText, InputLabel, List, ListItemText, Select, Typography } from "@material-ui/core";
+import {  Button,FormControl, FormHelperText, InputLabel, List, ListItemText, Select, Typography } from "@material-ui/core";
 import tunneldemogif from './../../../static/tunnel/tunneldemo.gif'
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import { withStyles  } from '@material-ui/core/styles';
-import fileDownload from 'js-file-download'
-import { getNeo4jData } from '../../../redux/Actions/getNeo4jData'
-import { Ligand, RibosomalProtein, RibosomeStructure, rRNA } from '../../../redux/RibosomeTypes'
 import Tooltip from '@material-ui/core/Tooltip';
 
 const getfile = (pdbid:string,ftype:"report"|"centerline")=>{
@@ -68,6 +74,66 @@ const useStylesBootstrap = makeStyles((theme: Theme) => ({
   },
 }));
 
+const WallChain:React.FC<{banid:string|null, chain:string, resids:ResidueProfile[], pdbid:string}> = ({chain, resids, banid, pdbid}) =>{
+
+  const parseAndDownloadChain = (pdbid: string, cid: string) => {
+    var duplicates = cid.split(",");
+    if (duplicates.length > 1) {
+      var cid = duplicates[0];
+    }
+
+    getNeo4jData("static_files", {
+      endpoint: "cif_chain",
+      params: { structid: pdbid, chainid: cid },
+    }).then(
+      resp => {
+        fileDownload(resp.data, `${pdbid}_${cid}.cif`);
+      },
+      error => {
+        alert(
+          "This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" +
+            error
+        );
+      }
+    );
+  };
+  return (
+    <div>
+      <Card style={{ width: "8rem" }} className="wallchain">
+        <Card.Header className="wc-header">
+          {banid?  <Link to={`/rps/${banid}`}>{banid}</Link> : chain}
+
+            <div
+              className="down-banner"
+              onClick={() =>
+                parseAndDownloadChain(pdbid, chain)
+              }
+            >
+                <button className='down-prot-button'>
+                  <img
+                    id="down-wall-prot"
+                    src={downicon}
+                    alt="download protein"
+                  />
+                </button>
+            </div>
+        </Card.Header>
+
+        <ListGroup variant="flush" id='list-group'>
+          {resids.map(self => (
+            <ListGroup.Item
+            style={
+              {margin:"0px", padding:"5px"}
+            }>
+              <div className={ `lig ${self.isligand ? "isligand" : null} ` }><span><strong>{self.resname}</strong></span><span>{self.resid}</span></div>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      </Card>
+    </div>
+  );
+
+}
 const TunnelDemoTooltip = withStyles((theme: Theme) => ({
   tooltip: {
     backgroundColor: '#f5f5f9',
@@ -103,97 +169,192 @@ const ExitTunnel = () => {
       textAlign:"center",
       
       
+    },
+    wallchainsTray:{
+      padding:20
     }
+
     })
   )();
+
+    const [selectedStruct, setselectedStruct] = useState<string>('')
+    const [wall, setwall] = useState<TunnelWall>({
+        pdbid        :  "null",
+        probeRadius  :  0,
+        proteins     :  {},
+        rna          :  {},
+        ligands      :  [],
+        nomMap       :  {}
+    })
+    const [structState, setstruct] = useState<StructResponseShape[]>([] as StructResponseShape[])
+
+    useEffect(() => {
+      setselectedStruct('4UG0')
+      setstruct([])
+    }, [])
+    
+    useEffect(() => {
+      getNeo4jData("neo4j",{ endpoint:"get_struct", params:{
+        pdbid:selectedStruct
+      }}).then(re=>{ 
+        console.log("GOT STRUCT ,", re.data);
+        setstruct(re.data) 
+      }
+      )
+    }, [ selectedStruct])
+
+    useEffect(() => {
+    getNeo4jData("static_files",{endpoint:"tunnel", params:{
+        struct:selectedStruct,
+        filetype:'report',
+    }}).then(
+        r=> { setwall(r.data)           },
+        e=>console.log("error", e)
+    )}, [selectedStruct])
 
   return (
     <Grid container xs={12}>
       <Grid item container xs={12}>
         <Paper variant="outlined" square className={classes.pageAnnotation}>
           <Typography variant="h5">Ribosome Exit Tunnel</Typography>
-
           <Typography variant="body1">
-            Here you can search and export some preliminary data about the             
+            Here you can search and export some preliminary data about the
             <b> location and shape</b> of the ribosome exit tunnel as is
-            caputured in a given model. <br/>The <b>tunnel walls</b> report provided
-            contains three main features are provided at the moment that
-            characterize tunnel walls:
+            caputured in a given model. <br />
+            The <b>tunnel walls</b> report provided contains three main features
+            are provided at the moment that characterize tunnel walls:
             <TunnelDemoTooltip
-            placement="top"
-            title={
-            <React.Fragment>
-            <Typography variant="caption"  style={{ left:"10%",padding:"10px"}}>
-
-Extraction of the ribosome exit tunnel from the <i>H. sapiens</i> ribosome (<a href="https://www.rcsb.org/structure/4UG0">4UG0</a>).<br/>
-Proteins adjacent to the tunnel are highlighted as well as the rna nucleotides.
-                </Typography>
-            <img src={tunneldemogif} className={classes.demogif}/>
-          </React.Fragment>}
-      >
+              placement="top"
+              title={
+                <React.Fragment>
+                  <Typography
+                    variant="caption"
+                    style={{ left: "10%", padding: "10px" }}
+                  >
+                    Extraction of the ribosome exit tunnel from the{" "}
+                    <i>H. sapiens</i> ribosome (
+                    <a href="https://www.rcsb.org/structure/4UG0">4UG0</a>).
+                    <br />
+                    Proteins adjacent to the tunnel are highlighted as well as
+                    the rna nucleotides.
+                  </Typography>
+                  <img src={tunneldemogif} className={classes.demogif} />
+                </React.Fragment>
+              }
+            >
               <List className={classes.annotationlist}>
                 <ListItemText secondary inset>
-                    <Typography variant="body1">
-                  - Residue profile of the ribosomal proteins that interface with
-                  the tunnel.
-                    </Typography>
+                  <Typography variant="body1">
+                    - Residue profile of the ribosomal proteins that interface
+                    with the tunnel.
+                  </Typography>
                 </ListItemText>
                 <ListItemText secondary inset>
-                    <Typography variant="body1">
-                   - The in-chain IDs of the tunnel-interfacing residues are
-                  provided for each protein and nucleotides of the RNA that
-                  interface with the tunnel.
-                    </Typography>
+                  <Typography variant="body1">
+                    - The in-chain IDs of the tunnel-interfacing residues are
+                    provided for each protein and nucleotides of the RNA that
+                    interface with the tunnel.
+                  </Typography>
                 </ListItemText>
                 <ListItemText secondary inset>
-                    <Typography variant="body1">
-                  - Ligands, ions or small molecules if any are found embedded in
-                  the walls of the tunnel.
-                    </Typography>
+                  <Typography variant="body1">
+                    - Ligands, ions or small molecules if any are found embedded
+                    in the walls of the tunnel.
+                  </Typography>
                 </ListItemText>
               </List>
-      </TunnelDemoTooltip>
+            </TunnelDemoTooltip>
           </Typography>
-
         </Paper>
       </Grid>
+      <Grid container item xs={12} >
+        <Grid container item spacing={1} xs={6}>
+          <Grid item container xs={12}>
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="grouped-native-select">
+                Ribosome Structure
+              </InputLabel>
+              <Select 
+              onChange={(e)=>setselectedStruct(e.target.value as string)} value={selectedStruct} defaultValue="" id="TunnelStructure">
+                {tunnels.map(tunnelstruct=> 
+                <option aria-label="None" value={tunnelstruct}>
+                  {tunnelstruct}
+                </option>
 
-<Grid container item xs={12}>
-  <Grid container item spacing={2} xs={6}>
-    <Grid item container xs={12}>
+                  )}
+              </Select>
+            </FormControl>
+            <Grid container direction="row" item xs={12}>
+              <Grid item xs={6}>
+                <Button className={classes.downButton} onClick={() => getfile(wall.pdbid, "report")}> Download Walls Report</Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button className={classes.downButton}
+            onClick={() => getfile(wall.pdbid, "centerline")}
+                >
+                  Download Tunnel Shape
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
 
-      <FormControl className={classes.formControl}>
+        <Grid container item xs={6}>
+          <Grid
+            className={classes.wallchainsTray} 
+            container
+            xs      = {12}
+            spacing = {1}
+          >
+            <Grid item xs={12}>
 
-        <InputLabel htmlFor="grouped-native-select">Ribosome Structure</InputLabel>
-
-        <Select native  defaultValue="some" id="struct1"  >
-
-          <option aria-label="None" value=""  />
-          <option aria-label="None" value="sda"  >Struc1</option>
-          <option aria-label="None" value="sda"  >Struc1</option>
-          <option aria-label="None" value="sda"  >Struc1</option>
-          <option aria-label="None" value="sda"  >Struc1</option>
-        </Select>
-
-      </FormControl>
-    </Grid>
-
-    <Grid container direction="row" item xs={12}>
-      <Grid item xs={6}>
-      <Button className={classes.downButton}>Download Walls Report</Button>
+            <Typography variant="overline">
+              Tunel-adjacent Proteins
+            </Typography>
+            </Grid>
+            {wall.proteins
+              ? Object.entries(wall.proteins).map(r => {
+                  return (
+                    <Grid item>
+                      <WallChain
+                        pdbid={wall.pdbid}
+                        chain={r[0]}
+                        banid={wall.nomMap[r[0]] ? wall.nomMap[r[0]][0] : null}
+                        resids={r[1]}
+                      />
+                    </Grid>
+                  );
+                })
+              : "None"}
+          </Grid>
+          <Grid
+            className={classes.wallchainsTray}
+            container
+            xs={12}
+            spacing={1}
+          >
+            <Grid item xs={12}>
+            <Typography variant="overline">
+              Tunel-adjacent RNA-nucleotides
+            </Typography>
+          </Grid>
+            {wall.rna
+              ? Object.entries(wall.rna).map(r => {
+                  return (
+                    <Grid item>
+                      <WallChain
+                        pdbid={wall.pdbid}
+                        chain={r[0]}
+                        banid={wall.nomMap[r[0]] ? wall.nomMap[r[0]][0] : null}
+                        resids={r[1]}
+                      />
+                    </Grid>
+                  );
+                })
+              : "None"}
+          </Grid>
+        </Grid>
       </Grid>
-      <Grid item xs={6}>
-      <Button className={classes.downButton} >Download Tunnel Shape</Button>
-      </Grid>
-    </Grid>
-  </Grid>
-
-{/*  -----------------------------------------------------*/}
-  <Grid container item xs={6}>
-
-  </Grid>
-
-</Grid>
     </Grid>
   );
 };
