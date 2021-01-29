@@ -125,7 +125,7 @@ const _StatsList: React.FC<ReduxProps> = prop => {
       <ListItem button>
         <Link to="/rps">
           {protn ? (
-            <ListItemText primary={`${protn} Ribosomal Proteins`} />
+            <ListItemText primary={`${protn} r-proteins`} />
           ) : (
             <InlineSpinner />
           )}
