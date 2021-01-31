@@ -1,11 +1,8 @@
-import { NeoStruct, RXZDataTypes } from "../../DataInterfaces";
-import { RibosomeStructure } from "../../RibosomeTypes";
 import { Action } from 'redux'
 // import { sendMessage } from './store/chat/actions'
 // import { RootState } from './store'
 import { AppState } from './../../store'
 import { ThunkAction } from 'redux-thunk'
-import { AppActions } from "../../AppActions";
 import { FilterData, FilterPredicate, FiltersActionTypes, FilterType } from "./ActionTypes";
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType,AppState,unknown,Action<string>>
 
@@ -59,6 +56,7 @@ export const FiltersReducer = (
 ): FiltersReducerState => {
   switch (action.type) {
     case "FILTER_CHANGE":
+      
       var filtIndex = state.applied_filters.indexOf(action.filttype)
       // shallow copy
       var appliedFilters = state.applied_filters;

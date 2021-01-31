@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from "react";import "./StructuresCatalogue.css";
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
+import MenuItem from '@material-ui/core/MenuItem';
+import Input from '@material-ui/core/Input';
+import Chip from '@material-ui/core/Chip';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import {large_subunit_map} from './../../../static/large-subunit-map'
+import {small_subunit_map} from './../../../static/small-subunit-map'
 import Grid from '@material-ui/core/Grid';
 import { ListSubheader, TextField, Tooltip } from "@material-ui/core";
 import Slider from '@material-ui/core/Slider';
 import { connect, useStore  } from "react-redux";
 import { AppState } from "../../../redux/store";
-// import StructHero from "../StructureHero/StructHero";
 import { AppActions } from "../../../redux/AppActions";
 import LoadingSpinner  from '../../Other/LoadingSpinner'
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
-import SelectProteins from './../../../materialui/SelectProteins'
 import StructHero from './../../../materialui/StructHero'
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -30,7 +35,6 @@ import PageAnnotation from './PageAnnotation'
 import { NeoStruct } from "../../../redux/DataInterfaces";
 import { FiltersReducerState } from "../../../redux/reducers/Filters/FiltersReducer";
 
-// import {filterChange} from'./../../../redux/reducers/Filters/ActionTypes'
 const pageData ={
   title:"Whole Ribosome Structures",
   text:'This database presents a catalogue of all the ribosome structures deposited to the RCSB/PDB.\
@@ -314,11 +318,124 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
 };
 
 
-export const YearSlider       = connect(mapStateFilter("YEAR"),          mapDispatchFilter("YEAR"))(_ValueSlider)
-export const ProtcountSlider  = connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
-export const ResolutionSlider = connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
-export const SearchField      = connect(mapStateFilter("SEARCH"), mapDispatchFilter("SEARCH"))(_SearchField)
-export const SpeciesList      = connect(mapStateFilter("SPECIES"), mapDispatchFilter("SPECIES"))(_SpeciesList)
+
+
+
+
+type SelectedProteinsFilterProps =  handleFilterChange & FilterData 
+
+const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
+
+const BanClassNames=Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
+
+function getStyles(name: string, personName: string[], theme: Theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
+const useProteinsSelectedStyles = makeStyles((theme: Theme) =>
+  createStyles({
+      select:{
+          width:300,
+          maxWidth:300
+      },
+    chips: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+    chip: {
+      margin: 2,
+    },
+  }),
+);
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 100,
+    },
+  },
+};
+
+
+
+  const classes = useProteinsSelectedStyles();
+  const theme = useTheme();
+  const [selectedProteins, setSelectedProteins] = React.useState<string[]>([]);
+
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSelectedProteins(event.target.value as string[]);
+    var newval:string[]  =  event.target.value as string[]
+    // prop.handleChange(prop.allFilters as FiltersReducerState, newval)
+  };
+
+
+  return (
+        <Grid xs={12} container spacing={2}> 
+        <Grid item>
+        <Select
+          labelId="demo-mutiple-chip-label"
+          id="demo-mutiple-chip"
+          multiple
+          value={selectedProteins}
+          onChange={handleChange}
+          input={<Input id="select-multiple-chip" />}
+          className={classes.select}
+          renderValue={(selected) => (
+            <div className={classes.chips}>
+              {(selected as string[]).map((value) => (
+                <Chip key={value} label={value} className={classes.chip} />
+              ))}
+            </div>
+          )}
+          MenuProps={MenuProps}
+        >
+          {BanClassNames.map((name) => (
+            <MenuItem key={name} value={name} style={getStyles(name, selectedProteins, theme)}>
+              {name}
+            </MenuItem>
+          ))}
+        </Select>
+</Grid>
+        <Grid item container xs={12}>
+        <Grid item container xs={6}>
+        <button onClick={()=>{
+
+      prop.handleChange(prop.allFilters as FiltersReducerState, selectedProteins)
+        }}>Search</button>
+
+</Grid>
+        <Grid item container xs={6}>
+        <button
+        onClick={
+()=>{
+      setSelectedProteins([] as string[])
+      prop.handleChange(prop.allFilters as FiltersReducerState, [] as string[])
+}
+        }
+        
+        >Reset</button>
+</Grid>
+</Grid>
+        </Grid>
+  );
+}
+
+
+export const SelectProteins    =  connect(mapStateFilter("PROTEINS_PRESENT"), mapDispatchFilter("PROTEINS_PRESENT"))(_SelectProteins)
+export const YearSlider        =  connect(mapStateFilter("YEAR"),          mapDispatchFilter("YEAR"))(_ValueSlider)
+export const ProtcountSlider   =  connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
+export const ResolutionSlider  =  connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
+export const SearchField       =  connect(mapStateFilter("SEARCH"),       mapDispatchFilter("SEARCH"))(_SearchField)
+export const SpeciesList       =  connect(mapStateFilter("SPECIES"),      mapDispatchFilter("SPECIES"))(_SpeciesList)
+export const SelectedProteins  =  connect(mapStateFilter("PROTEINS_PRESENT"), mapDispatchFilter("PROTEINS_PRESENT"))(_SpeciesList)
 
 // Filters component
 export const StructureFilters = () => {
@@ -393,11 +510,9 @@ export const StructureFilters = () => {
         <ListItem key={"select-proteins-typography"} >
           <Typography id="range-slider">Proteins Present</Typography>
         </ListItem>
-        <Tooltip title={"This will be implemented shortly."}> 
-        <ListItem key={"select-proteins"} disabled={true}>
+        <ListItem key={"select-proteins"} >
           <SelectProteins />
         </ListItem>
-</Tooltip>
       </List>
 
       <Divider />

@@ -1,3 +1,5 @@
+import { log } from "console";
+import _ from "lodash";
 import { RXZDataTypes } from "../../DataInterfaces";
 import { FiltersReducerState } from "./FiltersReducer";
 
@@ -19,6 +21,8 @@ export interface filterChange {
 
 export type FiltersActionTypes = filterChange;
 
+// Filtr predicates are the the set of functionals that define the comparison logic for 
+// the spaces that are being filtered.  Reducers  particular to thos spaces import this
 export const FilterPredicates : Record<FilterType,FilterPredicate> ={
 "SEARCH"          :(value:any ) =>(struct:RXZDataTypes) => ( struct.struct.rcsb_id+struct.struct.citation_title+ struct.struct.citation_year+ struct.struct.citation_rcsb_authors+ struct.struct._organismName  ).toLowerCase().includes(value as string) ,
 "PROTEIN_COUNT"   :(value:any ) =>(struct:RXZDataTypes) => struct.rps.length >= ( value as number[] )[0] && struct.rps.length<= ( value as number[] )[1],
@@ -31,11 +35,21 @@ export const FilterPredicates : Record<FilterType,FilterPredicate> ={
   //  Collapse each of a struct's taxids to boolean based on the predicate. ANDQ all.
   return struct.struct._organismId.reduce((accumulator:boolean,taxid)=> { return inSelectedSpecies(taxid) || accumulator }, false)
 },
-
-// To implement:
-"PROTEINS_PRESENT":(value:any ) =>(struct:RXZDataTypes) => struct.rps.length >= ( value as number[] )[0] && struct.rps.length<= ( value as number[] )[1],
+"PROTEINS_PRESENT":(value:any ) =>(struct:RXZDataTypes) => {
+  // for every rp that a structure has, check whether 
+  // length is zero
+  // any of the names conform with the values passed (push to accumulator if yes)
+  var presence = struct.rps.reduce((accumulator:string[], instance)=>{
+    return instance.noms.length === 0  ? accumulator : 
+    (value.includes( instance.noms[0] ) ? [...accumulator, instance.noms[0]]:  accumulator)
+  }, [])
+  // If accumulator contains the same elements as the passed value ==> the struct passes
+  return _.isEmpty(_.xor(value,presence))
+},
 }
 
+// This is the "bottleneck" or switchboard action creator where the derived filters-state  is actually calclated
+// before it is actually emitted to the FILTERS reducer as well as all the other reducers that rley on the state of th filters like, strucutres reducer, say.
 export const filterChangeActionCreator = (filtersState:FiltersReducerState,filttype:FilterType, newval: any):filterChange =>{ 
   let filterTypeIsSet: boolean = (() => {
     switch (filttype) {

@@ -68,88 +68,27 @@ export const _StructuresReducer = (
       }
     case "FILTER_CHANGE":
 
-      var statethings  = (action as filterChange).derived_filters
-      var ftype = (action as filterChange).filttype
-    
-      var filtered_structs =
+      // Filter change action emits new state of filters
+      var newState       =  (action as filterChange).derived_filters
+      // Type of the recently-change filte
+      var ftype             =  (action as filterChange).filttype
 
-       statethings.applied_filters.length === 0
+      var filtered_structs  =  
+
+       newState.applied_filters.length === 0
           ? state.neo_response
-          : statethings.applied_filters.reduce(
+
+          : newState.applied_filters
+          .reduce(
               (filteredStructs: NeoStruct[], filter:typeof ftype ) => {
-                return filteredStructs.filter(
-                  FilterPredicates[filter](statethings.filters[filter].value)
-                );
+                return filteredStructs.filter(FilterPredicates[filter](newState.filters[filter].value));
               },
               state.neo_response
             );
-
        
       return {...state, derived_filtered:filtered_structs, pages_total: Math.ceil(filtered_structs.length/20)}
     default:
       return state;
-    // case "FILTER_CHANGE":
-    //   var filtIndex = state.applied_filters.indexOf(action.filttype)
-    //   // shallow copy
-    //   var appliedFilters = state.applied_filters;
-    //   if ( filtIndex === -1  && action.set) {
-    //     appliedFilters.push(action.filttype);
-    //   }
-    //   if (!( filtIndex===-1 )&&  !action.set) {
-    //     appliedFilters.splice(filtIndex, 1);
-    //   }
-    //   var derived_state = {
-    //     ...state,
-    //     filters: {
-    //       ...state.filters,
-    //       [action.filttype]: { set: action.set, value: action.newval },
-    //     },
-    //     applied_filters: appliedFilters,
-    //   };
-    //   var filtered_structs =
-    //     appliedFilters.length === 0
-    //       ? state.neo_response
-    //       : appliedFilters.reduce(
-    //           (filteredStructs: NeoStruct[], filter: actions.FilterType) => {
-    //             return filteredStructs.filter(
-    //               FilterPredicates[filter](derived_state.filters[filter].value)
-    //             );
-    //           },
-    //           state.neo_response
-    //         );
-    //   derived_state = {...derived_state, derived_filtered:filtered_structs, pages_total: Math.ceil(filtered_structs.length/20)}
-    //   return derived_state
-
-    //   var filtIndex = state.applied_filters.indexOf(action.filttype)
-    //   // shallow copy
-    //   var appliedFilters = state.applied_filters;
-    //   if ( filtIndex === -1  && action.set) {
-    //     appliedFilters.push(action.filttype);
-    //   }
-    //   if (!( filtIndex===-1 )&&  !action.set) {
-    //     appliedFilters.splice(filtIndex, 1);
-    //   }
-    //   var derived_state = {
-    //     ...state,
-    //     filters: {
-    //       ...state.filters,
-    //       [action.filttype]: { set: action.set, value: action.newval },
-    //     },
-    //     applied_filters: appliedFilters,
-    //   };
-    //   var filtered_structs =
-    //     appliedFilters.length === 0
-    //       ? state.neo_response
-    //       : appliedFilters.reduce(
-    //           (filteredStructs: NeoStruct[], filter: actions.FilterType) => {
-    //             return filteredStructs.filter(
-    //               FilterPredicates[filter](derived_state.filters[filter].value)
-    //             );
-    //           },
-    //           state.neo_response
-    //         );
-    //   derived_state = {...derived_state, derived_filtered:filtered_structs, pages_total: Math.ceil(filtered_structs.length/20)}
-    //   return derived_state
   }
 };
 
