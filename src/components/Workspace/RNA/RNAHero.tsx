@@ -2,7 +2,7 @@ import { RNAProfile } from './RNACatalogue'
 import React from 'react'
 import { Link } from 'react-router-dom';
 import downicon from "./../../../static/download.png"
-import {getNeo4jData} from './../../../redux/Actions/getNeo4jData'
+import {getNeo4jData} from '../../../redux/AsyncActions/getNeo4jData'
 import './RNAHero.css'
 import fileDownload from "js-file-download";
 

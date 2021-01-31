@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {  flattenDeep} from "lodash";
-import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
+import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import "./RPsCatalogue.css";
 import { BanClass } from "../../../redux/RibosomeTypes";
 import { ThunkDispatch } from "redux-thunk";

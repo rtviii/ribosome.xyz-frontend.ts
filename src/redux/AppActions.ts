@@ -1,4 +1,4 @@
-import { UIActions } from "./reducers/UI/UIActions";
-import { DataActions } from "./reducers/Data/DataActions";
+import { StructActionTypes } from "./reducers/StructuresReducer/ActionTypes";
+import { FiltersActionTypes } from "./reducers/Filters/ActionTypes";
 
-export type AppActions = DataActions | UIActions;
+export type AppActions = StructActionTypes | FiltersActionTypes;

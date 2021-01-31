@@ -1,5 +1,5 @@
 import React from 'react';
-import {getNeo4jData} from './../../../redux/Actions/getNeo4jData'
+import {getNeo4jData} from '../../../redux/AsyncActions/getNeo4jData'
 import {RibosomeStructure} from './../../../redux/RibosomeTypes'
 import  { useEffect, useState } from 'react'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -22,12 +22,10 @@ import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 import {WarningPopover} from './../WorkInProgressChip'
 import { AppState } from '../../../redux/store';
-import { NeoStruct } from '../../../redux/reducers/Data/StructuresReducer/StructuresReducer';
 import { connect } from 'react-redux';
 import { truncate } from '../../Main';
 import PageAnnotation from '../Display/PageAnnotation';
-
-
+import { NeoStruct } from '../../../redux/DataInterfaces';
 
 
 interface prot {noms: string[], surface_ratio:number|null, strands:string}
