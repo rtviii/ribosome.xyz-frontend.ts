@@ -12,8 +12,7 @@ import { ListSubheader, TextField, Tooltip } from "@material-ui/core";
 import Slider from '@material-ui/core/Slider';
 import { connect, useStore  } from "react-redux";
 import { AppState } from "../../../redux/store";
-import { AppActions } from "../../../redux/AppActions";
-import LoadingSpinner  from '../../Other/LoadingSpinner'
+import { AppActions } from "../../../redux/AppActions";import LoadingSpinner  from '../../Other/LoadingSpinner'
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -25,6 +24,7 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import * as redux from '../../../redux/reducers/StructuresReducer/StructuresReducer'
 import { Dispatch } from 'redux';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import {useDebounce} from 'use-debounce'
 import {  FilterData, FilterType,filterChange, filterChangeActionCreator} from "../../../redux/reducers/Filters/ActionTypes"
 import {SpeciesGroupings} from './taxid_map'
@@ -167,95 +167,9 @@ export const mapDispatchFilter = (filttype: FilterType)=>(
  }
 
 
-interface OwnSpecFilterProps{}
-type SpeciesFilterProps = OwnSpecFilterProps & handleFilterChange & FilterData 
-const _SpeciesList:React.FC<SpeciesFilterProps> = (prop)=> {
-  const useSpeciesListStyles = makeStyles((theme: Theme) =>
-    createStyles({
-    item: {
-      // color: theme.palette.secondary.main,
-      '& span, & svg': {
-        fontSize: '12px'
-      }
-    },
-      root: {
-        width: '100%',
-        maxWidth: 360,
-        fontSize:12,
-        backgroundColor: theme.palette.background.paper,
-      }
-    }),
-  );
-
-  const classes = useSpeciesListStyles();
-  // ----------------
-  const taxIdMap = Object.entries(SpeciesGroupings);
-
-  var inxs = taxIdMap.map((val, index) => index);
-  const [checked, setChecked] = React.useState(inxs);
 
 
-  const handleToggle = (value: number, speckey:string) => () => {
-      
-    
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-      // -------
-      var newarr = prop.value
-      newarr = ( newarr as number[]).filter((n:number)=>!(SpeciesGroupings[speckey].includes(n)))
-      prop.handleChange(prop.allFilters as FiltersReducerState,newarr)
-    } else {
-      newChecked.splice(currentIndex, 1);
-
-      var newvalue  = SpeciesGroupings[speckey].reduce( ( acc,e:number ) => [ ...acc,e ], ( prop.value as number[] ))
-      prop.handleChange(prop.allFilters  as FiltersReducerState, newvalue)
-    }
-
-    
-    setChecked(newChecked);
-  };
-
-
-  return (
-    <List className={classes.root}>
-      {Object.entries(SpeciesGroupings).map((value,index) => {
-        const labelId = `checkbox-list-label-${value}`;
-
-        return (
-          <ListItem
-            key={value[0]}
-            button
-            onClick={handleToggle(index,value[0])}
-          >
-            <ListItemText
-              className = { classes.item }
-              id        = {labelId}
-              primary   = {value[0]}
-
-            />
-
-            <ListItemIcon>
-              <Checkbox
-                edge="start"
-                checked={checked.indexOf(index) !== -1}
-                tabIndex={-1}
-                disableRipple
-                color={"primary"}
-                inputProps={{ "aria-labelledby": labelId }}
-              />
-            </ListItemIcon>
-          </ListItem>
-        );
-      })}
-    </List>
-  );
-}
-
-
- const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
+const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
 {
   const [value, setValue] = useState('')
   const [debounced] = useDebounce(value,250)
@@ -319,11 +233,7 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
 
 
 
-
-
-
 type SelectedProteinsFilterProps =  handleFilterChange & FilterData 
-
 const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
 
 const BanClassNames=Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
@@ -429,13 +339,73 @@ const MenuProps = {
 }
 
 
+type SpecListProps = handleFilterChange & FilterData;
+export const _SpecList:React.FC<SpecListProps> =(prop)=> {
+  const useSpecListStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      root: {
+        padding: 10,
+        fontSize: 8,
+        width: "100%",
+        "& > * + *": {
+          marginTop: theme.spacing(3),
+          fontSize: 8,
+        },
+      },
+        autocomplete: {
+          fontSize: 8,
+        "& > * + *": {
+          fontSize: 8,
+        },
+        },
+    })
+  );
+
+
+
+  
+  const taxIdMap  =  Object.entries(SpeciesGroupings);
+    const classes = useSpecListStyles();
+
+    return (
+      <div className={classes.root}>
+        <Autocomplete
+        onChange={
+
+            (e:any,value:Array<
+              [string, number[]]
+              >)=>{
+              var taxids  = value.map(k => k[1]).reduce((acc, taxarr) => [...acc, ...taxarr], [])
+              prop.handleChange(prop.allFilters as FiltersReducerState, taxids)
+              
+            }
+        }
+          multiple
+          id="tags-standard"
+          options={taxIdMap}
+          getOptionLabel={(option) => option[0] as string}
+          defaultValue={[]}
+          renderInput={(params) => (
+            <TextField
+
+        className={classes.autocomplete}
+              {...params}
+              variant="outlined"
+            />
+          )}
+        />
+      </div>
+    );
+}
+
+
 export const SelectProteins    =  connect(mapStateFilter("PROTEINS_PRESENT"), mapDispatchFilter("PROTEINS_PRESENT"))(_SelectProteins)
 export const YearSlider        =  connect(mapStateFilter("YEAR"),          mapDispatchFilter("YEAR"))(_ValueSlider)
 export const ProtcountSlider   =  connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
 export const ResolutionSlider  =  connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
 export const SearchField       =  connect(mapStateFilter("SEARCH"),       mapDispatchFilter("SEARCH"))(_SearchField)
-export const SpeciesList       =  connect(mapStateFilter("SPECIES"),      mapDispatchFilter("SPECIES"))(_SpeciesList)
-export const SelectedProteins  =  connect(mapStateFilter("PROTEINS_PRESENT"), mapDispatchFilter("PROTEINS_PRESENT"))(_SpeciesList)
+export const SpeciesList       =  connect(mapStateFilter("SPECIES"),      mapDispatchFilter("SPECIES"))(_SpecList)
+// export const SelectedProteins  =  connect(mapStateFilter("PROTEINS_PRESENT"), mapDispatchFilter("PROTEINS_PRESENT"))(_SelectProteins)
 
 // Filters component
 export const StructureFilters = () => {
@@ -445,6 +415,7 @@ export const StructureFilters = () => {
       root: {
         display: "flex",
         zIndex: -1,
+        width:300
       },
       appBar: {
         width: `calc(100% - ${drawerWidth}px)`,
@@ -518,7 +489,6 @@ export const StructureFilters = () => {
       <Divider />
       <List>
         <ListSubheader> Species</ListSubheader>
-        {/* <SpeciesFilter species={['Kluyveromyces Lactis','Escherichia Coli','Homo Sapiens','Tetrahymena Thermophila','Deinococcus Radiodurans']}/> */}
 
       <SpeciesList/>
 
@@ -529,3 +499,89 @@ export const StructureFilters = () => {
 
 
 
+
+// type SpeciesFilterProps =   handleFilterChange & FilterData 
+// const _SpeciesList:React.FC<SpeciesFilterProps> = (prop)=> {
+
+//   const useSpeciesListStyles = makeStyles((theme: Theme) =>
+//     createStyles({
+//     item: {
+//       // color: theme.palette.secondary.main,
+//       '& span, & svg': {
+//         fontSize: '12px'
+//       }
+//     },
+//       root: {
+//         width: '100%',
+//         maxWidth: 360,
+//         fontSize:12,
+//         backgroundColor: theme.palette.background.paper,
+//       }
+//     }),
+//   );
+
+//   const classes   =  useSpeciesListStyles();
+//   const taxIdMap  =  Object.entries(SpeciesGroupings);
+
+//   var inxs = taxIdMap.map((val, index) => index);
+//   const [checked, setChecked] = React.useState(inxs);
+
+//   const handleToggle = (value: number, speckey:string) => () => {
+
+//     const currentIndex = checked.indexOf(value);
+//     const newChecked = [...checked];
+
+//     if (currentIndex === -1) {
+//       newChecked.push(value);
+//       var newarr = prop.value
+//       newarr = ( newarr as number[]).filter((n:number)=>!(SpeciesGroupings[speckey].includes(n)))
+//       prop.handleChange(prop.allFilters as FiltersReducerState,newarr)
+//     } else {
+//       newChecked.splice(currentIndex, 1);
+
+//       var newvalue  = SpeciesGroupings[speckey].reduce( ( acc,e:number ) => [ ...acc,e ], ( prop.value as number[] ))
+//       prop.handleChange(prop.allFilters  as FiltersReducerState, newvalue)
+//     }
+
+    
+//     setChecked(newChecked);
+//   };
+
+
+
+//   return (
+
+//     <List className={classes.root}>
+//       {Object.entries(SpeciesGroupings).map((value,index) => {
+//         const labelId = `checkbox-list-label-${value}`;
+//         return (
+//           <ListItem
+//             key={value[0]}
+//             button
+//             onClick={
+//               handleToggle(index,value[0])
+//             }
+//           >
+//             <ListItemText
+//               className = { classes.item }
+//               id        = {labelId}
+//               primary   = {value[0]}
+
+//             />
+
+//             <ListItemIcon>
+//               <Checkbox
+//                 edge="start"
+//                 checked={checked.indexOf(index) !== -1}
+//                 tabIndex={-1}
+//                 disableRipple
+//                 color={"primary"}
+//                 inputProps={{ "aria-labelledby": labelId }}
+//               />
+//             </ListItemIcon>
+//           </ListItem>
+//         );
+//       })}
+//     </List>
+//   );
+// }

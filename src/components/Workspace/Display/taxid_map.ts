@@ -3,10 +3,9 @@
 
 export const SpeciesGroupings:Record<string, number[]> = {
 "Rhizobium sp. Pop5"         : [1223565],
-"Saccharolobus solfataricus" : [2287],
 "Thermococcus celer "        : [1293037,311400],
 "Thermococcus kodakarensis " : [69014],
-"Saccharolobus solfataricus ": [273057],
+"Saccharolobus solfataricus ": [273057, 2287],
 "Pyrococcus abyssi "         : [272844],
 "Vairimorpha necatrix"       : [6039],
 "Canis lupus familiaris"     : [9615],
@@ -24,7 +23,7 @@ export const SpeciesGroupings:Record<string, number[]> = {
 "Apis mellifera"             : [7460],
 "Vibrio alginolyticus"       : [663],
 "Escherichia virus T4"       : [10665],
-"Acinetobacter (All)"        : [575584,1144670,1217649,1977881,480119 ,1217710,1310637,421052 ,470    ,1310678,52133,1144663,1960940],
+"Acinetobacter (All)"        : [575584,1144670,1217649,1977881,480119,1217710,1310637,421052,470,1310678,52133,1144663,1960940],
 "Enterococcus faecalis "     : [1351,474186],
 "Arabidopsis thaliana"       : [3702],
 "Tetrahymena thermophila "   : [312017],

@@ -47,9 +47,6 @@ const filtersReducerDefaultState: FiltersReducerState = {
   },
 };
 
-
-
-
 export const FiltersReducer = (
   state: FiltersReducerState = filtersReducerDefaultState,
   action: FiltersActionTypes

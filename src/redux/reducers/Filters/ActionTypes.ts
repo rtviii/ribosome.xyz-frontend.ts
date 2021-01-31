@@ -28,13 +28,7 @@ export const FilterPredicates : Record<FilterType,FilterPredicate> ={
 "PROTEIN_COUNT"   :(value:any ) =>(struct:RXZDataTypes) => struct.rps.length >= ( value as number[] )[0] && struct.rps.length<= ( value as number[] )[1],
 "YEAR"            :(value:any ) =>(struct:RXZDataTypes) => struct.struct.citation_year >= ( value as number[] ) [0]  && struct.struct.citation_year <= (value as number[])[1],
 "RESOLUTION"      :(value:any ) =>(struct:RXZDataTypes) => struct.struct.resolution >=( value as number[] ) [0]  && struct.struct.resolution <= (value as number[])[1],
-"SPECIES"         :(value:any ) =>(struct:RXZDataTypes) => {
-  // Structures frequently have more than one taxid associated with them. 
-  // InSelected species cheks whether a particular taxid figures in the list of selecte fitlers
-  const inSelectedSpecies = (taxid:number) => !( (value as number[]).includes(taxid)   )
-  //  Collapse each of a struct's taxids to boolean based on the predicate. ANDQ all.
-  return struct.struct._organismId.reduce((accumulator:boolean,taxid)=> { return inSelectedSpecies(taxid) || accumulator }, false)
-},
+"SPECIES"         :(value:any ) =>(struct:RXZDataTypes) => struct.struct._organismId.reduce((accumulator:boolean,taxid)=>  accumulator || ( value as number[] ).includes(taxid), false),
 "PROTEINS_PRESENT":(value:any ) =>(struct:RXZDataTypes) => {
   // for every rp that a structure has, check whether 
   // length is zero
