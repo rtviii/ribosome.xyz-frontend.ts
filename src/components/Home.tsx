@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { NeoStruct } from "../redux/reducers/Data/StructuresReducer/StructuresReducer";
+import { NeoStruct } from "./../redux/DataInterfaces"
 import { AppState } from "../redux/store";
 import "./Home.css";
 import { Link } from "react-router-dom";
@@ -17,7 +17,7 @@ import InlineSpinner from "./Other/InlineSpinner";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import { getNeo4jData } from "../redux/Actions/getNeo4jData";
+import { getNeo4jData } from "../redux/AsyncActions/getNeo4jData";
 
 import {useHistory} from 'react-router-dom'
 import CardActions from "@material-ui/core/CardActions";
@@ -135,7 +135,7 @@ const _StatsList: React.FC<ReduxProps> = prop => {
         <Link to="/structs">
           {structn ? (
             <ListItemText
-              primary={`${structn ? structn : ""} unique structure`}
+              primary={`${structn ? structn : ""} unique structures`}
             />
           ) : (
             <InlineSpinner />

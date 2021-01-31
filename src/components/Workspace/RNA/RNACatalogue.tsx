@@ -1,6 +1,6 @@
 import { flattenDeep } from "lodash";
 import React, { useEffect, useState } from "react";
-import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
+import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import LoadingSpinner from "../../Other/LoadingSpinner";
 import RNAHero from "./RNAHero";
 import "./RNACatalogue.css";

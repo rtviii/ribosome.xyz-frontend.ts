@@ -1,20 +1,20 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk, { ThunkMiddleware } from "redux-thunk";
 import { createLogger } from "redux-logger";
-import { PagewideFilterReducer } from "./reducers/UI/PagewideFilterReducer";
-import { workspaceCatalogueReducer } from "./reducers/UI/workspaceCatalogueReducer";
-import { StructuresReducer } from "./reducers/Data/StructuresReducer/StructuresReducer";
+import { _StructuresReducer } from "./reducers/StructuresReducer/StructuresReducer";
+import { FiltersReducer } from "./reducers/Filters/FiltersReducer";
 
 const collapsFilter = (action: any) => {
-  var toFilter = ["TOGGLE_WORKSPACE_SELECTED"];
+  // Collapse by action type:
+  var toFilter = [""];
   return !toFilter.includes(action!.type);
 };
 const logger = createLogger({ collapsed: collapsFilter });
 
 
 export const rootReducer = combineReducers({
-structures:StructuresReducer
-});
+  filters:FiltersReducer,
+  structures:_StructuresReducer});
 
 export type AppState = ReturnType<typeof rootReducer>;
 
