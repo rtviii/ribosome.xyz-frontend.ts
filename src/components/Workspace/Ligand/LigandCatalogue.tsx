@@ -2,7 +2,7 @@
 import { flattenDeep } from "lodash";
 import fileDownload from "js-file-download";
 import React, { useEffect, useState } from "react";
-import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData';
+import { getNeo4jData } from './../../../redux/Actions/getNeo4jData';
 import "./LigandCatalogue.css";
 import { Ligand } from "./../../../redux/RibosomeTypes";
 import { Link, useParams } from "react-router-dom";

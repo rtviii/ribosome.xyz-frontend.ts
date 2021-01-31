@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import fileDownload from 'js-file-download'
 import { Accordion, Card, Dropdown, DropdownButton, ListGroup } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData'
+import { getNeo4jData } from '../../../redux/Actions/getNeo4jData'
 import './ExitTunnelPage.css'
 import downicon from './../../../static/download.png'
 import { Ligand, RibosomalProtein, RibosomeStructure, rRNA } from '../../../redux/RibosomeTypes'
@@ -284,6 +284,13 @@ const ExitTunnel = () => {
                  </option>)}
               </Select>
               <Grid container xs={12}>
+                {/* <Grid item xs={6}>
+
+<Typography variant={"caption"}>{
+  structState ?  structState.structure && structState.structure._organismName[0] + " " :""
+}</Typography></Grid> */}
+
+                {/* <Grid item xs={6}> */}
 <Typography variant={"caption"}>{
   structState ?  structState.structure && structState.structure.citation_title+ " " :""
 }</Typography>

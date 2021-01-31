@@ -42,6 +42,17 @@ const MenuProps = {
 
 const names=Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
 
+// const names = [
+//     'uL2',
+//     'uL5',
+//     'bL24',
+//     'uL15',
+//     'uL16',
+//     'uL10',
+//     'uL121',
+//     'ar231',
+    
+
 function getStyles(name: string, personName: string[], theme: Theme) {
   return {
     fontWeight:
@@ -51,19 +62,19 @@ function getStyles(name: string, personName: string[], theme: Theme) {
   };
 }
 
-export default function _SelectProteins() {
+export default function SelectProteins() {
   const classes = useStyles();
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>([]);
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setPersonName(event.target.value as string[]);
-    console.log("proteins selected", event.target.value);
   };
 
 
   return (
         <Select
+        disabled={true}
           labelId="demo-mutiple-chip-label"
           id="demo-mutiple-chip"
           multiple

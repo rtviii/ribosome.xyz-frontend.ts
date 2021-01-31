@@ -4,7 +4,7 @@ import { useParams, Link } from "react-router-dom";
 import { flattenDeep } from "lodash";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import RibosomalProteinHero from "./RibosomalProteinHero";
-import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
+import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import axios from 'axios'
 
 interface NeoHomolog {

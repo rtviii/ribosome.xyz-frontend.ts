@@ -3,7 +3,7 @@ import "./RibosomalProteinHero.css";
 import { Link } from "react-router-dom";
 import downicon from "./../../../static/download.png"
 import fileDownload from "js-file-download";
-import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
+import { getNeo4jData } from "../../../redux/Actions/getNeo4jData";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import Accordion from "react-bootstrap/esm/Accordion";
 import { Button, Card, ListGroup } from "react-bootstrap";

@@ -4,7 +4,7 @@ import { AppActions } from "../redux/AppActions";
 import { AppState } from "../redux/store";
 import "./Main.css";
 import Display from "./Workspace/Display/Display";
-import * as redux from '../redux/reducers/StructuresReducer/StructuresReducer'
+import * as redux from './../redux/reducers/Data/StructuresReducer/StructuresReducer'
 import { connect } from "react-redux";
 import Dashboard from './../materialui/Dashboard/Dashboard'
 

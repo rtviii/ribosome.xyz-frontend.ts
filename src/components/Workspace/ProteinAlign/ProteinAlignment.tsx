@@ -4,7 +4,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData';
+import { getNeo4jData } from '../../../redux/Actions/getNeo4jData';
 import { RibosomalProtein, RibosomeStructure } from '../../../redux/RibosomeTypes';
 import Button from '@material-ui/core/Button';
 import fileDownload from 'js-file-download';

@@ -9,9 +9,9 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import hero from './../static/sample-hero.png'
 import { Grid, TextareaAutosize } from '@material-ui/core';
+import { NeoStruct } from '../redux/reducers/Data/StructuresReducer/StructuresReducer';
 import { truncate } from '../components/Main';
 import { Link,useHistory} from 'react-router-dom';
-import { NeoStruct } from '../redux/DataInterfaces';
 
 const useStyles = makeStyles({
   card: {

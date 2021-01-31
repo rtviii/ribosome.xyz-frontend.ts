@@ -18,19 +18,17 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import * as redux from '../../../redux/reducers/StructuresReducer/StructuresReducer'
+import * as redux from '../../../redux/reducers/Data/StructuresReducer/StructuresReducer'
 import { Dispatch } from 'redux';
 import {useDebounce} from 'use-debounce'
-import {  FilterData, FilterType,filterChange, filterChangeActionCreator} from "../../../redux/reducers/Filters/ActionTypes"
+import {  FilterData, FilterType } from "../../../redux/reducers/Data/StructuresReducer/ActionTypes";
 import {SpeciesGroupings} from './taxid_map'
 import Pagination from '@material-ui/lab/Pagination';
-import _  from "lodash";
+import _, { includes, propertyOf } from "lodash";
+import Home from "../../Home";
 import {useHistory} from "react-router-dom";
 import PageAnnotation from './PageAnnotation'
-import { NeoStruct } from "../../../redux/DataInterfaces";
-import { FiltersReducerState } from "../../../redux/reducers/Filters/FiltersReducer";
 
-// import {filterChange} from'./../../../redux/reducers/Filters/ActionTypes'
 const pageData ={
   title:"Whole Ribosome Structures",
   text:'This database presents a catalogue of all the ribosome structures deposited to the RCSB/PDB.\
@@ -65,7 +63,7 @@ const usePaginationStyles = makeStyles((theme) =>
 
 // Workspace itself
 interface StateProps {
-  structures  : NeoStruct[];
+  structures  : redux.NeoStruct[];
   loading     : boolean;
   current_page: number;
   pages_total : number
@@ -119,14 +117,12 @@ const specs =_.uniq(prop.structures.map((e)=>e.struct._organismId).reduce((accum
     <LoadingSpinner annotation="Fetching data..." />
   );
 };
-
 const mapstate = (state: AppState, ownprops: {}): StateProps => ({
-  structures  : state.structures.derived_filtered,
-  loading     : state.structures.Loading,
+  structures: state.structures.derived_filtered,
+  loading: state.structures.Loading,
   current_page: state.structures.current_page,
-  pages_total : state.structures.pages_total,
+  pages_total: state.structures.pages_total,
 });
-
 const mapdispatch =(
   dispatch:Dispatch<AppActions>,
   ownProps:any):DispatchProps=>({
@@ -146,21 +142,18 @@ export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
 
 // Filter Generics-----------------------------------------------------------------------------------------------
 interface handleFilterChange {
-  handleChange: ( allFilters:FiltersReducerState, newavalue:number|string|number[]|string[]) => void;
+  handleChange: (newavalue:number|string|number[]|string[]) => void;
 }
 export const mapStateFilter=(filttype:FilterType)=>(appstate:AppState, ownprops:any):FilterData =>({
-  allFilters: appstate.filters,
-  set       : appstate.filters.filters[filttype].set,
-  value     : appstate.filters.filters[filttype].value
+  set    :  appstate.structures.filters[filttype].set,
+  value  :  appstate.structures.filters[filttype].value
 })
 export const mapDispatchFilter = (filttype: FilterType)=>(
   dispatch:Dispatch<AppActions>,
-  ownProps:any,
-):handleFilterChange =>{ 
- return {
-  handleChange: ( allFilters, newrange) => dispatch(filterChangeActionCreator(allFilters,filttype, newrange))
-}
- }
+  ownProps:any
+):handleFilterChange =>({
+  handleChange: ( newrange ) => dispatch(redux.filterChange(filttype, newrange))
+})
 
 
 interface OwnSpecFilterProps{}
@@ -202,12 +195,12 @@ const _SpeciesList:React.FC<SpeciesFilterProps> = (prop)=> {
       // -------
       var newarr = prop.value
       newarr = ( newarr as number[]).filter((n:number)=>!(SpeciesGroupings[speckey].includes(n)))
-      prop.handleChange(prop.allFilters as FiltersReducerState,newarr)
+      prop.handleChange(newarr)
     } else {
       newChecked.splice(currentIndex, 1);
 
       var newvalue  = SpeciesGroupings[speckey].reduce( ( acc,e:number ) => [ ...acc,e ], ( prop.value as number[] ))
-      prop.handleChange(prop.allFilters  as FiltersReducerState, newvalue)
+      prop.handleChange(newvalue)
     }
 
     
@@ -260,8 +253,7 @@ const _SpeciesList:React.FC<SpeciesFilterProps> = (prop)=> {
     setValue(e.target.value)
   }
   useEffect(() => {
-    props.handleChange(props.allFilters as FiltersReducerState,debounced)
-
+    props.handleChange(debounced)
   }, [debounced])
   return(
       <TextField id="standard-basic" label="Search" value={value}  onChange={handleChange}/>
@@ -290,7 +282,7 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
     setValue(newValue as number[]);
   };
   useEffect(() => {
-      prop.handleChange(prop.allFilters as FiltersReducerState,debounced_val)
+      prop.handleChange(debounced_val)
   }, [debounced_val])
 
   return (

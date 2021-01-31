@@ -8,7 +8,7 @@ import {
 } from "../../../redux/RibosomeTypes";
 import "./StructurePage.css";
 import RNAHero from "./../RNA/RNAHero";
-import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
+import { getNeo4jData } from "./../../../redux/Actions/getNeo4jData";
 import { flattenDeep } from "lodash";
 import { connect } from "react-redux";
 import { AppState } from "../../../redux/store";
