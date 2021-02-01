@@ -68,7 +68,9 @@ const StructHero=(d:NeoStruct)=> {
   return (
     <Card className={classes.card} >
       
-      <CardActionArea onClick={()=>history.push(`/structs/${d.struct.rcsb_id}`)}>
+      <Link to={ `/structs/${d.struct.rcsb_id}` } >
+      
+      <CardActionArea >
         <CardContent >
           <CardMedia
             component="img"
@@ -135,6 +137,7 @@ const StructHero=(d:NeoStruct)=> {
           EMDB
         </Button>
       </CardActions>
+      </Link>
     </Card>
   );
 }

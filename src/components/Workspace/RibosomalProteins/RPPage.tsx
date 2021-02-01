@@ -52,9 +52,7 @@ const RPPage:React.FC<RPPageProps> = (prop) => {
   return params!.nom ? (
       <div className="rp-page">
         <h1>Ribosomal Proteins</h1>
-        <button onClick={()=>{
 
-        }}> CHECK</button>
         <h1>{params.nom}</h1>
         <Pagination 
         {...{gotopage:prop.goto_page, pagecount:prop.pagestotal}}

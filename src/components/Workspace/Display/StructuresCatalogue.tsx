@@ -29,7 +29,7 @@ import {useDebounce} from 'use-debounce'
 import {  FilterData, FilterType,filterChange, filterChangeActionCreator} from "../../../redux/reducers/Filters/ActionTypes"
 import {SpeciesGroupings} from './taxid_map'
 import _  from "lodash";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import PageAnnotation from './PageAnnotation'
 import { NeoStruct } from "../../../redux/DataInterfaces";
 import { FiltersReducerState } from "../../../redux/reducers/Filters/FiltersReducer";
@@ -422,11 +422,9 @@ export const StructureFilters = () => {
       <List>
       <Divider />
         <ListItem className={filterClasses.home} >
-          <ListItemText  onClick={()=>{
-
-          history.push(`/home`)
-
-          }} primary={"Home"} />
+          <Link to='/home'>
+          <ListItemText   primary={"Home"} />
+          </Link>
         </ListItem>
       <Divider />
         <ListItem key={"search"}>

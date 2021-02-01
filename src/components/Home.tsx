@@ -220,9 +220,6 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
   const classes = useMainContentCardStyles();
   const history = useHistory();
 
-  const gotoonclick = (page:string)=>{
-    history.push(`/${page}`)
-  }
   return (
     <Card className={classes.root}>
       <CardContent>
@@ -260,10 +257,9 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
       <CardActions>
         <Grid container xs={12} spacing={2}>
           <Grid item xs={12}>
+            <Link to='/structs'>
+
             <Paper
-              onClick={() => {
-                history.push(`/structs`);
-              }}
               className={classes.section}
               variant="outlined"
             >
@@ -276,13 +272,12 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                 available to process and analyze the structures
               </Typography>
             </Paper>
+            </Link>
           </Grid>
 
           <Grid item xs={12}>
+            <Link to='/rps'>
             <Paper
-              onClick={() => {
-                history.push(`/rps`);
-              }}
               className={classes.section}
               variant="outlined"
             >
@@ -296,12 +291,11 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                 recently adopted for naming ribosomal proteins.
               </Typography>
             </Paper>
+            </Link>
           </Grid>
           <Grid item xs={12}>
+            <Link to='/rnas'>
             <Paper
-              onClick={() => {
-                history.push(`/rnas`);
-              }}
               className={classes.section}
               variant="outlined"
             >
@@ -314,13 +308,12 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                 available to process and analyze the structures
               </Typography>
             </Paper>
+            </Link>
           </Grid>
 
           <Grid item xs={12}>
+            <Link to='/ligands'>
             <Paper
-              onClick={() => {
-                history.push(`/ligands`);
-              }}
               className={classes.section}
               variant="outlined"
             >
@@ -335,15 +328,14 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                 database.
               </Typography>
             </Paper>
+            </Link>
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.section} elevation={2} variant="outlined">
               <Typography variant="h5">Tools & Analytics</Typography>
 
+            <Link to='/rpclassification'>
               <Container
-                onClick={() => {
-                  gotoonclick("rpclassification");
-                }}
                 className={classes.tool}
               >
                 <Typography variant="h6" className={classes.tool}>
@@ -356,10 +348,9 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                   PTC.
                 </Typography>
               </Container>
+</Link>
+            <Link to='/rpalign'>
               <Container
-                onClick={() => {
-                  gotoonclick("rpalign");
-                }}
                 className={classes.tool}
               >
                 <Typography variant="h6" className={classes.tool}>
@@ -370,10 +361,9 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                   sub-components from different ribosomal structures.
                 </Typography>
               </Container>
+</Link>
+            <Link to='/interfaces'>
               <Container
-                onClick={() => {
-                  gotoonclick("interfaces");
-                }}
                 className={classes.tool}
               >
                 <Typography variant="h6" className={classes.tool}>
@@ -384,10 +374,9 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                   deposited strucutres and their binding sites.
                 </Typography>
               </Container>
+</Link>
+            <Link to='/tunnel'>
               <Container
-                onClick={() => {
-                  gotoonclick("tunnel");
-                }}
                 className={classes.tool}
               >
                 <Typography variant="h6" className={classes.tool}>
@@ -408,6 +397,7 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                   the walls of the tunnel.
                 </Typography>
               </Container>
+</Link>
             </Paper>
           </Grid>
         </Grid>
