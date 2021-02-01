@@ -15,7 +15,6 @@ export interface StructReducerState {
   
 }
 
-
 const structReducerDefaultState: StructReducerState = {
   Loading         : false,
   Error           : null,
@@ -109,9 +108,6 @@ export const requestAllStructuresDjango =  () => {
     );
   };
 };
-
-
-
 
 
 // ---------------------------------------Pagination

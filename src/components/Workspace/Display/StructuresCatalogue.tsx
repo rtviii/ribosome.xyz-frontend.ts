@@ -28,12 +28,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import {useDebounce} from 'use-debounce'
 import {  FilterData, FilterType,filterChange, filterChangeActionCreator} from "../../../redux/reducers/Filters/ActionTypes"
 import {SpeciesGroupings} from './taxid_map'
-import Pagination from '@material-ui/lab/Pagination';
 import _  from "lodash";
 import {useHistory} from "react-router-dom";
 import PageAnnotation from './PageAnnotation'
 import { NeoStruct } from "../../../redux/DataInterfaces";
 import { FiltersReducerState } from "../../../redux/reducers/Filters/FiltersReducer";
+import Pagination from './Pagination'
 
 const pageData ={
   title:"Whole Ribosome Structures",
@@ -41,31 +41,6 @@ const pageData ={
    These structures are processed here for an easy search and access of the structures and their components\
    (listed below). Various modules (gear icon) are also available to process and analyze the structures'
 }
-
-
-export const PaginationRounded=({gotopage, pagecount}:{
-  gotopage : (pid:number)=>void;
-  pagecount: number
-})=> {
-const usePaginationStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      '& > *': {
-        marginTop: theme.spacing(2),
-      },
-    },
-  }),
-);
-  const classes = usePaginationStyles();
-  return (
-    <div className={classes.root}>
-      <Pagination count={pagecount} onChange={(_,page)=>{ 
-        gotopage(page)
-        }} variant="outlined" shape="rounded" />
-    </div>
-  );
-}
-
 
 // Workspace itself
 interface StateProps {
@@ -96,7 +71,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
       <Grid container item xs={12} spacing={3}>
         <PageAnnotation {...pageData}/>
         <Grid item xs={12}>
-          <PaginationRounded
+          <Pagination
             {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}
           />
         </Grid>
@@ -110,7 +85,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
             ))}
         </Grid>
         <Grid item xs={12}>
-          <PaginationRounded
+          <Pagination
             {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}
           />
         </Grid>
@@ -135,11 +110,8 @@ const mapdispatch =(
     next_page: ()=>dispatch( redux.nextpage()),
     prev_page: ()=>dispatch( redux.prevpage()),
   })
+
 export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
-
-
-
-
 
 // Filter Generics-----------------------------------------------------------------------------------------------
 interface handleFilterChange {
