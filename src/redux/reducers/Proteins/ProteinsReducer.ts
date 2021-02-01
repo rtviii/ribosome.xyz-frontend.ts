@@ -34,18 +34,42 @@ const initialStateProteinsReducer:ProteinsReducerState = {
     erroredOut         :  false
 
 }
-export  const  ProteinsReducer = (
-    state: ProteinsReducerState = initialStateProteinsReducer,
-    action: ProteinActions
-):ProteinsReducerState =>{
-    switch(action.type){
-        case "REQUEST_BAN_CLASS_GO":
-            return {...state, isLoading:true}
-        case "REQUEST_BAN_CLASS_SUCCESS":
-            return {...state, current_ban_class: action.payload}
-        case "REQUEST_BAN_CLASS_ERR":
-            return {...state, isLoading:false, error:action.error, erroredOut:true}
-        default:
-            return state
-    }
-}
+export const ProteinsReducer = (
+  state: ProteinsReducerState = initialStateProteinsReducer,
+  action: ProteinActions
+): ProteinsReducerState => {
+  switch (action.type) {
+    case "REQUEST_BAN_CLASS_GO":
+      return { ...state, isLoading: true };
+    case "REQUEST_BAN_CLASS_SUCCESS":
+      return {
+        ...state,
+        current_ban_class: action.payload,
+        pages_total: Math.ceil(action.payload.length / 20),
+      };
+    case "REQUEST_BAN_CLASS_ERR":
+      return {
+        ...state,
+        isLoading: false,
+        error: action.error,
+        erroredOut: true,
+      };
+    case "GOTO_PAGE_PROTEINS":
+      if (action.pid <= state.pages_total && action.pid >=1) {
+        return {...state, current_page: action.pid}
+      }
+      return state;
+    case "NEXT_PAGE_PROTEINS":
+      if (state.current_page + 1 === state.pages_total) {
+        return state;
+      }
+      return { ...state, current_page: state.current_page + 1 };
+    case "PREV_PAGE_PROTEINS":
+      if (state.current_page - 1 < 1) {
+        return state;
+      }
+      return { ...state, current_page: state.current_page - 1 };
+    default:
+      return state;
+  }
+};

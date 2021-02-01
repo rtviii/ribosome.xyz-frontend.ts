@@ -1,19 +1,16 @@
 import React, { useEffect, useState  } from "react";
 import "./RPPage.css";
 import { useParams, Link } from "react-router-dom";
-import { flattenDeep } from "lodash";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import RibosomalProteinHero from "./RibosomalProteinHero";
-import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import { truncate } from "../../Main";
 import { AppState } from "../../../redux/store";
-import { Dispatch } from "redux";
 import { AppActions } from "../../../redux/AppActions";
-import { gotopage, requestBanClass } from "../../../redux/reducers/Proteins/ActionTypes";
+import { gotopage, nextpage, prevpage, requestBanClass } from "../../../redux/reducers/Proteins/ActionTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { connect } from "react-redux";
-import { createStyles, makeStyles } from "@material-ui/core";
 import Pagination from './../Display/Pagination'
+import { RXZDataTypes } from "../../../redux/DataInterfaces";
 
 
 
@@ -37,8 +34,9 @@ interface ReduxProps{
 
 interface DispatchProps{
   requestBanClass  :  (banClassString:string)=> void
-//  pagination
   goto_page        :  (pid:number)=>void;
+  next_page        :  ()=>void;
+  prev_page        :  ()=>void;
 }
 
 type  RPPageProps = ReduxProps &  DispatchProps
@@ -54,8 +52,15 @@ const RPPage:React.FC<RPPageProps> = (prop) => {
   return params!.nom ? (
       <div className="rp-page">
         <h1>Ribosomal Proteins</h1>
+        <button onClick={()=>{
+
+        }}> CHECK</button>
         <h1>{params.nom}</h1>
-          {prop.current_rps.map((e: NeoHomolog) => {
+        <Pagination 
+        {...{gotopage:prop.goto_page, pagecount:prop.pagestotal}}
+        />
+          {prop.current_rps.slice(( prop.currentpage -1)*20,  prop.currentpage *20)
+          .map((e: NeoHomolog) => {
             return (
               <div className="homolog-hero" style={{ display: "flex" }}>
                 <RibosomalProteinHero data={e.protein} pdbid={e.parent} />{" "}
@@ -101,8 +106,11 @@ const mapstate = (
 const mapdispatch = (
   dispatch: ThunkDispatch<any, any, AppActions>,
   ownProps:any):DispatchProps =>({
-    requestBanClass  :  (banclass)=>dispatch(requestBanClass(banclass)),
-    goto_page: (pid)=>dispatch(gotopage(pid))
+    requestBanClass: (banclass)=>dispatch(requestBanClass(banclass)),
+    goto_page      : (pid)=>dispatch(gotopage(pid)),
+    next_page      : ()=>dispatch(nextpage()),
+    prev_page      : ()=>dispatch(prevpage()),
+    
   })
 
 export default connect(mapstate,mapdispatch)( RPPage );

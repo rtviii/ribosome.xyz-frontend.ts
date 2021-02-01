@@ -10,8 +10,8 @@ export interface StructReducerState {
   derived_filtered: NeoStruct[],
   Loading         : boolean;
   Error           : null | Error;
-  current_page: number;
-  pages_total : number
+  current_page    : number;
+  pages_total     : number
   
 }
 
@@ -71,7 +71,7 @@ export const _StructuresReducer = (
           : newState.applied_filters
           .reduce(
               (filteredStructs: NeoStruct[], filter:typeof ftype ) => {
-                return filteredStructs.filter(FilterPredicates[filter](newState.filters[filter].value));
+                return filteredStructs.filter(FilterPredicates[filter][ 'STRUCTURE' ]!(newState.filters[filter].value));
               },
               state.neo_response
             );
