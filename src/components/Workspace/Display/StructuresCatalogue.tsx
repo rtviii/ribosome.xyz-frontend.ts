@@ -85,9 +85,6 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
 
-const specs =_.uniq(prop.structures.map((e)=>e.struct._organismId).reduce((accumulator,specarr:number[])=>{
-  return [...accumulator, ...specarr]
-}, []))
 
 
   return !prop.loading ? (
@@ -138,11 +135,7 @@ const mapdispatch =(
     next_page: ()=>dispatch( redux.nextpage()),
     prev_page: ()=>dispatch( redux.prevpage()),
   })
-
 export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
-
-// SPECIES 
-
 
 
 

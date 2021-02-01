@@ -57,29 +57,25 @@ export interface rRNA {
 }
 
 export interface RibosomalProtein {
-  parent_rcsb_id: string;
+  parent_rcsb_id                    :  string;
 
-  pfam_accessions  : string[]
-  pfam_comments    : string[]
-  pfam_descriptions: string[]
+  pfam_accessions                   :  string[]
+  pfam_comments                     :  string[]
+  pfam_descriptions                 :  string[]
 
-
-  rcsb_source_organism_id         : number[];
-  rcsb_source_organism_description: string[];
-  uniprot_accession               : string[] 
-
-
-  rcsb_pdbx_description: string | null;
+  rcsb_source_organism_id           :  number[];
+  rcsb_source_organism_description  :  string[];
+  uniprot_accession                 :  string[]
+  rcsb_pdbx_description             :  string | null;
   // entity_polymer
-  entity_poly_strand_id              : string;
-  entity_poly_seq_one_letter_code    : string;
-  entity_poly_seq_one_letter_code_can: string;
-  entity_poly_seq_length             : number;
-  entity_poly_polymer_type           : string;
-  entity_poly_entity_type            : string;
-
-  surface_ratio        : number | null;
-  nomenclature         : Array<BanClass>;
+  entity_poly_strand_id                :  string;
+  entity_poly_seq_one_letter_code      :  string;
+  entity_poly_seq_one_letter_code_can  :  string;
+  entity_poly_seq_length               :  number;
+  entity_poly_polymer_type             :  string;
+  entity_poly_entity_type              :  string;
+  surface_ratio                        :  number | null;
+  nomenclature                         :  Array<BanClass>;
 
 
 }

@@ -11,7 +11,6 @@ import BanClassHero from './BanClassHero'
 import {large_subunit_map} from './../../../static/large-subunit-map'
 import {small_subunit_map} from './../../../static/small-subunit-map'
 import LoadingSpinner from "../../Other/LoadingSpinner";
-import {ReactMarkdownElement, md_files} from './../../Other/ReactMarkdownElement'
 import PageAnnotation from "../Display/PageAnnotation";
 import Grid from "@material-ui/core/Grid";
 
@@ -25,10 +24,9 @@ const pageData={
    This ontology is notably based on a nomenclature that was recently adopted for naming ribosomal proteins."
 }
 
-// endpoint response shape
 export interface ERS {
-  nom_class: BanClass;
-  presentIn        : Array<string>;
+  nom_class  :  BanClass;
+  presentIn  :  Array<string>;
   rps              : Array<{        
     organism_desc: string
     organism_id  : number

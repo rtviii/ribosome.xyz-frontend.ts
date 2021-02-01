@@ -3,6 +3,7 @@ import thunk, { ThunkMiddleware } from "redux-thunk";
 import { createLogger } from "redux-logger";
 import { _StructuresReducer } from "./reducers/StructuresReducer/StructuresReducer";
 import { FiltersReducer } from "./reducers/Filters/FiltersReducer";
+import { ProteinsReducer } from "./reducers/Proteins/ProteinsReducer";
 
 const collapsFilter = (action: any) => {
   // Collapse by action type:
@@ -13,8 +14,11 @@ const logger = createLogger({ collapsed: collapsFilter });
 
 
 export const rootReducer = combineReducers({
-  filters:FiltersReducer,
-  structures:_StructuresReducer});
+  filters     :  FiltersReducer,
+  structures  :  _StructuresReducer,
+  proteins    :  ProteinsReducer
+
+});
 
 export type AppState = ReturnType<typeof rootReducer>;
 

@@ -1,24 +1,15 @@
 import * as actions from "./ActionTypes";
 import { getNeo4jData } from "../../AsyncActions/getNeo4jData";
-import { combineReducers, Dispatch } from "redux";
-import { RibosomeStructure } from "../../RibosomeTypes";
+import {  Dispatch } from "redux";
 import { NeoStruct } from "./../../DataInterfaces";
 import { flattenDeep } from "lodash";
-import {FiltersReducer,FiltersReducerState} from './../Filters/FiltersReducer'
-import { AppState, store } from "../../store";
-import { useStore } from "react-redux";
 import { filterChange, FilterPredicates } from "../Filters/ActionTypes";
 
 export interface StructReducerState {
-  // data
   neo_response    : NeoStruct[]
-  // filters
   derived_filtered: NeoStruct[],
-  // applied_filters : actions.FilterType[],
-  // filters         : Record<actions.FilterType, actions.FilterData>
   Loading         : boolean;
   Error           : null | Error;
-  // pagination
   current_page: number;
   pages_total : number
   
@@ -52,17 +43,17 @@ export const _StructuresReducer = (
                   derived_filtered: [...action.payload],
                   pages_total     : Math.ceil(action.payload.length/20),
                   Loading         : false };
-    case "NEXT_PAGE":
+    case "NEXT_PAGE_STRUCTS":
       if (state.current_page+1 === state.pages_total){
         return state
       }
       return {...state, current_page:state.current_page+1}
-    case "PREV_PAGE":
+    case "PREV_PAGE_STRUCTS":
       if (state.current_page-1 < 1){
         return state
       }
       return {...state, current_page:state.current_page-1}
-    case "GOTO_PAGE":
+    case "GOTO_PAGE_STRUCTS":
       if (action.page_id <= state.pages_total && action.page_id >=1) {
         return {...state, current_page: action.page_id}
       }
@@ -97,6 +88,7 @@ export const _StructuresReducer = (
 
 
 export const requestAllStructuresDjango =  () => {
+
   return async (dispatch: Dispatch<actions.StructActionTypes>) => {
     dispatch({
       type: actions.REQUEST_STRUCTS_GO,
@@ -121,48 +113,17 @@ export const requestAllStructuresDjango =  () => {
 
 
 
-const StructuresReducer = combineReducers({
-  filters: FiltersReducer,
-  structures:_StructuresReducer
-})
-
-// export const filterChange = (filttype:actions.FilterType, newval: any):actions.filterChange =>{ 
-//   let set: boolean = (() => {
-//     switch (filttype) {
-//       case "PROTEINS_PRESENT":
-//         return !( newval.length ===0 );
-//       case "PROTEIN_COUNT":
-//         return !( newval[0] === 25 && newval[1] ===150 );
-//       case "RESOLUTION":
-//         return !( newval[0] === 1 && newval[1] ===6 );
-//       case "SEARCH":
-//         return !( newval.length===0  );
-//       case "SPECIES":
-//         return !( newval.length===0  );
-//       case "YEAR":
-//         return !( newval[0] === 2012 && newval[1] ===2021 );
-//       default:
-//         return false;
-//     }
-//   })();
-
-//   return {
-//   type: actions.FILTER_CHANGE,
-//   filttype,
-//   newval,
-//   set
-// }}
 
 // ---------------------------------------Pagination
 
 
 export const gotopage = (pid: number): actions.gotopage => ({
-  type: actions.GOTO_PAGE,
+  type: actions.GOTO_PAGE_STRUCTS,
   page_id: pid,
 });
 export const nextpage = (): actions.nextpage => ({
-  type: actions.NEXT_PAGE,
+  type: actions.NEXT_PAGE_STRUCTS,
 });
 export const prevpage = (): actions.prevpage => ({
-  type: actions.PREV_PAGE,
+  type: actions.PREV_PAGE_STRUCTS,
 });

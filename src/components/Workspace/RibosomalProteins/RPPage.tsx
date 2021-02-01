@@ -5,7 +5,13 @@ import { flattenDeep } from "lodash";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import RibosomalProteinHero from "./RibosomalProteinHero";
 import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
-import axios from 'axios'
+import { truncate } from "../../Main";
+import { AppState } from "../../../redux/store";
+import { Dispatch } from "redux";
+import { AppActions } from "../../../redux/AppActions";
+import { requestBanClass } from "../../../redux/reducers/Proteins/ActionTypes";
+import { ThunkDispatch } from "redux-thunk";
+import { connect } from "react-redux";
 
 interface NeoHomolog {
   parent : string;
@@ -16,60 +22,33 @@ interface NeoHomolog {
 }
 
 
-// const RiboVisionRequest = async ()=>{
-
-// const username = 'LDW_group'
-// const password = 'RiboVision_Desire'
-// const url = 'https://ribovision3.chemistry.gatech.edu/desire-api/alignments/?name=bL21'
-//   await axios.get(url, {
-//     auth:{
-//       username:username,
-//       password: password
-//     }
-//   }).then(
-//     r=> console.log(r.data),
-//     e=> console.log("erorr" ,e)
-//   )
-// }
-
-const truncate = (str:string) =>{
-    return str.length > 40 ? str.substring(0, 30) + "...": str;
+interface ReduxProps{
+  current_rps: NeoHomolog[]
 }
-const RPPage = () => {
+
+interface DispatchProps{
+  requestBanClass : (banClassString:string)=> void
+}
+
+type  RPPageProps = ReduxProps &  DispatchProps
+
+const RPPage:React.FC<RPPageProps> = (prop) => {
+
   var params: any = useParams();
+
+    
   const [homologs, sethomologs] = useState<NeoHomolog[]>([]);
+
   useEffect(() => {
-    var banName = params.nom;
-
-    getNeo4jData("neo4j", {
-                endpoint: "gmo_nom_class",
-                params: {
-                  banName:banName
-                },
-              }).then(
-      r => {
-        
-        var flattened: NeoHomolog[] = flattenDeep(r.data);
-        console.log(
-         flattened
-        );
-        sethomologs(flattened);
-
-      },
-      e => {
-        console.log("Got error on /neo request", e);
-      }
-    );
-
-
-  }, [params]);
+    prop.requestBanClass(params.nom)
+  }, [])
 
 
   return params!.nom ? (
       <div className="rp-page">
-    <h1>Ribosomal Proteins</h1>
+        <h1>Ribosomal Proteins</h1>
         <h1>{params.nom}</h1>
-          {homologs.map((e: NeoHomolog) => {
+          {prop.current_rps.map((e: NeoHomolog) => {
             return (
               <div className="homolog-hero" style={{ display: "flex" }}>
                 <RibosomalProteinHero data={e.protein} pdbid={e.parent} />{" "}
@@ -86,7 +65,7 @@ const RPPage = () => {
                   {
                     e.orgname.map(
                       ( org,i ) =>
-                  <span id='homolog-tax-span'>{truncate( e.orgname[i] )}( ID: {e.orgid[i]} )</span>
+                  <span id='homolog-tax-span'>{truncate( e.orgname[i], 40,40 )}( ID: {e.orgid[i]} )</span>
                     )
                   }
                   
@@ -101,4 +80,20 @@ const RPPage = () => {
   );
 };
 
-export default RPPage;
+
+
+const mapstate = (
+  appstate:AppState,
+  ownProps:any
+):ReduxProps =>( {
+  current_rps: appstate.proteins.current_ban_class
+})
+
+const mapdispatch = (
+  dispatch: ThunkDispatch<any, any, AppActions>,
+  ownProps:any):DispatchProps =>({
+    requestBanClass: (banclass)=>dispatch(requestBanClass(banclass))
+  })
+
+export default connect(mapstate,mapdispatch)( RPPage );
+
