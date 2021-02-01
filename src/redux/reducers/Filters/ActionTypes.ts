@@ -3,7 +3,7 @@ import _ from "lodash";
 import { RXZDataTypes } from "../../DataInterfaces";
 import { FiltersReducerState } from "./FiltersReducer";
 
-export const FILTER_CHANGE           = "FILTER_CHANGE"
+export const FILTER_CHANGE  = "FILTER_CHANGE"
 export type FilterType      = "PROTEIN_COUNT" | "YEAR" | "RESOLUTION" | "PROTEINS_PRESENT" | "SEARCH" | "SPECIES"
 export type FilterPredicate = ( value: string[] | string | number[] | number ) =>(struct:RXZDataTypes) => boolean;
 export type FilterData      = {

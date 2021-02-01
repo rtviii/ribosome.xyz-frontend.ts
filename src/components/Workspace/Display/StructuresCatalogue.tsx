@@ -150,14 +150,15 @@ export const mapStateFilter=(filttype:FilterType)=>(appstate:AppState, ownprops:
   set       : appstate.filters.filters[filttype].set,
   value     : appstate.filters.filters[filttype].value
 })
-export const mapDispatchFilter = (filttype: FilterType)=>(
-  dispatch:Dispatch<AppActions>,
-  ownProps:any,
-):handleFilterChange =>{ 
- return {
-  handleChange: ( allFilters, newrange) => dispatch(filterChangeActionCreator(allFilters,filttype, newrange))
-}
- }
+export const mapDispatchFilter = (filttype: FilterType) => (
+  dispatch: Dispatch<AppActions>,
+  ownProps: any
+): handleFilterChange => {
+  return {
+    handleChange: (allFilters, newrange) =>
+      dispatch(filterChangeActionCreator(allFilters, filttype, newrange)),
+  };
+};
 
 
 
@@ -489,92 +490,3 @@ export const StructureFilters = () => {
     </Drawer>
   );
 };
-
-
-
-
-// type SpeciesFilterProps =   handleFilterChange & FilterData 
-// const _SpeciesList:React.FC<SpeciesFilterProps> = (prop)=> {
-
-//   const useSpeciesListStyles = makeStyles((theme: Theme) =>
-//     createStyles({
-//     item: {
-//       // color: theme.palette.secondary.main,
-//       '& span, & svg': {
-//         fontSize: '12px'
-//       }
-//     },
-//       root: {
-//         width: '100%',
-//         maxWidth: 360,
-//         fontSize:12,
-//         backgroundColor: theme.palette.background.paper,
-//       }
-//     }),
-//   );
-
-//   const classes   =  useSpeciesListStyles();
-//   const taxIdMap  =  Object.entries(SpeciesGroupings);
-
-//   var inxs = taxIdMap.map((val, index) => index);
-//   const [checked, setChecked] = React.useState(inxs);
-
-//   const handleToggle = (value: number, speckey:string) => () => {
-
-//     const currentIndex = checked.indexOf(value);
-//     const newChecked = [...checked];
-
-//     if (currentIndex === -1) {
-//       newChecked.push(value);
-//       var newarr = prop.value
-//       newarr = ( newarr as number[]).filter((n:number)=>!(SpeciesGroupings[speckey].includes(n)))
-//       prop.handleChange(prop.allFilters as FiltersReducerState,newarr)
-//     } else {
-//       newChecked.splice(currentIndex, 1);
-
-//       var newvalue  = SpeciesGroupings[speckey].reduce( ( acc,e:number ) => [ ...acc,e ], ( prop.value as number[] ))
-//       prop.handleChange(prop.allFilters  as FiltersReducerState, newvalue)
-//     }
-
-    
-//     setChecked(newChecked);
-//   };
-
-
-
-//   return (
-
-//     <List className={classes.root}>
-//       {Object.entries(SpeciesGroupings).map((value,index) => {
-//         const labelId = `checkbox-list-label-${value}`;
-//         return (
-//           <ListItem
-//             key={value[0]}
-//             button
-//             onClick={
-//               handleToggle(index,value[0])
-//             }
-//           >
-//             <ListItemText
-//               className = { classes.item }
-//               id        = {labelId}
-//               primary   = {value[0]}
-
-//             />
-
-//             <ListItemIcon>
-//               <Checkbox
-//                 edge="start"
-//                 checked={checked.indexOf(index) !== -1}
-//                 tabIndex={-1}
-//                 disableRipple
-//                 color={"primary"}
-//                 inputProps={{ "aria-labelledby": labelId }}
-//               />
-//             </ListItemIcon>
-//           </ListItem>
-//         );
-//       })}
-//     </List>
-//   );
-// }
