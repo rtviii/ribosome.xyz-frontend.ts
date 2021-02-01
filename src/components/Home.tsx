@@ -8,7 +8,11 @@ import { Link } from "react-router-dom";
 import bioplogo from "./../static/biopython_logo.svg";
 import pdb from "./../static/pdb.png";
 import pfam from "./../static/pfam.gif";
+<<<<<<< HEAD
 import raylogo from "./../static/ray-transp-logo.png";
+=======
+import raylogo from './../static/ray-transp-logo.png'
+>>>>>>> master
 import ubc from "./../static/ubc-logo.png";
 import gatech from "./../static/gatech.png";
 import InlineSpinner from "./Other/InlineSpinner";
@@ -221,6 +225,7 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
   const history = useHistory();
 
   return (
+<<<<<<< HEAD
     <Card className={classes.root}>
       <CardContent>
         <Grid
@@ -460,6 +465,73 @@ const AcknowlegementsList = () => {
           <Paper elevation={1} className={plugstyles.root}>
             <Grid container direction="row">
               <Typography variant="caption">
+=======
+    <div className="homepage">
+      <div className="stats area">
+        <div id="stats-proper">
+          <div>
+            <img id="teg" src={raylogo} alt="teg" />
+          </div>
+
+          <div>
+            <h4>Resource Summary:</h4>
+
+            <li>
+              <b>{protn ? protn : <InlineSpinner />}</b> unique{" "}
+              <Link to="/rps">ribosomal proteins</Link>
+            </li>
+            <li>
+              <b>{rnan ? rnan : <InlineSpinner />}</b>{" "}
+              <Link to="/rnas">rRNA</Link>
+            </li>
+            <li>
+              <b>{structn ? structn : <InlineSpinner />}</b> ribosome{" "}
+              <Link to="/structs">structures:</Link>{" "}
+            </li>
+            <li id="indent">
+              <b>-{em ? em : <InlineSpinner />}</b> ElectronMicroscopy
+            </li>
+            <li id="indent">
+              <b>-{xray ? xray : <InlineSpinner />}</b> X-Ray Diffraction
+            </li>
+          </div>
+        </div>
+
+        <div className="relmats">
+          <h4>Relevant Materials</h4>
+          <ul>
+            {[
+              [
+                "https://www.mdpi.com/1420-3049/25/18/4262",
+                "Structural Heterogeneities of the Ribosome: New Frontiers and Opportunities for Cryo-EM",
+              ],
+              [
+                "https://bangroup.ethz.ch/research/nomenclature-of-ribosomal-proteins.html",
+                "New System for Naming Ribosomal Proteins",
+              ],
+              [
+                "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6486554/",
+                "Differences in the path to exit the ribosome across the three domains of life",
+              ],
+              [
+                "https://pubmed.ncbi.nlm.nih.gov/19279186/",
+                "A recurrent magnesium-binding motif providesa framework for the ribosomal peptidyltransferase center",
+              ],
+            ].map(pub => (
+              <li>
+                <a href={pub[0]}>{pub[1]}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="acknowledgements">
+
+          <h4>Acknowlegements</h4>
+          <AcknPlug text="">
+            <div>
+              <p>
+>>>>>>> master
                 Crystallographic strucutures and some of the annotations are
                 acquired from <a href={"https://www.rcsb.org/"}>RCSB PDB</a>.
                 <br />
@@ -502,6 +574,7 @@ const AcknowlegementsList = () => {
                 <a href="https://jcheminf.biomedcentral.com/articles/10.1186/1758-2946-5-39">
                   MOLE
                 </a>{" "}
+<<<<<<< HEAD
                 software is used to extract the ribosomal exit tunnel.
               </Typography>
             </Grid>
@@ -538,6 +611,30 @@ const AcknowlegementsList = () => {
         </Grid>{" "}
       </Grid>
     </Grid>
+=======
+                at Georgia Institute of Technology.
+              </p>
+              <p className="in-dev">
+                This is still in active development phase. All usability and
+                conceptual suggestions would be very much appreciated. Thanks
+                for getting in touch at{" "}
+                <a href="mailto:rtkushner@gmail.com">rtkushner@gmail.com</a>!
+              </p>
+            </div>
+            <img id="ubclogo" className="footerimg" src={ubc} alt="ubc" />
+          </AcknPlug>
+
+        </div>
+      </div>
+      <div className="mods area">
+        <ReactMarkdownElement md={md_files.all.home.prots}/>
+        <ReactMarkdownElement md={md_files.all.home.ligs}/>
+        <ReactMarkdownElement md={md_files.all.home.exittunnel}/>
+        <ReactMarkdownElement md={md_files.all.home.rna}/>
+        <ReactMarkdownElement md={md_files.all.home.limitations}/>
+      </div>
+    </div>
+>>>>>>> master
   );
 };
 
