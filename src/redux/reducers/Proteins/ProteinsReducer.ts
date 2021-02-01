@@ -14,6 +14,9 @@ interface ProteinsReducerState{
     current_ban_class  :  NeoHomolog[];
     allProteins        :  RibosomalProtein[];
 
+    current_page       :  number,
+    pages_total        :  number,
+
     derived_filtered   :  RibosomalProtein[];
 }
 
@@ -22,6 +25,11 @@ const initialStateProteinsReducer:ProteinsReducerState = {
     allProteins        :  [],
     error              :  null,
     derived_filtered   :  [],
+    // pagination
+    current_page  :  1,
+    pages_total   :  1,
+
+    // net
     isLoading          :  false,
     erroredOut         :  false
 

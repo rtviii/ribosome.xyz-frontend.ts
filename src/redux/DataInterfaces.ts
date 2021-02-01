@@ -20,19 +20,6 @@ export interface NeoHomolog {
 
 
 
-// export interface ERS {
-//   nom_class  :  BanClass;
-//   presentIn  :  Array<string>;
-//   rps              : Array<{        
-//     organism_desc: string
-//     organism_id  : number
-//     uniprot      : string
-//     parent       : string
-//     parent_reso  : number
-//     strand_id    : string
-//   }>
-// }
-
 
 
 export type RXZDataTypes = NeoStruct;

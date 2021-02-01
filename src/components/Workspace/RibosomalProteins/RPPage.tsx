@@ -9,9 +9,16 @@ import { truncate } from "../../Main";
 import { AppState } from "../../../redux/store";
 import { Dispatch } from "redux";
 import { AppActions } from "../../../redux/AppActions";
-import { requestBanClass } from "../../../redux/reducers/Proteins/ActionTypes";
+import { gotopage, requestBanClass } from "../../../redux/reducers/Proteins/ActionTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { connect } from "react-redux";
+import { createStyles, makeStyles } from "@material-ui/core";
+import Pagination from './../Display/Pagination'
+
+
+
+
+
 
 interface NeoHomolog {
   parent : string;
@@ -24,10 +31,14 @@ interface NeoHomolog {
 
 interface ReduxProps{
   current_rps: NeoHomolog[]
+  pagestotal       :  number
+  currentpage      :  number
 }
 
 interface DispatchProps{
-  requestBanClass : (banClassString:string)=> void
+  requestBanClass  :  (banClassString:string)=> void
+//  pagination
+  goto_page        :  (pid:number)=>void;
 }
 
 type  RPPageProps = ReduxProps &  DispatchProps
@@ -35,10 +46,6 @@ type  RPPageProps = ReduxProps &  DispatchProps
 const RPPage:React.FC<RPPageProps> = (prop) => {
 
   var params: any = useParams();
-
-    
-  const [homologs, sethomologs] = useState<NeoHomolog[]>([]);
-
   useEffect(() => {
     prop.requestBanClass(params.nom)
   }, [])
@@ -86,13 +93,16 @@ const mapstate = (
   appstate:AppState,
   ownProps:any
 ):ReduxProps =>( {
-  current_rps: appstate.proteins.current_ban_class
+  current_rps  :  appstate.proteins.current_ban_class,
+  pagestotal   :  appstate.proteins.pages_total,
+  currentpage  :  appstate.proteins.current_page
 })
 
 const mapdispatch = (
   dispatch: ThunkDispatch<any, any, AppActions>,
   ownProps:any):DispatchProps =>({
-    requestBanClass: (banclass)=>dispatch(requestBanClass(banclass))
+    requestBanClass  :  (banclass)=>dispatch(requestBanClass(banclass)),
+    goto_page: (pid)=>dispatch(gotopage(pid))
   })
 
 export default connect(mapstate,mapdispatch)( RPPage );
