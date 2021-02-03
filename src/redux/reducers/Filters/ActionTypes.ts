@@ -42,6 +42,20 @@ export const FilterPredicates: Record<
         .toLowerCase()
         .includes(value as string);
     },
+    PROTEIN: (value:any) => (item:RXZDataTypes) =>{
+      var prot = item as NeoHomolog
+      return (
+        prot.parent +
+        prot.protein.nomenclature +
+        prot.protein.pfam_comments+
+        prot.protein.pfam_descriptions+
+        prot.protein.rcsb_pdbx_description+
+        prot.title+
+        prot.orgname.reduce((acc, name)=>acc+name,'')
+      )
+        .toLowerCase()
+        .includes(value as string);
+    }
   },
 
   YEAR: {
@@ -69,6 +83,14 @@ export const FilterPredicates: Record<
     STRUCTURE: (value: any) => (item: RXZDataTypes) => {
       var struct = item as NeoStruct;
       return struct.struct._organismId.reduce(
+        (accumulator: boolean, taxid) =>
+          accumulator || (value as number[]).includes(taxid),
+        false
+      );
+    },
+    PROTEIN: (value: any) => (item: RXZDataTypes) => {
+      var prot = item as NeoHomolog
+      return prot.orgid.reduce(
         (accumulator: boolean, taxid) =>
           accumulator || (value as number[]).includes(taxid),
         false

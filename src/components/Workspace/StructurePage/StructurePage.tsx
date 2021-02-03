@@ -19,6 +19,8 @@ import LoadingSpinner from './../../Other/LoadingSpinner'
 import { Tooltip } from "react-bootstrap";
 import { OverlayTrigger } from "react-bootstrap";
 
+import rayimg from '../../../../public/ray_templates/_ray_1VY4.png'
+
 interface OwnProps {}
 interface ReduxProps {
   globalFilter: string;
@@ -179,6 +181,8 @@ const StructurePage: React.FC<StructurePageProps> = (
         <div className="structure-page--main">
           <h2 className="title">{pdbid}</h2>
 
+<img  
+src={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`}/>
           <div className="component-category">
 
             <div

@@ -77,7 +77,7 @@ export default function TemporaryDrawer() {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-        <MenuItem key='new' menutext="Home" linkto='home'/>
+        <MenuItem key='new' menutext="Home" linkto='/home'/>
       <List>
         <ListSubheader>Available Data</ListSubheader>
         <MenuItem key='new' menutext="Structures" linkto='/structs'/>

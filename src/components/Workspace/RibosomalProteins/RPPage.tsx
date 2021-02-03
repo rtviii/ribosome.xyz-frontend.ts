@@ -1,29 +1,24 @@
 import React, { useEffect, useState  } from "react";
 import "./RPPage.css";
-import { useParams, Link } from "react-router-dom";
-import { RibosomalProtein } from "../../../redux/RibosomeTypes";
-import RibosomalProteinHero from "./RibosomalProteinHero";
-import { truncate } from "../../Main";
+import { useParams } from "react-router-dom";
 import { AppState } from "../../../redux/store";
 import { AppActions } from "../../../redux/AppActions";
 import { gotopage, nextpage, prevpage, requestBanClass } from "../../../redux/reducers/Proteins/ActionTypes";
 import { ThunkDispatch } from "redux-thunk";
 import { connect } from "react-redux";
 import Pagination from './../Display/Pagination'
-import { RXZDataTypes } from "../../../redux/DataInterfaces";
+import Grid from "@material-ui/core/Grid";
+import { _SpecList, _SearchField  } from "../Display/StructuresCatalogue";
+import { FiltersReducerState, mapDispatchFilter, mapStateFilter, handleFilterChange } from "../../../redux/reducers/Filters/FiltersReducer";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import { Divider } from "@material-ui/core";
+import { ListSubheader } from "@material-ui/core";
+import { NeoHomolog } from "../../../redux/DataInterfaces";
+import RibosomalProteinCard from './RibosomalProteinCard'
+import Typography from "@material-ui/core/Typography";
 
 
-
-
-
-
-interface NeoHomolog {
-  parent : string;
-  orgname: string[]
-  orgid  : number[]
-  protein: RibosomalProtein;
-  title  : string
-}
 
 
 interface ReduxProps{
@@ -44,59 +39,70 @@ type  RPPageProps = ReduxProps &  DispatchProps
 const RPPage:React.FC<RPPageProps> = (prop) => {
 
   var params: any = useParams();
-  useEffect(() => {
-    prop.requestBanClass(params.nom)
+  var nameparam = params.nom
+  var className = nameparam.slice(0,1).toLowerCase() + nameparam.slice(1,2).toUpperCase() + nameparam.slice(2)
+
+    useEffect(() => {
+      console.log(className);
+      
+    prop.requestBanClass(className)
   }, [])
 
 
   return params!.nom ? (
-      <div className="rp-page">
-        <h1>Ribosomal Proteins</h1>
+    <Grid xs={12} container>
+      <Grid item container xs={12} >
+        <Typography variant="h3" style={{padding:"20px"}}>Ribosomal Protein Class {className}</Typography>
+      </Grid>
 
-        <h1>{params.nom}</h1>
-        <Pagination 
-        {...{gotopage:prop.goto_page, pagecount:prop.pagestotal}}
-        />
-          {prop.current_rps.slice(( prop.currentpage -1)*20,  prop.currentpage *20)
-          .map((e: NeoHomolog) => {
-            return (
-              <div className="homolog-hero" style={{ display: "flex" }}>
-                <RibosomalProteinHero data={e.protein} pdbid={e.parent} />{" "}
-                <div className="homolog-struct">
-                  <div id='homolog-struct-title'>
-                    <Link
-                      style={{ width: "min-content" }}
-                      to={`/structs/${e.parent}`}
-                    >
-                      <h4>{e.parent}</h4>
-                    </Link>{" "}
-                    <p> {e.title}</p>
-                  </div>
-                  {
-                    e.orgname.map(
-                      ( org,i ) =>
-                  <span id='homolog-tax-span'>{truncate( e.orgname[i], 40,40 )}( ID: {e.orgid[i]} )</span>
-                    )
-                  }
-                  
-                </div>
-              </div>
-            );
-          })}
+      <Grid item container xs={12} spacing={2}>
+        <Grid item container xs={2} direction="column" >
+          <List>
+            <Divider />
+            <ListSubheader>Species</ListSubheader>
+            <ListItem>
+              <SpeciesList />
+            </ListItem>
 
-      </div>
+            <Divider />
+            <ListItem>
+              <SearchField />
+            </ListItem>
+            <ListItem>
+          <Pagination
+            {...{ gotopage: prop.goto_page, pagecount: prop.pagestotal }}
+          />
+            </ListItem>
+          </List>
+        </Grid>
+
+        <Grid item container direction="column" spacing={1} xs={10}  >
+
+          {prop.current_rps
+            .slice((prop.currentpage - 1) * 20, prop.currentpage * 20)
+            .map((protein: NeoHomolog) => {
+              return (
+                <Grid item >
+                      <RibosomalProteinCard e={protein}/>
+                </Grid>
+              );
+            })}
+        </Grid>
+      </Grid>
+    </Grid>
   ) : (
     <div>"Fetching..."</div>
   );
 };
 
-
+export const SearchField       =  connect(mapStateFilter("SEARCH"),       mapDispatchFilter("SEARCH"))(_SearchField)
+export const SpeciesList       =  connect(mapStateFilter("SPECIES"),      mapDispatchFilter("SPECIES"))(_SpecList)
 
 const mapstate = (
   appstate:AppState,
   ownProps:any
 ):ReduxProps =>( {
-  current_rps  :  appstate.proteins.current_ban_class,
+  current_rps  :  appstate.proteins.ban_class_derived,
   pagestotal   :  appstate.proteins.pages_total,
   currentpage  :  appstate.proteins.current_page
 })

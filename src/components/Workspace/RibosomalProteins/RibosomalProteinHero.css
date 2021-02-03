@@ -65,14 +65,8 @@ table, td,tr, th{
   height: 20px;
 }
 #download-protein{
-  width : 20px;
-  height: 20px;
-  margin-right: 20px;
-  transition: all 100ms;
+  max-height: 20px;
  }
-#download-protein:hover{
-  transform: translate(0px,2px)
-}
 
 .down-prot-button{
   cursor: pointer;

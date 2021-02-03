@@ -76,7 +76,7 @@ export const _StructuresReducer = (
               state.neo_response
             );
        
-      return {...state, derived_filtered:filtered_structs, pages_total: Math.ceil(filtered_structs.length/20)}
+      return {...state, derived_filtered:filtered_structs, pages_total: Math.ceil(filtered_structs.length/20), current_page:1}
     default:
       return state;
   }
