@@ -161,7 +161,7 @@ const StructurePage: React.FC<StructurePageProps> = (
           .map(lig => (
             <div className="ligand-hero">
               <h3>
-                <Link to={`/interfaces`}>{lig.chemicalId}</Link>
+                <Link to={`/bindingsites`}>{lig.chemicalId}</Link>
               </h3>
               <div>Name: {lig.chemicalName}</div>
               <div>

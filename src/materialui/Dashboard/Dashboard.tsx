@@ -8,8 +8,6 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import { ListSubheader, Tooltip } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import gear from './../../static/gear.png'
@@ -88,7 +86,7 @@ export default function TemporaryDrawer() {
       <Divider />
       <List>
         <ListSubheader>Tools</ListSubheader>
-        <MenuItem key='new1' menutext="Binding Interfaces" linkto='/interfaces'/>
+        <MenuItem key='new1' menutext="Binding Sites" linkto='/bindingsites'/>
         <MenuItem key='new1' menutext="Protein Classification" linkto='/rpclassification'/>
         <MenuItem key='new1' menutext="Protein Alignment" linkto='/rpalign'/>
         <MenuItem key='new1' menutext="Exit Tunnel" linkto='/tunnel'/>
