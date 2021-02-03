@@ -49,12 +49,6 @@ const RibosomalProteinHero = ({
     );
   };
 
-  const RPLoader = () => (
-    <div className="prot-loading">
-      <span>Parsing file..</span>
-      <img src={loading} />
-    </div>
-  );
 
   return (
     <div className="ribosomal-protein-hero">
@@ -117,7 +111,7 @@ const RibosomalProteinHero = ({
               }
             >
               {isFetching ? (
-                <RPLoader />
+                "loading"
               ) : (
                 <button className='down-prot-button'>
                   <img

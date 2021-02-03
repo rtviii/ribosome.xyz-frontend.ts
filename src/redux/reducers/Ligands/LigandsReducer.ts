@@ -1,33 +1,29 @@
-import {RibosomalProtein} from './../../RibosomeTypes'
-import { ProteinActions } from './ActionTypes'
-import {NeoHomolog} from './../../DataInterfaces'
+import {RibosomalProtein} from '../../RibosomeTypes'
+import {LigandResponseShape, NeoHomolog} from '../../DataInterfaces'
 import { filterChange, FilterPredicates } from '../Filters/ActionTypes';
+import { LigandsActions } from './ActionTypes';
 
 
 
 
 
-interface ProteinsReducerState{
+interface LigandsReducerState{
 
     error               : any,
     is_loading          : boolean;
     errored_out         : boolean;
-    ban_class           : NeoHomolog[];
-    ban_class_derived   : NeoHomolog[],
-    all_proteins        : RibosomalProtein[];
-    all_proteins_derived: RibosomalProtein[],
+
+    ligands_all        : LigandResponseShape[],
+    ligands_all_derived: LigandResponseShape[],
 
     current_page        : number,
     pages_total         : number,
 }
 
-const initialStateProteinsReducer:ProteinsReducerState = {
-    ban_class           : [],
-    ban_class_derived   : [],
-
-    all_proteins        : [],
-    all_proteins_derived: [],
-    error               : null,
+const initialStateLigandsReducer:LigandsReducerState = {
+  ligands_all        : [],
+  ligands_all_derived: [],
+  error              : null,
     // pagination
     current_page  :  1,
     pages_total   :  1,
@@ -36,38 +32,38 @@ const initialStateProteinsReducer:ProteinsReducerState = {
     errored_out         :  false
 
 }
-export const ProteinsReducer = (
-  state: ProteinsReducerState = initialStateProteinsReducer,
-  action: ProteinActions
-): ProteinsReducerState => {
+export const LigandsReducer = (
+  state: LigandsReducerState = initialStateLigandsReducer,
+  action: LigandsActions
+): LigandsReducerState => {
   switch (action.type) {
-    case "REQUEST_BAN_CLASS_GO":
+    case "REQUEST_ALL_LIGANDS_GO":
       return { ...state, is_loading: true };
-    case "REQUEST_BAN_CLASS_SUCCESS":
+    case "REQUEST_ALL_LIGANDS_SUCCESS":
       return {
         ...state,
-        ban_class: action.payload,
-        ban_class_derived: action.payload,
-        pages_total: Math.ceil(action.payload.length / 20),
+        ligands_all        : action.payload,
+        ligands_all_derived: action.payload,
+        pages_total      : Math.ceil(action.payload.length / 20),
       };
-    case "REQUEST_BAN_CLASS_ERR":
+    case "REQUEST_ALL_LIGANDS_ERR":
       return {
         ...state,
         is_loading: false,
         error: action.error,
         errored_out: true,
       };
-    case "GOTO_PAGE_PROTEINS":
+    case "GOTO_PAGE_LIGANDS":
       if (action.pid <= state.pages_total && action.pid >= 1) {
         return { ...state, current_page: action.pid };
       }
       return state;
-    case "NEXT_PAGE_PROTEINS":
+    case "NEXT_PAGE_LIGANDS":
       if (state.current_page + 1 === state.pages_total) {
         return state;
       }
       return { ...state, current_page: state.current_page + 1 };
-    case "PREV_PAGE_PROTEINS":
+    case "PREV_PAGE_LIGANDS":
       if (state.current_page - 1 < 1) {
         return state;
       }
@@ -77,25 +73,26 @@ export const ProteinsReducer = (
       // Type of the recently-change filte
       var ftype = (action as filterChange).filttype;
 
-      var filtered_proteins =
+      var filtered_ligands =
         newState.applied_filters.length === 0
-          ? state.ban_class
+          ? state.ligands_all
           : newState.applied_filters.reduce(
-              (filteredProteins: NeoHomolog[], filtertype: typeof ftype) => {
-                return filteredProteins.filter(
-                  FilterPredicates[filtertype]["PROTEIN"]!(
+
+              (filteredligands: LigandResponseShape[], filtertype: typeof ftype) => {
+                return filteredligands.filter(
+                  FilterPredicates[filtertype]["LIGAND"]!(
                     newState.filters[filtertype].value
                   )
                 );
               },
-              state.ban_class
+              state.ligands_all
             );
 
       return {
         ...state,
-        ban_class_derived: filtered_proteins,
-        pages_total: Math.ceil(filtered_proteins.length / 20),
-        current_page:1
+        ligands_all_derived: filtered_ligands,
+        pages_total        : Math.ceil(filtered_ligands.length / 20),
+        current_page       : 1
 
       };
 

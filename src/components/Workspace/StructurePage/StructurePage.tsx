@@ -7,7 +7,7 @@ import {
   rRNA,
 } from "../../../redux/RibosomeTypes";
 import "./StructurePage.css";
-import RNAHero from "./../RNA/RNAHero";
+// import RNAHero from "./../RNA/RNAHero";
 import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import { flattenDeep } from "lodash";
 import { connect } from "react-redux";
@@ -18,6 +18,8 @@ import StructGrid from "./StructGrid";
 import LoadingSpinner from './../../Other/LoadingSpinner'
 import { Tooltip } from "react-bootstrap";
 import { OverlayTrigger } from "react-bootstrap";
+
+import rayimg from '../../../../public/ray_templates/_ray_1VY4.png'
 
 interface OwnProps {}
 interface ReduxProps {
@@ -121,20 +123,21 @@ const StructurePage: React.FC<StructurePageProps> = (
           />
         );
       case "rrna":
-        return rrnas.map(obj => (
-          <RNAHero
-            rna ={{
-              description: obj.rcsb_pdbx_description
-                ? obj.rcsb_pdbx_description
-                       :  "Null",
-                length : obj.entity_poly_seq_length,
-                parent : pdbid,
-                strand : obj.entity_poly_strand_id,
-                orgid  : obj.rcsb_source_organism_id,
-                orgname: obj.rcsb_source_organism_description
-            }}
-          />
-        ));
+        return ""
+        // return rrnas.map(obj => (
+        //   <RNAHero
+        //     rna ={{
+        //       description: obj.rcsb_pdbx_description
+        //         ? obj.rcsb_pdbx_description
+        //                :  "Null",
+        //         length : obj.entity_poly_seq_length,
+        //         parent : pdbid,
+        //         strand : obj.entity_poly_strand_id,
+        //         orgid  : obj.rcsb_source_organism_id,
+        //         orgname: obj.rcsb_source_organism_description
+        //     }}
+        //   />
+        // ));
       case "ligands":
         return <div className='struct-page-ligands'>
             
@@ -158,7 +161,7 @@ const StructurePage: React.FC<StructurePageProps> = (
           .map(lig => (
             <div className="ligand-hero">
               <h3>
-                <Link to={`/interfaces`}>{lig.chemicalId}</Link>
+                <Link to={`/bindingsites`}>{lig.chemicalId}</Link>
               </h3>
               <div>Name: {lig.chemicalName}</div>
               <div>
@@ -179,6 +182,8 @@ const StructurePage: React.FC<StructurePageProps> = (
         <div className="structure-page--main">
           <h2 className="title">{pdbid}</h2>
 
+<img  
+src={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`}/>
           <div className="component-category">
 
             <div

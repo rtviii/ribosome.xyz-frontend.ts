@@ -1,4 +1,4 @@
-import { RNAProfile } from './RNACatalogue'
+import { RNAProfile } from './../../../redux/DataInterfaces'
 import React from 'react'
 import { Link } from 'react-router-dom';
 import downicon from "./../../../static/download.png"
@@ -29,18 +29,18 @@ const RNAHero = ({rna}:{rna:RNAProfile}) => {
   };
 
   return <div className="rna-hero">
-      <button id="download-rna"  className='down-rna-button' onClick={()=>{ parseAndDownloadChain(rna.parent,rna.strand) }}>
+      {/* <button id="download-rna"  className='down-rna-button' onClick={()=>{ parseAndDownloadChain(rna.parent,rna.rna.rcsb_pdbx_description) }}>
           
         <img
           id="download-rna"
           src={downicon}
           alt="download-rna"
         />
-      </button>
-      <p><span className='rna-hero-title' style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>{truncate(rna.description)}</span></p>
+      </button> */}
+      {/* <p><span className='rna-hero-title' style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>{truncate(rna.rna.rcsb_pdbx_description)}</span></p> */}
       <p>Parent structure: <Link to={`/structs/${rna.parent}`}>{rna.parent}</Link></p>
-      <p>RCSB strand id: {rna.strand}</p>
-      <p>AA Length: {rna.length}</p>
+      {/* <p>RCSB strand id: {rna.strand}</p> */}
+      {/* <p>AA Length: {rna.length}</p> */}
       <p>Tax Id:{rna.orgid[0]} </p>
     <p>Name: {rna.orgname[0]}</p>
 

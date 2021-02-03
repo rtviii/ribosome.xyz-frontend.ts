@@ -3,6 +3,7 @@ import { getNeo4jData } from "../../AsyncActions/getNeo4jData";
 import { NeoHomolog} from './../../DataInterfaces'
 import { flattenDeep } from "lodash";
 import { RibosomalProtein } from "../../RibosomeTypes";
+import { filterChange } from "../Filters/ActionTypes";
 
 export const REQUEST_ALL_PROTEINS_GO       =  "REQUEST_ALL_PROTEINS_GO";
 export const REQUEST_ALL_PROTEINS_SUCCESS  =  "REQUEST_ALL_PROTEINS_SUCCESS";
@@ -37,6 +38,8 @@ export type ProteinActions =
   | requestBanClassGo
   | requestBanClassSuccess
   | requestBanClassErr
+  
+  | filterChange
 
   |nextPageProts
   |prevPageProts

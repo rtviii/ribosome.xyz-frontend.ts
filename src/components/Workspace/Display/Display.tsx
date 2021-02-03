@@ -39,8 +39,8 @@ const Display = () => {
 
         <Route exact path = "/rnas" component                         = {RNACatalogue} />
 
-        <Route exact path = "/interfaces" component                   = {Interfaces} />
-        <Route exact path = "/interfaces/:struct/:type/:id" component = {Interfaces} />
+        <Route exact path = "/bindingsites" component                   = {Interfaces} />
+        <Route exact path = "/bindingsites/:struct/:type/:id" component = {Interfaces} />
 
         {/* <Route exact path = "/tunnel"                      component  = {ExitTunnelPage} /> */}
         <Route exact path = "/tunnel"                      component  = {ExitTunnel} />

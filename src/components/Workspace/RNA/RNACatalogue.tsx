@@ -4,12 +4,48 @@ import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import LoadingSpinner from "../../Other/LoadingSpinner";
 import RNAHero from "./RNAHero";
 import "./RNACatalogue.css";
-import { Accordion, Card } from "react-bootstrap";
-import { Button } from "react-bootstrap";
-import { transformToShortTax } from "./../../Main";
 import PageAnnotation from "./../Display/PageAnnotation";
 import Grid from "@material-ui/core/Grid";
-import Typography from '@material-ui/core/Typography';
+import { RNAProfile } from "./../../../redux/DataInterfaces";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
+import RNACard from "./RNACard";
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import ListItem from "@material-ui/core/ListItem";
+import { SearchField, SpeciesList } from "../Display/StructuresCatalogue";
+import Pagination from "../Display/Pagination";
+import { AppState } from "../../../redux/store";
+import { filterChange, FilterData } from "../../../redux/reducers/Filters/ActionTypes";
+import { connect } from "react-redux";
+import { AppActions } from "../../../redux/AppActions";
+import { gotopage } from "../../../redux/reducers/RNA/ActionTypes";
+import { Dispatch } from "redux";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+}
+
+const TabPanel = (props: TabPanelProps) => {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box p={3}>{children}</Box>}
+    </div>
+  );
+};
 
 const pageData = {
   title: "Ribosomal, messenger, transfer RNA",
@@ -18,23 +54,16 @@ const pageData = {
  with the ribosomes are caccessible and can be searched through all structures.",
 };
 
-export interface RNAProfile {
-  description: string;
-  length: number;
-  parent: string;
-  strand: string;
-  orgname: string[];
-  orgid: number[];
-}
+type  ReduxProps                        = {rna_strands: RNAProfile[], current_page: number, page_total:number}
+type  DispatchProps                     = {gotopage: (pid:number)=>void}
+const RNACatalogue:React.FC<ReduxProps & DispatchProps> = (prop) => {
+  const a11yProps = (index: any) => {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  };
 
-const truncate = (str: string) => {
-  if (typeof str === "undefined") {
-    return " ";
-  }
-  return str.length > 20 ? str.substring(0, 15) + "..." : str;
-};
-const RNACatalogue = () => {
-  const [rnas, setrnas]           = useState<RNAProfile[]>([]);
   const [trnas, settrna]          = useState<RNAProfile[]>([]);
   const [mrnas, setmrna]          = useState<RNAProfile[]>([]);
   const [class_16s, setclass_16s] = useState<RNAProfile[]>([]);
@@ -44,33 +73,24 @@ const RNACatalogue = () => {
 
   const filterByClass = (rnas: RNAProfile[], kwords: RegExp) => {
     return rnas.filter(r => {
-      const desc = r.description.toLowerCase();
+      const desc = r.rna.rcsb_pdbx_description!.toLowerCase();
       if (kwords.test(desc)) {
         return true;
       } else return false;
     });
   };
 
-  const [organismFilter, setorganismFilter] = useState<Array<number>>([]);
-  useEffect(() => {
-    getNeo4jData("neo4j", { endpoint: "get_all_rnas", params: null }).then(
-      response => {
-        var flattened: RNAProfile[] = flattenDeep(response.data);
-        setrnas(flattened);
-      }
-    );
-  }, []);
 
   useEffect(() => {
-    var mrna = filterByClass(rnas, /m-rna|messenger|mrna/);
-    var trna = filterByClass(rnas, /t-rna|transfer|trna/);
+    var rnas = prop.rna_strands
     var class_23s = filterByClass(rnas, /23 s|23s|23-s|28s|28 s|28-s/);
+    var mrna      = filterByClass(rnas, /m-rna|messenger|mrna/);
+    var trna      = filterByClass(rnas, /t-rna|transfer|trna/);
     var class_16s = filterByClass(rnas, /16 s|16s|16-s|18s|18 s|18-s/);
-    var class_5s = filterByClass(
+    var class_5s  = filterByClass(
       rnas,
       /(?<!2)5 s|(?<!2)5s|(?<!2)5-s|5.8s|5.8 s/
     );
-
     var other = rnas.filter(
       el =>
         ![...mrna, ...trna, ...class_16s, ...class_23s, ...class_5s].includes(
@@ -78,195 +98,144 @@ const RNACatalogue = () => {
         )
     );
 
+    setclass_23s(class_23s);
     setmrna(mrna);
     settrna(trna);
     setclass_16s(class_16s);
-    setclass_23s(class_23s);
     setclass_5s(class_5s);
     setother(other);
-  }, [rnas, organismFilter]);
+  }, [prop.rna_strands]);
 
-  const [organismsAvailable, setorganismsAvailable] = useState({});
-  useEffect(() => {
-    var organisms = rnas.map(str => {
-      return {
-        name: str.orgname.map(x => x.toLowerCase()),
-        id: str.orgid,
-      };
-    });
 
-    const orgsdict: { [id: string]: { names: string[]; count: number } } = {};
-    organisms.map(org => {
-      org.id.forEach((id: number, index: number) => {
-        if (!Object.keys(orgsdict).includes(id.toString())) {
-          orgsdict[id] = {
-            names: [],
-            count: 1,
-          };
-          orgsdict[id].names.push(org.name[index]);
-        } else {
-          orgsdict[id].names.push(org.name[index]);
-          orgsdict[id].count += 1;
-        }
-      });
-    });
-    console.log(orgsdict);
-    setorganismsAvailable(orgsdict);
-  }, [rnas]);
 
-  const filterByOrganims = (
-    elems: RNAProfile[],
-    filter: number[]
-  ): RNAProfile[] => {
-    if (filter.length === 0) {
-      console.log("yep its empty, returning all", elems.length);
-      return elems;
-    }
-
-    if (filter.length > 0) {
-      var ftrd = elems.filter(elem => {
-        for (var n of elem.orgid) {
-          if (filter.includes(n)) return true;
-        }
-        return false;
-      });
-      return ftrd;
-    }
-    return elems;
+  // -------------------------------------
+  const [tabValue, setTabValue] = React.useState(0);
+  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setTabValue(newValue);
   };
+  // -------------------------------------
+  return (
+    <Grid container xs={12}>
+      <Grid item xs={12}>
+        <PageAnnotation {...pageData} />
+      </Grid>
 
-  useEffect(() => {
-    console.log(organismFilter);
-  }, [organismFilter]);
+      <Grid container item xs={2}>
+          <List>
+            <ListSubheader>Species</ListSubheader>
+            <ListItem>
+              <SpeciesList />
+            </ListItem>
 
-  return other.length < 1 ? (
-    <LoadingSpinner annotation="Loading RNA..." />
-  ) : (
-    <div className="rnas-catalogue">
-      <div className="rnas-catalogue-grid">
-        <div className="filters-tools">
-          <Accordion defaultActiveKey="0">
-            <Card>
-              <Card.Header>
-                <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                  Species
-                </Accordion.Toggle>
-              </Card.Header>
+            <Divider />
+            <ListItem>
+              <SearchField />
+            </ListItem>
+          </List>
+      </Grid>
 
-              <Accordion.Collapse eventKey="0">
-                <Card.Body>
-                  <div className="wspace-species">
-                    <li>
-                      <div className="species-filter">
-                        <div></div>
-                        <div>Tax</div>
-                        <div>Total</div>
-                      </div>
-                    </li>
-                    {Object.entries(organismsAvailable).map((tpl: any) => {
-                      transformToShortTax(tpl[1].names[0]);
-                      return (
-                        <li>
-                          <div className="species-filter">
-                            <input
-                              onChange={e => {
-                                var checked = e.target.checked;
-                                var id = e.target.id;
+      <Grid item xs={10} container spacing={1}>
+        <Grid item xs={12}>
+          <Paper>
+            <Tabs
+              indicatorColor="primary"
+              centered
+              value={tabValue}
+              onChange={handleTabChange}
+            >
+              <Tab label = { `23S-like rRNA ${class_23s.length > 0 ? "("+class_23s.length+")": ""}` } {...a11yProps(0)} />
+              <Tab label = { `16S-like rRNA ${class_16s.length > 0 ? "("+class_16s.length+")": ""}` } {...a11yProps(1)} />
+              <Tab label = { `5S-like rRNA ${class_5s.length > 0 ? "("+class_5s.length+")": ""}` }    {...a11yProps(2)} />
+              <Tab label = { `mRNA ${mrnas.length > 0 ? "("+mrnas.length+")": ""}` }                  {...a11yProps(3)} />
+              <Tab label = { `tRNA ${trnas.length > 0 ? "("+trnas.length+")": ""}` }                  {...a11yProps(4)} />
+              <Tab label = { `uncategorized ${other.length > 0 ? "("+other.length+")": ""}` }         {...a11yProps(5)} />
+            </Tabs>
 
-                                if (!checked) {
-                                  console.log("id popped", tpl[0]);
-                                  setorganismFilter(
-                                    organismFilter.filter(
-                                      id => id !== parseInt(tpl[0])
-                                    )
-                                  );
-                                } else {
-                                  console.log("id pushed", tpl[0]);
-                                  setorganismFilter([
-                                    ...organismFilter,
-                                    parseInt(tpl[0]),
-                                  ]);
-                                }
-                              }}
-                              type="checkbox"
-                              id={tpl[0]}
-                            />
-                            <div>
-                              {truncate(transformToShortTax(tpl[1].names[0]))}{" "}
-                              (id:{tpl[0]})
-                            </div>
-                            <div>{tpl[1].count}</div>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </div>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
-        </div>
-
-        <Grid container xs={12} direction="row">
-          <Grid item xs={12}>
-            <PageAnnotation {...pageData} />
-          </Grid>
-          <Grid item xs={12} container  spacing={1}>
-            <Grid item xs={2} container direction="column">
-              {/* <div className="rnaclass rna-class-23s"> */}
-                <Typography variant="h5">23S-like RNA</Typography>
-                {filterByOrganims(class_23s, organismFilter).map((r, i) => (
-                  <RNAHero rna={r} key={i} />
+            <TabPanel value={tabValue} index={0}>
+              <Grid container xs={12} spacing={2}>
+              <Pagination
+                {...{ gotopage: prop.gotopage, pagecount: Math.ceil( class_23s.length/20 ) }}
+              />
+                {class_23s.slice((prop.current_page - 1) * 20, prop.current_page * 20).map((r, i) => (
+                  <Grid item xs={12}>
+                    <RNACard e={r} />
+                  </Grid>
                 ))}
-              {/* </div> */}
-            </Grid>
-            <Grid item xs={2} container direction="column">
-              {/* <div className="rnaclass rna-class-16s"> */}
-                <Typography variant="h5">16S-like RNA</Typography>
-                {filterByOrganims(class_16s, organismFilter).map((r, i) => (
-                  <RNAHero rna={r} key={i} />
+              </Grid>
+            </TabPanel>
+            <TabPanel value={tabValue} index={1}>
+              <Grid container xs={12} spacing={2}>
+              <Pagination
+                {...{ gotopage: prop.gotopage, pagecount: Math.ceil( class_16s.length/20 ) }}
+              />
+                {class_16s.slice((prop.current_page - 1) * 20, prop.current_page * 20).map((r, i) => (
+                  <Grid item xs={12}>
+                    <RNACard e={r} />
+                  </Grid>
                 ))}
-              {/* </div> */}
-            </Grid>
-            <Grid item xs={2} container direction="column">
-              {/* <div className="rnaclass rna-class-5s"> */}
-                <Typography variant="h5">5S-like RNA</Typography>
-                {filterByOrganims(class_5s, organismFilter).map((r, i) => (
-                  <RNAHero rna={r} key={i} />
+              </Grid>
+            </TabPanel>
+            <TabPanel value={tabValue} index={2}>
+              <Grid container xs={12} spacing={2}>
+              <Pagination
+                {...{ gotopage: prop.gotopage, pagecount: Math.ceil( class_5s.length/20 ) }}
+              />
+                {class_5s.slice((prop.current_page - 1) * 20, prop.current_page * 20).map((r, i) => (
+                  <Grid item xs={12}>
+                    <RNACard e={r} />
+                  </Grid>
                 ))}
-              {/* </div> */}
-            </Grid>
-            <Grid item xs={2} container direction="column">
-              {/* <div className="rnaclass rna-class-mrna"> */}
-                <Typography variant="h5">mRNA</Typography>
-                {filterByOrganims(mrnas, organismFilter).map((r, i) => (
-                  <RNAHero rna={r} key={i} />
+              </Grid>
+            </TabPanel>
+            <TabPanel value={tabValue} index={3}>
+              <Grid container xs={12} spacing={2}>
+              <Pagination
+                {...{ gotopage: prop.gotopage, pagecount: Math.ceil( mrnas.length/20 ) }}
+              />
+                {mrnas.slice((prop.current_page - 1) * 20, prop.current_page * 20).map((r, i) => (
+                  <Grid item xs={12}>
+                    <RNACard e={r} />
+                  </Grid>
                 ))}
-              {/* </div> */}
-            </Grid>
-            <Grid item xs={2} container direction="column">
-              {/* <div className="rnaclass rna-class-trna"> */}
-                <Typography variant="h5">tRNA</Typography>
-                {filterByOrganims(trnas, organismFilter).map((r, i) => (
-                  <RNAHero rna={r} key={i} />
+              </Grid>
+            </TabPanel>
+            <TabPanel value={tabValue} index={4}>
+              <Grid container xs={12} spacing={2}>
+              <Pagination
+                {...{ gotopage: prop.gotopage, pagecount: Math.ceil( trnas.length/20 ) }}
+              />
+                {trnas.slice((prop.current_page - 1) * 20, prop.current_page * 20).map((r, i) => (
+                  <Grid item xs={12}>
+                    <RNACard e={r} />
+                  </Grid>
                 ))}
-              {/* </div> */}
-            </Grid>
-            <Grid item xs={2} container direction="column">
-              {/* <div className="rnaclass rna-class-other"> */}
-                <Typography variant="h5">
-Other/Unclassified
-                </Typography>
-                {filterByOrganims(other, organismFilter).map((r, i) => (
-                  <RNAHero rna={r} key={i} />
+              </Grid>
+            </TabPanel>
+            <TabPanel value={tabValue} index={5}>
+              <Grid container xs={12} spacing={2}>
+              <Pagination
+                {...{ gotopage: prop.gotopage, pagecount: Math.ceil( other.length/20 ) }}
+              />
+                {other.slice((prop.current_page - 1) * 20, prop.current_page * 20).map((r, i) => (
+                  <Grid item xs={12}>
+                    <RNACard e={r} />
+                  </Grid>
                 ))}
-              {/* </div> */}
-            </Grid>
-          </Grid>
+              </Grid>
+            </TabPanel>
+          </Paper>
         </Grid>
-      </div>
-    </div>
+      </Grid>
+    </Grid>
   );
 };
 
-export default RNACatalogue;
+const mapstate = (appstate:AppState, ownprops:any):ReduxProps =>({
+  rna_strands : appstate.rna.all_rna_derived,
+  page_total  : appstate.rna.pages_total,
+  current_page: appstate.rna.current_page,
+})
+const mapdispatch = ( dispatch:Dispatch<AppActions>, ownprops:any):DispatchProps =>({
+  gotopage:(pid) => dispatch(gotopage(pid))
+})
+export default connect(mapstate, mapdispatch)( RNACatalogue );

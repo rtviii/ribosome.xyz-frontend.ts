@@ -8,16 +8,25 @@ import * as redux from '../redux/reducers/StructuresReducer/StructuresReducer'
 import { connect } from "react-redux";
 import Dashboard from './../materialui/Dashboard/Dashboard'
 
+import {requestAllRNAs}from './../redux/reducers/RNA/ActionTypes'
+import { requestAllLigands } from "../redux/reducers/Ligands/ActionTypes";
 
 interface OwnProps {}
 interface ReduxProps {}
-interface DispatchProps {__rx_requestStructures: () => void}
+interface DispatchProps {
+  __rx_requestStructures: () => void
+
+__rx_requestRNAs:()=>void
+__rx_requestAllLigands:()=>void
+}
 
 type MainProps = DispatchProps & OwnProps & ReduxProps;
 const Main: React.FC<MainProps> = (prop:MainProps) => {
 
   useEffect(() => {
     prop.__rx_requestStructures()
+    prop.__rx_requestRNAs()
+    prop.__rx_requestAllLigands()
   }, [])
 
   return (
@@ -37,11 +46,14 @@ const mapdispatch = (
   dispatch: ThunkDispatch<any, any, AppActions>,
   ownprops: OwnProps
 ): DispatchProps => ({
-  __rx_requestStructures: ()=> dispatch(redux.requestAllStructuresDjango())
+  __rx_requestStructures: ()=> dispatch(redux.requestAllStructuresDjango()),
+  __rx_requestRNAs      : ()=> dispatch(requestAllRNAs()),
+  __rx_requestAllLigands      : ()=> dispatch(requestAllLigands())
 });
 
 export default connect(mapstate, mapdispatch)(Main);
 
+// --------------------------------------------
 
 export const truncate = (str:string, charlim:number, truncateto:number) =>{
   if (typeof str === 'undefined'){

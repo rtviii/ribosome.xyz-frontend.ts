@@ -29,8 +29,8 @@ type Neo4jEndpoints =
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
 interface TEMP_classification_sample{
-  endpoint:'TEMP_classification_sample',
-  params:null
+  endpoint: 'TEMP_classification_sample',
+  params  : null
 }
 interface get_surface_ratios{
   endpoint:'get_surface_ratios',

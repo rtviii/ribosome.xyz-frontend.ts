@@ -32,7 +32,8 @@ import _  from "lodash";
 import {Link, useHistory} from "react-router-dom";
 import PageAnnotation from './PageAnnotation'
 import { NeoStruct } from "../../../redux/DataInterfaces";
-import { FiltersReducerState } from "../../../redux/reducers/Filters/FiltersReducer";
+import { FiltersReducerState, mapDispatchFilter, mapStateFilter, handleFilterChange } from "../../../redux/reducers/Filters/FiltersReducer";
+
 import Pagination from './Pagination'
 
 const pageData ={
@@ -113,29 +114,11 @@ const mapdispatch =(
 
 export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
 
-// Filter Generics-----------------------------------------------------------------------------------------------
-interface handleFilterChange {
-  handleChange: ( allFilters:FiltersReducerState, newavalue:number|string|number[]|string[]) => void;
-}
-export const mapStateFilter=(filttype:FilterType)=>(appstate:AppState, ownprops:any):FilterData =>({
-  allFilters: appstate.filters,
-  set       : appstate.filters.filters[filttype].set,
-  value     : appstate.filters.filters[filttype].value
-})
-export const mapDispatchFilter = (filttype: FilterType) => (
-  dispatch: Dispatch<AppActions>,
-  ownProps: any
-): handleFilterChange => {
-  return {
-    handleChange: (allFilters, newrange) =>
-      dispatch(filterChangeActionCreator(allFilters, filttype, newrange)),
-  };
-};
 
 
 
 
-const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
+export const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
 {
   const [value, setValue] = useState('')
   const [debounced] = useDebounce(value,250)
@@ -230,12 +213,12 @@ const useProteinsSelectedStyles = makeStyles((theme: Theme) =>
 );
 
 const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+// const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   PaperProps: {
     style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 100,
+      maxHeight: ITEM_HEIGHT * 4.5 
+      // width: 100,
     },
   },
 };
@@ -309,21 +292,16 @@ type SpecListProps = handleFilterChange & FilterData;
 export const _SpecList:React.FC<SpecListProps> =(prop)=> {
   const useSpecListStyles = makeStyles((theme: Theme) =>
     createStyles({
+      
       root: {
-        padding: 10,
         fontSize: 8,
+        maxWidth:"2em",
         width: "100%",
+        minWidth: "100%",
         "& > * + *": {
-          marginTop: theme.spacing(3),
           fontSize: 8,
         },
       },
-        autocomplete: {
-          fontSize: 8,
-        "& > * + *": {
-          fontSize: 8,
-        },
-        },
     })
   );
 
@@ -333,28 +311,39 @@ export const _SpecList:React.FC<SpecListProps> =(prop)=> {
   const taxIdMap  =  Object.entries(SpeciesGroupings);
     const classes = useSpecListStyles();
 
+    const [ specListValues, setSpecListValues ] = useState<Array<[ string,number[] ]>>([])
+
+    useEffect(() => {
+
+    var filtered = taxIdMap.filter(
+      (r:[string,number[]])=> (prop.value as number[]).reduce(
+
+        (bool:boolean, next:number)=>r[1].includes(next),false)
+      
+      // .includes(r[1][0])
+      )
+    setSpecListValues(filtered)
+    
+    }, [prop.value])
     return (
       <div className={classes.root}>
         <Autocomplete
         onChange={
 
-            (e:any,value:Array<
-              [string, number[]]
-              >)=>{
+            (e:any,value:Array<[string, number[]]>)=>{
               var taxids  = value.map(k => k[1]).reduce((acc, taxarr) => [...acc, ...taxarr], [])
               prop.handleChange(prop.allFilters as FiltersReducerState, taxids)
-              
             }
         }
           multiple
+          size="small"
           id="tags-standard"
           options={taxIdMap}
           getOptionLabel={(option) => option[0] as string}
           defaultValue={[]}
+          value={specListValues}
           renderInput={(params) => (
             <TextField
-
-        className={classes.autocomplete}
               {...params}
               variant="outlined"
             />
