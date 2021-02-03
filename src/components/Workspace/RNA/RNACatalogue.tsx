@@ -143,12 +143,12 @@ const RNACatalogue:React.FC<ReduxProps & DispatchProps> = (prop) => {
               value={tabValue}
               onChange={handleTabChange}
             >
-              <Tab label="23S-like rRNA" {...a11yProps(0)} />
-              <Tab label="16S-like rRNA" {...a11yProps(1)} />
-              <Tab label="5S-like rRNA" {...a11yProps(2)} />
-              <Tab label="mRNA" {...a11yProps(3)} />
-              <Tab label="tRNA" {...a11yProps(4)} />
-              <Tab label="uncategorized" {...a11yProps(5)} />
+              <Tab label = { `23S-like rRNA ${class_23s.length > 0 ? "("+class_23s.length+")": ""}` } {...a11yProps(0)} />
+              <Tab label = { `16S-like rRNA ${class_16s.length > 0 ? "("+class_16s.length+")": ""}` } {...a11yProps(1)} />
+              <Tab label = { `5S-like rRNA ${class_5s.length > 0 ? "("+class_5s.length+")": ""}` }    {...a11yProps(2)} />
+              <Tab label = { `mRNA ${mrnas.length > 0 ? "("+mrnas.length+")": ""}` }                  {...a11yProps(3)} />
+              <Tab label = { `tRNA ${trnas.length > 0 ? "("+trnas.length+")": ""}` }                  {...a11yProps(4)} />
+              <Tab label = { `uncategorized ${other.length > 0 ? "("+other.length+")": ""}` }         {...a11yProps(5)} />
             </Tabs>
 
             <TabPanel value={tabValue} index={0}>

@@ -4,6 +4,7 @@ import {
   NeoStruct,
   NeoHomolog,
   RNAProfile,
+  LigandResponseShape,
 } from "../../DataInterfaces";
 import { FiltersReducerState } from "./FiltersReducer";
 
@@ -80,6 +81,12 @@ export const FilterPredicates: Record<
         .toLowerCase()
         .includes(value as string);
     },
+    LIGAND: (value: any) => (item: RXZDataTypes) => {
+      var lig = item as LigandResponseShape;
+      return (lig.ligand.chemicalName + lig.ligand.chemicalId)
+        .toLowerCase()
+        .includes(value as string);
+    }
   },
 
   YEAR: {
@@ -92,6 +99,7 @@ export const FilterPredicates: Record<
     },
     PROTEIN: value => item => true,
     RNA: (value: any) => (item: RXZDataTypes) => true,
+    LIGAND: (value: any) => (item: RXZDataTypes) => true
   },
 
   RESOLUTION: {
@@ -105,6 +113,8 @@ export const FilterPredicates: Record<
     },
     PROTEIN: value => item => true,
     RNA: (value: any) => (item: RXZDataTypes) => true,
+
+    LIGAND: (value: any) => (item: RXZDataTypes) => true
   },
 
   SPECIES: {
@@ -133,6 +143,16 @@ export const FilterPredicates: Record<
         false
       );
     },
+    LIGAND: (value: any) => (item: RXZDataTypes) => {
+      var lig = item as LigandResponseShape;
+
+      return lig.presentIn.reduce(
+        // oute reduce: for eveyr structure, check wether it is present in the selected species
+        (structWiseAccumulator :boolean, struct) => structWiseAccumulator  || struct._organismId.reduce(
+        // inner reduce: for every species associated with a structure, check whether it is inside fitler values
+        (inStructSpeciesAccumulator: boolean, taxid) =>inStructSpeciesAccumulator || (value as number[]).includes(taxid),false)
+        ,false)
+    }
   },
   // Should be made into generics --------
 
@@ -146,6 +166,7 @@ export const FilterPredicates: Record<
     },
     PROTEIN: value => item => true,
     RNA: (value: any) => (item: RXZDataTypes) => true,
+    LIGAND: (value: any) => (item: RXZDataTypes) => true
   },
   PROTEINS_PRESENT: {
     STRUCTURE: (value: any) => (item: RXZDataTypes) => {
@@ -164,9 +185,9 @@ export const FilterPredicates: Record<
       // If accumulator contains the same elements as the passed value ==> the struct passes
       return _.isEmpty(_.xor(value, presence));
     },
-
     PROTEIN: value => item => true,
     RNA: (value: any) => (item: RXZDataTypes) => true,
+    LIGAND: (value: any) => (item: RXZDataTypes) => true
   },
 };
 

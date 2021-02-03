@@ -1,4 +1,4 @@
-import {  RibosomeStructure,  RibosomalProtein, rRNA} from "./RibosomeTypes";
+import {  RibosomeStructure,  RibosomalProtein, rRNA, Ligand} from "./RibosomeTypes";
 
 // Preload for strucutrescatalogue
 export interface NeoStruct{
@@ -24,7 +24,23 @@ export interface RNAProfile {
   title  : string
 }
 
+export interface StructureWithLigand{
+  _organismId          : number[];
+  _organismName        : string[];
+  rcsb_id              : string;
+  expMethod            : string;
+  resolution           : number;
+  cryoem_exp_resolution: number|null;
+  citation_title       : string
+  pdbx_keywords_text   : string| null
+
+}
+export interface LigandResponseShape  {
+  ligand   : Ligand
+  presentIn: StructureWithLigand[]
+};
 
 
 
-export type RXZDataTypes                 = NeoStruct | NeoHomolog | RNAProfile;
+
+export type RXZDataTypes                 = NeoStruct | NeoHomolog | RNAProfile | LigandResponseShape;

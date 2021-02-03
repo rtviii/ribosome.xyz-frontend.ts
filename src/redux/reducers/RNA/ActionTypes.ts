@@ -26,12 +26,12 @@ export type RNAActions =
   | requestAllRNAGo
   | requestAllRNASuccess
   | requestAllRNAErrorr
-  
+
   | filterChange
 
-  |nextPageRNA
-  |prevPageRNA
-  |gotoPageRNA
+  | nextPageRNA
+  | prevPageRNA
+  | gotoPageRNA;
 
 export const requestAllRNAs =  () => {
   return async (dispatch: Dispatch<RNAActions>) => {
