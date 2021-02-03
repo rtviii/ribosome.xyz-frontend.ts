@@ -51,12 +51,14 @@ const RPPage:React.FC<RPPageProps> = (prop) => {
 
   return params!.nom ? (
     <Grid xs={12} container>
-      <Grid item container xs={12} >
-        <Typography variant="h3" style={{padding:"20px"}}>Ribosomal Protein Class {className}</Typography>
+      <Grid item container xs={12}>
+        <Typography variant="h3" style={{ padding: "20px" }}>
+          Ribosomal Protein Class {className}
+        </Typography>
       </Grid>
 
       <Grid item container xs={12} spacing={2}>
-        <Grid item container xs={2} direction="column" >
+        <Grid item container xs={2} direction="column">
           <List>
             <Divider />
             <ListSubheader>Species</ListSubheader>
@@ -69,21 +71,20 @@ const RPPage:React.FC<RPPageProps> = (prop) => {
               <SearchField />
             </ListItem>
             <ListItem>
-          <Pagination
-            {...{ gotopage: prop.goto_page, pagecount: prop.pagestotal }}
-          />
+              <Pagination
+                {...{ gotopage: prop.goto_page, pagecount: prop.pagestotal }}
+              />
             </ListItem>
           </List>
         </Grid>
 
-        <Grid item container direction="column" spacing={1} xs={10}  >
-
+        <Grid item container direction="column" spacing={1} xs={10}>
           {prop.current_rps
             .slice((prop.currentpage - 1) * 20, prop.currentpage * 20)
             .map((protein: NeoHomolog) => {
               return (
-                <Grid item >
-                      <RibosomalProteinCard e={protein}/>
+                <Grid item>
+                  <RibosomalProteinCard e={protein} />
                 </Grid>
               );
             })}

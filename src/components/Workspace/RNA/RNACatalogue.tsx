@@ -4,12 +4,42 @@ import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import LoadingSpinner from "../../Other/LoadingSpinner";
 import RNAHero from "./RNAHero";
 import "./RNACatalogue.css";
-import { Accordion, Card } from "react-bootstrap";
-import { Button } from "react-bootstrap";
-import { transformToShortTax } from "./../../Main";
 import PageAnnotation from "./../Display/PageAnnotation";
 import Grid from "@material-ui/core/Grid";
-import Typography from '@material-ui/core/Typography';
+import { RNAProfile } from "./../../../redux/DataInterfaces";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
+import RNACard from "./RNACard";
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import ListItem from "@material-ui/core/ListItem";
+import { SearchField, SpeciesList } from "../Display/StructuresCatalogue";
+import Pagination from "../Display/Pagination";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+}
+
+const TabPanel = (props: TabPanelProps) => {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box p={3}>{children}</Box>}
+    </div>
+  );
+};
 
 const pageData = {
   title: "Ribosomal, messenger, transfer RNA",
@@ -18,33 +48,25 @@ const pageData = {
  with the ribosomes are caccessible and can be searched through all structures.",
 };
 
-export interface RNAProfile {
-  description: string;
-  length: number;
-  parent: string;
-  strand: string;
-  orgname: string[];
-  orgid: number[];
-}
-
-const truncate = (str: string) => {
-  if (typeof str === "undefined") {
-    return " ";
-  }
-  return str.length > 20 ? str.substring(0, 15) + "..." : str;
-};
 const RNACatalogue = () => {
-  const [rnas, setrnas]           = useState<RNAProfile[]>([]);
-  const [trnas, settrna]          = useState<RNAProfile[]>([]);
-  const [mrnas, setmrna]          = useState<RNAProfile[]>([]);
+  const a11yProps = (index: any) => {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  };
+
+  const [rnas, setrnas] = useState<RNAProfile[]>([]);
+  const [trnas, settrna] = useState<RNAProfile[]>([]);
+  const [mrnas, setmrna] = useState<RNAProfile[]>([]);
   const [class_16s, setclass_16s] = useState<RNAProfile[]>([]);
   const [class_23s, setclass_23s] = useState<RNAProfile[]>([]);
-  const [class_5s, setclass_5s]   = useState<RNAProfile[]>([]);
-  const [other, setother]         = useState<RNAProfile[]>([]);
+  const [class_5s, setclass_5s] = useState<RNAProfile[]>([]);
+  const [other, setother] = useState<RNAProfile[]>([]);
 
   const filterByClass = (rnas: RNAProfile[], kwords: RegExp) => {
     return rnas.filter(r => {
-      const desc = r.description.toLowerCase();
+      const desc = r.rna.rcsb_pdbx_description!.toLowerCase();
       if (kwords.test(desc)) {
         return true;
       } else return false;
@@ -62,31 +84,31 @@ const RNACatalogue = () => {
   }, []);
 
   useEffect(() => {
-    var mrna = filterByClass(rnas, /m-rna|messenger|mrna/);
-    var trna = filterByClass(rnas, /t-rna|transfer|trna/);
     var class_23s = filterByClass(rnas, /23 s|23s|23-s|28s|28 s|28-s/);
-    var class_16s = filterByClass(rnas, /16 s|16s|16-s|18s|18 s|18-s/);
-    var class_5s = filterByClass(
-      rnas,
-      /(?<!2)5 s|(?<!2)5s|(?<!2)5-s|5.8s|5.8 s/
-    );
+    // var mrna      = filterByClass(rnas, /m-rna|messenger|mrna/);
+    // var trna      = filterByClass(rnas, /t-rna|transfer|trna/);
+    // var class_16s = filterByClass(rnas, /16 s|16s|16-s|18s|18 s|18-s/);
+    // var class_5s  = filterByClass(
+    //   rnas,
+    //   /(?<!2)5 s|(?<!2)5s|(?<!2)5-s|5.8s|5.8 s/
+    // );
+    // var other = rnas.filter(
+    //   el =>
+    //     ![...mrna, ...trna, ...class_16s, ...class_23s, ...class_5s].includes(
+    //       el
+    //     )
+    // );
 
-    var other = rnas.filter(
-      el =>
-        ![...mrna, ...trna, ...class_16s, ...class_23s, ...class_5s].includes(
-          el
-        )
-    );
-
-    setmrna(mrna);
-    settrna(trna);
-    setclass_16s(class_16s);
     setclass_23s(class_23s);
-    setclass_5s(class_5s);
-    setother(other);
+    // setmrna(mrna);
+    // settrna(trna);
+    // setclass_16s(class_16s);
+    // setclass_5s(class_5s);
+    // setother(other);
   }, [rnas, organismFilter]);
 
   const [organismsAvailable, setorganismsAvailable] = useState({});
+
   useEffect(() => {
     var organisms = rnas.map(str => {
       return {
@@ -110,162 +132,118 @@ const RNACatalogue = () => {
         }
       });
     });
-    console.log(orgsdict);
     setorganismsAvailable(orgsdict);
   }, [rnas]);
 
-  const filterByOrganims = (
-    elems: RNAProfile[],
-    filter: number[]
-  ): RNAProfile[] => {
-    if (filter.length === 0) {
-      console.log("yep its empty, returning all", elems.length);
-      return elems;
-    }
-
-    if (filter.length > 0) {
-      var ftrd = elems.filter(elem => {
-        for (var n of elem.orgid) {
-          if (filter.includes(n)) return true;
-        }
-        return false;
-      });
-      return ftrd;
-    }
-    return elems;
+  // -------------------------------------
+  const [tabValue, setTabValue] = React.useState(0);
+  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setTabValue(newValue);
   };
+  // -------------------------------------
+  return (
+    <Grid container xs={12}>
+      <Grid item xs={12}>
+        <PageAnnotation {...pageData} />
+      </Grid>
 
-  useEffect(() => {
-    console.log(organismFilter);
-  }, [organismFilter]);
+      <Grid container item xs={2}>
+        <Grid item container xs={2} direction="column">
+          <List>
+            <Divider />
+            <ListSubheader>Species</ListSubheader>
+            <ListItem>
+              <SpeciesList />
+            </ListItem>
 
-  return other.length < 1 ? (
-    <LoadingSpinner annotation="Loading RNA..." />
-  ) : (
-    <div className="rnas-catalogue">
-      <div className="rnas-catalogue-grid">
-        <div className="filters-tools">
-          <Accordion defaultActiveKey="0">
-            <Card>
-              <Card.Header>
-                <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                  Species
-                </Accordion.Toggle>
-              </Card.Header>
-
-              <Accordion.Collapse eventKey="0">
-                <Card.Body>
-                  <div className="wspace-species">
-                    <li>
-                      <div className="species-filter">
-                        <div></div>
-                        <div>Tax</div>
-                        <div>Total</div>
-                      </div>
-                    </li>
-                    {Object.entries(organismsAvailable).map((tpl: any) => {
-                      transformToShortTax(tpl[1].names[0]);
-                      return (
-                        <li>
-                          <div className="species-filter">
-                            <input
-                              onChange={e => {
-                                var checked = e.target.checked;
-                                var id = e.target.id;
-
-                                if (!checked) {
-                                  console.log("id popped", tpl[0]);
-                                  setorganismFilter(
-                                    organismFilter.filter(
-                                      id => id !== parseInt(tpl[0])
-                                    )
-                                  );
-                                } else {
-                                  console.log("id pushed", tpl[0]);
-                                  setorganismFilter([
-                                    ...organismFilter,
-                                    parseInt(tpl[0]),
-                                  ]);
-                                }
-                              }}
-                              type="checkbox"
-                              id={tpl[0]}
-                            />
-                            <div>
-                              {truncate(transformToShortTax(tpl[1].names[0]))}{" "}
-                              (id:{tpl[0]})
-                            </div>
-                            <div>{tpl[1].count}</div>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </div>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
-        </div>
-
-        <Grid container xs={12} direction="row">
-          <Grid item xs={12}>
-            <PageAnnotation {...pageData} />
-          </Grid>
-          <Grid item xs={12} container  spacing={1}>
-            <Grid item xs={2} container direction="column">
-              {/* <div className="rnaclass rna-class-23s"> */}
-                <Typography variant="h5">23S-like RNA</Typography>
-                {filterByOrganims(class_23s, organismFilter).map((r, i) => (
-                  <RNAHero rna={r} key={i} />
-                ))}
-              {/* </div> */}
-            </Grid>
-            <Grid item xs={2} container direction="column">
-              {/* <div className="rnaclass rna-class-16s"> */}
-                <Typography variant="h5">16S-like RNA</Typography>
-                {filterByOrganims(class_16s, organismFilter).map((r, i) => (
-                  <RNAHero rna={r} key={i} />
-                ))}
-              {/* </div> */}
-            </Grid>
-            <Grid item xs={2} container direction="column">
-              {/* <div className="rnaclass rna-class-5s"> */}
-                <Typography variant="h5">5S-like RNA</Typography>
-                {filterByOrganims(class_5s, organismFilter).map((r, i) => (
-                  <RNAHero rna={r} key={i} />
-                ))}
-              {/* </div> */}
-            </Grid>
-            <Grid item xs={2} container direction="column">
-              {/* <div className="rnaclass rna-class-mrna"> */}
-                <Typography variant="h5">mRNA</Typography>
-                {filterByOrganims(mrnas, organismFilter).map((r, i) => (
-                  <RNAHero rna={r} key={i} />
-                ))}
-              {/* </div> */}
-            </Grid>
-            <Grid item xs={2} container direction="column">
-              {/* <div className="rnaclass rna-class-trna"> */}
-                <Typography variant="h5">tRNA</Typography>
-                {filterByOrganims(trnas, organismFilter).map((r, i) => (
-                  <RNAHero rna={r} key={i} />
-                ))}
-              {/* </div> */}
-            </Grid>
-            <Grid item xs={2} container direction="column">
-              {/* <div className="rnaclass rna-class-other"> */}
-                <Typography variant="h5">
-Other/Unclassified
-                </Typography>
-                {filterByOrganims(other, organismFilter).map((r, i) => (
-                  <RNAHero rna={r} key={i} />
-                ))}
-              {/* </div> */}
-            </Grid>
-          </Grid>
+            <Divider />
+            <ListItem>
+              <SearchField />
+            </ListItem>
+            <ListItem>
+              {/* <Pagination
+                {...{ gotopage: prop.goto_page, pagecount: prop.pagestotal }}
+              /> */}
+            </ListItem>
+          </List>
         </Grid>
-      </div>
-    </div>
+      </Grid>
+
+      <Grid item xs={10} container spacing={1}>
+        <Grid item xs={12}>
+          <Paper>
+            <Tabs
+              indicatorColor="primary"
+              centered
+              value={tabValue}
+              onChange={handleTabChange}
+            >
+              <Tab label="23S-like rRNA" {...a11yProps(0)} />
+              <Tab label="16S-like rRNA" {...a11yProps(1)} />
+              <Tab label="5S-like rRNA" {...a11yProps(2)} />
+              <Tab label="mRNA" {...a11yProps(3)} />
+              <Tab label="tRNA" {...a11yProps(4)} />
+              <Tab label="uncategorized" {...a11yProps(5)} />
+            </Tabs>
+
+            <TabPanel value={tabValue} index={0}>
+              <Grid container xs={12} spacing={2}>
+                {class_23s.slice(0,20).map((r, i) => (
+                  <Grid item xs={12}>
+                    <RNACard e={r} />
+                  </Grid>
+                ))}
+              </Grid>
+            </TabPanel>
+            {/* <TabPanel value={tabValue} index={1}>
+              <Grid container xs={12} spacing={2}>
+                {class_16s.map((r, i) => (
+                  <Grid item xs={12}>
+                    <RNACard e={r} />
+                  </Grid>
+                ))}
+              </Grid>
+            </TabPanel>
+            <TabPanel value={tabValue} index={2}>
+              <Grid container xs={12} spacing={2}>
+                {class_5s.map((r, i) => (
+                  <Grid item xs={12}>
+                    <RNACard e={r} />
+                  </Grid>
+                ))}
+              </Grid>
+            </TabPanel>
+            <TabPanel value={tabValue} index={3}>
+              <Grid container xs={12} spacing={2}>
+                {mrnas.map((r, i) => (
+                  <Grid item xs={12}>
+                    <RNACard e={r} />
+                  </Grid>
+                ))}
+              </Grid>
+            </TabPanel>
+            <TabPanel value={tabValue} index={4}>
+              <Grid container xs={12} spacing={2}>
+                {trnas.map((r, i) => (
+                  <Grid item xs={12}>
+                    <RNACard e={r} />
+                  </Grid>
+                ))}
+              </Grid>
+            </TabPanel>
+            <TabPanel value={tabValue} index={5}>
+              <Grid container xs={12} spacing={2}>
+                {other.map((r, i) => (
+                  <Grid item xs={12}>
+                    <RNACard e={r} />
+                  </Grid>
+                ))}
+              </Grid>
+            </TabPanel> */}
+          </Paper>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 

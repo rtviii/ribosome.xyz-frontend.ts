@@ -1,6 +1,6 @@
-import {RibosomalProtein} from './../../RibosomeTypes'
+import {RibosomalProtein} from '../../RibosomeTypes'
 import { ProteinActions } from './ActionTypes'
-import {NeoHomolog} from './../../DataInterfaces'
+import {NeoHomolog} from '../../DataInterfaces'
 import { filterChange, FilterPredicates } from '../Filters/ActionTypes';
 
 

@@ -7,7 +7,7 @@ import {
   rRNA,
 } from "../../../redux/RibosomeTypes";
 import "./StructurePage.css";
-import RNAHero from "./../RNA/RNAHero";
+// import RNAHero from "./../RNA/RNAHero";
 import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import { flattenDeep } from "lodash";
 import { connect } from "react-redux";
@@ -123,20 +123,21 @@ const StructurePage: React.FC<StructurePageProps> = (
           />
         );
       case "rrna":
-        return rrnas.map(obj => (
-          <RNAHero
-            rna ={{
-              description: obj.rcsb_pdbx_description
-                ? obj.rcsb_pdbx_description
-                       :  "Null",
-                length : obj.entity_poly_seq_length,
-                parent : pdbid,
-                strand : obj.entity_poly_strand_id,
-                orgid  : obj.rcsb_source_organism_id,
-                orgname: obj.rcsb_source_organism_description
-            }}
-          />
-        ));
+        return ""
+        // return rrnas.map(obj => (
+        //   <RNAHero
+        //     rna ={{
+        //       description: obj.rcsb_pdbx_description
+        //         ? obj.rcsb_pdbx_description
+        //                :  "Null",
+        //         length : obj.entity_poly_seq_length,
+        //         parent : pdbid,
+        //         strand : obj.entity_poly_strand_id,
+        //         orgid  : obj.rcsb_source_organism_id,
+        //         orgname: obj.rcsb_source_organism_description
+        //     }}
+        //   />
+        // ));
       case "ligands":
         return <div className='struct-page-ligands'>
             

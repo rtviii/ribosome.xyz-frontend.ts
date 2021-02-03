@@ -41,12 +41,11 @@ export interface RibosomeStructure {
 }
 export interface rRNA {
 
-  parent_rcsb_id: string;
-
+  parent_rcsb_id                  : string;
   rcsb_source_organism_id         : number[];
   rcsb_source_organism_description: string[];
+  rcsb_pdbx_description           : string | null;
 
-  rcsb_pdbx_description: string | null;
   // entity_polymer
   entity_poly_strand_id              : string;
   entity_poly_seq_one_letter_code    : string;

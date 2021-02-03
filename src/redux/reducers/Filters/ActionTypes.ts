@@ -25,6 +25,7 @@ type   PartialRecord<K extends keyof any, T> = {[P in K]?: T;};
 
 
 // I would really love to get out of that cast inside each predicate. Not sure how to type this properly.
+// If no filter is implemented, the predicate should return TRUE(all items pass)
 export const FilterPredicates: Record<
   FilterType,
   PartialRecord<DataType, FilterPredicate>
@@ -59,13 +60,14 @@ export const FilterPredicates: Record<
   },
 
   YEAR: {
-    STRUCTURE: (value: any) => (item: RXZDataTypes) => {
+    STRUCTURE: (value) => (item: RXZDataTypes) => {
       var struct = item as NeoStruct;
       return (
         struct.struct.citation_year >= (value as number[])[0] &&
         struct.struct.citation_year <= (value as number[])[1]
       );
     },
+    PROTEIN:(value) =>(item) => true
   },
 
   RESOLUTION: {
@@ -77,6 +79,7 @@ export const FilterPredicates: Record<
         struct.struct.resolution <= (value as number[])[1]
       );
     },
+    PROTEIN:(value) =>(item) => true
   },
 
   SPECIES: {
@@ -107,6 +110,7 @@ export const FilterPredicates: Record<
         struct.rps.length <= (value as number[])[1]
       );
     },
+    PROTEIN:(value) =>(item) => true
   },
   PROTEINS_PRESENT: {
     STRUCTURE: (value: any) => (item: RXZDataTypes) => {
@@ -125,41 +129,12 @@ export const FilterPredicates: Record<
       // If accumulator contains the same elements as the passed value ==> the struct passes
       return _.isEmpty(_.xor(value, presence));
     },
+
+    PROTEIN:(value) =>(item) => true
   },
 };
 
 
-
-
-
-
-
-
-// Filtr predicates are the the set of functionals that define the comparison logic for 
-// the spaces that are being filtered.  Reducers  particular to thos spaces import this
-// export const FilterPredicates : Record<FilterType,FilterPredicate> ={
-
-// // Should be made into generics --------
-// "SEARCH"          :(value:any ) =>(struct:RXZDataTypes) => ( struct.struct.rcsb_id+struct.struct.citation_title+ struct.struct.citation_year+ struct.struct.citation_rcsb_authors+ struct.struct._organismName  ).toLowerCase().includes(value as string) ,
-// "YEAR"            :(value:any ) =>(struct:RXZDataTypes) => struct.( struct as NeoStruct ).citation_year >= ( value as number[] ) [0]  && struct.struct.citation_year <= (value as number[])[1],
-// "RESOLUTION"      :(value:any ) =>(struct:RXZDataTypes) => struct.struct.resolution >=( value as number[] ) [0]  && struct.struct.resolution <= (value as number[])[1],
-// "SPECIES"         :(value:any ) =>(struct:RXZDataTypes) => struct.struct._organismId.reduce((accumulator:boolean,taxid)=>  accumulator || ( value as number[] ).includes(taxid), false),
-// // Should be made into generics --------
-
-// "PROTEIN_COUNT"   :(value:any ) =>(struct:RXZDataTypes) => struct.rps.length >= ( value as number[] )[0] && struct.rps.length<= ( value as number[] )[1],
-// "PROTEINS_PRESENT":(value:any ) =>(struct:RXZDataTypes) => {
-//   // if (typeof struct === NeoStruct)
-//   // for every rp that a structure has, check whether 
-//   // length is zero
-//   // any of the names conform with the values passed (push to accumulator if yes)
-//   var presence = struct.rps.reduce((accumulator:string[], instance)=>{
-//     return instance.noms.length === 0  ? accumulator : 
-//     (value.includes( instance.noms[0] ) ? [...accumulator, instance.noms[0]]:  accumulator)
-//   }, [])
-//   // If accumulator contains the same elements as the passed value ==> the struct passes
-//   return _.isEmpty(_.xor(value,presence))
-// },
-// }
 
 // This is the "bottleneck" or switchboard action creator where the derived filters-state  is actually calclated
 // before it is actually emitted to the FILTERS reducer as well as all the other reducers that rley on the state of th filters like, strucutres reducer, say.
