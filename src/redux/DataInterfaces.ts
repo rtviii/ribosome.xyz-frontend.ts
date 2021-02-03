@@ -27,4 +27,4 @@ export interface RNAProfile {
 
 
 
-export type RXZDataTypes                 = NeoStruct | NeoHomolog;
+export type RXZDataTypes                 = NeoStruct | NeoHomolog | RNAProfile;
