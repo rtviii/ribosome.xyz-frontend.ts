@@ -14,13 +14,13 @@ import { requestAllLigands } from "../redux/reducers/Ligands/ActionTypes";
 interface OwnProps {}
 interface ReduxProps {}
 interface DispatchProps {
-  __rx_requestStructures: () => void
-
-__rx_requestRNAs:()=>void
-__rx_requestAllLigands:()=>void
+  __rx_requestStructures: ()=>void
+  __rx_requestRNAs      : ()=>void
+  __rx_requestAllLigands: ()=>void
 }
 
 type MainProps = DispatchProps & OwnProps & ReduxProps;
+
 const Main: React.FC<MainProps> = (prop:MainProps) => {
 
   useEffect(() => {

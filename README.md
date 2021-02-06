@@ -108,7 +108,7 @@ The absence of standardized naming scheme for ribosomal proteins has been an obs
 
 # Binding Interfaces
 
-[/interfaces](https://www.ribosome.xyz/classify)
+[/bindingsites](https://www.ribosome.xyz/classify)
 
 Ribosomal models are frequently resolved containing extraneous molecules such as antibiotics, inhibitors, transport- and messenger- RNA strands, and ligands. Most of these are of potential pharmacological interest. We provide  "binding interfaces" that detail the nature of the binding site across structures for each particular ligand. For a number of ribosomal structures ligands are available(ions are filtered out): you can inspect and download a "binding interface" for each ligand.
 
