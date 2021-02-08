@@ -1,4 +1,5 @@
 import FormControl from '@material-ui/core/FormControl';import Grid from '@material-ui/core/Grid';
+import pic from './../../../static/3j9m_gdp.png'
 import { connect } from 'react-redux';
 import {StaticFilesCatalogue} from './../../../redux/reducers/Utilities/ActionTypes'
 import { AppState } from "./../../../redux/store";
@@ -29,6 +30,7 @@ import { truncate } from '../../Main';
 import fileDownload from 'js-file-download';
 import Tooltip from '@material-ui/core/Tooltip';
 import { useHistory } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 
 interface StructDBProfile{
   ligands    :  Ligand[],
@@ -211,13 +213,10 @@ const useSelectStyles = makeStyles((theme: Theme) =>
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setChosenLigand(event.target.value as string);
     setChosenStruct('')
+    setCurrentStructureData({})
     setBindingSite({} as BindingSite)
   };
 
-  const pageData={
-    title:"Ligand & Antibiotic Binding Sites",
-    text:"Short exposition"
-  }
 
   const ligands    = Object.keys(prop.ligmap)
 
@@ -307,11 +306,60 @@ useEffect(() => {
   }
 }, [chosenStruct])
 
+const TunnelDemoTooltip = withStyles((theme: Theme) => ({
+  tooltip: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 600,
+    border: '1px solid #dadde9',
+  },
+}))(Tooltip);
   return (
     <Grid item container xs={12}>
-      <Grid item container xs={12}>
-        <PageAnnotation {...pageData} />
+        <Paper>
+      <Grid  container xs={12} style={{padding:"10px"}}>
+
+
+
+
+<Grid container item xs={12}>
+<Typography variant="h4"> Ligands & Antibiotic Binding Sites</Typography>
+</Grid>
+<Grid container item xs={12}>
+<Typography variant="body2">
+        For a number of ribosomal structures ligands are available. 
+        One can inspect and download a "binding site report" for each available ligand.
+</Typography></Grid>
+
+
+            <TunnelDemoTooltip
+              placement="bottom"
+              title={
+                <React.Fragment>
+                  <Typography
+                    variant="caption"
+                    // style={{ left: "10%", padding: "10px" }}
+                  >
+                    An illustration of guanosine-diphosphate (GDP) binding site inside the 
+                    structure of the 
+                    <i>E. coli</i> ribosome (
+                    <a href="https://www.rcsb.org/structure/3J7Z">3J7Z</a>).
+                    Residues surrounding the antibiotic are highlighted in blue.
+                  </Typography>
+                  <img style={{width:"100%"}} src={pic}  />
+                </React.Fragment>
+              }
+            >
+<Grid container item xs={12}>
+<Typography variant="body2">
+        A binding interface consists of the residue-wise profile of the ligand
+        itself(<b> Constituents</b>) and the non-ligand neighbor-residues(
+        <b>Neighbors</b>) that are within the radius of 5 Angstrom of the
+        ligand.
+</Typography></Grid>
+</TunnelDemoTooltip>
       </Grid>
+</Paper>
       <Grid item container xs={10} spacing={2} justify="flex-start" alignContent='flex-end' alignItems='flex-end'>
 
 <Grid item>
@@ -367,7 +415,10 @@ useEffect(() => {
 <Grid item container xs={10} spacing={2}>
 
 <Grid item xs={5}>
-      <LigandCard {...chosenLigandData} />
+  {chosenLigandData ? 
+      <LigandCard {...chosenLigandData} />:
+      ""
+  }
 </Grid>
 <Grid item xs={5}>
       {currentStructureData.structure ? (
