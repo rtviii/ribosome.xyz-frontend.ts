@@ -6,6 +6,7 @@ import { FiltersReducer } from "./reducers/Filters/FiltersReducer";
 import { ProteinsReducer } from "./reducers/Proteins/ProteinsReducer";
 import { RNAReducer } from "./reducers/RNA/RNAReducer";
 import { LigandsReducer } from "./reducers/Ligands/LigandsReducer";
+import { UtilitiesReducer } from "./reducers/Utilities/UtilitiesReducer"
 
 
 const collapsFilter = (action: any) => {
@@ -21,7 +22,8 @@ export const rootReducer = combineReducers({
   structures: _StructuresReducer,
   proteins  : ProteinsReducer,
   rna       : RNAReducer,
-  ligands   : LigandsReducer
+  ligands   : LigandsReducer,
+  utils     : UtilitiesReducer
 });
 
 export type AppState = ReturnType<typeof rootReducer>;

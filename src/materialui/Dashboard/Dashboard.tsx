@@ -36,16 +36,18 @@ type MenuItemData = {
 }
 const MenuItem = (d:MenuItemData, tooltip:boolean
 )=>{
+  const history = useHistory();
+
 
   return (
-    <ListItem button key={d.key}>
+    <ListItem button key={d.key}  onClick={()=>{history.push(d.linkto)}}>
+
       <ListItemIcon>
         {<img src={enzymes} style={{ height: "20px", width: "20px" }} />}
       </ListItemIcon>
 
-      <Link key="proteins-link" to={d.linkto}>
         <ListItemText primary={d.menutext} />
-      </Link>
+
     </ListItem>)
 }
 

@@ -7,7 +7,7 @@ import RPPage from "./../RibosomalProteins/RPPage";
 import RPsCatalogue from "./../RibosomalProteins/RPsCatalogue";
 import LigandCatalogue from "./../Ligand/LigandCatalogue";
 import RNACatalogue from './../RNA/RNACatalogue'
-import Interfaces from './../Analytics/Interfaces'
+import Interfaces from '../Analytics/Interfaces'
 import Home from './../../Home'
 import ExitTunnelPage from './../ExitTunnel/ExitTunnelPage'
 import ExitTunnel from './../ExitTunnel/ExitTunnel'
@@ -42,7 +42,6 @@ const Display = () => {
         <Route exact path = "/bindingsites" component                   = {Interfaces} />
         <Route exact path = "/bindingsites/:struct/:type/:id" component = {Interfaces} />
 
-        {/* <Route exact path = "/tunnel"                      component  = {ExitTunnelPage} /> */}
         <Route exact path = "/tunnel"                      component  = {ExitTunnel} />
 
         <Route exact path = "/rpclassification"                     component= {RPClassification} />
