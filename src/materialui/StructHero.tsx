@@ -61,7 +61,7 @@ className={classes.annotation}
 
 
 
-const StructHero=(d:NeoStruct)=> {
+export const StructHero=(d:NeoStruct)=> {
   const classes = useStyles();
 
   const history = useHistory();
@@ -112,8 +112,6 @@ const StructHero=(d:NeoStruct)=> {
             alignItems="flex-start"
             component="div"
           >
-
-
 
           <CardBodyAnnotation keyname={"Organism"} value={truncate( d.struct._organismName[0], 20,20)}/>
           <CardBodyAnnotation keyname={"Method"} value={d.struct.expMethod}/>

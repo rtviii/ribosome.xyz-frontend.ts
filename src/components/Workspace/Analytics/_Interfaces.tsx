@@ -16,6 +16,7 @@ interface InterfacesProp {
   type  : "ligand" | "rna";
   target: Ligand | rRNA;
 }
+
 interface Response {
   struct  : string;
   title   : string;
@@ -23,6 +24,7 @@ interface Response {
   organism: string[];
   ligands : {chemid:string, name:string}[]
 }
+
 interface Residue {
   resn     : string;
   strand_id: string;
@@ -30,6 +32,7 @@ interface Residue {
   resid    : number;
   struct   : string;
 }
+
 interface LigandInterface{
   constituents: Array<Residue>,
   nbrs        : Array<Residue>
