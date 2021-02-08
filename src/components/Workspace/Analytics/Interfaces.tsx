@@ -42,7 +42,7 @@ const LigandCard= (props:Ligand, )=> {
   const classes = useLigandCardStyles();
 
   return (
-    <Card className={classes.root}>
+    <Card >
       <CardContent>
         <Typography className={classes.title} color="textSecondary" gutterBottom>
           {props.chemicalId}
@@ -104,9 +104,6 @@ const useSelectStyles = makeStyles((theme: Theme) =>
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setChosenLigand(event.target.value as string);
-    getNeo4jData('neo4j',{endpoint:"get_all_ligands", params:null}).then(
-      r=> console.log(r.data)
-    )
   };
 
   const pageData={
@@ -126,13 +123,25 @@ const useSelectStyles = makeStyles((theme: Theme) =>
       chemId:chosenLigand
     }}).then(
       r=>{
-        
         setChosenLigandData(r.data[0])
         console.log(r.data[0]) }
 
       
     )
   },[chosenLigand])
+
+  useEffect(()=>{
+        getNeo4jData("static_files",{endpoint:"get_ligand_nbhd",params:{
+    chemid:chosenLigand,
+    struct:chosenStruct
+    }}).then(
+      r=>{
+        console.log(r.data) 
+      }
+
+      
+    )
+  },[chosenStruct])
   
   return (
     <Grid item container xs={12}>
@@ -158,8 +167,11 @@ const useSelectStyles = makeStyles((theme: Theme) =>
               ))}
             </Select>
 
+          </FormControl>
 
 
+          <FormControl className={classes.formControl}>
+            <InputLabel id="demo-simple-select-label">Structure</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -170,8 +182,8 @@ const useSelectStyles = makeStyles((theme: Theme) =>
                 <MenuItem value={struct}>{struct}</MenuItem>
               )) : <MenuItem>"Choose a Ligand"</MenuItem>}
             </Select>
-
           </FormControl>
+
 
           <Grid item container xs={12}>
             {ligands.length > 0 && chosenLigand !== "" ? prop.ligmap[chosenLigand].map(struct => (
