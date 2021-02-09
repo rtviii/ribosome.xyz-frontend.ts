@@ -71,10 +71,14 @@ export const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => 
 
   const downloadChain = (pdbid:string, cid:string)=>{
 
+    var chain = cid;
+    if (cid.includes(",")){
+     chain = cid.split(",")[0]
+    }
     getNeo4jData("static_files", {
 
       endpoint  :  "cif_chain",
-      params    :  { structid: pdbid, chainid: cid },
+      params    :  { structid: pdbid, chainid: chain },
 
     })
     .then(
