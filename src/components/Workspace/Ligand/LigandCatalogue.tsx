@@ -157,7 +157,7 @@ const LigandCard =(l:LigandResponseShape)=> {
               </Grid>
 
               <Grid item xs={1} justify="flex-start" container>
-<Tooltip title="Download binding site analytics as a .json file.">
+{/* <Tooltip title="Download binding site analytics as a .json file.">
 
                   <img
 
@@ -177,7 +177,8 @@ const LigandCard =(l:LigandResponseShape)=> {
                     src={process.env.PUBLIC_URL + "/icons/download.png"}
                     style={{ height: "20px", width: "20px", marginLeft:"30px"}}
                   />
-</Tooltip></Grid>
+</Tooltip> */}
+</Grid>
               <Grid item xs={6}>
                 <Typography>{r.citation_title}</Typography>
               </Grid>
