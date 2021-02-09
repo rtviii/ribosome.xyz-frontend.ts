@@ -66,15 +66,6 @@ type StructResponseShape = {
   rps      : RibosomalProtein[]
 }
 
-const useStylesBootstrap = makeStyles((theme: Theme) => ({
-  arrow: {
-    color: theme.palette.common.black,
-  },
-  tooltip: {
-    backgroundColor: theme.palette.common.black,
-  },
-}));
-
 const WallChain:React.FC<{banid:string|null, chain:string, resids:ResidueProfile[], pdbid:string}> = ({chain, resids, banid, pdbid}) =>{
 
   const parseAndDownloadChain = (pdbid: string, cid: string) => {
@@ -291,10 +282,19 @@ const ExitTunnel = () => {
             </FormControl>
               </Grid>
               <Grid item xs={6} >
+                <Tooltip title="This file lists the residues and nucleotides that constitute the walls of the exit tunnel."> 
                 <Button className={classes.downButton} onClick={() => getfile(wall.pdbid, "report")}> Download Walls Report</Button>
-                <Button className={classes.downButton}onClick={() => getfile(wall.pdbid, "centerline")}>
+                </Tooltip>
+
+
+                <Tooltip title="The shape of the exit tunnel will be made available for export."> 
+
+          <div style={{cursor:"pointer"}}>
+                <Button className={classes.downButton}onClick={() => getfile(wall.pdbid, "centerline")} disabled={true}>
                   Download Tunnel Shape
                 </Button>
+                </div>
+                </Tooltip>
               </Grid>
           </Grid>
         </Grid>

@@ -362,7 +362,7 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                 </Typography>
               </Container>
 </Link>
-            <Link to='/interfaces'>
+            <Link to='/bindingsites'>
               <Container
                 className={classes.tool}
               >
@@ -421,7 +421,7 @@ const AcknPlug: React.FC = children => {
       <Grid>
 
         <Typography variant="caption">
-          Crystallographic strucutures and some of the annotations are acquired
+          Structure files and some of the annotations are acquired
           from <a href={"https://www.rcsb.org/"}>RCSB PDB</a>.
           <br />
           <a href="https://data.rcsb.org/index.html#gql-api">RCSB GQL</a>{" "}
@@ -565,12 +565,14 @@ const Home: React.FC<ReduxProps> = prop => {
       xs={12}
     >
       <Grid item xs={2} className={classes.gridItem}>
-        <AcknowlegementsList />
       </Grid>
       <Grid item xs={5} className={classes.gridItem}>
         <MainContentCard />
       </Grid>
-      <Grid item xs={2}></Grid>
+      <Grid item xs={2}>
+
+        <AcknowlegementsList />
+      </Grid>
     </Grid>
   );
 };

@@ -4,11 +4,12 @@ const BACKEND: any   = process.env.REACT_APP_DJANGO_URL;
 type  DjangoAPIs     = "neo4j" | "static_files" 
 
 
-type  StaticFilesEndpoints = 
+type StaticFilesEndpoints =
   | downloadCifChain
   | download_ligand_nbhd
   | get_tunnel
   | pairwise_align
+  | get_static_catalogue;
 
 type Neo4jEndpoints =
   | getStructure
@@ -21,17 +22,32 @@ type Neo4jEndpoints =
   | getAllRnas
   | getRnasByStruct
   | getLigandsByStruct
+  | get_surface_ratios
+  | TEMP_classification_sample
   | get_ligand_nbhd
+  | get_individual_ligand
   | match_structs_by_proteins
   | get_surface_ratios
   | TEMP_classification_sample;
 
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
-interface TEMP_classification_sample{
-  endpoint: 'TEMP_classification_sample',
+interface get_individual_ligand{
+  endpoint: 'get_individual_ligand',
+  params  : {
+    chemId:string
+  }
+}
+interface get_static_catalogue{
+  endpoint: 'get_static_catalogue',
   params  : null
 }
+
+interface TEMP_classification_sample {
+  endpoint:"TEMP_classification_sample",
+  params: null
+}
+
 interface get_surface_ratios{
   endpoint:'get_surface_ratios',
   params:{

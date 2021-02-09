@@ -20,6 +20,186 @@ import { Tooltip } from "react-bootstrap";
 import { OverlayTrigger } from "react-bootstrap";
 
 import rayimg from '../../../../public/ray_templates/_ray_1VY4.png'
+import fileDownload from "js-file-download";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import CardActions from "@material-ui/core/CardActions";
+import Button from "@material-ui/core/Button";
+import Popover from "@material-ui/core/Popover";
+import { makeStyles } from "@material-ui/core/styles";
+
+
+
+
+
+const RNACard = (prop:rRNA) => {
+
+const useRNAStyles = makeStyles({
+  tooltiproot: {
+    width: 500,
+
+  },
+  root: {
+
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 10,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+  popover:{
+    padding:"20px"
+  },
+  hover:{
+      "&:hover": {
+        transition: "0.05s all",
+        transform: "scale(1.01)",
+        cursor: "pointer",
+      }
+  
+  }
+});
+  const [isFetching, setisFetching] = useState<boolean>(false);
+
+  const downloadChain = (pdbid:string, cid:string)=>{
+
+    getNeo4jData("static_files", {
+      endpoint  :  "cif_chain",
+      params    :  { structid: pdbid, chainid: cid },})
+    .then(
+      resp => {
+        setisFetching(false);
+        fileDownload(resp.data, `${pdbid}_${cid}.cif`);
+      },
+      error => {
+        alert(
+          "This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" + error
+        );
+        setisFetching(false);
+      }
+    );
+  }
+  const classes = useRNAStyles();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
+  return (
+    <Card className={classes.root} variant="outlined">
+      <CardContent>
+        <Grid xs={12} container spacing={1}>
+          <Grid
+            item
+            style={{ borderBottom: "1px solid gray" }}
+            justify="space-between"
+            container
+            xs={12}
+          >
+
+            <Grid item xs={4}>
+                <Typography
+                  // className={classes.hover}
+                  variant="body1"
+                >
+                  {prop.parent_rcsb_id}.{prop.entity_poly_strand_id}
+                </Typography>
+            </Grid>
+            <Grid
+              // className={classes.hover}
+              item
+              xs={6}
+            >
+              <Typography variant="caption">{prop.rcsb_source_organism_description[0]}</Typography>
+            </Grid>
+          </Grid>
+          <Grid item justify="space-between" container xs={12}>
+            <Typography variant="body1" component="p">
+              {prop.rcsb_pdbx_description}
+            </Typography>
+          </Grid>
+        </Grid>
+      </CardContent>
+
+      <CardActions>
+        <Grid container xs={12}>
+<Grid container item xs={8}>
+            <Button  size="small" aria-describedby={id} onClick={handleClick}>
+              Seq ({prop.entity_poly_seq_length}AAs)
+            </Button>
+            <Button
+              size="small"
+              onClick={() =>
+                downloadChain(
+                  prop.parent_rcsb_id,
+                  prop.entity_poly_strand_id
+                )
+              }
+            >
+              Download Chain
+                <img
+                  id="download-protein"
+                  src={process.env.PUBLIC_URL + `/public/icons/download.png`}
+                  alt=""
+                />
+            </Button>
+
+</Grid>
+<Grid container item xs={4}>
+            <Button  onClick={()=>{
+            }}size="small" disabled={true}>
+              Add to Workspace
+            </Button>
+            </Grid>
+        </Grid>
+      </CardActions>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        className={classes.popover}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
+        {/* <Typography></Typography> */}
+        <Grid container xs={12}>
+          <Typography
+            style={{ width: "400px", wordBreak: "break-word" }}
+            variant="body2"
+            className={classes.popover}
+          >
+            {prop.entity_poly_seq_one_letter_code}
+          </Typography>
+        </Grid>
+      </Popover>
+    </Card>
+  );
+}
+
+
 
 interface OwnProps {}
 interface ReduxProps {
@@ -66,7 +246,6 @@ const MethodSwitch = (r: RibosomeStructure) => {
               </table>
             );
 }
-
 type StructurePageProps = OwnProps & ReduxProps & DispatchProps;
 const StructurePage: React.FC<StructurePageProps> = (
   props: StructurePageProps
@@ -123,21 +302,18 @@ const StructurePage: React.FC<StructurePageProps> = (
           />
         );
       case "rrna":
-        return ""
-        // return rrnas.map(obj => (
-        //   <RNAHero
-        //     rna ={{
-        //       description: obj.rcsb_pdbx_description
-        //         ? obj.rcsb_pdbx_description
-        //                :  "Null",
-        //         length : obj.entity_poly_seq_length,
-        //         parent : pdbid,
-        //         strand : obj.entity_poly_strand_id,
-        //         orgid  : obj.rcsb_source_organism_id,
-        //         orgname: obj.rcsb_source_organism_description
-        //     }}
-        //   />
-        // ));
+        return <Grid container xs={12} spacing={1}>
+       
+          { rrnas.map(obj => (
+            <Grid item xs={12}>
+
+          <RNACard {...obj}
+          />
+
+            </Grid>
+        )) }
+
+        </Grid>
       case "ligands":
         return <div className='struct-page-ligands'>
             

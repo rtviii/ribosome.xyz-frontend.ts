@@ -21,7 +21,7 @@ const Navbar = () => {
   const Tools:NavDropdownParams = {
     dropdownTitle: "Analytics",
     itemLinks: [
-      {itemtext: "Binding Interfaces", linkto:'/interfaces'},
+      {itemtext: "Binding Interfaces", linkto:'/bindingsites'},
       {itemtext: "Exit Tunnel", linkto:'/tunnel' },
       {itemtext: "Classification", linkto:'/classify' },
       {itemtext: "RP Nomenclature", linkto:'/rpnomenclature'},

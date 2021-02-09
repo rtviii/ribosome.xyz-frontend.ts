@@ -9,9 +9,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { ListSubheader, Tooltip } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import gear from './../../static/gear.png'
 import enzymes from './../../static/enzymes-icon.png'
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
   root:{
@@ -35,16 +36,18 @@ type MenuItemData = {
 }
 const MenuItem = (d:MenuItemData, tooltip:boolean
 )=>{
+  const history = useHistory();
+
 
   return (
-    <ListItem button key={d.key}>
+    <ListItem button key={d.key}  onClick={()=>{history.push(d.linkto)}}>
+
       <ListItemIcon>
         {<img src={enzymes} style={{ height: "20px", width: "20px" }} />}
       </ListItemIcon>
 
-      <Link key="proteins-link" to={d.linkto}>
         <ListItemText primary={d.menutext} />
-      </Link>
+
     </ListItem>)
 }
 
@@ -66,10 +69,13 @@ export default function TemporaryDrawer() {
     setState({ ...state, [anchor]: open });
   };
 
+  const current_path = useHistory().location.pathname;
+
+  
   const list = (anchor: Anchor) => (
     <div
       className={clsx(classes.list, {
-        [classes.fullList]: anchor === 'left' || anchor === 'bottom',
+        [classes.fullList]: anchor === 'left' || anchor === 'top',
       })}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
@@ -94,7 +100,36 @@ export default function TemporaryDrawer() {
     </div>
   );
 
-  return (
+  return current_path ==="/home" ? 
+    <div
+      style={{ position: "fixed", left: "20px", bottom: "20px", zIndex: 4000 }}
+    >
+      <React.Fragment key={"left"}>
+       {!state.left ? 
+       <Button onClick={toggleDrawer("left", true)} className={classes.root}>
+          <img
+            src={gear}
+            style={{ width: "100px", opacity:"0.5", height: "100px" }}
+            className={classes.root}
+          />
+
+        <Typography variant="overline"  style={{fontSize:"1.2rem"}}>
+      Data & Tools
+        </Typography>
+        </Button> 
+        
+        : <></>} 
+        <Drawer
+          anchor={"left"}
+          open={state["left"]}
+          onClose={toggleDrawer("left", false)}
+        >
+          {list("left")}
+        </Drawer>
+      </React.Fragment>
+  </div>  
+
+  :
     <div
       style={{ position: "fixed", left: "20px", bottom: "20px", zIndex: 4000 }}
     >
@@ -114,6 +149,5 @@ export default function TemporaryDrawer() {
           {list("left")}
         </Drawer>
       </React.Fragment>
-    </div>
-  );
+  </div>  
 }

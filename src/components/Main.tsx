@@ -10,23 +10,26 @@ import Dashboard from './../materialui/Dashboard/Dashboard'
 
 import {requestAllRNAs}from './../redux/reducers/RNA/ActionTypes'
 import { requestAllLigands } from "../redux/reducers/Ligands/ActionTypes";
+import { requestStaticCatalogue } from "../redux/reducers/Utilities/UtilitiesReducer";
 
 interface OwnProps {}
 interface ReduxProps {}
 interface DispatchProps {
-  __rx_requestStructures: () => void
-
-__rx_requestRNAs:()=>void
-__rx_requestAllLigands:()=>void
+  __rx_requestStructures: ()=>void
+  __rx_requestRNAs      : ()=>void
+  __rx_requestAllLigands: ()=>void
+  __rx_staticCatalogue: ()=>void
 }
 
 type MainProps = DispatchProps & OwnProps & ReduxProps;
+
 const Main: React.FC<MainProps> = (prop:MainProps) => {
 
   useEffect(() => {
     prop.__rx_requestStructures()
     prop.__rx_requestRNAs()
     prop.__rx_requestAllLigands()
+    prop.__rx_staticCatalogue()
   }, [])
 
   return (
@@ -48,7 +51,8 @@ const mapdispatch = (
 ): DispatchProps => ({
   __rx_requestStructures: ()=> dispatch(redux.requestAllStructuresDjango()),
   __rx_requestRNAs      : ()=> dispatch(requestAllRNAs()),
-  __rx_requestAllLigands      : ()=> dispatch(requestAllLigands())
+  __rx_requestAllLigands: ()=> dispatch(requestAllLigands()),
+  __rx_staticCatalogue  : ()=> dispatch(requestStaticCatalogue())
 });
 
 export default connect(mapstate, mapdispatch)(Main);
