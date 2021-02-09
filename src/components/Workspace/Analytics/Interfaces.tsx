@@ -213,7 +213,7 @@ const useSelectStyles = makeStyles((theme: Theme) =>
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setChosenLigand(event.target.value as string);
     setChosenStruct('')
-    setCurrentStructureData({})
+    setCurrentStructureData({} as StructDBProfile)
     setBindingSite({} as BindingSite)
   };
 
@@ -221,7 +221,6 @@ const useSelectStyles = makeStyles((theme: Theme) =>
   const ligands    = Object.keys(prop.ligmap)
 
   useEffect(() => {
-    // setChosenLigand("OHX")
   }, [prop.ligmap])
 
 

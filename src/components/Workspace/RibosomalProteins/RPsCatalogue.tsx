@@ -18,11 +18,12 @@ import Grid from "@material-ui/core/Grid";
 const pageData={
 
   title:"Ribosomal Proteins",
-  text:"To enable comprehensive comparison of structures deposited by the community in to the RCSB/PDB,\
+  text:"To enable comprehensive comparison of structures deposited by the community to the RCSB/PDB,\
    we have provided a common ontology that allows to get access to the structure of ribosomal proteins across\
     multiple files, by refering to their standard names \
    This ontology is notably based on a nomenclature that was recently adopted for naming ribosomal proteins."
 }
+
 
 export interface ERS {
   nom_class  :  BanClass;
@@ -46,9 +47,11 @@ export interface BanPaperEntry{
 }
 
 interface OwnProps {}
+
 interface ReduxProps {
   globalFilter: string;
 }
+
 interface DispatchProps {}
 type RPsCatalogueProps = DispatchProps & OwnProps & ReduxProps;
 
@@ -112,37 +115,33 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
         <PageAnnotation  {...pageData}/>
         
         <Grid item xs={4} container>
-        <div id="e">
+        <Grid component="div" id="e" spacing={2}>
           <h4>Eukaryotic</h4>
-          <div className="kingdom-tray">
-            {kb.map(x => {
-              return <BanClassHero prop={x}  paperinfo={map[x.nom_class]}/>;
-            })}
-          </div>
-        </div>
+            {kb.map(x =>  
+                <BanClassHero prop={x}  paperinfo={map[x.nom_class]}/>
+
+  )}
+        </Grid>
 
         </Grid>
         <Grid item xs={4} container>
-        <div id="b">
+        <Grid component="div" id="b" spacing={2}>
           <h4>Bacterial</h4>
-          <div className="kingdom-tray">
-            {ke.map(x => {
-              return <BanClassHero prop={x}  paperinfo={map[x.nom_class]}/>;
-            })}{" "}
-          </div>
-        </div>
+            {ke.map(x =>  
+
+              <BanClassHero prop={x}  paperinfo={map[x.nom_class]}/>
+  )}
+        </Grid>
 
         </Grid>
         <Grid item xs={4} container>
 
-        <div id="u">
+        <Grid  id="u" spacing={2} >
           <h4>Universal</h4>
-          <div className="kingdom-tray">
-            {ku.map(x => {
-              return <BanClassHero prop={x}  paperinfo={map[x.nom_class]}/>;
-            })}{" "}
-          </div>
-        </div>
+            {ku.map(x =>  
+              <BanClassHero prop={x}  paperinfo={map[x.nom_class]}/>
+  )}
+        </Grid>
         </Grid>
         </Grid>
     );
@@ -152,20 +151,14 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
     switch (category) {
       case "lsu":
         return (
-          <div className="rps-subunit-tray">
               <KingdomGrid prots={lsu} map={large_subunit_map}/>
-          </div>
         );
       case "ssu":
         return (
-          <div className="rps-subunit-tray">
               <KingdomGrid prots={ssu} map={small_subunit_map}/>
-          </div>
         );
       case "other":
         return (
-          <div className="rps-subunit-tray">
-            <h2 className="title">Other</h2>
             <div className='subunit-members'>
             {other
               .filter(x =>
@@ -175,12 +168,12 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
               return <BanClassHero prop={x}  paperinfo={{ b:"",h:"",pfamDomainAccession:[], taxRange:[],y:""}}/>;
               })}
               </div>
-          </div>
         );
       default:
         return "Something went wrong in the render switch.";
     }
   };
+
   useEffect(() => {
     getNeo4jData("neo4j", {
       endpoint: "list_nom_classes",
@@ -211,6 +204,7 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
       );
     });
     return () => {};
+
   }, []);
   return (
     <div className="rps-catalogue">
@@ -232,7 +226,9 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
           </div>
       </div>
       <div className="rps-catalogue-classes">
+
         { available.length > 1 ?  renderSwitchSubunit(activecat):<LoadingSpinner annotation='Loading ...'/>}
+
       </div>
     </div>
   );
