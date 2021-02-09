@@ -13,8 +13,7 @@ import { truncate } from '../components/Main';
 import { Link,useHistory} from 'react-router-dom';
 import { NeoStruct } from '../redux/DataInterfaces';
 
-const useStyles = makeStyles({
-  card: {
+const useStyles = makeStyles({  card: {
     width:300
   },
   title:{
@@ -76,7 +75,7 @@ export const StructHero=(d:NeoStruct)=> {
             component="img"
             alt="Ribosome Banner"
             height="150"
-            image={`ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`}
+            image={process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`}
             title="Ribosome Banner"
           />
 
