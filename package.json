@@ -71,9 +71,9 @@
     ]
   },
   "devDependencies": {
-    "@types/marked"         : "^1.1.0",
+    "@types/marked": "^1.1.0",
     "@types/react-bootstrap": "^0.32.24",
-    "@types/react-redux"    : "^7.1.9",
-    "lodash"                : "^4.17.19"
+    "@types/react-redux": "^7.1.9",
+    "lodash": "^4.17.19"
   }
 }

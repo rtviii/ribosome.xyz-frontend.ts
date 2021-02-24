@@ -10,7 +10,8 @@ import Button from '@material-ui/core/Button';
 import fileDownload from 'js-file-download';
 import Grid from '@material-ui/core/Grid';
 import PageAnnotation from '../Display/PageAnnotation';
-import {WarningPopover} from './../WorkInProgressChip'
+import { WarningPopover } from './../WorkInProgressChip'
+
 
 
 const useScript = ( url:string ) => {
@@ -36,11 +37,13 @@ type StructRespone = {
     ligands: string[]
 }
 
+// @ts-ignore
+const viewerInstance = new PDBeMolstarPlugin() as any;
+
 export default function ProteinAlignment() {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    formControl: {
-      margin: theme.spacing(1),
+    formControl: {      margin: theme.spacing(1),
       minWidth: 120,
       marginLeft:20
     }
@@ -106,6 +109,26 @@ const useStyles = makeStyles((theme: Theme) =>
       return () => {
       }
   }, [])
+
+
+  useEffect(() => {
+      var options = {
+        moleculeId: 'none',
+        hideControls: true
+      }
+      var viewerContainer = document.getElementById('molstar-viewer');
+      viewerInstance.render(viewerContainer, options);
+  }, [])
+
+  const updateViewer = () =>{
+    console.log("Updating");
+    
+    viewerInstance.visual.update(
+     { url: 'https://www.ebi.ac.uk/pdbe/coordinates/1cbs/chains?entityId=1&asymId=A&encoding=bcif', format: 'cif', binary:false } )
+      
+      // {
+      // moleculeId:"1cbs"})
+  }
 
 
   const pageData={
@@ -192,6 +215,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
       </Grid>
     <Button variant="outlined" onClick={()=>{
+viewerInstance.visual.update({
+  customData:{ url: `https://ribosome.xyz:8000/static_files/pairwise_align/?struct1=${struct1}&struct2=${struct2}&strand1=${strand1}&strand2=${strand2}`, format: 'cif', binary:false }})
       console.log("requesting ", struct1,struct2,strand1,strand2)
             requestAlignment({
                 struct1:struct1,
@@ -202,6 +227,14 @@ const useStyles = makeStyles((theme: Theme) =>
     </Grid>
 
 
+{/* <button onClick={()=>{viewerInstance.visual.update({moleculeId:'1cbs'})}}> Update</button> */}
+<button onClick={()=>{viewerInstance.visual.update({
+  customData:{ url: 'https://ribosome.xyz:8000/static_files/pairwise_align/?struct1=3j9m&struct2=7k00&strand1=AF&strand2=k', format: 'cif', binary:false }})}}> 
+  Request Aligned
+  </button>
+
+
+<div id='molstar-viewer' >Molstar Viewer</div>
 
 </div>
   );
