@@ -35,6 +35,7 @@ import { NeoStruct } from "../../../redux/DataInterfaces";
 import { FiltersReducerState, mapDispatchFilter, mapStateFilter, handleFilterChange } from "../../../redux/reducers/Filters/FiltersReducer";
 
 import Pagination from './Pagination'
+import { Dashboard } from "@material-ui/icons";
 
 const pageData ={
   title:"Whole Ribosome Structures",
@@ -440,12 +441,9 @@ export const StructureFilters = () => {
       </List>
 
       <Divider />
-      <List>
         <ListSubheader> Species</ListSubheader>
-
-      <SpeciesList/>
-
-      </List>
+        <SpeciesList/>
+        <Dashboard/>
     </Drawer>
   );
 };

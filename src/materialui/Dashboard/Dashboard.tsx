@@ -101,10 +101,9 @@ export default function TemporaryDrawer() {
   );
 
   return current_path ==="/home" ? 
-    <div
-      style={{ position: "fixed", left: "20px", bottom: "20px", zIndex: 4000 }}
-    >
+    <div style={{ position: "fixed", left: "20px", bottom: "20px", zIndex: 4000 }}>
       <React.Fragment key={"left"}>
+
        {!state.left ? 
        <Button onClick={toggleDrawer("left", true)} className={classes.root}>
           <img
@@ -116,6 +115,7 @@ export default function TemporaryDrawer() {
         <Typography variant="overline"  style={{fontSize:"1.2rem"}}>
       Data & Tools
         </Typography>
+
         </Button> 
         
         : <></>} 
