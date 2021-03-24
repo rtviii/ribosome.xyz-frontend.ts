@@ -6,7 +6,7 @@ import "./Main.css";
 import Display from "./Workspace/Display/Display";
 import * as redux from '../redux/reducers/StructuresReducer/StructuresReducer'
 import { connect } from "react-redux";
-import Dashboard from './../materialui/Dashboard/Dashboard'
+import { TemporaryDrawer } from './../materialui/Dashboard/Dashboard'
 
 import {requestAllRNAs}from './../redux/reducers/RNA/ActionTypes'
 import { requestAllLigands } from "../redux/reducers/Ligands/ActionTypes";
@@ -34,7 +34,7 @@ const Main: React.FC<MainProps> = (prop:MainProps) => {
 
   return (
     <div>
-      <Dashboard/>
+      <TemporaryDrawer/>
       <Display />
      </div> 
   );

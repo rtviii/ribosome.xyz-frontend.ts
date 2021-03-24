@@ -30,6 +30,7 @@ import {  FilterData, FilterType,filterChange, filterChangeActionCreator} from "
 import {SpeciesGroupings} from './taxid_map'
 import _  from "lodash";
 import {Link, useHistory} from "react-router-dom";
+import {DashboardButton} from './../../../materialui/Dashboard/Dashboard'
 import PageAnnotation from './PageAnnotation'
 import { NeoStruct } from "../../../redux/DataInterfaces";
 import { FiltersReducerState, mapDispatchFilter, mapStateFilter, handleFilterChange } from "../../../redux/reducers/Filters/FiltersReducer";
@@ -443,7 +444,7 @@ export const StructureFilters = () => {
       <Divider />
         <ListSubheader> Species</ListSubheader>
         <SpeciesList/>
-        <Dashboard/>
+        <DashboardButton/>
     </Drawer>
   );
 };

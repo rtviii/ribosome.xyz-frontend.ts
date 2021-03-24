@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -13,6 +13,13 @@ import { Link, useHistory } from 'react-router-dom';
 import gear from './../../static/gear.png'
 import enzymes from './../../static/enzymes-icon.png'
 import Typography from '@material-ui/core/Typography';
+// import {AppActions} from './../../redux/AppActions'
+import {toggle_dashboard} from './../../redux/reducers/Interface/ActionTypes'
+import { AppState } from '../../redux/store';
+import { ThunkDispatch } from 'redux-thunk';
+import { AppActions } from '../../redux/AppActions';
+import { connect } from 'react-redux';
+import { stat } from 'fs';
 
 const useStyles = makeStyles({
   root:{
@@ -51,35 +58,56 @@ const MenuItem = (d:MenuItemData, tooltip:boolean
     </ListItem>)
 }
 
-export default function TemporaryDrawer() {
+const ms = (state:AppState, ownProps:any): {dashboard_hidden:boolean} =>({
+   dashboard_hidden: state.Interface.dashboardHidden
+})
+const md = (
+  dispatch: ThunkDispatch<any, any, AppActions>,
+  ownprops: any
+):{
+  toggle_dash: () =>void
+}  => ({
+  toggle_dash: () =>dispatch(toggle_dashboard())
+});
+
+const _DashboardButton:React.FC<{dashboard_hidden:boolean,   toggle_dash: () =>void}> = (props)=>{
+  return <Button onClick={()=>props.toggle_dash()} className={"yep"}>
+          <img
+            src={gear}
+            style={{ width: "100px", opacity:"0.5", height: "100px" }}
+          />
+        <Typography variant="overline"  style={{fontSize:"1.2rem"}}>
+              Data & Tools
+        </Typography>
+
+        </Button> 
+}
+
+export const DashboardButton = connect(ms,md)(_DashboardButton)
+
+interface DrawerState{
+  dashboard_hidden:boolean
+  toggle_dash : () =>void
+}
+
+ const _TemporaryDrawer:React.FC<DrawerState> = (props)=> {
+
   const classes = useStyles();
-  const [state, setState] = React.useState({
-    left   : false,
-  });
 
-  const toggleDrawer = (anchor: Anchor, open: boolean) => (
-    event: React.KeyboardEvent | React.MouseEvent,
-  ) => {
-    if (
-      event.type === 'keydown' &&((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')
-    ) {
-      return;
-    }
+  useEffect(() => {
+      console.log("got dahsborad change", props.dashboard_hidden)
+  }, [props.dashboard_hidden])
 
-    setState({ ...state, [anchor]: open });
-  };
 
   const current_path = useHistory().location.pathname;
 
   
   const list = (anchor: Anchor) => (
     <div
-      className={clsx(classes.list, {
-        [classes.fullList]: anchor === 'left' || anchor === 'top',
-      })}
+      className={clsx(classes.list, {[classes.fullList]: anchor === 'left' || anchor === 'top',})}
       role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
+      // onClick={toggleDrawer(anchor, false)}
+      // onKeyDown={toggleDrawer(anchor, false)}
     >
         <MenuItem key='new' menutext="Home" linkto='/home'/>
       <List>
@@ -100,54 +128,20 @@ export default function TemporaryDrawer() {
     </div>
   );
 
-  return current_path ==="/home" ? 
-    <div style={{ position: "fixed", left: "20px", bottom: "20px", zIndex: 4000 }}>
+ return( 
       <React.Fragment key={"left"}>
 
-       {!state.left ? 
-       <Button onClick={toggleDrawer("left", true)} className={classes.root}>
-          <img
-            src={gear}
-            style={{ width: "100px", opacity:"0.5", height: "100px" }}
-            className={classes.root}
-          />
-
-        <Typography variant="overline"  style={{fontSize:"1.2rem"}}>
-      Data & Tools
-        </Typography>
-
-        </Button> 
-        
-        : <></>} 
         <Drawer
           anchor={"left"}
-          open={state["left"]}
-          onClose={toggleDrawer("left", false)}
-        >
+          open={props.dashboard_hidden}
+          onClose={()=>props.toggle_dash()}
+          
+          >
+
           {list("left")}
         </Drawer>
       </React.Fragment>
-  </div>  
-
-  :
-    <div
-      style={{ position: "fixed", left: "20px", bottom: "20px", zIndex: 4000 }}
-    >
-      <React.Fragment key={"left"}>
-       {!state.left ? <Button onClick={toggleDrawer("left", true)} className={classes.root}>
-          <img
-            src={gear}
-            style={{ width: "100px", opacity:"0.5", height: "100px" }}
-            className={classes.root}
-          />
-        </Button> : <></>} 
-        <Drawer
-          anchor={"left"}
-          open={state["left"]}
-          onClose={toggleDrawer("left", false)}
-        >
-          {list("left")}
-        </Drawer>
-      </React.Fragment>
-  </div>  
+)
 }
+
+export const TemporaryDrawer  = connect(ms,md)(_TemporaryDrawer)
