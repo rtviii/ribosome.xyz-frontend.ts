@@ -41,23 +41,6 @@ type MenuItemData = {
   linkto  : string
   menutext: string
 }
-const MenuItem = (d:MenuItemData, tooltip:boolean
-)=>{
-  const history = useHistory();
-
-
-  return (
-    <ListItem button key={d.key}  onClick={()=>{history.push(d.linkto)}}>
-
-      <ListItemIcon>
-        {<img src={enzymes} style={{ height: "20px", width: "20px" }} />}
-      </ListItemIcon>
-
-        <ListItemText primary={d.menutext} />
-
-    </ListItem>)
-}
-
 const ms = (state:AppState, ownProps:any): {dashboard_hidden:boolean} =>({
    dashboard_hidden: state.Interface.dashboardHidden
 })
@@ -69,6 +52,29 @@ const md = (
 }  => ({
   toggle_dash: () =>dispatch(toggle_dashboard())
 });
+
+const _MenuItem:React.FC<{toggle_dash:()=>void; tooltip:boolean} & MenuItemData> = (props)=>{
+  const history = useHistory();
+  return (
+    <ListItem button key={props.key}  onClick={()=>{
+      
+      props.toggle_dash()
+      history.push(props.linkto)}}>
+
+      <ListItemIcon>
+        {<img src={enzymes} style={{ height: "20px", width: "20px" }} />}
+      </ListItemIcon>
+
+        <ListItemText primary={props.menutext} />
+
+    </ListItem>)}
+
+const MenuItem = connect(null, md)(_MenuItem)
+
+
+
+
+
 
 const _DashboardButton:React.FC<{dashboard_hidden:boolean,   toggle_dash: () =>void}> = (props)=>{
   return <Button onClick={()=>props.toggle_dash()} className={"yep"}>
@@ -105,10 +111,7 @@ interface DrawerState{
   const list = (anchor: Anchor) => (
     <div
       className={clsx(classes.list, {[classes.fullList]: anchor === 'left' || anchor === 'top',})}
-      role="presentation"
-      // onClick={toggleDrawer(anchor, false)}
-      // onKeyDown={toggleDrawer(anchor, false)}
-    >
+      role="presentation">
         <MenuItem key='new' menutext="Home" linkto='/home'/>
       <List>
         <ListSubheader>Available Data</ListSubheader>
@@ -130,14 +133,10 @@ interface DrawerState{
 
  return( 
       <React.Fragment key={"left"}>
-
         <Drawer
           anchor={"left"}
           open={props.dashboard_hidden}
-          onClose={()=>props.toggle_dash()}
-          
-          >
-
+          onClose={()=>props.toggle_dash()}>
           {list("left")}
         </Drawer>
       </React.Fragment>
