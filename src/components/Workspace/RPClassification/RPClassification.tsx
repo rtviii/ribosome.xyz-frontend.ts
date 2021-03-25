@@ -26,6 +26,7 @@ import { connect } from 'react-redux';
 import { truncate } from '../../Main';
 import PageAnnotation from '../Display/PageAnnotation';
 import { NeoStruct } from '../../../redux/DataInterfaces';
+import { DashboardButton } from '../../../materialui/Dashboard/Dashboard';
 
 
 interface prot {noms: string[], surface_ratio:number|null, strands:string}
@@ -381,6 +382,7 @@ const RPClassification = () => {
               </ListItem>
               <Divider/>
 
+<DashboardButton/>
 
             </List>
           </Grid>

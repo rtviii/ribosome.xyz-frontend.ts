@@ -34,6 +34,7 @@ import {
 import List from "@material-ui/core/List";
 import ListItem, { ListItemProps } from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import { DashboardButton } from "../materialui/Dashboard/Dashboard";
 
 interface ReduxProps {
   __rx_structures: NeoStruct[];
@@ -402,6 +403,7 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
           </Grid>
         </Grid>
       </CardActions>
+
     </Card>
   );
 };
@@ -552,7 +554,9 @@ const Home: React.FC<ReduxProps> = prop => {
         textAlign: "center",
         color: theme.palette.text.secondary,
       },
-      gridItem: {},
+      gridItem: {
+        padding:20
+      },
     })
   );
 
@@ -564,14 +568,15 @@ const Home: React.FC<ReduxProps> = prop => {
       alignContent="center"
       xs={12}
     >
-      <Grid item xs={2} className={classes.gridItem}>
+      <Grid item xs={3} container> 
+      <DashboardButton/>
       </Grid>
-      <Grid item xs={5} className={classes.gridItem}>
+      <Grid item xs={6} className={classes.gridItem}>
         <MainContentCard />
       </Grid>
-      <Grid item xs={2}>
 
-        <AcknowlegementsList />
+      <Grid item xs={3}className={classes.gridItem}>
+      <AcknowlegementsList />
       </Grid>
     </Grid>
   );

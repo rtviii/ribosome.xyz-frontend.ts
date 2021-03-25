@@ -24,6 +24,7 @@ import { connect } from "react-redux";
 import { AppActions } from "../../../redux/AppActions";
 import { gotopage } from "../../../redux/reducers/RNA/ActionTypes";
 import { Dispatch } from "redux";
+import { DashboardButton } from "../../../materialui/Dashboard/Dashboard";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -131,6 +132,7 @@ const RNACatalogue:React.FC<ReduxProps & DispatchProps> = (prop) => {
             <ListItem>
               <SearchField />
             </ListItem>
+            <DashboardButton/>
           </List>
       </Grid>
 
@@ -150,7 +152,6 @@ const RNACatalogue:React.FC<ReduxProps & DispatchProps> = (prop) => {
               <Tab label = { `tRNA ${trnas.length > 0 ? "("+trnas.length+")": ""}` }                  {...a11yProps(4)} />
               <Tab label = { `uncategorized ${other.length > 0 ? "("+other.length+")": ""}` }         {...a11yProps(5)} />
             </Tabs>
-
             <TabPanel value={tabValue} index={0}>
               <Grid container xs={12} spacing={2}>
               <Pagination

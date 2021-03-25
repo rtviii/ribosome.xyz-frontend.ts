@@ -41,15 +41,20 @@ type MenuItemData = {
   linkto  : string
   menutext: string
 }
-const ms = (state:AppState, ownProps:any): {dashboard_hidden:boolean} =>({
+
+
+interface DashState{dashboard_hidden:boolean};
+interface ToggleDash{toggle_dash:()=>void};
+type DashProps = DashState & ToggleDash;
+
+
+const ms = (state:AppState, ownProps:any): DashState  =>({
    dashboard_hidden: state.Interface.dashboardHidden
 })
 const md = (
   dispatch: ThunkDispatch<any, any, AppActions>,
   ownprops: any
-):{
-  toggle_dash: () =>void
-}  => ({
+):ToggleDash  => ({
   toggle_dash: () =>dispatch(toggle_dashboard())
 });
 
@@ -76,7 +81,7 @@ const MenuItem = connect(null, md)(_MenuItem)
 
 
 
-const _DashboardButton:React.FC<{dashboard_hidden:boolean,   toggle_dash: () =>void}> = (props)=>{
+const _DashboardButton:React.FC<DashProps> = (props)=>{
   return <Button onClick={()=>props.toggle_dash()} className={"yep"}>
           <img
             src={gear}
@@ -91,12 +96,8 @@ const _DashboardButton:React.FC<{dashboard_hidden:boolean,   toggle_dash: () =>v
 
 export const DashboardButton = connect(ms,md)(_DashboardButton)
 
-interface DrawerState{
-  dashboard_hidden:boolean
-  toggle_dash : () =>void
-}
 
- const _TemporaryDrawer:React.FC<DrawerState> = (props)=> {
+ const _TemporaryDrawer:React.FC<DashProps> = (props)=> {
 
   const classes = useStyles();
 
@@ -104,15 +105,16 @@ interface DrawerState{
       console.log("got dahsborad change", props.dashboard_hidden)
   }, [props.dashboard_hidden])
 
-
   const current_path = useHistory().location.pathname;
 
-  
+
   const list = (anchor: Anchor) => (
     <div
       className={clsx(classes.list, {[classes.fullList]: anchor === 'left' || anchor === 'top',})}
       role="presentation">
+
         <MenuItem key='new' menutext="Home" linkto='/home'/>
+
       <List>
         <ListSubheader>Available Data</ListSubheader>
         <MenuItem key='new' menutext="Structures" linkto='/structs'/>

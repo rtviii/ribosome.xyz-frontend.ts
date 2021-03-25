@@ -34,6 +34,7 @@ import { Dispatch } from "redux";
 import { truncate } from "../../Main";
 import Popover from "@material-ui/core/Popover";
 import Tooltip from "@material-ui/core/Tooltip";
+import { DashboardButton } from "../../../materialui/Dashboard/Dashboard";
 
 
 const pageData= {
@@ -99,28 +100,12 @@ const LigandCard =(l:LigandResponseShape)=> {
   return (
     <Card className={classes.root} variant="outlined">
       <CardContent>
-        {/* <Typography className={classes.title} color="textSecondary" gutterBottom>
-        </Typography> */}
         <Typography variant="h5">{l.ligand.chemicalId}</Typography>
         <Typography className={classes.pos} color="textSecondary">
           {truncate(l.ligand.chemicalName, 40, 50)}
         </Typography>
-        {/* <Typography variant="body2" component="p" noWrap={false}>
-          {truncate( l.ligand.pdbx_description, 40,40)}
-        </Typography> */}
       </CardContent>
       <CardActions>
-        {/* <OverlayTrigger 
-        rootClose trigger={'click'}
-        placement='bottom'
-        overlay={popoverstructs(data, speciesFilter,data.ligand.chemicalId)}>
-          <div id='lig-str-present'>
-          Associated structures({filterByorg( data.presentIn, speciesFilter ).length})</div>
-          </OverlayTrigger> */}
-        {/* <Link to={`/interfaces/${null}/ligand/${l.chemicalId}`}>{l.chemicalId}</Link> (<span style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>{truncate(l.chemicalName)}</span>) */}
-
-        {/* <Button size="small">Binding Sites</Button> */}
-
         <Button
           size="small"
           aria-describedby={id}
@@ -155,30 +140,8 @@ const LigandCard =(l:LigandResponseShape)=> {
                     {r.rcsb_id}
                 </Typography>
               </Grid>
-
               <Grid item xs={1} justify="flex-start" container>
-{/* <Tooltip title="Download binding site analytics as a .json file.">
-
-                  <img
-
-                    onClick={()=>{
-                      getNeo4jData("neo4j",{endpoint:"download_ligand_nbhd",params:{
-                        chemid:l.ligand.chemicalId,
-                        structid:r.rcsb_id
-                      }}).then(
-                        response=>{
-                            fileDownload(response.data, `LIGAND_${l.ligand.chemicalId}_${r.rcsb_id}.json`);
-                        },
-                        e=>alert("Sorry, this structure has not been parsed yet.")
-                        
-                        
-                      )
-                    }}
-                    src={process.env.PUBLIC_URL + "/icons/download.png"}
-                    style={{ height: "20px", width: "20px", marginLeft:"30px"}}
-                  />
-</Tooltip> */}
-</Grid>
+              </Grid>
               <Grid item xs={6}>
                 <Typography>{r.citation_title}</Typography>
               </Grid>
@@ -197,8 +160,8 @@ interface DispatchProps{gotopage: (pid:number)=>void}
 
 type      LigandsCatalogueProps                           = ReduxProps & DispatchProps
 const     LigandCatalogue:React.FC<LigandsCatalogueProps> = (prop) => {
-  const [ligs, setligs]     = useState<LigandResponseShape[]>([]);
-  const [ionsOn, setionsOn] = useState(true);
+  const [ligs, setligs]      =  useState<LigandResponseShape[]>([]);
+  const [ionsOn, setionsOn]  =  useState(true);
 
   var params: any = useParams();
 
@@ -231,6 +194,7 @@ const     LigandCatalogue:React.FC<LigandsCatalogueProps> = (prop) => {
               />
             </ListItem>
             
+            <DashboardButton/>
           </List>
       </Grid>
 

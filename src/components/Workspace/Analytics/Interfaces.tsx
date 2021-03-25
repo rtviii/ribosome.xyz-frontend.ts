@@ -31,6 +31,7 @@ import fileDownload from 'js-file-download';
 import Tooltip from '@material-ui/core/Tooltip';
 import { useHistory } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
+import { DashboardButton } from '../../../materialui/Dashboard/Dashboard';
 
 interface StructDBProfile{
   ligands    :  Ligand[],
@@ -186,17 +187,17 @@ interface ReduxProps {
 const Interfaces:React.FC<ReduxProps> = (prop) => {
 
   const history = useHistory();
-const useSelectStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-  }),
-);
+  const useSelectStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+      },
+      selectEmpty: {
+        marginTop: theme.spacing(2),
+      },
+    }),
+  );
   const classes                                 = useSelectStyles();
   const [chosenLigand, setChosenLigand]         = React.useState<string>('');
   const [chosenLigandData, setChosenLigandData] = React.useState<Ligand>({
@@ -285,6 +286,7 @@ const tableClasses = useTableStyles()
 const [currentStructureData, setCurrentStructureData]  = useState<StructDBProfile>({} as StructDBProfile)
 const [nbrsPage, setNbrsPage]                  =  useState<number>(1);
 const [constituentsPage, setConstituentsPage]  =  useState<number>(1);
+
 useEffect(() => {
   if (chosenStruct !== '')
   {
@@ -313,213 +315,131 @@ const TunnelDemoTooltip = withStyles((theme: Theme) => ({
     border: '1px solid #dadde9',
   },
 }))(Tooltip);
+
   return (
     <Grid item container xs={12}>
-        <Paper>
-      <Grid  container xs={12} style={{padding:"10px"}}>
-
-
-
-
-<Grid container item xs={12}>
-<Typography variant="h4"> Ligands & Antibiotic Binding Sites</Typography>
-</Grid>
-<Grid container item xs={12}>
-<Typography variant="body2">
-        For a number of ribosomal structures ligands are available. 
-        One can inspect and download a "binding site report" for each available ligand.
-</Typography></Grid>
-
-
-            <TunnelDemoTooltip
-              placement="bottom"
-              title={
-                <React.Fragment>
-                  <Typography
-                    variant="caption"
-                    // style={{ left: "10%", padding: "10px" }}
-                  >
-                    An illustration of guanosine-diphosphate (GDP) binding site inside the 
-                    structure of the 
-                    <i>E. coli</i> ribosome (
-                    <a href="https://www.rcsb.org/structure/3J7Z">3J7Z</a>).
-                    Residues surrounding the antibiotic are highlighted in blue.
-                  </Typography>
-                  <img style={{width:"100%"}} src={pic}  />
-                </React.Fragment>
-              }
-            >
-<Grid container item xs={12}>
-<Typography variant="body2">
-        A binding interface consists of the residue-wise profile of the ligand
-        itself(<b> Constituents</b>) and the non-ligand neighbor-residues(
-        <b>Neighbors</b>) that are within the radius of 5 Angstrom of the
-        ligand.
-</Typography></Grid>
-</TunnelDemoTooltip>
-      </Grid>
-</Paper>
-      <Grid item container xs={10} spacing={2} justify="flex-start" alignContent='flex-end' alignItems='flex-end'>
-
-<Grid item>
-        <FormControl className={classes.formControl}>
-          <InputLabel id="demo-simple-select-label">Ligand</InputLabel>
-          <Select
-            labelId   =  "demo-simple-select-label"
-            id        =  "demo-simple-select"
-            value     =  {chosenLigand}
-            onChange  =  {handleChange}
-          >
-            {ligands.map(ligand => (
-              <MenuItem value={ligand}>{ligand}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-</Grid>
-<Grid item>
-        <FormControl className={classes.formControl}>
-          <InputLabel id="demo-simple-select-label">Structure</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={chosenStruct}
-            onChange={e => {
-              setChosenStruct(e.target.value as any);
-            }}
-          >
-            {ligands.length > 0 && chosenLigand !== "" ? (
-              prop.ligmap[chosenLigand].map(struct => (
-                <MenuItem value={struct}>{struct}</MenuItem>
-              ))
-            ) : (
-              <MenuItem>Choose a Ligand</MenuItem>
-            )}
-          </Select>
-        </FormControl>
-</Grid>
-<Grid item>
-        <Button
-          onClick={() => {
-            donwloadBindingSiteReport(chosenStruct, chosenLigand);
-          }}
-          variant="outlined"
-        >
-          Download Binding Site Report
-        </Button>
-
-</Grid>
-
-      </Grid>
-
-<Grid item container xs={10} spacing={2}>
-
-<Grid item xs={5}>
-  {chosenLigandData ? 
-      <LigandCard {...chosenLigandData} />:
-      ""
-  }
-</Grid>
-<Grid item xs={5}>
-      {currentStructureData.structure ? (
-        <StructureCard {...currentStructureData} />
-      ) : (
-        ""
-      )}
-</Grid>
-
-</Grid>
-      <Grid xs={12} container item spacing={2} style={{ padding: "10px" }}>
-        <Grid xs={5} container item>
-          <Grid xs={12} container justify="space-between">
-            <Typography variant="overline">Neighboring Strands </Typography>
-            {bindingsite.nbrs ? (
-              <Pagination
-                {...{
-                  gotopage: (pid: number) => {
-                    setNbrsPage(pid);
-                  },
-                  pagecount: Math.ceil(bindingsite.nbrs.length / 20),
-                }}
-              />
-            ) : (
-              <Pagination
-                {...{
-                  gotopage: (pid: number) => {},
-                  pagecount: 0,
-                }}
-              />
-            )}
-
-            <Table
-              className={tableClasses.table}
-              size="small"
-              aria-label="a dense table"
-            >
-              <TableHead>
-                <TableRow>
-                  <Tooltip
-                    title="The name of the residue according to th .mmcif deposition"
-                    arrow
-                  >
-                    <TableCell align="right">Residue Name</TableCell>
-                  </Tooltip>
-                  <Tooltip
-                    title="The position of the residue in the chain according to the .mmcif deposition"
-                    arrow
-                  >
-                    <TableCell align="right">Residue Number</TableCell>
-                  </Tooltip>
-                  <Tooltip
-                    title="The name of the subchain containing the residue (Click to download)"
-                    arrow
-                  >
-                    <TableCell align="right">Parent Strand</TableCell>
-                  </Tooltip>
-                  <Tooltip
-                    title="Ribosomal Protein class of the containing strand(  according to Ban et. al 2014)"
-                    arrow
-                  >
-                    <TableCell align="right">Nomenclature Class</TableCell>
-                  </Tooltip>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {bindingsite.nbrs
-                  ? bindingsite.nbrs
-                      .slice((nbrsPage - 1) * 20, nbrsPage * 20)
-                      .map(nbr => (
-                        <TableRow key={nbr.resid}>
-                          <TableCell component="th" scope="row">
-                            {nbr.resn}
-                          </TableCell>
-                          <TableCell align="right">{nbr.resid}</TableCell>
-                          <TableCell
-                            className={tableClasses.hovercell}
-                            onClick={() => {
-                              downloadStrand(chosenStruct, nbr.strand_id);
-                            }}
-                            align="right"
-                          >
-                            {nbr.strand_id}
-                          </TableCell>
-                          <TableCell
-                            onClick={() => {
-                              return nbr.banClass
-                                ? history.push(`/rps/${nbr.banClass}`)
-                                : null;
-                            }}
-                            align="right"
-                          >
-                            {nbr.banClass}
-                          </TableCell>
-                        </TableRow>
-                      ))
-                  : ""}
-              </TableBody>
-            </Table>
+      <Paper>
+        <Grid container xs={12} style={{ padding: "10px" }}>
+          <Grid container item xs={12}>
+            <Typography variant="h4">
+              {" "}
+              Ligands & Antibiotic Binding Sites
+            </Typography>
           </Grid>
+
+          <Grid container item xs={12}>
+            <Typography variant="body2">
+              For a number of ribosomal structures ligands are available. One
+              can inspect and download a "binding site report" for each
+              available ligand.
+            </Typography>
+          </Grid>
+
+          <TunnelDemoTooltip
+            placement="bottom"
+            title={
+              <React.Fragment>
+                <Typography
+                  variant="caption"
+                  // style={{ left: "10%", padding: "10px" }}
+                >
+                  An illustration of guanosine-diphosphate (GDP) binding site
+                  inside the structure of the
+                  <i>E. coli</i> ribosome (
+                  <a href="https://www.rcsb.org/structure/3J7Z">3J7Z</a>).
+                  Residues surrounding the antibiotic are highlighted in blue.
+                </Typography>
+                <img style={{ width: "100%" }} src={pic} />
+              </React.Fragment>
+            }
+          >
+            <Grid container item xs={12}>
+              <Typography variant="body2">
+                A binding interface consists of the residue-wise profile of the
+                ligand itself(<b> Constituents</b>) and the non-ligand
+                neighbor-residues(
+                <b>Neighbors</b>) that are within the radius of 5 Angstrom of
+                the ligand.
+              </Typography>
+            </Grid>
+          </TunnelDemoTooltip>
         </Grid>
-        <Grid xs={5} container item>
+      </Paper>
+
+
+      
+
+
+{/* Form controls */}
+<Grid className="bindinginterfaces-content" container xs={12} style={{background:'wheat'}}>
+
+      <Grid item container xs={2} justify="flex-start"  alignContent="flex-start" alignItems="flex-start">
+        <Grid item>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="demo-simple-select-label">Ligand</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={chosenLigand}
+              onChange={handleChange}
+            >
+              {ligands.map(ligand => (
+                <MenuItem value={ligand}>{ligand}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="demo-simple-select-label">Structure</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={chosenStruct}
+              onChange={e => {
+                setChosenStruct(e.target.value as any);
+              }}
+            >
+              {ligands.length > 0 && chosenLigand !== "" ? (
+                prop.ligmap[chosenLigand].map(struct => (
+                  <MenuItem value={struct}>{struct}</MenuItem>
+                ))
+              ) : (
+                <MenuItem>Choose a Ligand</MenuItem>
+              )}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <Button
+            onClick={() => {
+              donwloadBindingSiteReport(chosenStruct, chosenLigand);
+            }}
+            variant="outlined">
+            Download Binding Site Report
+          </Button>
+        </Grid>
+        <DashboardButton/>
+      </Grid>
+
+      <Grid item container xs={10}  >
+        <Grid xs={12} container direction='row'>
+
+        <Grid item xs={6}>
+          {chosenLigandData ? <LigandCard {...chosenLigandData} /> : ""}
+        </Grid>
+        <Grid item xs={6}>
+
+          {currentStructureData.structure ? (
+            <StructureCard {...currentStructureData} />
+          ) : (
+            ""
+          )}
+        </Grid>
+        </Grid>
+
+      <Grid xs={12} container item spacing={2} style={{ padding: "10px" }}>
+        <Grid xs={6} container item>
           <Grid xs={12} container justify="space-between">
             <Typography variant="overline">Ligand Residues</Typography>
             {bindingsite.constituents ? (
@@ -609,8 +529,103 @@ const TunnelDemoTooltip = withStyles((theme: Theme) => ({
             </TableBody>
           </Table>
         </Grid>
+
+        <Grid xs={6} container item>
+          <Grid xs={12} container justify="space-between">
+            <Typography variant="overline">Neighboring Strands </Typography>
+            {bindingsite.nbrs ? (
+              <Pagination
+                {...{
+                  gotopage: (pid: number) => {
+                    setNbrsPage(pid);
+                  },
+                  pagecount: Math.ceil(bindingsite.nbrs.length / 20),
+                }}
+              />
+            ) : (
+              <Pagination
+                {...{
+                  gotopage: (pid: number) => {},
+                  pagecount: 0,
+                }}
+              />
+            )}
+
+            <Table
+              className={tableClasses.table}
+              size="small"
+              aria-label="a dense table"
+            >
+              <TableHead>
+                <TableRow>
+                  <Tooltip
+                    title="The name of the residue according to th .mmcif deposition"
+                    arrow
+                  >
+                    <TableCell align="right">Residue Name</TableCell>
+                  </Tooltip>
+                  <Tooltip
+                    title="The position of the residue in the chain according to the .mmcif deposition"
+                    arrow
+                  >
+                    <TableCell align="right">Residue Number</TableCell>
+                  </Tooltip>
+                  <Tooltip
+                    title="The name of the subchain containing the residue (Click to download)"
+                    arrow
+                  >
+                    <TableCell align="right">Parent Strand</TableCell>
+                  </Tooltip>
+                  <Tooltip
+                    title="Ribosomal Protein class of the containing strand(  according to Ban et. al 2014)"
+                    arrow
+                  >
+                    <TableCell align="right">Nomenclature Class</TableCell>
+                  </Tooltip>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {bindingsite.nbrs
+                  ? bindingsite.nbrs
+                      .slice((nbrsPage - 1) * 20, nbrsPage * 20)
+                      .map(nbr => (
+                        <TableRow key={nbr.resid}>
+                          <TableCell component="th" scope="row">
+                            {nbr.resn}
+                          </TableCell>
+                          <TableCell align="right">{nbr.resid}</TableCell>
+                          <TableCell
+                            className={tableClasses.hovercell}
+                            onClick={() => {
+                              downloadStrand(chosenStruct, nbr.strand_id);
+                            }}
+                            align="right"
+                          >
+                            {nbr.strand_id}
+                          </TableCell>
+                          <TableCell
+                            onClick={() => {
+                              return nbr.banClass
+                                ? history.push(`/rps/${nbr.banClass}`)
+                                : null;
+                            }}
+                            align="right"
+                          >
+                            {nbr.banClass}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                  : ""}
+              </TableBody>
+            </Table>
+          </Grid>
+        </Grid>
+
+
+      </Grid>
       </Grid>
     </Grid>
+</Grid>
   );
 }
 

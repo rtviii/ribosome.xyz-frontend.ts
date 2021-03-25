@@ -11,6 +11,7 @@ import fileDownload from 'js-file-download';
 import Grid from '@material-ui/core/Grid';
 import PageAnnotation from '../Display/PageAnnotation';
 import { WarningPopover } from './../WorkInProgressChip'
+import { DashboardButton } from '../../../materialui/Dashboard/Dashboard';
 
 
 
@@ -29,7 +30,6 @@ const useScript = ( url:string ) => {
   }, [url]);
 };
 
-
 type StructRespone = {
     struct : RibosomeStructure,
     rps    : {noms:string[], strands:string}[],
@@ -39,7 +39,6 @@ type StructRespone = {
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
-
 export default function ProteinAlignment() {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -136,107 +135,165 @@ const useStyles = makeStyles((theme: Theme) =>
     text:"Multiple individual components (sets of protein- and RNA-strands, protein-ion clusters, etc. ) belonging to different structures can be extracted, superimposed and exported here\
      for further processing and structural analyses."}
 
-  return ( 
-<div>
-    <Grid container xs={12} direction="column">
-      <Grid item xs={1} style={{margin:20}}>
-        <WarningPopover content="This module is at proof-of-concept stage and is still in construction. Pairwise alignmnet and download of proteins from different structures is available."/>
-      </Grid>
-      <Grid item xs={12}>
-        <PageAnnotation {...pageData}/>
-      </Grid>
-      <Grid item xs={12}>
-
-
+  return (
     <div>
-      <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="grouped-native-select">Structure 1</InputLabel>
+      <Grid container xs={12} direction="column">
+        <Grid item xs={1} style={{ margin: 20 }}>
+          <WarningPopover content="This module is at proof-of-concept stage and is still in construction. Pairwise alignmnet and download of proteins from different structures is available." />
+        </Grid>
 
-        <Select native  defaultValue="" id="struct1" onChange={e=>{setProts1(getProteinsForStruct(e.target.value as string, structs))
-            setstruct1(e.target.value as string) }} >
-          <option aria-label="None" value=""  />
-          {structs.map(str=><option value={str.struct.rcsb_id}>{str.struct.rcsb_id}</option>)}
-        </Select>
-
-      </FormControl>
-
-      <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="grouped-select">Strand</InputLabel>
-        <Select defaultValue="" id="grouped-select"  onChange={e=>setstrand1(e.target.value as string)}>
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-
-            {prots1.map(rp=> <MenuItem value={rp.strandid}>{`${ rp.strandid } (${rp.nomenclature})`  } </MenuItem>) }
-
-        </Select>
-      </FormControl>
+        <Grid item xs={12}>
+          <PageAnnotation {...pageData} />
+        </Grid>
+        <Grid item container xs={12}>
 
 
+        <Grid item xs={2} className='alignment-dash'>
+
+          <div>
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="grouped-native-select">
+                Structure 1
+              </InputLabel>
+              <Select
+                native
+                defaultValue=""
+                id="struct1"
+                onChange={e => {
+                  setProts1(
+                    getProteinsForStruct(e.target.value as string, structs)
+                  );
+                  setstruct1(e.target.value as string);
+                }}
+              >
+                <option aria-label="None" value="" />
+                {structs.map(str => (
+                  <option value={str.struct.rcsb_id}>
+                    {str.struct.rcsb_id}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="grouped-select">Strand</InputLabel>
+              <Select
+                defaultValue=""
+                id="grouped-select"
+                onChange={e => setstrand1(e.target.value as string)}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+
+                {prots1.map(rp => (
+                  <MenuItem value={rp.strandid}>
+                    {`${rp.strandid} (${rp.nomenclature})`}{" "}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+
+          <Grid container direction="column" xs={4} item>
+            <Grid direction="column" xs={4} item></Grid>
+            <Grid direction="column" xs={4} item></Grid>
+
+            <Grid direction="column" xs={4} item></Grid>
+          </Grid>
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="grouped-native-select">Structure 2</InputLabel>
+
+            <Select
+              native
+              defaultValue=""
+              id="struct2"
+              onChange={e => {
+                setProts2(
+                  getProteinsForStruct(e.target.value as string, structs)
+                );
+                setstruct2(e.target.value as string);
+              }}
+            >
+              <option aria-label="None" value="" />
+              {structs.map(str => (
+                <option value={str.struct.rcsb_id}>{str.struct.rcsb_id}</option>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="grouped-select">Strand</InputLabel>
+            <Select
+              defaultValue=""
+              id="grouped-select"
+              onChange={e => {
+                setstrand2(e.target.value as string);
+              }}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {prots2.map(rp => (
+                <MenuItem value={rp.strandid}>
+                  {`${rp.strandid} (${rp.nomenclature})`}{" "}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+                <DashboardButton/>
+
+
+        </Grid>
+
+
+<Grid item container xs={10}>
+      {/* <button onClick={()=>{viewerInstance.visual.update({moleculeId:'1cbs'})}}> Update</button> */}
+      <button
+        onClick={() => {
+          viewerInstance.visual.update({
+            customData: {
+              url:
+                "https://ribosome.xyz:8000/static_files/pairwise_align/?struct1=3j9m&struct2=7k00&strand1=AF&strand2=k",
+              format: "cif",
+              binary: false,
+            },
+          });
+        }}
+      >
+        Request Aligned
+      </button>
+
+      <div id="molstar-viewer">Molstar Viewer</div>
+        <Button variant="outlined"
+          onClick={() => {
+            viewerInstance.visual.update({
+              customData: {
+                url: `https://ribosome.xyz:8000/static_files/pairwise_align/?struct1=${struct1}&struct2=${struct2}&strand1=${strand1}&strand2=${strand2}`,
+                format: "cif",
+                binary: false,
+              },
+            });
+            console.log("requesting ", struct1, struct2, strand1, strand2);
+            requestAlignment({
+              struct1: struct1,
+              struct2: struct2,
+              strand1: strand1,
+              strand2: strand2,
+            });
+          }}>
+          Align
+        </Button>
+
+</Grid>
+
+        </Grid>
+
+
+      </Grid>
 
     </div>
-
-
-
-      <Grid container direction="column" xs={4} item>
-      <Grid  direction="column" xs={4} item>
-
-      </Grid>
-      <Grid  direction="column" xs={4} item>
-
-      </Grid>
-
-      <Grid  direction="column" xs={4} item>
-
-      </Grid>
-      </Grid>
-      <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="grouped-native-select">Structure 2</InputLabel>
-
-        <Select native defaultValue="" id="struct2" onChange={e=>{ 
-            setProts2(getProteinsForStruct(e.target.value as string, structs))
-            setstruct2(e.target.value as string) }}        >
-          <option aria-label="None" value="" />
-          {structs.map(str=><option value={str.struct.rcsb_id}>{str.struct.rcsb_id}</option>)}
-        </Select>
-
-      </FormControl>
-
-      <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="grouped-select">Strand</InputLabel>
-        <Select defaultValue="" id="grouped-select" onChange={(e)=>{setstrand2(e.target.value as string)}}>
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-            {prots2.map(rp=> <MenuItem value={rp.strandid}>{`${ rp.strandid } (${rp.nomenclature})`  } </MenuItem>) }
-
-        </Select>
-      </FormControl>
-
-      </Grid>
-    <Button variant="outlined" onClick={()=>{
-viewerInstance.visual.update({
-  customData:{ url: `https://ribosome.xyz:8000/static_files/pairwise_align/?struct1=${struct1}&struct2=${struct2}&strand1=${strand1}&strand2=${strand2}`, format: 'cif', binary:false }})
-      console.log("requesting ", struct1,struct2,strand1,strand2)
-            requestAlignment({
-                struct1:struct1,
-                struct2:struct2,
-                strand1:strand1,
-                strand2:strand2})}}>Align</Button>
-
-    </Grid>
-
-
-{/* <button onClick={()=>{viewerInstance.visual.update({moleculeId:'1cbs'})}}> Update</button> */}
-<button onClick={()=>{viewerInstance.visual.update({
-  customData:{ url: 'https://ribosome.xyz:8000/static_files/pairwise_align/?struct1=3j9m&struct2=7k00&strand1=AF&strand2=k', format: 'cif', binary:false }})}}> 
-  Request Aligned
-  </button>
-
-
-<div id='molstar-viewer' >Molstar Viewer</div>
-
-</div>
   );
 
 }

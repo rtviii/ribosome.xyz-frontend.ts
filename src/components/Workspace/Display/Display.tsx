@@ -9,7 +9,6 @@ import LigandCatalogue from "./../Ligand/LigandCatalogue";
 import RNACatalogue from './../RNA/RNACatalogue'
 import Interfaces from '../Analytics/Interfaces'
 import Home from './../../Home'
-import ExitTunnelPage from './../ExitTunnel/ExitTunnelPage'
 import ExitTunnel from './../ExitTunnel/ExitTunnel'
 import WorkInProgress from './../WorkInProgress'
 import ProteinAlignment from './../ProteinAlign/ProteinAlignment'

@@ -207,17 +207,20 @@ const ExitTunnel = () => {
     <Grid container xs={12}>
       <Grid item container xs={12}>
         <Paper variant="outlined" square className={classes.pageAnnotation}>
-      {/* <Grid item xs={1} style={{margin:20}}> */}
-      {/* </Grid> */}
-      <Grid container alignItems='center' justify='space-between'>
-          <Typography variant="h5">Ribosome Exit Tunnel</Typography>
-          <WarningPopover content={"We will extend this dataset from overrepresented E.coli to other species in the near future. Working on better export options."}/>
-      </Grid>
+          <Grid container alignItems="center" justify="space-between">
+            <Typography variant="h5">Ribosome Exit Tunnel</Typography>
+            <WarningPopover
+              content={
+                "We will extend this dataset from overrepresented E.coli to other species in the near future. Working on better export options."
+              }
+            />
+          </Grid>
           <Typography variant="body1">
             Here you can search and export some preliminary data about the
             <b> location and shape</b> of the ribosome exit tunnel as is
             caputured in a given model. <br />
-            The <b>tunnel walls report </b>provided contains three main features that characterize tunnel walls:
+            The <b>tunnel walls report </b>provided contains three main features
+            that characterize tunnel walls:
             <TunnelDemoTooltip
               placement="top"
               title={
@@ -262,55 +265,76 @@ const ExitTunnel = () => {
           </Typography>
         </Paper>
       </Grid>
-      <Grid container item xs={12} >
+
+      <Grid container item xs={12}>
         <Grid container item spacing={1} xs={12}>
-          <Grid item container xs={12} style={{padding:20}}  spacing={1} justify="flex-start">
-
-
-              {/* <Grid item xs={1} alignItems="center" justify="center" alignContent="center"><Typography variant="body1" align="center">Structure:</Typography></Grid> */}
-              <Grid item xs={6}>
-            <FormControl className={classes.formControl}>
-              <Select onChange={(e)=>setselectedStruct(e.target.value as string)} value={selectedStruct}  id="TunnelStructure">
-                {resolved_tunnels.map(tunnelstruct=> <option aria-label="hey" value={tunnelstruct.pdbid}>{tunnelstruct.pdbid + " " + tunnelstruct.organism[0]}
-                 </option>)}
-              </Select>
-              <Grid container xs={12}>
-<Typography variant={"caption"}>{
-  structState ?  structState.structure && structState.structure.citation_title+ " " :""
-}</Typography>
-              </Grid>
-            </FormControl>
-              </Grid>
-              <Grid item xs={6} >
-                <Tooltip title="This file lists the residues and nucleotides that constitute the walls of the exit tunnel."> 
-                <Button className={classes.downButton} onClick={() => getfile(wall.pdbid, "report")}> Download Walls Report</Button>
-                </Tooltip>
-
-
-                <Tooltip title="The shape of the exit tunnel will be made available for export."> 
-
-          <div style={{cursor:"pointer"}}>
-                <Button className={classes.downButton}onClick={() => getfile(wall.pdbid, "centerline")} disabled={true}>
-                  Download Tunnel Shape
+          <Grid
+            item
+            container
+            xs={12}
+            style={{ padding: 20 }}
+            spacing={1}
+            justify="flex-start"
+          >
+            <Grid item xs={6}>
+              <FormControl className={classes.formControl}>
+                <Select
+                  onChange={e => setselectedStruct(e.target.value as string)}
+                  value={selectedStruct}
+                  id="TunnelStructure"
+                >
+                  {resolved_tunnels.map(tunnelstruct => (
+                    <option aria-label="hey" value={tunnelstruct.pdbid}>
+                      {tunnelstruct.pdbid + " " + tunnelstruct.organism[0]}
+                    </option>
+                  ))}
+                </Select>
+                <Grid container xs={12}>
+                  <Typography variant={"caption"}>
+                    {structState
+                      ? structState.structure &&
+                        structState.structure.citation_title + " "
+                      : ""}
+                  </Typography>
+                </Grid>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <Tooltip title="This file lists the residues and nucleotides that constitute the walls of the exit tunnel.">
+                <Button
+                  className={classes.downButton}
+                  onClick={() => getfile(wall.pdbid, "report")}
+                >
+                  {" "}
+                  Download Walls Report
                 </Button>
+              </Tooltip>
+
+              <Tooltip title="The shape of the exit tunnel will be made available for export.">
+                <div style={{ cursor: "pointer" }}>
+                  <Button
+                    className={classes.downButton}
+                    onClick={() => getfile(wall.pdbid, "centerline")}
+                    disabled={true}
+                  >
+                    Download Tunnel Shape
+                  </Button>
                 </div>
-                </Tooltip>
-              </Grid>
+              </Tooltip>
+            </Grid>
           </Grid>
         </Grid>
-
         <Grid container item xs={6}>
           <Grid
-            className={classes.wallchainsTray} 
+            className={classes.wallchainsTray}
             container
-            xs      = {12}
-            spacing = {1}
+            xs={12}
+            spacing={1}
           >
             <Grid item xs={12}>
-
-            <Typography variant="overline">
-              Tunel-adjacent Proteins
-            </Typography>
+              <Typography variant="overline">
+                Tunel-adjacent Proteins
+              </Typography>
             </Grid>
             {wall.proteins
               ? Object.entries(wall.proteins).map(r => {
@@ -334,10 +358,10 @@ const ExitTunnel = () => {
             spacing={1}
           >
             <Grid item xs={12}>
-            <Typography variant="overline">
-              Tunel-adjacent RNA-nucleotides
-            </Typography>
-          </Grid>
+              <Typography variant="overline">
+                Tunel-adjacent RNA-nucleotides
+              </Typography>
+            </Grid>
             {wall.rna
               ? Object.entries(wall.rna).map(r => {
                   return (

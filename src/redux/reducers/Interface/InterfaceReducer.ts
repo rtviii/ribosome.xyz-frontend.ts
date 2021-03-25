@@ -2,15 +2,12 @@ import { filterChange, FilterPredicates } from '../Filters/ActionTypes';
 import {InterfaceActions} from './ActionTypes'
 
 
-
-
-
 interface InterfaceReducerState{
     dashboardHidden: boolean
 }
 
 const initialStateInterfaceReducer:InterfaceReducerState = {
-    dashboardHidden: true
+    dashboardHidden: false
 
 }
 export const InterfaceReducer = (

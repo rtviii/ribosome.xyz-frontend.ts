@@ -9,10 +9,9 @@ import { LigandsReducer } from "./reducers/Ligands/LigandsReducer";
 import { UtilitiesReducer } from "./reducers/Utilities/UtilitiesReducer"
 import { InterfaceReducer } from "./reducers/Interface/InterfaceReducer"
 
-
 const collapsFilter = (action: any) => {
   // Collapse by action type:
-  var toFilter = [""];
+  var toFilter  =  [""];
   return !toFilter.includes(action!.type);
 };
 const logger = createLogger({ collapsed: collapsFilter });
