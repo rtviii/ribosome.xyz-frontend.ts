@@ -13,7 +13,6 @@ import ExitTunnel from './../ExitTunnel/ExitTunnel'
 import WorkInProgress from './../WorkInProgress'
 import ProteinAlignment from './../ProteinAlign/ProteinAlignment'
 import RPClassification from './../RPClassification/RPClassification'
-import StructuresPage from './../../../materialui/StructuresPage/StructuresPage'
 
 const Display = () => {
   return (
@@ -23,7 +22,6 @@ const Display = () => {
       </Route>
 
       <Switch>
-        <Route exact path = "/mat_structs" component                         = {StructuresPage} />
         <Route exact path = "/rpalign" component                      = {ProteinAlignment} />
         <Route exact path = "/home" component                         = {Home} />
 

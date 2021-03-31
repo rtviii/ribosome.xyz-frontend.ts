@@ -270,7 +270,7 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                 structures deposited to the RCSB/PDB. These structures are
                 processed here for an easy search and access of the structures
                 and their components (listed below). Various modules are also
-                available to process and analyze the structures
+                available to process and analyze the structures.
               </Typography>
             </Paper>
             </Link>
@@ -568,7 +568,9 @@ const Home: React.FC<ReduxProps> = prop => {
       alignContent="center"
       xs={12}
     >
-      <Grid item xs={3} container> 
+      <Grid item xs={3} container 
+            alignItems='flex-start'
+      > 
       <DashboardButton/>
       </Grid>
       <Grid item xs={6} className={classes.gridItem}>

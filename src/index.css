@@ -11,7 +11,7 @@ body {
   color: black;
 
   font-size: 1.2rem;
-  scrollbar-width: none;
+  /* scrollbar-width: none; */
 }
 a {
   color: black; 
@@ -29,10 +29,10 @@ code {
     monospace;
 }
 
-body::-webkit-scrollbar {
+/* body::-webkit-scrollbar {
   display: none;
   scrollbar-width: none;
-}
+} */
 
 html {
     overflow: scroll;

@@ -63,7 +63,7 @@ export const truncate = (str:string, charlim:number, truncateto:number) =>{
   if (typeof str === 'undefined'){
     return str
   }
-    return str.length > 20 ? str.substring(0, 15) + "..." : str;
+    return str.length > charlim ? str.substring(0, truncateto) + "..." : str;
 }
 export const transformToShortTax = (taxname:string) =>{
   if (typeof taxname === 'string'){

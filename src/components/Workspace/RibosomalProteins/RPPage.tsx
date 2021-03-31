@@ -17,6 +17,7 @@ import { ListSubheader } from "@material-ui/core";
 import { NeoHomolog } from "../../../redux/DataInterfaces";
 import RibosomalProteinCard from './RibosomalProteinCard'
 import Typography from "@material-ui/core/Typography";
+import { DashboardButton } from "../../../materialui/Dashboard/Dashboard";
 
 
 
@@ -75,6 +76,7 @@ const RPPage:React.FC<RPPageProps> = (prop) => {
                 {...{ gotopage: prop.goto_page, pagecount: prop.pagestotal }}
               />
             </ListItem>
+            <DashboardButton/>
           </List>
         </Grid>
 

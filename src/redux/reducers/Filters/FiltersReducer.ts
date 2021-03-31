@@ -50,8 +50,37 @@ export const FiltersReducer = (
   action: FiltersActionTypes
 ): FiltersReducerState => {
   switch (action.type) {
+    case "RESET_ALL_FILTERS":
+      return {
+  applied_filters : [],
+  filters         : {
+    PROTEIN_COUNT: {
+      set: false,
+      value: [25, 150],
+    },
+    YEAR: {
+      set: false,
+      value: [2012, 2021],
+    },
+    RESOLUTION: {
+      set: false,
+      value: [1, 6],
+    },
+    PROTEINS_PRESENT: {
+      set: false,
+      value: [],
+    },
+    SEARCH: {
+      set: false,
+      value: "",
+    },
+    SPECIES: {
+      set: false,
+      value: [],
+    },
+  },
+} 
     case "FILTER_CHANGE":
-      
       var filtIndex = state.applied_filters.indexOf(action.filttype)
       // shallow copy
       var appliedFilters = state.applied_filters;
@@ -72,13 +101,10 @@ export const FiltersReducer = (
 
       
       return derived_state
-
     default:
       return state;
   }
 };
-
-
 
 
 export interface handleFilterChange {
@@ -94,7 +120,6 @@ export const mapDispatchFilter = (filttype: FilterType) => (
   ownProps: any
 ): handleFilterChange => {
   return {
-    handleChange: (allFilters, newrange) =>
-      dispatch(filterChangeActionCreator(allFilters, filttype, newrange)),
+    handleChange: (allFilters, newrange) => dispatch(filterChangeActionCreator(allFilters, filttype, newrange)),
   };
 };

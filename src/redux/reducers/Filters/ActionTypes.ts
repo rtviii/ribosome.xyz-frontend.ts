@@ -8,15 +8,25 @@ import {
 } from "../../DataInterfaces";
 import { FiltersReducerState } from "./FiltersReducer";
 
+const RESET_ALL_FILTERS = "RESET_ALL_FILTERS"
 export interface filterChange {
-  type: typeof FILTER_CHANGE;
-  filttype: FilterType;
-  newval: any;
-  set: boolean;
-  derived_filters: FiltersReducerState;
+  type             :  typeof FILTER_CHANGE;
+  filttype         :  FilterType;
+  newval           :  any;
+  set              :  boolean;
+  derived_filters  :  FiltersReducerState;
 }
 
-export type FiltersActionTypes = filterChange;
+export interface resetFilters{
+  type: typeof RESET_ALL_FILTERS
+}
+
+
+export const resetAllFilters = ():resetFilters =>({
+  type: RESET_ALL_FILTERS
+})
+
+export type FiltersActionTypes = filterChange | resetFilters;
 export const FILTER_CHANGE = "FILTER_CHANGE";
 export type FilterType =
   | "PROTEIN_COUNT"
@@ -29,9 +39,9 @@ export type FilterPredicate = (
   value: string[] | string | number[] | number
 ) => (item: RXZDataTypes) => boolean;
 export type FilterData = {
-  set: boolean;
-  value: string[] | string | number[] | number;
-  allFilters?: FiltersReducerState;
+  set          :  boolean;
+  value        :  string[] | string | number[] | number;
+  allFilters?  :  FiltersReducerState;
 };
 
 type DataType = "STRUCTURE" | "PROTEIN" | "LIGAND" | "RNA";
@@ -190,6 +200,9 @@ export const FilterPredicates: Record<
     LIGAND: (value: any) => (item: RXZDataTypes) => true
   },
 };
+
+
+
 
 // This is the "bottleneck" or switchboard action creator where the derived filters-state  is actually calclated
 // before it is actually emitted to the FILTERS reducer as well as all the other reducers that rley on the state of th filters like, strucutres reducer, say.

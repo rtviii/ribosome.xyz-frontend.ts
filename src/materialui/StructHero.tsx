@@ -100,7 +100,7 @@ export const StructHero=(d:NeoStruct)=> {
             </Typography>
           </Grid>
           <Typography variant="body2" component="p" color="primary" className={classes.title}>
-            {d.struct.citation_title}
+            {truncate(d.struct.citation_title,100, 100)}
           </Typography>
 
 

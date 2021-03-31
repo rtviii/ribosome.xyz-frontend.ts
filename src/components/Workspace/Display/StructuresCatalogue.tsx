@@ -26,7 +26,7 @@ import * as redux from '../../../redux/reducers/StructuresReducer/StructuresRedu
 import { Dispatch } from 'redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {useDebounce} from 'use-debounce'
-import {  FilterData, FilterType,filterChange, filterChangeActionCreator} from "../../../redux/reducers/Filters/ActionTypes"
+import {  FilterData, FilterType,filterChange, filterChangeActionCreator, resetAllFilters} from "../../../redux/reducers/Filters/ActionTypes"
 import {SpeciesGroupings} from './taxid_map'
 import _  from "lodash";
 import {Link, useHistory} from "react-router-dom";
@@ -184,114 +184,128 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
 
 
 
+
 type SelectedProteinsFilterProps =  handleFilterChange & FilterData 
 const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
 
-const BanClassNames=Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
+  const BanClassNames=Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
 
-function getStyles(name: string, personName: string[], theme: Theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
+  function getStyles(name: string, personName: string[], theme: Theme) {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
 
-const useProteinsSelectedStyles = makeStyles((theme: Theme) =>
-  createStyles({
-      select:{
-          width:300,
-          maxWidth:300
+  const useProteinsSelectedStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        select:{
+            width:300,
+            maxWidth:300
+        },
+      chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
       },
-    chips: {
-      display: 'flex',
-      flexWrap: 'wrap',
+      chip: {
+        margin: 2,
+      },
+    }),
+  );
+
+  const ITEM_HEIGHT = 48;
+  // const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 
+        // width: 100,
+      },
     },
-    chip: {
-      margin: 2,
-    },
-  }),
-);
-
-const ITEM_HEIGHT = 48;
-// const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 
-      // width: 100,
-    },
-  },
-};
-
-
-
-  const classes = useProteinsSelectedStyles();
-  const theme = useTheme();
-  const [selectedProteins, setSelectedProteins] = React.useState<string[]>([]);
-
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelectedProteins(event.target.value as string[]);
-    var newval:string[]  =  event.target.value as string[]
-    // prop.handleChange(prop.allFilters as FiltersReducerState, newval)
   };
 
 
-  return (
-        <Grid xs={12} container spacing={2}> 
-        <Grid item>
-        <Select
-          labelId="demo-mutiple-chip-label"
-          id="demo-mutiple-chip"
-          multiple
-          value={selectedProteins}
-          onChange={handleChange}
-          input={<Input id="select-multiple-chip" />}
-          className={classes.select}
-          renderValue={(selected) => (
-            <div className={classes.chips}>
-              {(selected as string[]).map((value) => (
-                <Chip key={value} label={value} className={classes.chip} />
-              ))}
-            </div>
-          )}
-          MenuProps={MenuProps}
-        >
-          {BanClassNames.map((name) => (
-            <MenuItem key={name} value={name} style={getStyles(name, selectedProteins, theme)}>
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-</Grid>
-        <Grid item container xs={12}>
-        <Grid item container xs={6}>
-        <button onClick={()=>{
 
-      prop.handleChange(prop.allFilters as FiltersReducerState, selectedProteins)
-        }}>Search</button>
+    const classes = useProteinsSelectedStyles();
+    const theme = useTheme();
+    const [selectedProteins, setSelectedProteins] = React.useState<string[]>([]);
 
-</Grid>
-        <Grid item container xs={6}>
-        <button
-        onClick={
-()=>{
-      setSelectedProteins([] as string[])
-      prop.handleChange(prop.allFilters as FiltersReducerState, [] as string[])
-}
-        }
-        
-        >Reset</button>
-</Grid>
-</Grid>
+    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+      setSelectedProteins(event.target.value as string[]);
+      var newval:string[]  =  event.target.value as string[]
+      // prop.handleChange(prop.allFilters as FiltersReducerState, newval)
+    };
+
+
+    return (
+      <Grid xs={12} container spacing={2}>
+        <Grid item xs={12}>
+          <Select
+            labelId="demo-mutiple-chip-label"
+            id="demo-mutiple-chip"
+            multiple
+            value={selectedProteins}
+            onChange={handleChange}
+            input={<Input id="select-multiple-chip" />}
+            className={classes.select}
+            renderValue={selected => (
+              <div className={classes.chips}>
+                {(selected as string[]).map(value => (
+                  <Chip key={value} label={value} className={classes.chip} />
+                ))}
+              </div>
+            )}
+            MenuProps={MenuProps}
+          >
+            {BanClassNames.map(name => (
+              <MenuItem
+                key={name}
+                value={name}
+                style={getStyles(name, selectedProteins, theme)}
+              >
+                {name}
+              </MenuItem>
+            ))}
+          </Select>
         </Grid>
-  );
-}
+
+        <Grid item container xs={12}>
+          <Grid item container xs={6}>
+            <button
+              onClick={() => {
+                prop.handleChange(
+                  prop.allFilters as FiltersReducerState,
+                  selectedProteins
+                );
+              }}
+            >
+              Search
+            </button>
+          </Grid>
+          <Grid item container xs={6}>
+            <button
+              onClick={() => {
+                setSelectedProteins([] as string[]);
+                prop.handleChange(
+                  prop.allFilters as FiltersReducerState,
+                  [] as string[]
+                );
+              }}
+            >
+              Reset
+            </button>
+          </Grid>
+        </Grid>
+      </Grid>
+    );
+  }
 
 
 type SpecListProps = handleFilterChange & FilterData;
 export const _SpecList:React.FC<SpecListProps> =(prop)=> {
+
   const useSpecListStyles = makeStyles((theme: Theme) =>
     createStyles({
       
@@ -307,49 +321,40 @@ export const _SpecList:React.FC<SpecListProps> =(prop)=> {
     })
   );
 
-
-
-  
-  const taxIdMap  =  Object.entries(SpeciesGroupings);
+    const taxIdMap = Object.entries(SpeciesGroupings);
     const classes = useSpecListStyles();
 
-    const [ specListValues, setSpecListValues ] = useState<Array<[ string,number[] ]>>([])
+    const [specListValues, setSpecListValues] = useState<Array<[string, number[]]>>([]);
 
     useEffect(() => {
+      var filtered = taxIdMap.filter(
+        (r: [string, number[]]) =>
+          (prop.value as number[]).reduce(
+            (bool: boolean, next: number) => r[1].includes(next),
+            false
+          )
 
-    var filtered = taxIdMap.filter(
-      (r:[string,number[]])=> (prop.value as number[]).reduce(
-
-        (bool:boolean, next:number)=>r[1].includes(next),false)
-      
-      // .includes(r[1][0])
-      )
-    setSpecListValues(filtered)
-    
-    }, [prop.value])
+        // .includes(r[1][0])
+      );
+      setSpecListValues(filtered);
+    }, [prop.value]);
     return (
       <div className={classes.root}>
         <Autocomplete
-        onChange={
-
-            (e:any,value:Array<[string, number[]]>)=>{
-              var taxids  = value.map(k => k[1]).reduce((acc, taxarr) => [...acc, ...taxarr], [])
-              prop.handleChange(prop.allFilters as FiltersReducerState, taxids)
-            }
-        }
+          onChange={(e: any, value: Array<[string, number[]]>) => {
+            var taxids = value
+              .map(k => k[1])
+              .reduce((acc, taxarr) => [...acc, ...taxarr], []);
+            prop.handleChange(prop.allFilters as FiltersReducerState, taxids);
+          }}
           multiple
           size="small"
           id="tags-standard"
           options={taxIdMap}
-          getOptionLabel={(option) => option[0] as string}
+          getOptionLabel={option => option[0] as string}
           defaultValue={[]}
           value={specListValues}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-            />
-          )}
+          renderInput={params => <TextField {...params} variant="outlined" />}
         />
       </div>
     );
@@ -362,10 +367,20 @@ export const ProtcountSlider   =  connect(mapStateFilter("PROTEIN_COUNT"), mapDi
 export const ResolutionSlider  =  connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
 export const SearchField       =  connect(mapStateFilter("SEARCH"),       mapDispatchFilter("SEARCH"))(_SearchField)
 export const SpeciesList       =  connect(mapStateFilter("SPECIES"),      mapDispatchFilter("SPECIES"))(_SpecList)
+
 // export const SelectedProteins  =  connect(mapStateFilter("PROTEINS_PRESENT"), mapDispatchFilter("PROTEINS_PRESENT"))(_SelectProteins)
 
+const mapResetFilters = (dispatch: Dispatch<AppActions>, ownprops:any):{
+  reset_filters: () =>void
+} =>({
+  reset_filters: ()=>    { dispatch(resetAllFilters()) }
+})
+
+type StructureFilterProps ={
+  reset_filters: () =>void
+};
 // Filters component
-export const StructureFilters = () => {
+ const _StructureFilters:React.FC<StructureFilterProps> = (props) => {
   const drawerWidth = 240;
   const useFiltersStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -397,7 +412,6 @@ export const StructureFilters = () => {
   );
 
   const filterClasses = useFiltersStyles();
-  const history = useHistory();
 
   return (
     <Drawer
@@ -444,7 +458,12 @@ export const StructureFilters = () => {
       <Divider />
         <ListSubheader> Species</ListSubheader>
         <SpeciesList/>
+        <button onClick={()=>{props.reset_filters()}}>Reset Filters</button>
+
         <DashboardButton/>
     </Drawer>
   );
 };
+
+
+export const StructureFilters = connect(null, mapResetFilters)(_StructureFilters);

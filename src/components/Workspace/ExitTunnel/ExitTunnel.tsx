@@ -16,6 +16,7 @@ import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import { withStyles  } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import {WarningPopover} from './../WorkInProgressChip'
+import { DashboardButton } from "../../../materialui/Dashboard/Dashboard";
 
 const getfile = (pdbid:string,ftype:"report"|"centerline")=>{
   var pdbid = pdbid.toUpperCase()
@@ -267,6 +268,8 @@ const ExitTunnel = () => {
       </Grid>
 
       <Grid container item xs={12}>
+        <Grid container item xs={2}>
+
         <Grid container item spacing={1} xs={12}>
           <Grid
             item
@@ -324,6 +327,13 @@ const ExitTunnel = () => {
             </Grid>
           </Grid>
         </Grid>
+
+        <DashboardButton/>
+
+        </Grid>
+
+      <Grid container item xs={10}>
+
         <Grid container item xs={6}>
           <Grid
             className={classes.wallchainsTray}
@@ -379,6 +389,8 @@ const ExitTunnel = () => {
           </Grid>
         </Grid>
       </Grid>
+      </Grid>
+
     </Grid>
   );
 };

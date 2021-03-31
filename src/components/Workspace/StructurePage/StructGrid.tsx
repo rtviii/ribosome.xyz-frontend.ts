@@ -7,6 +7,7 @@ import {
   RibosomalProtein,
   rRNA,
 } from "./../../../redux/RibosomeTypes";
+import { Grid } from "@material-ui/core";
 
 const StructGrid = ({
   pdbid,
@@ -35,31 +36,26 @@ const StructGrid = ({
     setother(other)
   }, [protdata])
   return (
-    <div className="struct-grid">
-      <div className="struct-grid-lsu">
-        
+    <Grid xs={10} container item>
+      <Grid container item xs={4}>
         <h4>Large Subunit Proteins</h4>
-        {lsu
-          .map((x, j) => (
-            <RibosomalProteinHero key={j} data={x} pdbid={pdbid} />
-          ))}
-      </div>
-
-      <div className="struct-grid-ssu">
-        <h4>Small Subunit Proteins</h4>
-      {ssu
-        .map((x, j) => (
-          <RibosomalProteinHero key={j} data={x} pdbid={pdbid}  />
-        ))}
-      </div>
-      <div className="struct-grid-other">
-        <h4>Other/Undetermined</h4>
-      {other
-        .map((x, j) => (
+        {lsu.map((x, j) => (
           <RibosomalProteinHero key={j} data={x} pdbid={pdbid} />
         ))}
-      </div>
-    </div>
+      </Grid>
+      <Grid container item xs={4}>
+        <h4>Small Subunit Proteins</h4>
+        {ssu.map((x, j) => (
+          <RibosomalProteinHero key={j} data={x} pdbid={pdbid} />
+        ))}
+      </Grid>
+      <Grid container item xs={4}>
+        <h4>Other/Undetermined</h4>
+        {other.map((x, j) => (
+          <RibosomalProteinHero key={j} data={x} pdbid={pdbid} />
+        ))}
+      </Grid>
+    </Grid>
   );
 };
 

@@ -1,5 +1,5 @@
 import { NeoStruct } from "../../DataInterfaces";
-import {filterChange} from './../Filters/ActionTypes'
+import {filterChange, resetFilters} from './../Filters/ActionTypes'
 
 export const REQUEST_STRUCTS_GO      = "REQUEST_STRUCTS_GO";
 export const REQUEST_STRUCTS_SUCCESS = "REQUEST_STRUCTS_SUCCESS";
@@ -27,4 +27,5 @@ export type StructActionTypes =
   | filterChange
   | gotopage
   | nextpage
-  | prevpage;
+  | prevpage
+  | resetFilters

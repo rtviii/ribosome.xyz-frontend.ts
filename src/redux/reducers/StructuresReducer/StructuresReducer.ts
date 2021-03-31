@@ -31,6 +31,7 @@ export const _StructuresReducer = (
   action: actions.StructActionTypes
 ): StructReducerState => {
   switch (action.type) {
+
     case "REQUEST_STRUCTS_GO":
       return { ...state, Loading: true };
     case "REQUEST_STRUCTS_ERR":
@@ -56,6 +57,8 @@ export const _StructuresReducer = (
       if (action.page_id <= state.pages_total && action.page_id >=1) {
         return {...state, current_page: action.page_id}
       }
+    case "RESET_ALL_FILTERS":
+      return {...state, derived_filtered: state.neo_response,pages_total: Math.ceil(state.neo_response.length/20), current_page:1}
     case "FILTER_CHANGE":
 
       // Filter change action emits new state of filters
