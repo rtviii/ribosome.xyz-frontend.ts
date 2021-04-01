@@ -13,13 +13,12 @@ import { Link, useHistory } from 'react-router-dom';
 import gear from './../../static/gear.png'
 import enzymes from './../../static/enzymes-icon.png'
 import Typography from '@material-ui/core/Typography';
-// import {AppActions} from './../../redux/AppActions'
 import {toggle_dashboard} from './../../redux/reducers/Interface/ActionTypes'
 import { AppState } from '../../redux/store';
 import { ThunkDispatch } from 'redux-thunk';
 import { AppActions } from '../../redux/AppActions';
 import { connect } from 'react-redux';
-import { stat } from 'fs';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
   root:{
@@ -74,29 +73,22 @@ const _MenuItem:React.FC<{toggle_dash:()=>void; tooltip:boolean} & MenuItemData>
 
     </ListItem>)}
 
-const MenuItem = connect(null, md)(_MenuItem)
-
-
-
-
-
-
 const _DashboardButton:React.FC<DashProps> = (props)=>{
-  return <Button onClick={()=>props.toggle_dash()} className={"yep"}>
-          <img
-            src={gear}
-            style={{ width: "100px", opacity:"0.5", height: "100px" }}
-          />
-        <Typography variant="overline"  style={{fontSize:"1.2rem"}}>
-              Data & Tools
-        </Typography>
+  return  <Grid   onClick={() => props.toggle_dash()}container xs={12} justify="flex-start">
+      <Grid item xs={4} justify='center'>
+        <img  src={gear} style={{cursor:"pointer", height: "40px", opacity: "0.5" }} />
+      </Grid>
 
-        </Button> 
+      <Grid item xs={8} justify='center'  >
+      <Button   style={{width:"100%"}} >
+      Menu
+      </Button>
+      </Grid>
+      </Grid>
+
+
+
 }
-
-export const DashboardButton = connect(ms,md)(_DashboardButton)
-
-
  const _TemporaryDrawer:React.FC<DashProps> = (props)=> {
 
   const classes = useStyles();
@@ -145,4 +137,6 @@ export const DashboardButton = connect(ms,md)(_DashboardButton)
 )
 }
 
+const MenuItem = connect(null, md)(_MenuItem)
+export const DashboardButton = connect(ms,md)(_DashboardButton)
 export const TemporaryDrawer  = connect(ms,md)(_TemporaryDrawer)

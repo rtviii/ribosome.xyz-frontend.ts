@@ -36,7 +36,7 @@ import { NeoStruct } from "../../../redux/DataInterfaces";
 import { FiltersReducerState, mapDispatchFilter, mapStateFilter, handleFilterChange } from "../../../redux/reducers/Filters/FiltersReducer";
 
 import Pagination from './Pagination'
-import { Dashboard } from "@material-ui/icons";
+import classes from "*.module.css";
 
 const pageData ={
   title:"Whole Ribosome Structures",
@@ -188,130 +188,60 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
 type SelectedProteinsFilterProps =  handleFilterChange & FilterData 
 const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
 
-  const BanClassNames=Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
-
-  function getStyles(name: string, personName: string[], theme: Theme) {
-    return {
-      fontWeight:
-        personName.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
-  }
-
-  const useProteinsSelectedStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        select:{
-            width:300,
-            maxWidth:300
-        },
-      chips: {
-        display: 'flex',
-        flexWrap: 'wrap',
-      },
-      chip: {
-        margin: 2,
-      },
-    }),
-  );
-
-  const ITEM_HEIGHT = 48;
-  // const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 
-        // width: 100,
-      },
-    },
-  };
-
-
-
-    const classes = useProteinsSelectedStyles();
-    const theme = useTheme();
-    const [selectedProteins, setSelectedProteins] = React.useState<string[]>([]);
-
-    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-      setSelectedProteins(event.target.value as string[]);
-      var newval:string[]  =  event.target.value as string[]
-      // prop.handleChange(prop.allFilters as FiltersReducerState, newval)
-    };
-
-
-    return (
-      <Grid xs={12} container spacing={2}>
-        <Grid item xs={12}>
-          <Select
-            labelId="demo-mutiple-chip-label"
-            id="demo-mutiple-chip"
-            multiple
-            value={selectedProteins}
-            onChange={handleChange}
-            input={<Input id="select-multiple-chip" />}
-            className={classes.select}
-            renderValue={selected => (
-              <div className={classes.chips}>
-                {(selected as string[]).map(value => (
-                  <Chip key={value} label={value} className={classes.chip} />
-                ))}
-              </div>
-            )}
-            MenuProps={MenuProps}
-          >
-            {BanClassNames.map(name => (
-              <MenuItem
-                key={name}
-                value={name}
-                style={getStyles(name, selectedProteins, theme)}
-              >
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-        </Grid>
-
-        <Grid item container xs={12}>
-          <Grid item container xs={6}>
-            <button
-              onClick={() => {
-                prop.handleChange(
-                  prop.allFilters as FiltersReducerState,
-                  selectedProteins
-                );
-              }}
-            >
-              Search
-            </button>
-          </Grid>
-          <Grid item container xs={6}>
-            <button
-              onClick={() => {
-                setSelectedProteins([] as string[]);
-                prop.handleChange(
-                  prop.allFilters as FiltersReducerState,
-                  [] as string[]
-                );
-              }}
-            >
-              Reset
-            </button>
-          </Grid>
-        </Grid>
-      </Grid>
-    );
-  }
-
-
-type SpecListProps = handleFilterChange & FilterData;
-export const _SpecList:React.FC<SpecListProps> =(prop)=> {
-
-  const useSpecListStyles = makeStyles((theme: Theme) =>
+  const BanClassNames = Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
+  const useProteinsPresentStyles = makeStyles((theme: Theme) =>
     createStyles({
       
       root: {
+        fontSize: 6,
+        width: "100%",
+        minWidth: "100%",
+        "& > * + *": {
+          fontSize: 6,
+        },
+      },
+    })
+  );
+
+
+  const classes = useProteinsPresentStyles();
+
+  return (
+
+    <div className={classes.root}>
+
+      <Autocomplete
+        multiple
+        id="size-small-outlined-multi"
+        size="small"
+        options={BanClassNames}
+        getOptionLabel={(option) => option}
+        defaultValue={[]}
+        onChange={
+          (e:any, value:string[])=>{
+            console.log(value)
+            prop.handleChange(prop.allFilters as FiltersReducerState, value)
+          }}
+        renderInput={(params) => { 
+          return <TextField {...params} variant="outlined" label="Proteins Present" placeholder="" />
+          }}
+      />
+    </div>
+
+
+
+  );
+}
+
+
+type SpecListProps = handleFilterChange & FilterData;
+export const _SpecList: React.FC<SpecListProps> = (prop) => {
+
+  const useSpecListStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      root: {
         fontSize: 8,
-        maxWidth:"2em",
+        maxWidth: "2em",
         width: "100%",
         minWidth: "100%",
         "& > * + *": {
@@ -321,43 +251,41 @@ export const _SpecList:React.FC<SpecListProps> =(prop)=> {
     })
   );
 
-    const taxIdMap = Object.entries(SpeciesGroupings);
-    const classes = useSpecListStyles();
+  const taxIdMap = Object.entries(SpeciesGroupings);
+  const classes = useSpecListStyles();
 
-    const [specListValues, setSpecListValues] = useState<Array<[string, number[]]>>([]);
+  const [specListValues, setSpecListValues] = useState<Array<[string, number[]]>>([]);
 
-    useEffect(() => {
-      var filtered = taxIdMap.filter(
-        (r: [string, number[]]) =>
-          (prop.value as number[]).reduce(
-            (bool: boolean, next: number) => r[1].includes(next),
-            false
-          )
-
-        // .includes(r[1][0])
-      );
-      setSpecListValues(filtered);
-    }, [prop.value]);
-    return (
-      <div className={classes.root}>
-        <Autocomplete
-          onChange={(e: any, value: Array<[string, number[]]>) => {
-            var taxids = value
-              .map(k => k[1])
-              .reduce((acc, taxarr) => [...acc, ...taxarr], []);
-            prop.handleChange(prop.allFilters as FiltersReducerState, taxids);
-          }}
-          multiple
-          size="small"
-          id="tags-standard"
-          options={taxIdMap}
-          getOptionLabel={option => option[0] as string}
-          defaultValue={[]}
-          value={specListValues}
-          renderInput={params => <TextField {...params} variant="outlined" />}
-        />
-      </div>
+  useEffect(() => {
+    var filtered = taxIdMap.filter(
+      (r: [string, number[]]) =>
+        (prop.value as number[]).reduce(
+          (bool: boolean, next: number) => r[1].includes(next),
+          false
+        )
     );
+    setSpecListValues(filtered);
+  }, [prop.value]);
+  return (
+    <div className={classes.root}>
+      <Autocomplete
+        multiple
+        id="size-small-outlined-multi"
+        size="small"
+        options={taxIdMap}
+        getOptionLabel={(option) => option[0] as string}
+        defaultValue={[]}
+        onChange={
+          (e: any, value: [string, number[]][]) => {
+            var taxids = value.map(k => k[1]).reduce((acc, taxarr) => [...acc, ...taxarr], [])
+            prop.handleChange(prop.allFilters as FiltersReducerState, taxids)
+          }}
+        renderInput={(params) => {
+          return <TextField {...params} variant="outlined" label="Species" placeholder="" />
+        }}
+      />
+    </div>
+  );
 }
 
 
@@ -425,42 +353,39 @@ type StructureFilterProps ={
     >
       <div className={filterClasses.toolbar} />
       <List>
-      <Divider />
+      {/* <Divider />
         <ListItem className={filterClasses.home} >
           <Link to='/home'>
-          <ListItemText   primary={"Home"} />
+              <ListItemText  primary={"Home"} />
           </Link>
         </ListItem>
-      <Divider />
+      <Divider /> */}
         <ListItem key={"search"}>
-          <SearchField/>
+          <SearchField />
         </ListItem>
         <ListItem key={"year"}>
-          <YearSlider min={2012} max={2021}  name={"Deposition Date"} step={1}/> 
+          <YearSlider min={2012} max={2021} name={"Deposition Date"} step={1} />
         </ListItem>
-        <ListItem key={"number-of-proteins"}>
+        {/* <ListItem key={"number-of-proteins"}>
           <ProtcountSlider min={25} max={150}  name={"Protein Count"} step={1}/> 
-        </ListItem>
+        </ListItem> */}
         <ListItem key={"resolution"}>
-          <ResolutionSlider min={1} max={6}  name={"Resolution(A)"} step={0.1}/> 
-        </ListItem>
-
-      <Divider />
-
-        <ListItem key={"select-proteins-typography"} >
-          <Typography id="range-slider">Proteins Present</Typography>
+          <ResolutionSlider min={1} max={6} name={"Resolution(A)"} step={0.1} />
         </ListItem>
         <ListItem key={"select-proteins"} >
           <SelectProteins />
         </ListItem>
+
+        {/* <ListSubheader> Species</ListSubheader> */}
+        <ListItem key={"select-species"} >
+          <SpeciesList />
+        </ListItem>
+        {/* <button onClick={() => { props.reset_filters() }}>Reset Filters</button> */}
+        <ListItem >
+          <DashboardButton/>
+        </ListItem>
+
       </List>
-
-      <Divider />
-        <ListSubheader> Species</ListSubheader>
-        <SpeciesList/>
-        <button onClick={()=>{props.reset_filters()}}>Reset Filters</button>
-
-        <DashboardButton/>
     </Drawer>
   );
 };
