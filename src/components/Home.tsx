@@ -54,14 +54,14 @@ const _StatsList: React.FC<ReduxProps> = prop => {
       },
     })
   );
-  const classes = useStatsListStyles();
-  var [structn, setstructn] = useState<number>(0);
-  var [protn, setProtn] = useState<number>(0);
-  var [rnan, setrnan] = useState<number>(0);
-  var [xray, setxray] = useState<number>(0);
-  var [em, setem] = useState<number>(0);
-  var [ligs, setligs] = useState<number>(0);
-  var [ligClasses, setligclasses] = useState<number>(0);
+  const classes                      =  useStatsListStyles();
+  var   [structn, setstructn]        =  useState<number>(0);
+  var   [protn, setProtn]            =  useState<number>(0);
+  var   [rnan, setrnan]              =  useState<number>(0);
+  var   [xray, setxray]              =  useState<number>(0);
+  var   [em, setem]                  =  useState<number>(0);
+  var   [ligs, setligs]              =  useState<number>(0);
+  var   [ligClasses, setligclasses]  =  useState<number>(0);
 
   useEffect(() => {
     interface NeoLigandClass {
@@ -568,10 +568,14 @@ const Home: React.FC<ReduxProps> = prop => {
       alignContent="center"
       xs={12}
     >
-      <Grid item xs={3} container 
-            alignItems='flex-start'
-      > 
-      <DashboardButton/>
+      <Grid item xs={3} > 
+      <List>
+        <ListItem >
+          <DashboardButton/>
+        </ListItem>
+
+      </List>
+      
       </Grid>
       <Grid item xs={6} className={classes.gridItem}>
         <MainContentCard />

@@ -18,9 +18,14 @@ import { NeoHomolog } from "../../../redux/DataInterfaces";
 import RibosomalProteinCard from './RibosomalProteinCard'
 import Typography from "@material-ui/core/Typography";
 import { DashboardButton } from "../../../materialui/Dashboard/Dashboard";
-
-
-
+import Cart from "./../../Workspace/Cart/Cart";
+import Paper from "@material-ui/core/Paper/Paper";
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 interface ReduxProps{
   current_rps: NeoHomolog[]
@@ -36,7 +41,6 @@ interface DispatchProps{
 }
 
 type  RPPageProps = ReduxProps &  DispatchProps
-
 const RPPage:React.FC<RPPageProps> = (prop) => {
 
   var params: any = useParams();
@@ -49,44 +53,85 @@ const RPPage:React.FC<RPPageProps> = (prop) => {
     prop.requestBanClass(className)
   }, [])
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
+const classes = useStyles();
 
   return params!.nom ? (
     <Grid xs={12} container>
-      <Grid item container xs={12}>
+      <Grid item container xs={12} >
         <Typography variant="h3" style={{ padding: "20px" }}>
           Ribosomal Protein Class {className}
         </Typography>
       </Grid>
 
       <Grid item container xs={12} spacing={2}>
+
         <Grid item container xs={2} direction="column">
           <List>
-            <Divider />
-            <ListSubheader>Species</ListSubheader>
-            <ListItem>
-              <SpeciesList />
-            </ListItem>
 
-            <Divider />
             <ListItem>
               <SearchField />
+            </ListItem>
+            <ListItem>
+              <SpeciesList />
             </ListItem>
             <ListItem>
               <Pagination
                 {...{ gotopage: prop.goto_page, pagecount: prop.pagestotal }}
               />
             </ListItem>
+            <ListItem>
+            <Cart/>
+            </ListItem>
+            <ListItem>
             <DashboardButton/>
+            </ListItem>
           </List>
         </Grid>
 
-        <Grid item container direction="column" spacing={1} xs={10}>
+        <Grid item container direction="row" spacing={1} xs={10} alignContent="flex-start" alignItems="flex-start">
+
+           
+          <Grid item xs={12}>  
+          {/* <Paper variant="elevation" elevation={3} style={{
+            padding:"20px"
+          }}>
+            tools
+
+
+          </Paper> */}
+
+{/* <AppBar position="static">
+  <Toolbar>
+    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+      <MenuIcon />
+    </IconButton>
+    <Typography variant="h6" className={classes.title}>
+      
+    </Typography>
+    <Button color="inherit">Login</Button>
+  </Toolbar>
+</AppBar> */}
+
+          
+          </Grid>
+          
           {prop.current_rps
             .slice((prop.currentpage - 1) * 20, prop.currentpage * 20)
             .map((protein: NeoHomolog) => {
               return (
-                <Grid item>
-                  <RibosomalProteinCard e={protein} />
+                <Grid item xs={12}>
+                  <RibosomalProteinCard protein={ protein }  />
                 </Grid>
               );
             })}

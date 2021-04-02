@@ -5,7 +5,6 @@ import { ERS, BanPaperEntry } from './RPsCatalogue';
 import {  OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
@@ -60,6 +59,7 @@ const usePopoverStyles = makeStyles((theme: Theme) =>
     },
     rowHover:{
       '&:hover':{
+
         background:"gray",
         cursor:"pointer"
 
@@ -83,24 +83,24 @@ const usePopoverStyles = makeStyles((theme: Theme) =>
 
 
   return (
-    <Paper style={{marginTop:"10px"}}>
+    <Paper style={{ marginTop: "10px" }}>
 
       <Grid container item xs={12} justify="space-between" alignContent="flex-end" alignItems="flex-end">
 
- <OverlayTrigger placement="left" overlay={renderTooltip}>
+        <OverlayTrigger placement="left" overlay={renderTooltip}>
 
-<Grid item>
+          <Grid item>
 
-        <Button style={{color:"blue"}} onClick={()=>{history.push(`/rps/${prop.nom_class}`)}}  variant='outlined'>{prop.nom_class}</Button>
+            <Button style={{ color: "blue" }} onClick={() => { history.push(`/rps/${prop.nom_class}`) }} variant='outlined'>{prop.nom_class}</Button>
 
-</Grid>
+          </Grid>
         </OverlayTrigger>
-<Grid item>
+        <Grid item>
 
-        <Button  variant="text" size="small" onClick={handleClick}>
-          Associated Structures
+          <Button variant="text" size="small" onClick={handleClick}>
+            Associated Structures
         </Button>
-</Grid>
+        </Grid>
 
         <Popover
           id={id}

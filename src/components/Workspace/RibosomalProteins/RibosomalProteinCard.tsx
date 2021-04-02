@@ -1,4 +1,5 @@
-import React, { useState } from 'react';import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import React, { useState } from 'react';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -17,7 +18,11 @@ import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import Popover from '@material-ui/core/Popover';
 import { connect } from 'react-redux';
 import {  mapDispatchFilter, mapStateFilter, handleFilterChange, FiltersReducerState } from "../../../redux/reducers/Filters/FiltersReducer";
-import {  FilterData  } from '../../../redux/reducers/Filters/ActionTypes';
+import {  filterChangeActionCreator, FilterData, FilterType  } from '../../../redux/reducers/Filters/ActionTypes';
+import { CartItem, cart_add_item } from '../../../redux/reducers/Cart/ActionTypes';
+import { AppState } from '../../../redux/store';
+import {Dispatch} from 'redux'
+import { AppActions } from '../../../redux/AppActions';
 
 const RPLoader = () => (
   <div className="prot-loading">
@@ -61,22 +66,33 @@ const useStyles = makeStyles({
   }
 });
 
-interface OwnProps{
-e:NeoHomolog
+interface OwnProps {
+  protein: NeoHomolog
 }
-type RibosomalProtCardProps = handleFilterChange & FilterData & OwnProps
-export const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
-  const history   = useHistory()
-  const [isFetching, setisFetching] = useState<boolean>(false);
 
-  const downloadChain = (pdbid:string, cid:string)=>{
+interface StateProps {
+  allFilters: FiltersReducerState
+}
+
+interface DispatchProps {
+  handleFilterChange  :  (allFilters:FiltersReducerState,filtertype:FilterType, newavalue:number|string|number[]|string[]) => void
+  addCartItem         :  (item:CartItem) => void
+}
+
+
+
+type RibosomalProtCardProps = DispatchProps & StateProps & OwnProps
+const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
+
+  const history                      =  useHistory()
+  const [isFetching, setisFetching]  =  useState<boolean>(false);
+  const downloadChain                =  (pdbid:string, cid:string)=>{
 
     var chain = cid;
     if (cid.includes(",")){
      chain = cid.split(",")[0]
     }
     getNeo4jData("static_files", {
-
       endpoint  :  "cif_chain",
       params    :  { structid: pdbid, chainid: chain },
 
@@ -110,6 +126,7 @@ export const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => 
 
   return (
     <Card className={classes.root} variant="outlined">
+
       <CardContent>
         <Grid xs={12} container spacing={1}>
           <Grid
@@ -123,9 +140,9 @@ export const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => 
               <Tooltip
                 title={
                   <Typography>
-                    Structure {prop.e.parent}:
+                    Structure {prop.protein.parent}:
                     <br />
-                    {prop.e.title}
+                    {prop.protein.title}
                   </Typography>
                 }
                 placement="top-end"
@@ -133,43 +150,43 @@ export const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => 
                 <Typography
                   className={classes.hover}
                   onClick={() => {
-                    history.push(`/structs/${prop.e.parent}`);
+                    history.push(`/structs/${prop.protein.parent}`);
                   }}
                   variant="body1"
                 >
-                  {prop.e.parent}.{prop.e.protein.entity_poly_strand_id}
+                  {prop.protein.parent}.{prop.protein.protein.entity_poly_strand_id}
                 </Typography>
               </Tooltip>
             </Grid>
             <Grid
               className={classes.hover}
               onClick={() => {
-                prop.handleChange(
+                prop.handleFilterChange(
                   prop.allFilters as FiltersReducerState,
-                  prop.e.orgid
+                  "SPECIES",
+                  prop.protein.orgid
                 );
               }}
               item
               xs={6}
             >
-              <Typography variant="caption">{prop.e.orgname[0]}</Typography>
+              <Typography variant="caption">{prop.protein.orgname[0]}</Typography>
             </Grid>
           </Grid>
           <Grid item justify="space-between" container xs={12}></Grid>
           <Grid item justify="space-between" container xs={12}>
             <Typography variant="body2" component="p">
-              {prop.e.protein.pfam_descriptions}
-              <br /> {prop.e.protein.rcsb_pdbx_description}
+              {prop.protein.protein.pfam_descriptions}
+              <br /> {prop.protein.protein.rcsb_pdbx_description}
             </Typography>
           </Grid>
         </Grid>
       </CardContent>
-
       <CardActions>
         <Grid container xs={12}>
 <Grid container item xs={8}>
             <Button size="small" aria-describedby={id} onClick={handleClick}>
-              Seq ({prop.e.protein.entity_poly_seq_length}AAs)
+              Seq ({prop.protein.protein.entity_poly_seq_length}AAs)
             </Button>
             <Button
               size="small"
@@ -177,7 +194,7 @@ export const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => 
               // href={`https://www.uniprot.org/uniprot/${prop.e.protein.uniprot_accession}`}
             >
               <a style={{color:"black", textDecoration:"none"}}
-   href={ `https://www.uniprot.org/uniprot/${prop.e.protein.uniprot_accession}` }>
+   href={ `https://www.uniprot.org/uniprot/${prop.protein.protein.uniprot_accession}` }>
               Uniprot
               </a>
             </Button>
@@ -185,8 +202,8 @@ export const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => 
               size="small"
               onClick={() =>
                 downloadChain(
-                  prop.e.parent,
-                  prop.e.protein.entity_poly_strand_id
+                  prop.protein.parent,
+                  prop.protein.protein.entity_poly_strand_id
                 )
               }
             >
@@ -205,7 +222,10 @@ export const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => 
 </Grid>
 <Grid container item xs={4}>
             <Button  onClick={()=>{
-            }}size="small" disabled={true}>
+
+prop.addCartItem(prop.protein)
+        
+            }}size="small" >
               Add to Workspace
             </Button>
             </Grid>
@@ -226,14 +246,12 @@ export const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => 
           horizontal: "center",
         }}
       >
-        {/* <Typography ></Typography> */}
         <Grid container xs={12}>
           <Typography
-            style={{ width: "400px", wordBreak: "break-word" }}
+            style={{width: "400px",wordBreak:"break-word"}}
             variant="body2"
-            className={classes.popover}
-          >
-            {prop.e.protein.entity_poly_seq_one_letter_code}
+            className={classes.popover}          >
+            {prop.protein.protein.entity_poly_seq_one_letter_code}
           </Typography>
         </Grid>
       </Popover>
@@ -241,4 +259,17 @@ export const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => 
   );
 }
 
-export default connect (mapStateFilter("SPECIES"), mapDispatchFilter("SPECIES")) (_RibosomalProteinCard);
+
+const mapstate = (appstate:AppState, ownprops:OwnProps):StateProps =>({
+  allFilters: appstate.filters,
+});
+
+const mapdispatch = (dispatch: Dispatch<AppActions>, ownprops:any):DispatchProps =>
+({
+  handleFilterChange  :  (allfilters,filttype,newval)=>dispatch(filterChangeActionCreator(allfilters,filttype,newval)),
+  addCartItem         :  (item)=>dispatch(cart_add_item(item))
+})
+
+const RibosomalProteinCard = connect(mapstate,mapdispatch)(_RibosomalProteinCard)
+
+export default RibosomalProteinCard;

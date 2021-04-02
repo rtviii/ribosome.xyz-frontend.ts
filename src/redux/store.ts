@@ -8,6 +8,7 @@ import { RNAReducer } from "./reducers/RNA/RNAReducer";
 import { LigandsReducer } from "./reducers/Ligands/LigandsReducer";
 import { UtilitiesReducer } from "./reducers/Utilities/UtilitiesReducer"
 import { InterfaceReducer } from "./reducers/Interface/InterfaceReducer"
+import { CartReducer } from "./reducers/Cart/CartReducer"
 
 const collapsFilter = (action: any) => {
   // Collapse by action type:
@@ -24,7 +25,8 @@ export const rootReducer = combineReducers({
   rna       : RNAReducer,
   ligands   : LigandsReducer,
   utils     : UtilitiesReducer,
-  Interface : InterfaceReducer
+  Interface : InterfaceReducer,
+  cart: CartReducer
 });
 
 export type AppState = ReturnType<typeof rootReducer>;

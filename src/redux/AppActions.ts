@@ -5,6 +5,7 @@ import { RNAActions } from "./reducers/RNA/ActionTypes";
 import { LigandsActions } from "./reducers/Ligands/ActionTypes";
 import { UtilitiesActions } from "./reducers/Utilities/ActionTypes"
 import { InterfaceActions } from "./reducers/Interface/ActionTypes";
+import { CartActions } from "./reducers/Cart/ActionTypes";
 
 export type AppActions =
   | StructActionTypes
@@ -14,3 +15,4 @@ export type AppActions =
   | LigandsActions
   | UtilitiesActions
   | InterfaceActions
+  | CartActions

@@ -19,6 +19,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AppActions } from '../../redux/AppActions';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles({
   root:{
@@ -73,23 +74,20 @@ const _MenuItem:React.FC<{toggle_dash:()=>void; tooltip:boolean} & MenuItemData>
 
     </ListItem>)}
 
-const _DashboardButton:React.FC<DashProps> = (props)=>{
-  return  <Grid   onClick={() => props.toggle_dash()}container xs={12} justify="flex-start">
-      <Grid item xs={4} justify='center'>
-        <img  src={gear} style={{cursor:"pointer", height: "40px", opacity: "0.5" }} />
-      </Grid>
-
-      <Grid item xs={8} justify='center'  >
-      <Button   style={{width:"100%"}} >
-      Menu
-      </Button>
-      </Grid>
-      </Grid>
-
-
-
+const _DashboardButton: React.FC<DashProps> = (props) => {
+  return <Grid 
+  onClick={() => props.toggle_dash()} container xs={12} 
+  style={{cursor:"pointer"}}
+  justify="flex-start" 
+  alignContent='center'
+  // alignItems='center'
+  direction='row' >
+    <Grid item xs={4} > 
+      <img style={{maxWidth:"100%",maxHeight:"100%"}} src={gear}/>
+    </Grid>
+  </Grid>
 }
- const _TemporaryDrawer:React.FC<DashProps> = (props)=> {
+const _TemporaryDrawer: React.FC<DashProps> = (props) => {
 
   const classes = useStyles();
 

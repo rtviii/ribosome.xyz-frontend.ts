@@ -29,6 +29,7 @@ import {useDebounce} from 'use-debounce'
 import {  FilterData, FilterType,filterChange, filterChangeActionCreator, resetAllFilters} from "../../../redux/reducers/Filters/ActionTypes"
 import {SpeciesGroupings} from './taxid_map'
 import _  from "lodash";
+import Cart from './../Cart/Cart'
 import {Link, useHistory} from "react-router-dom";
 import {DashboardButton} from './../../../materialui/Dashboard/Dashboard'
 import PageAnnotation from './PageAnnotation'
@@ -385,6 +386,9 @@ type StructureFilterProps ={
           <DashboardButton/>
         </ListItem>
 
+        <ListItem >
+         <Cart/>
+        </ListItem>
       </List>
     </Drawer>
   );

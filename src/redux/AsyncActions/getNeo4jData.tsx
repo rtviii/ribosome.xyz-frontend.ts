@@ -1,7 +1,8 @@
 import Axios from "axios";
+import qs from 'qs'
 
-const BACKEND: any   = process.env.REACT_APP_DJANGO_URL;
-type  DjangoAPIs     = "neo4j" | "static_files" 
+const BACKEND: any  =  process.env.REACT_APP_DJANGO_URL;
+type  DjangoAPIs    =  "neo4j" | "static_files"
 
 
 type StaticFilesEndpoints =
@@ -9,7 +10,8 @@ type StaticFilesEndpoints =
   | download_ligand_nbhd
   | get_tunnel
   | pairwise_align
-  | get_static_catalogue;
+  | get_static_catalogue
+  | downloadArchive
 
 type Neo4jEndpoints =
   | getStructure
@@ -28,9 +30,15 @@ type Neo4jEndpoints =
   | get_individual_ligand
   | match_structs_by_proteins
   | get_surface_ratios
-  | TEMP_classification_sample;
+  | TEMP_classification_sample
 
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
+interface downloadArchive {
+  endpoint: 'downloadArchive',
+  params: {
+    [key:string]:string
+  }
+}
 
 interface get_individual_ligand{
   endpoint: 'get_individual_ligand',
@@ -154,5 +162,8 @@ interface getAllLigands{
 
 export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {
   const URI = encodeURI(`${BACKEND}/${api}/${ep.endpoint}/`);
-  return ep.params != null ? Axios.get(URI, { params: ep.params }) : Axios.get(URI);
+  return ep.params != null ? Axios.get(URI, { params: ep.params , paramsSerializer:params => qs.stringify(params, {
+    arrayFormat:"repeat"
+    
+  })}) : Axios.get(URI);
 };

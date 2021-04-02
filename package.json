@@ -30,6 +30,7 @@
     "node-sass": "^4.14.1",
     "pdb-topology-viewer": "^2.0.0",
     "pdbe-molstar": "^1.1.0-dev.4",
+    "qs": "^6.10.1",
     "react": "^16.13.1",
     "react-app-polyfill": "^2.0.0",
     "react-bootstrap": "^1.4.3",

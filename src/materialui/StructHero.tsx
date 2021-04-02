@@ -7,8 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import hero from './../static/sample-hero.png'
-import { Grid, TextareaAutosize } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { truncate } from '../components/Main';
 import { Link,useHistory} from 'react-router-dom';
 import { NeoStruct } from '../redux/DataInterfaces';

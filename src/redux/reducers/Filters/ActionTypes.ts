@@ -38,6 +38,7 @@ export type FilterType =
 export type FilterPredicate = (
   value: string[] | string | number[] | number
 ) => (item: RXZDataTypes) => boolean;
+
 export type FilterData = {
   set          :  boolean;
   value        :  string[] | string | number[] | number;

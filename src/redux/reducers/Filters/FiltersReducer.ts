@@ -110,11 +110,15 @@ export const FiltersReducer = (
 export interface handleFilterChange {
   handleChange: ( allFilters:FiltersReducerState, newavalue:number|string|number[]|string[]) => void;
 }
+
 export const mapStateFilter=(filttype:FilterType)=>(appstate:AppState, ownprops:any):FilterData =>({
+
   allFilters: appstate.filters,
   set       : appstate.filters.filters[filttype].set,
   value     : appstate.filters.filters[filttype].value
+
 })
+
 export const mapDispatchFilter = (filttype: FilterType) => (
   dispatch: Dispatch<AppActions>,
   ownProps: any
