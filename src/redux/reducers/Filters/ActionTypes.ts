@@ -6,6 +6,7 @@ import {
   RNAProfile,
   LigandResponseShape,
 } from "../../DataInterfaces";
+import { RibosomalProtein } from "../../RibosomeTypes";
 import { FiltersReducerState } from "./FiltersReducer";
 
 const RESET_ALL_FILTERS = "RESET_ALL_FILTERS"
@@ -68,15 +69,13 @@ export const FilterPredicates: Record<
         .includes(value as string);
     },
     PROTEIN: (value: any) => (item: RXZDataTypes) => {
-      var prot = item as NeoHomolog;
+      var prot = item as RibosomalProtein;
       return (
-        prot.parent +
-        prot.protein.nomenclature +
-        prot.protein.pfam_comments +
-        prot.protein.pfam_descriptions +
-        prot.protein.rcsb_pdbx_description +
-        prot.title +
-        prot.orgname.reduce((acc, name) => acc + name, "")
+        prot.nomenclature +
+        prot.pfam_comments.reduce((acc, name) => acc + name, "") +
+        prot.pfam_descriptions +
+        prot.rcsb_pdbx_description +
+        prot.rcsb_source_organism_id.reduce((acc, name) => acc + name, "")
       )
         .toLowerCase()
         .includes(value as string);
@@ -138,8 +137,8 @@ export const FilterPredicates: Record<
       );
     },
     PROTEIN: (value: any) => (item: RXZDataTypes) => {
-      var prot = item as NeoHomolog;
-      return prot.orgid.reduce(
+      var prot = item as RibosomalProtein;
+      return prot.rcsb_source_organism_id.reduce(
         (accumulator: boolean, taxid) =>
           accumulator || (value as number[]).includes(taxid),
         false

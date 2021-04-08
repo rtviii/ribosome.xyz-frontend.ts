@@ -1,4 +1,6 @@
 import {  RibosomeStructure,  RibosomalProtein, rRNA, Ligand} from "./RibosomeTypes";
+// DataInterfaces contains declarations for most datatypes that the application
+// uses. Some are imported from RibosomeTypes and constitute non-composite types that also resemble neo4j-schema
 
 // Preload for strucutrescatalogue
 export interface NeoStruct{
@@ -35,6 +37,7 @@ export interface StructureWithLigand{
   pdbx_keywords_text   : string| null
 
 }
+
 export interface LigandResponseShape  {
   ligand   : Ligand
   presentIn: StructureWithLigand[]
@@ -43,4 +46,4 @@ export interface LigandResponseShape  {
 
 
 
-export type RXZDataTypes                 = NeoStruct | NeoHomolog | RNAProfile | LigandResponseShape;
+export type RXZDataTypes= NeoStruct | RibosomalProtein | RNAProfile | LigandResponseShape;

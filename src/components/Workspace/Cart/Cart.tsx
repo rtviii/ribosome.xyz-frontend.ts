@@ -25,9 +25,10 @@ import ContentSelectAll from 'material-ui/svg-icons/content/select-all'
 import axios from 'axios'
 import fileDownload from 'js-file-download'
 import { ListSubheader } from '@material-ui/core'
+import { RibosomalProtein } from '../../../redux/RibosomeTypes'
 
 interface StateProps{
-    cartitems:NeoHomolog[]
+    cartitems:RibosomalProtein[]
 }
 
 const Cart:React.FC<StateProps> = (prop) => {
@@ -66,7 +67,7 @@ const Cart:React.FC<StateProps> = (prop) => {
                 </ListSubheader>
             {prop.cartitems.map(i => 
                 <ListItem>
-             {i.protein.entity_poly_strand_id + " [" +i.protein.nomenclature[0]+"]" }
+             {i.entity_poly_strand_id + " [" +i.nomenclature[0]+"]" }
                 </ListItem>
             )}
             </List>
@@ -87,13 +88,13 @@ const Cart:React.FC<StateProps> = (prop) => {
 
                             getNeo4jData("static_files", {
                                 endpoint: "downloadArchive", params:
-                                    prop.cartitems.reduce((acc: { [k: string]: string }, val: NeoHomolog) => {
+                                    prop.cartitems.reduce((acc: { [k: string]: string }, val: RibosomalProtein) => {
 
-                                        if (Object.keys(acc).includes(val.parent)) {
-                                            acc[val.parent] = acc[val.parent] + '.' + val.protein.entity_poly_strand_id
+                                        if (Object.keys(acc).includes(val.parent_rcsb_id)) {
+                                            acc[val.parent_rcsb_id] = acc[val.parent_rcsb_id] + '.' + val.entity_poly_strand_id
                                         }
                                         else {
-                                            acc[val.parent] = val.protein.entity_poly_strand_id
+                                            acc[val.parent_rcsb_id] = val.entity_poly_strand_id
                                         } return acc
                                     }, {})
 
@@ -109,7 +110,7 @@ const Cart:React.FC<StateProps> = (prop) => {
                     {prop.cartitems.map((prot, i) => {
                         const labelId = `checkbox-list-label-${prot}`;
                         return (
-                            <ListItem key={prot.parent + i} role={undefined} dense button >
+                            <ListItem key={prot.parent_rcsb_id + i} role={undefined} dense button >
                                 <ListItemIcon>
                                     <Checkbox
                                         edge="start"
@@ -119,7 +120,7 @@ const Cart:React.FC<StateProps> = (prop) => {
                                         inputProps={{ 'aria-labelledby': labelId }}
                                     />
                                 </ListItemIcon>
-                                <ListItemText id={labelId} primary={`Protein ${prot.protein.nomenclature[0]} (${prot.parent})`} />
+                                <ListItemText id={labelId} primary={`Protein ${prot.nomenclature[0]} (${prot.parent_rcsb_id})`} />
                                 <ListItemSecondaryAction>
                                     <IconButton edge="end" aria-label="comments">
                                         <CommentIcon />

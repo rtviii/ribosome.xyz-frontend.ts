@@ -17,12 +17,13 @@ import {useHistory} from 'react-router-dom'
 import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import Popover from '@material-ui/core/Popover';
 import { connect } from 'react-redux';
-import {  mapDispatchFilter, mapStateFilter, handleFilterChange, FiltersReducerState } from "../../../redux/reducers/Filters/FiltersReducer";
+import {  FiltersReducerState } from "../../../redux/reducers/Filters/FiltersReducer";
 import {  filterChangeActionCreator, FilterData, FilterType  } from '../../../redux/reducers/Filters/ActionTypes';
 import { CartItem, cart_add_item } from '../../../redux/reducers/Cart/ActionTypes';
 import { AppState } from '../../../redux/store';
 import {Dispatch} from 'redux'
 import { AppActions } from '../../../redux/AppActions';
+import { RibosomalProtein } from '../../../redux/RibosomeTypes';
 
 const RPLoader = () => (
   <div className="prot-loading">
@@ -40,7 +41,6 @@ const useStyles = makeStyles({
 
   },
   root: {
-
   },
   bullet: {
     display: 'inline-block',
@@ -67,7 +67,7 @@ const useStyles = makeStyles({
 });
 
 interface OwnProps {
-  protein: NeoHomolog
+  protein: RibosomalProtein
 }
 
 interface StateProps {
@@ -121,9 +121,8 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
     setAnchorEl(null);
   };
 
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
-
+  const open  =  Boolean(anchorEl);
+  const id    =  open ? 'simple-popover' : undefined;
   return (
     <Card className={classes.root} variant="outlined">
 
@@ -140,9 +139,9 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
               <Tooltip
                 title={
                   <Typography>
-                    Structure {prop.protein.parent}:
+                    Structure {prop.protein.parent_rcsb_id}:
                     <br />
-                    {prop.protein.title}
+                    strand {prop.protein.entity_poly_strand_id}
                   </Typography>
                 }
                 placement="top-end"
@@ -150,11 +149,11 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
                 <Typography
                   className={classes.hover}
                   onClick={() => {
-                    history.push(`/structs/${prop.protein.parent}`);
+                    history.push(`/structs/${prop.protein.parent_rcsb_id}`);
                   }}
                   variant="body1"
                 >
-                  {prop.protein.parent}.{prop.protein.protein.entity_poly_strand_id}
+                  {prop.protein.parent_rcsb_id}.{prop.protein.entity_poly_strand_id}
                 </Typography>
               </Tooltip>
             </Grid>
@@ -164,20 +163,20 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
                 prop.handleFilterChange(
                   prop.allFilters as FiltersReducerState,
                   "SPECIES",
-                  prop.protein.orgid
+                  prop.protein.rcsb_source_organism_id
                 );
               }}
               item
               xs={6}
             >
-              <Typography variant="caption">{prop.protein.orgname[0]}</Typography>
+              <Typography variant="caption">{prop.protein.rcsb_source_organism_id[0]}</Typography>
             </Grid>
           </Grid>
           <Grid item justify="space-between" container xs={12}></Grid>
           <Grid item justify="space-between" container xs={12}>
             <Typography variant="body2" component="p">
-              {prop.protein.protein.pfam_descriptions}
-              <br /> {prop.protein.protein.rcsb_pdbx_description}
+              {prop.protein.pfam_descriptions}
+              <br /> {prop.protein.rcsb_pdbx_description}
             </Typography>
           </Grid>
         </Grid>
@@ -186,7 +185,7 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
         <Grid container xs={12}>
 <Grid container item xs={8}>
             <Button size="small" aria-describedby={id} onClick={handleClick}>
-              Seq ({prop.protein.protein.entity_poly_seq_length}AAs)
+              Seq ({prop.protein.entity_poly_seq_length}AAs)
             </Button>
             <Button
               size="small"
@@ -194,7 +193,7 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
               // href={`https://www.uniprot.org/uniprot/${prop.e.protein.uniprot_accession}`}
             >
               <a style={{color:"black", textDecoration:"none"}}
-   href={ `https://www.uniprot.org/uniprot/${prop.protein.protein.uniprot_accession}` }>
+   href={ `https://www.uniprot.org/uniprot/${prop.protein.uniprot_accession}` }>
               Uniprot
               </a>
             </Button>
@@ -202,8 +201,8 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
               size="small"
               onClick={() =>
                 downloadChain(
-                  prop.protein.parent,
-                  prop.protein.protein.entity_poly_strand_id
+                  prop.protein.parent_rcsb_id,
+                  prop.protein.entity_poly_strand_id
                 )
               }
             >
@@ -212,6 +211,9 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
                 <RPLoader />
               ) : (
                 <img
+                  style={{
+                    width:"20px", height:"20px"
+                  }}
                   id="download-protein"
                   src={downicon}
                   alt="download protein"
@@ -251,7 +253,7 @@ prop.addCartItem(prop.protein)
             style={{width: "400px",wordBreak:"break-word"}}
             variant="body2"
             className={classes.popover}          >
-            {prop.protein.protein.entity_poly_seq_one_letter_code}
+            {prop.protein.entity_poly_seq_one_letter_code}
           </Typography>
         </Grid>
       </Popover>

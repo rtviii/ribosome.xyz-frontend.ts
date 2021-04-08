@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";import "./StructuresCatalogue.css";
 import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import Input from '@material-ui/core/Input';
-import Chip from '@material-ui/core/Chip';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
 import {large_subunit_map} from './../../../static/large-subunit-map'
 import {small_subunit_map} from './../../../static/small-subunit-map'
 import Grid from '@material-ui/core/Grid';
@@ -13,14 +8,10 @@ import Slider from '@material-ui/core/Slider';
 import { connect, useStore  } from "react-redux";
 import { AppState } from "../../../redux/store";
 import { AppActions } from "../../../redux/AppActions";import LoadingSpinner  from '../../Other/LoadingSpinner'
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
 import StructHero from './../../../materialui/StructHero'
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import * as redux from '../../../redux/reducers/StructuresReducer/StructuresReducer'
 import { Dispatch } from 'redux';
@@ -35,9 +26,10 @@ import {DashboardButton} from './../../../materialui/Dashboard/Dashboard'
 import PageAnnotation from './PageAnnotation'
 import { NeoStruct } from "../../../redux/DataInterfaces";
 import { FiltersReducerState, mapDispatchFilter, mapStateFilter, handleFilterChange } from "../../../redux/reducers/Filters/FiltersReducer";
+import DropdownTreeSelect from 'react-dropdown-tree-select'
+import 'react-dropdown-tree-select/dist/styles.css'
 
 import Pagination from './Pagination'
-import classes from "*.module.css";
 
 const pageData ={
   title:"Whole Ribosome Structures",
@@ -48,12 +40,88 @@ const pageData ={
 
 // Workspace itself
 interface StateProps {
-  structures  : NeoStruct[];
-  loading     : boolean;
-  current_page: number;
-  pages_total : number
-  }
+  structures    :  NeoStruct[];
+  loading       :  boolean;
+  current_page  :  number;
+  pages_total   :  number
+}
 
+
+const data = {
+  label     :  'Species Filter',
+  value     :  'All',
+  children  :  [
+    {
+      label: "Viruses",
+      value: "Viruses",
+      children: []
+    },
+    {
+      label: "Archea",
+      value: "Archea",
+      children: [
+
+        {
+          label: "Candidatus Diapherotrites archaeon ADurb.Bin253",
+          value: "Candidatus Diapherotrites archaeon ADurb.Bin253",
+        },
+        {
+          label: "Thermococcus celer Vu 13 = JCM 8558",
+          value: "Thermococcus celer Vu 13 = JCM 8558",
+        }
+      ]
+    },
+    {
+      label: "Eukaryota",
+      value: "Eukaryota",
+      children: [
+        {
+          label: "Leishmania braziliensis MHOM/BR/75/M2904",
+          value: "Leishmania braziliensis MHOM/BR/75/M2904",
+        },
+        {
+          label: "Cryptosporidium hominis TU502",
+          value: "Cryptosporidium hominis TU502",
+        },
+        {
+          label: "Yarrowia lipolytica CLIB122",
+          value: "Yarrowia lipolytica CLIB122",
+        }
+
+
+      ]
+    },
+    {
+      label: "Bacteria",
+      value: "Bacteria",
+      children: [
+
+        {
+          label: "Acinetobacter sp. RUH2624",
+          value: "Acinetobacter sp. RUH2624",
+        },
+        {
+          label: "Gluconobacter oxydans 621H",
+          value: "Gluconobacter oxydans 621H",
+        }
+      ]
+    },
+  ],
+}
+
+//@ts-ignore
+const onChange = (currentNode, selectedNodes) => {
+  console.log('onChange::', currentNode, selectedNodes)
+}
+//@ts-ignore
+const onAction = (node, action) => {
+  console.log('onAction::', action, node)
+}
+//@ts-ignore
+const onNodeToggle = currentNode => {
+  console.log('onNodeToggle::', currentNode)
+}
+ 
 interface DispatchProps{
   next_page: ()=>void;
   prev_page: ()=>void;
@@ -63,13 +131,11 @@ type WorkspaceCatalogueProps =  StateProps & DispatchProps;
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
-
-
-
-  return !prop.loading ? (
+  return ! prop.loading ? (
     <div className="workspace-catalogue-grid">
       <div className="wspace-catalogue-filters-tools">
         <StructureFilters />
+
       </div>
 
       <Grid container item xs={12} spacing={3}>
@@ -297,8 +363,6 @@ export const ResolutionSlider  =  connect(mapStateFilter("RESOLUTION"),    mapDi
 export const SearchField       =  connect(mapStateFilter("SEARCH"),       mapDispatchFilter("SEARCH"))(_SearchField)
 export const SpeciesList       =  connect(mapStateFilter("SPECIES"),      mapDispatchFilter("SPECIES"))(_SpecList)
 
-// export const SelectedProteins  =  connect(mapStateFilter("PROTEINS_PRESENT"), mapDispatchFilter("PROTEINS_PRESENT"))(_SelectProteins)
-
 const mapResetFilters = (dispatch: Dispatch<AppActions>, ownprops:any):{
   reset_filters: () =>void
 } =>({
@@ -361,6 +425,7 @@ type StructureFilterProps ={
           </Link>
         </ListItem>
       <Divider /> */}
+
         <ListItem key={"search"}>
           <SearchField />
         </ListItem>
@@ -388,6 +453,9 @@ type StructureFilterProps ={
 
         <ListItem >
          <Cart/>
+        </ListItem>
+        <ListItem key={"select-species"} >
+          <DropdownTreeSelect data={data} onChange={onChange} onAction={onAction} onNodeToggle={onNodeToggle} />
         </ListItem>
       </List>
     </Drawer>

@@ -26,9 +26,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 
 interface ReduxProps{
-  current_rps: NeoHomolog[]
+  current_rps      : RibosomalProtein[]
   pagestotal       :  number
   currentpage      :  number
 }
@@ -48,8 +49,7 @@ const RPPage:React.FC<RPPageProps> = (prop) => {
   var className = nameparam.slice(0,1).toLowerCase() + nameparam.slice(1,2).toUpperCase() + nameparam.slice(2)
 
     useEffect(() => {
-      console.log(className);
-      
+    console.log(className);
     prop.requestBanClass(className)
   }, [])
 
@@ -103,32 +103,11 @@ const classes = useStyles();
 
            
           <Grid item xs={12}>  
-          {/* <Paper variant="elevation" elevation={3} style={{
-            padding:"20px"
-          }}>
-            tools
-
-
-          </Paper> */}
-
-{/* <AppBar position="static">
-  <Toolbar>
-    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-      <MenuIcon />
-    </IconButton>
-    <Typography variant="h6" className={classes.title}>
-      
-    </Typography>
-    <Button color="inherit">Login</Button>
-  </Toolbar>
-</AppBar> */}
-
-          
           </Grid>
           
           {prop.current_rps
             .slice((prop.currentpage - 1) * 20, prop.currentpage * 20)
-            .map((protein: NeoHomolog) => {
+            .map((protein: RibosomalProtein) => {
               return (
                 <Grid item xs={12}>
                   <RibosomalProteinCard protein={ protein }  />

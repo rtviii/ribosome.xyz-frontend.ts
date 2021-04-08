@@ -7,15 +7,20 @@ import {
   rRNA,
 } from "../../../redux/RibosomeTypes";
 import "./StructurePage.css";
+// import RNAHero from "./../RNA/RNAHero";
 import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import { flattenDeep } from "lodash";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../../redux/store";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../../../redux/AppActions";
+import StructGrid from "./StructGrid";
 import LoadingSpinner from './../../Other/LoadingSpinner'
 import { Tooltip } from "react-bootstrap";
 import { OverlayTrigger } from "react-bootstrap";
+
+import rayimg from '../../../../public/ray_templates/_ray_1VY4.png'
+import fileDownload from "js-file-download";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
@@ -25,14 +30,7 @@ import Button from "@material-ui/core/Button";
 import Popover from "@material-ui/core/Popover";
 import { makeStyles } from "@material-ui/core/styles";
 import { DashboardButton } from "../../../materialui/Dashboard/Dashboard";
-import RibosomalProteinCard from "../RibosomalProteins/RibosomalProteinCard";
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import fileDownload from "js-file-download";
-
-
+import { struct_page_choice } from "../../../redux/reducers/Interface/ActionTypes";
 
 
 
@@ -280,102 +278,27 @@ const StructurePage: React.FC<StructurePageProps> = (
     return () => {};
   }, [pdbid]);
 
-  const [lsu, setlsu]     = useState<RibosomalProtein[]>([])
-  const [ssu, setssu]     = useState<RibosomalProtein[]>([])
-  const [other, setother] = useState<RibosomalProtein[]>([])
-
-
-
-  useEffect(() => {
-    var lsu   = protdata.filter(x=> x.nomenclature.length === 1 && flattenDeep(x.nomenclature.map(name => { return name.match(/L/)})).includes('L') )
-    var ssu   = protdata.filter(x=> x.nomenclature.length === 1 && flattenDeep(x.nomenclature.map(name => { return name.match(/S/)})).includes('S'))
-    var other = protdata.filter(x=> ![...lsu,...ssu].includes(x))
-    setlsu(lsu)
-    setssu(ssu)
-    setother(other)
-  }, [protdata])
   const renderSwitch = (activecategory: string) => {
     switch (activecategory) {
       case "protein":
         return (
-          <Grid xs={9} container item spacing={1}>
+          <StructGrid
+            {...{
+              pdbid     :  pdbid,
+              ligands   :  ligands,
+              protdata  :  protdata,
+              rrnas     :  rrnas,
+            }}/>
 
-            {/* <Grid item xs={12}> */}
-
-              {/* <Paper>
-
-                Filters
-        </Paper>
-
-            </Grid> */}
-            <Grid item justify="flex-start" alignItems='flex-start' alignContent='flex-start' container xs={4} spacing={1}>
-              <Grid item xs={12} style={{ paddingTop: "10px" }} >
-                <Typography color="primary" variant="h4">
-
-                  LSU Proteins
-              </Typography>
-              </Grid>
-
-              {lsu.map(protein => {
-
-                return <Grid item xs={12}>
-                  <RibosomalProteinCard protein={protein} />
-                </Grid>
-              })}
-
-            </Grid>
-            <Grid item justify="flex-start" alignItems='flex-start' container alignContent='flex-start' xs={4} spacing={1}>
-              <Grid item xs={12} style={{ paddingTop: "10px" }} >
-                <Typography color="primary" variant="h4">
-
-                  SSU Proteins
-              </Typography>
-              </Grid>
-              {ssu.map(protein => {
-                return <Grid item xs={12}>
-                  <RibosomalProteinCard protein={protein} />
-                </Grid>
-              })}
-
-            </Grid>
-            <Grid item justify="flex-start" alignItems='flex-start' alignContent='flex-start' container xs={4} spacing={1}>
-              <Grid item xs={12} style={{ paddingTop: "10px" }} >
-                <Typography color="primary" variant="h4">
-
-                  Other/Unclassified
-              </Typography>
-              </Grid>
-              {other.map(protein => {
-                return <Grid item xs={12}>
-                  <RibosomalProteinCard protein={protein} />
-                </Grid>
-              })}
-
-            </Grid>
-
-
-
-
-          </Grid>
         );
-
       case "rna":
 
       return (
-
-        <Grid container xs={10} spacing={1}>{
-          rrnas.map(obj => (
-          <Grid item xs={12}>
-            <RNACard {...obj} />
-            </Grid>
-          ))}
-        </Grid>);
-
+        <Grid container xs={12} spacing={1}>{rrnas.map(obj => (<Grid item xs={12}><RNACard {...obj} /></Grid>))}</Grid>);
       case "ligand":
 
         return (
           <div className="struct-page-ligands">
-
             <div>
               Hide Ions:{" "}
               <input type="checkbox" id="ionscheck"
@@ -408,30 +331,40 @@ const StructurePage: React.FC<StructurePageProps> = (
     }
   };
 
-
-
-  const StructCardField = ({field,value}:{ field:string,value:string[]|string|number}) => { 
-    return <ListItem className="annotation"><Typography variant="overline">{field}:</Typography> <Typography variant="body2">{value}</Typography> </ListItem> }
-  
   return structdata ? (
     <Grid xs={12} container item>
-    <Grid xs={3} container item alignContent="flex-start">
+    <Grid xs={2} container item alignContent="flex-start">
 
-    <Card     >
-      <CardActionArea>
 
-        <CardMedia
-          // className={CardClasses.media}
-          image={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`}
-          title="Such and such ribosome"
-        />
+        <h2 className="title">{pdbid}</h2>
+        <img src={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`}/>
+        <div className="component-category">
+          <div
+            onClick={() => dispatch(struct_page_choice("component","rna"))}
+            className={activecat === "rna" ? "activecat" : "cat"}
+          >
+            rRNA
+          </div>
 
-      </CardActionArea>
-        <List>
-          <StructCardField field="Species" value={structdata._organismName} />
+          <div
+            onClick={() => dispatch(struct_page_choice("component","protein"))}
+            className={activecat === "protein" ? "activecat" : "cat"}
+          >
+            Proteins
+          </div>
 
-          {/* <ListItem className="annotation"><Typography variant="overline">Species:</Typography> {structdata._organismName} </ListItem> */}
-          <StructCardField field="Resolution" value={structdata.resolution} />
+          <div
+            onClick={() => dispatch(struct_page_choice("component","ligand"))}
+            className={activecat === "ligand" ? "activecat" : "cat"}
+          >
+            Ligands
+          </div>
+        </div>
+        <div className="structure-info">
+          <div className="annotation">Species: {structdata._organismName} </div>
+          <div className="annotation">Resolution: {structdata.resolution}Å</div>
+          <div className="annotation">
+            Experimental Method:{" "}
             <OverlayTrigger
               key="bottom-overlaytrigger"
               placement="bottom"
@@ -445,37 +378,36 @@ const StructurePage: React.FC<StructurePageProps> = (
                 </Tooltip>
               }
             >
-          <ListItem className="annotation"><Typography variant="overline">Experimental Method:</Typography><Typography variant="body2"> {structdata.expMethod}</Typography>
-          </ListItem>
+              <p className="experimental_method_value">
+                {" "}
+                {structdata.expMethod}
+              </p>
             </OverlayTrigger>
-            <ListItem className="annotation">Title: {structdata.citation_title}</ListItem>
-          <StructCardField field="Title" value={structdata.citation_title} />
-          <StructCardField field="Publication" value={structdata.citation_title} />
-
-          <ListItem className="annotation">
+            <div className="annotation">Title: {structdata.citation_title}</div>
+          </div>
+          <div className="annotation">
+            <p>
+              {" "}
+              Publication:{" "}
+              <a href={`https://www.doi.org/${structdata.citation_pdbx_doi}`}>
+                {structdata.citation_pdbx_doi}
+              </a>
+            </p>
+          </div>
+          <div className="annotation">
             Orgnaism Id: {structdata._organismId}
-          </ListItem>
-          <ListItem className="annotation">
+          </div>
+          <div className="annotation">
             Authors:{" "}
             {structdata.citation_rcsb_authors.length > 1
-              ? structdata.citation_rcsb_authors.reduce((acc:any, curr:any) => {
+              ? structdata.citation_rcsb_authors.reduce((acc, curr) => {
                   return acc.concat(curr, ",");
                 }, "")
               : structdata.citation_rcsb_authors[0]}
-          </ListItem>
-          <ListItem className="annotation">Year: {structdata.citation_year}</ListItem>
+          </div>
+          <div className="annotation">Year: {structdata.citation_year}</div>
           <DashboardButton/>
-        </List>
-      <CardActions>
-        <Button size="small" color="primary">
-          Share
-        </Button>
-        <Button size="small" color="primary">
-          Learn More
-        </Button>
-      </CardActions>
-    {/* !!! ADD                                       DOI  <<<<<<<<<<<<<<<<<<<<<<<*/}
-    </Card>
+        </div>
 
     </Grid>
         {renderSwitch(activecat)}

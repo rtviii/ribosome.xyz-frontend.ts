@@ -1,7 +1,5 @@
 import React from 'react'
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
 import Tooltip from '@material-ui/core/Tooltip';
 import ErrorIcon from '@material-ui/icons/Error';
 import Popover from '@material-ui/core/Popover';

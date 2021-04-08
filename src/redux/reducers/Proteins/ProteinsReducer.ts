@@ -12,8 +12,8 @@ interface ProteinsReducerState{
     error               : any,
     is_loading          : boolean;
     errored_out         : boolean;
-    ban_class           : NeoHomolog[];
-    ban_class_derived   : NeoHomolog[],
+    ban_class           : RibosomalProtein[];
+    ban_class_derived   : RibosomalProtein[],
     all_proteins        : RibosomalProtein[];
     all_proteins_derived: RibosomalProtein[],
 
@@ -81,7 +81,7 @@ export const ProteinsReducer = (
         newState.applied_filters.length === 0
           ? state.ban_class
           : newState.applied_filters.reduce(
-              (filteredProteins: NeoHomolog[], filtertype: typeof ftype) => {
+              (filteredProteins: RibosomalProtein[], filtertype: typeof ftype) => {
                 return filteredProteins.filter(
                   FilterPredicates[filtertype]["PROTEIN"]!(
                     newState.filters[filtertype].value

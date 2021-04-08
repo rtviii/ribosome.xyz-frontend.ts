@@ -1,0 +1,375 @@
+synthetic construct
+-----------------------------------
+Viruses
++-Severe acute respiratory syndrome-related coronavirus
+| \-Severe acute respiratory syndrome coronavirus 2
++-Salmonella virus SP6
+\-Escherichia virus T4
+-----------------------------------
+Eukaryota
++-Leishmania braziliensis
+| \-Leishmania braziliensis MHOM/BR/75/M2904
++-Cryptosporidium hominis
+| \-Cryptosporidium hominis TU502
++-Dictyostelium discoideum
+| \-Dictyostelium discoideum AX4
++-Thalassiosira pseudonana
+| \-Thalassiosira pseudonana CCMP1335
++-Schizosaccharomyces pombe
+| \-Schizosaccharomyces pombe 972h-
++-Yarrowia lipolytica
+| \-Yarrowia lipolytica CLIB122
++-Cyanidioschyzon merolae
+| \-Cyanidioschyzon merolae strain 10D
++-Paranosema locustae
++-Chaetomium thermophilum
+| \-Chaetomium thermophilum var. thermophilum DSM 1495
++-Anopheles gambiae
+| \-Anopheles gambiae str. PEST
++-Adineta vaga
++-Guillardia theta
++-Palomena prasina
++-Oryza sativa
+| \-Oryza sativa Japonica Group
++-Pyrrhocoris apterus
++-Plasmodium falciparum
+| \-Plasmodium falciparum 3D7
++-Eremothecium gossypii
++-Kluyveromyces lactis
+| \-Kluyveromyces lactis NRRL Y-1140
++-Monodelphis domestica
++-Rattus norvegicus
++-Mus musculus
++-Bos taurus
++-Sus scrofa
+| \-Sus scrofa domesticus
++-Tursiops truncatus
++-Canis lupus
+| \-Canis lupus familiaris
++-Homo sapiens
++-Pan troglodytes
++-Gallus gallus
++-Xenopus laevis
++-Danio rerio
++-Latimeria chalumnae
++-Oncopeltus fasciatus
++-Apis mellifera
++-Drosophila melanogaster
++-Aedes albopictus
++-Caenorhabditis elegans
++-Caenorhabditis briggsae
++-Vairimorpha necatrix
++-Tetrahymena thermophila
+| \-Tetrahymena thermophila SB210
++-Toxoplasma gondii
++-Trichomonas vaginalis
++-Trypanosoma brucei
+| \-Trypanosoma brucei brucei
+|   \-Trypanosoma brucei brucei TREU927
++-Trypanosoma cruzi
+| \-Trypanosoma cruzi strain CL Brener
++-Leishmania donovani
++-Thermomyces lanuginosus
++-Saccharomyces cerevisiae
+| +-Saccharomyces cerevisiae BY4741
+| +-Saccharomyces cerevisiae P283
+| +-Saccharomyces cerevisiae W303
+| +-Saccharomyces cerevisiae S288C
+| \-Saccharomyces cerevisiae RM11-1a
++-Triticum aestivum
++-Arabidopsis thaliana
++-Spinacia oleracea
+\-Euglena gracilis
+-----------------------------------
+Archaea
++-Candidatus Diapherotrites archaeon ADurb.Bin253
++-Candidatus Odinarchaeota archaeon LCB_4
++-Candidatus Heimdallarchaeota archaeon LC_3
++-Candidatus Woesearchaeota archaeon CG1_02_57_44
++-Theionarchaea archaeon DG-70-1
++-Candidatus Aenigmarchaeota archaeon CG1_02_38_14
++-Candidatus Pacearchaeota archaeon RBG_13_36_9
++-Candidatus Hadarchaeum yellowstonense
++-Candidatus Thorarchaeota archaeon SMTZ1-45
++-Candidatus Bathyarchaeota archaeon BA1
++-Candidatus Nanopusillus acidilobi
++-Lokiarchaeum sp. GC14_75
++-Thermococcus celer
+| \-Thermococcus celer Vu 13 = JCM 8558
++-Candidatus Haloredivivus sp. G17
++-Candidatus Parvarchaeum acidiphilum
+| \-Candidatus Parvarchaeum acidiphilum ARMAN-4
++-Methanoregula boonei
+| \-Methanoregula boonei 6A8
++-Ignicoccus hospitalis
+| \-Ignicoccus hospitalis KIN4/I
++-Nitrosopumilus maritimus
+| \-Nitrosopumilus maritimus SCM1
++-Candidatus Micrarchaeum acidiphilum
+| \-Candidatus Micrarchaeum acidiphilum ARMAN-2
++-Methanococcus aeolicus
+| \-Methanococcus aeolicus Nankai-3
++-Halorubrum lacusprofundi
+| \-Halorubrum lacusprofundi ATCC 49239
++-Hyperthermus butylicus
+| \-Hyperthermus butylicus DSM 5456
++-Cenarchaeum symbiosum
+| \-Cenarchaeum symbiosum A
++-Pyrobaculum calidifontis
+| \-Pyrobaculum calidifontis JCM 11548
++-Methanocorpusculum labreanum
+| \-Methanocorpusculum labreanum Z
++-Staphylothermus marinus
+| \-Staphylothermus marinus F1
++-Metallosphaera sedula
+| \-Metallosphaera sedula DSM 5348
++-Caldivirga maquilingensis
+| \-Caldivirga maquilingensis IC-167
++-Candidatus Korarchaeum cryptofilum
+| \-Candidatus Korarchaeum cryptofilum OPF8
++-Thermofilum pendens
+| \-Thermofilum pendens Hrk 5
++-Methanoculleus marisnigri
+| \-Methanoculleus marisnigri JR1
++-Haloquadratum walsbyi
+| \-Haloquadratum walsbyi DSM 16790
++-Methanothrix thermoacetophila
+| \-Methanothrix thermoacetophila PT
++-Natronomonas pharaonis
+| \-Natronomonas pharaonis DSM 2160
++-Methanosphaera stadtmanae
+| \-Methanosphaera stadtmanae DSM 3091
++-Methanospirillum hungatei
+| \-Methanospirillum hungatei JF-1
++-Haloferax volcanii
+| \-Haloferax volcanii DS2
++-Thermoplasma volcanium
+| \-Thermoplasma volcanium GSS1
++-Sulfurisphaera tokodaii
+| \-Sulfurisphaera tokodaii str. 7
++-Pyrococcus abyssi
+| \-Pyrococcus abyssi GE5
++-Aeropyrum pernix
+| \-Aeropyrum pernix K1
++-Methanosarcina barkeri
+| \-Methanosarcina barkeri str. Fusaro
++-Picrophilus torridus
+| \-Picrophilus torridus DSM 9790
++-Methanococcoides burtonii
+| \-Methanococcoides burtonii DSM 6242
++-Nanoarchaeum equitans
+| \-Nanoarchaeum equitans Kin4-M
++-Archaeoglobus fulgidus
+| \-Archaeoglobus fulgidus DSM 4304
++-Methanosarcina mazei
+| \-Methanosarcina mazei Go1
++-Methanopyrus kandleri
+| \-Methanopyrus kandleri AV19
++-Methanosarcina acetivorans
+| \-Methanosarcina acetivorans C2A
++-Pyrococcus furiosus
+| \-Pyrococcus furiosus DSM 3638
++-Methanothermobacter thermautotrophicus
+| \-Methanothermobacter thermautotrophicus str. Delta H
++-Ferroplasma acidiphilum
++-Thermococcus kodakarensis
+| \-Thermococcus kodakarensis KOD1
++-Halobacterium salinarum
+| \-Halobacterium salinarum NRC-1
++-Saccharolobus solfataricus
+| \-Saccharolobus solfataricus P2
++-Sulfolobus acidocaldarius
+| \-Sulfolobus acidocaldarius DSM 639
++-Haloarcula marismortui
+| \-Haloarcula marismortui ATCC 43049
+\-Methanocaldococcus jannaschii
+  \-Methanocaldococcus jannaschii DSM 2661
+-----------------------------------
+Bacteria
++-Acinetobacter sp. ANC 4470
++-Acinetobacter sp. ANC 5600
++-Acinetobacter sp. 263903-1
++-Acinetobacter sp. 809848
++-Rhizobium sp. Pop5
++-Acinetobacter sp. NIPH 899
++-Acinetobacter beijerinckii
+| \-Acinetobacter beijerinckii ANC 3835
++-Acinetobacter sp. CIP 51.11
++-Acinetobacter sp. CIP 102082
++-Synechocystis sp. PCC 6803
+| \-Synechocystis sp. PCC 6803 substr. GT-I
++-Geobacter sulfurreducens
+| \-Geobacter sulfurreducens KN400
++-Acinetobacter nosocomialis
+| \-Acinetobacter sp. RUH2624
++-Caulobacter vibrioides
+| \-Caulobacter vibrioides NA1000
++-Buchnera aphidicola
+| \-Buchnera aphidicola str. 5A (Acyrthosiphon pisum)
++-Zymomonas mobilis
+| \-Zymomonas mobilis subsp. mobilis ATCC 10988
++-Burkholderia lata
++-Acinetobacter rudis
+| \-Acinetobacter rudis CIP 110305
++-Lactococcus cremoris
+| \-Lactococcus lactis subsp. cremoris MG1363
++-Luteovulum sphaeroides
+| \-Rhodobacter sphaeroides ATCC 17025
++-Legionella pneumophila
+| \-Legionella pneumophila str. Lens
++-Polaromonas sp. JS666
++-Wolbachia endosymbiont of Brugia malayi
+| \-Wolbachia endosymbiont strain TRS of Brugia malayi
++-Symbiobacterium thermophilum
+| \-Symbiobacterium thermophilum IAM 14863
++-Gluconobacter oxydans
+| \-Gluconobacter oxydans 621H
++-Bartonella henselae
+| \-Bartonella henselae str. Houston-1
++-Leifsonia xyli
+| \-Leifsonia xyli subsp. xyli str. CTCB07
++-Novosphingobium aromaticivorans
+| \-Novosphingobium aromaticivorans DSM 12444
++-Caldanaerobacter subterraneus
+| \-Caldanaerobacter subterraneus subsp. tengcongensis MB4
++-Mycobacterium leprae
+| \-Mycobacterium leprae TN
++-Magnetospirillum magnetotacticum
+| \-Magnetospirillum magnetotacticum MS-1
++-Cytophaga hutchinsonii
+| \-Cytophaga hutchinsonii ATCC 33406
++-Cutibacterium acnes
+| \-Cutibacterium acnes KPA171202
++-Sinorhizobium meliloti
+| \-Sinorhizobium meliloti 1021
++-Mesoplasma florum
+| \-Mesoplasma florum L1
++-Cupriavidus pinatubonensis
+| \-Cupriavidus pinatubonensis JMP134
++-Gloeobacter violaceus
+| \-Gloeobacter violaceus PCC 7421
++-Vibrio cholerae
+| \-Vibrio cholerae O1 biovar El Tor str. N16961
++-Treponema pallidum
+| \-Treponema pallidum subsp. pallidum str. Nichols
++-Thermotoga maritima
+| \-Thermotoga maritima MSB8
++-Photorhabdus laumondii
+| \-Photorhabdus laumondii subsp. laumondii TTO1
++-Dehalococcoides mccartyi
+| \-Dehalococcoides mccartyi 195
++-Rhodopirellula baltica
+| \-Rhodopirellula baltica SH 1
++-Porphyromonas gingivalis
+| \-Porphyromonas gingivalis W83
++-Neisseria gonorrhoeae
+| \-Neisseria gonorrhoeae FA 1090
++-Trichormus variabilis
+| \-Trichormus variabilis ATCC 29413
++-Geobacillus kaustophilus
+| \-Geobacillus kaustophilus HTA426
++-Helicobacter hepaticus
+| \-Helicobacter hepaticus ATCC 51449
++-Nitrosomonas europaea
+| \-Nitrosomonas europaea ATCC 19718
++-Chlamydia caviae
+| \-Chlamydia caviae GPIC
++-Coxiella burnetii
+| \-Coxiella burnetii RSA 493
++-Bacteroides thetaiotaomicron
+| \-Bacteroides thetaiotaomicron VPI-5482
++-Bradyrhizobium diazoefficiens
+| \-Bradyrhizobium diazoefficiens USDA 110
++-Oceanobacillus iheyensis
+| \-Oceanobacillus iheyensis HTE831
++-Yersinia pestis
+| \-Yersinia pestis CO92
++-Shewanella oneidensis
+| \-Shewanella oneidensis MR-1
++-Bifidobacterium longum
+| \-Bifidobacterium longum DJO10A
++-Candidatus Blochmannia floridanus
++-Tropheryma whipplei
+| \-Tropheryma whipplei str. Twist
++-Bacillus anthracis
+| \-Bacillus anthracis str. Ames
++-Thermosynechococcus elongatus
+| \-Thermosynechococcus elongatus BP-1
++-Chlorobaculum tepidum
+| \-Chlorobaculum tepidum TLS
++-Xanthomonas citri
+| \-Xanthomonas citri pv. citri str. 306
++-Fusobacterium nucleatum
+| \-Fusobacterium nucleatum subsp. nucleatum ATCC 25586
++-Agrobacterium fabrum
+| \-Agrobacterium fabrum str. C58
++-Streptococcus pneumoniae
+| \-Streptococcus pneumoniae R6
++-Listeria monocytogenes
+| \-Listeria monocytogenes EGD-e
++-Crocosphaera watsonii
+| \-Crocosphaera watsonii WH 8501
++-Dechloromonas aromatica
+| \-Dechloromonas aromatica RCB
++-Magnetococcus marinus
+| \-Magnetococcus marinus MC-1
++-Synechococcus sp. PCC 7335
++-Salmonella enterica
+| \-Salmonella enterica subsp. enterica serovar Typhimurium
++-Haemophilus influenzae
+| \-Haemophilus influenzae Rd KW20
++-Azoarcus olearius
++-Acinetobacter venetianus
++-Streptomyces
+| +-Streptomyces azureus
+| +-Streptomyces coelicolor
+| | \-Streptomyces coelicolor A3(2)
+| +-Streptomyces graminofaciens
+| +-Streptomyces californicus
+| +-Streptomyces virginiae
+| +-Streptomyces sp.
+| \-Streptomyces actuosus
++-Mycobacterium tuberculosis
++-Mycolicibacterium smegmatis
+| \-Mycolicibacterium smegmatis MC2 155
++-Bacillus subtilis
+| \-Bacillus subtilis subsp. subtilis str. 168
++-Geobacillus stearothermophilus
++-Enterococcus faecalis
+| \-Enterococcus faecalis OG1RF
++-Deinococcus radiodurans
+| \-Deinococcus radiodurans R1
++-Staphylococcus aureus
+| +-Staphylococcus aureus subsp. aureus USA300
+| +-Staphylococcus aureus subsp. aureus MRSA252
+| +-Staphylococcus aureus RF122
+| +-Staphylococcus aureus subsp. aureus COL
+| \-Staphylococcus aureus subsp. aureus NCTC 8325
++-Flavobacterium johnsoniae
++-Vibrio alginolyticus
++-Proteus vulgaris
++-Klebsiella pneumoniae
+| \-Klebsiella pneumoniae subsp. ozaenae
++-Escherichia coli
+| +-Escherichia coli DH5[alpha]
+| +-Escherichia coli S88
+| +-Escherichia coli BL21(DE3)
+| +-Escherichia coli 536
+| +-Escherichia coli O139:H28 str. E24377A
+| +-Escherichia coli O157:H7
+| | \-Escherichia coli O157:H7 str. TW14359
+| \-Escherichia coli K-12
+|   +-Escherichia coli str. K-12 substr. MDS42
+|   +-Escherichia coli BW25113
+|   +-Escherichia coli str. K-12 substr. MG1655
+|   \-Escherichia coli str. K-12 substr. DH10B
++-Acinetobacter baumannii
+| +-Acinetobacter baumannii ATCC 19606 = CIP 70.34 = JCM 6841
+| \-Acinetobacter baumannii AB0057
++-Pseudomonas aeruginosa
+| \-Pseudomonas aeruginosa UCBPP-PA14
++-Thermus thermophilus
+| +-Thermus thermophilus HB8
+| \-Thermus thermophilus HB27
+\-Campylobacter jejuni
+-----------------------------------

@@ -1,8 +1,4 @@
-import { flattenDeep } from "lodash";
 import React, { useEffect, useState } from "react";
-import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
-import LoadingSpinner from "../../Other/LoadingSpinner";
-import RNAHero from "./RNAHero";
 import "./RNACatalogue.css";
 import PageAnnotation from "./../Display/PageAnnotation";
 import Grid from "@material-ui/core/Grid";
@@ -19,7 +15,6 @@ import ListItem from "@material-ui/core/ListItem";
 import { SearchField, SpeciesList } from "../Display/StructuresCatalogue";
 import Pagination from "../Display/Pagination";
 import { AppState } from "../../../redux/store";
-import { filterChange, FilterData } from "../../../redux/reducers/Filters/ActionTypes";
 import { connect } from "react-redux";
 import { AppActions } from "../../../redux/AppActions";
 import { gotopage } from "../../../redux/reducers/RNA/ActionTypes";

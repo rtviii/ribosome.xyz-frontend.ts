@@ -23,7 +23,7 @@ export interface requestAllProteinsSuccess  {type: typeof REQUEST_ALL_PROTEINS_S
 export interface requestAllProteinsErrorr   {type: typeof REQUEST_ALL_PROTEINS_ERR;    error: Error;}
 
 export interface requestBanClassGo          {type: typeof REQUEST_BAN_CLASS_GO;}
-export interface requestBanClassSuccess     {type: typeof REQUEST_BAN_CLASS_SUCCESS;payload: NeoHomolog[]}
+export interface requestBanClassSuccess     {type: typeof REQUEST_BAN_CLASS_SUCCESS;payload: RibosomalProtein[]}
 export interface requestBanClassErr         {type: typeof REQUEST_BAN_CLASS_ERR;    error: Error;}
 
 export interface nextPageProts           {type: typeof NEXT_PAGE_PROTEINS;}
