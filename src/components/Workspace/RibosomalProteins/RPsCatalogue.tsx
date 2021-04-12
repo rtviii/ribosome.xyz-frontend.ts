@@ -13,6 +13,7 @@ import {small_subunit_map} from './../../../static/small-subunit-map'
 import LoadingSpinner from "../../Other/LoadingSpinner";
 import PageAnnotation from "../Display/PageAnnotation";
 import Grid from "@material-ui/core/Grid";
+import Backdrop from './../Backdrop'
 
 
 const pageData={
@@ -227,7 +228,9 @@ const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
       </div>
       <div className="rps-catalogue-classes">
 
-        { available.length > 1 ?  renderSwitchSubunit(activecat):<LoadingSpinner annotation='Loading ...'/>}
+        { available.length > 1 ?  renderSwitchSubunit(activecat):
+    <Backdrop/>
+}
 
       </div>
     </div>

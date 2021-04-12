@@ -31,6 +31,15 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import fileDownload from "js-file-download";
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import DraftsIcon from '@material-ui/icons/Drafts';
+import SendIcon from '@material-ui/icons/Send';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import StarBorder from '@material-ui/icons/StarBorder';
+import ListItemText from "@material-ui/core/ListItemText";
+import Collapse from "@material-ui/core/Collapse";
+import CardHeader from "@material-ui/core/CardHeader";
 
 
 
@@ -300,14 +309,6 @@ const StructurePage: React.FC<StructurePageProps> = (
         return (
           <Grid xs={9} container item spacing={1}>
 
-            {/* <Grid item xs={12}> */}
-
-              {/* <Paper>
-
-                Filters
-        </Paper>
-
-            </Grid> */}
             <Grid item justify="flex-start" alignItems='flex-start' alignContent='flex-start' container xs={4} spacing={1}>
               <Grid item xs={12} style={{ paddingTop: "10px" }} >
                 <Typography color="primary" variant="h4">
@@ -352,10 +353,6 @@ const StructurePage: React.FC<StructurePageProps> = (
               })}
 
             </Grid>
-
-
-
-
           </Grid>
         );
 
@@ -409,29 +406,76 @@ const StructurePage: React.FC<StructurePageProps> = (
   };
 
 
+  const classes=makeStyles({  
+  card: {
+    // width:300
+  },
+  title:{
+    fontSize:14,
+    height:300
+  },
+  heading: {
+    fontSize     : 12,
+    paddingTop   : 5,
+  },
+  annotation: {fontSize: 12,},
+  nested: {
+    paddingLeft: 20,
+    color:"black"
+  },
 
-  const StructCardField = ({field,value}:{ field:string,value:string[]|string|number}) => { 
-    return <ListItem className="annotation"><Typography variant="overline">{field}:</Typography> <Typography variant="body2">{value}</Typography> </ListItem> }
-  
+})();
+
+const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:any, value:string| string[]|number})=>{
+  return     <ListItem onClick={onClick}><Grid
+      container
+      direction="row"
+      justify="space-between"
+      alignItems="center"
+      component="div"    >
+      <Typography variant="caption" color="textSecondary" component="p"
+        className={classes.annotation}
+
+      >
+        {keyname}:
+            </Typography>
+      <Typography variant="caption" color="textPrimary" component="p" noWrap
+        className={classes.annotation}
+      >
+        {value}
+      </Typography>
+    </Grid></ListItem>
+  }
+
+
+  const [authorsOpen, setOpen] = React.useState(false);
+
+  const handleAuthorsToggle = () => {
+    setOpen(!authorsOpen);
+  };
+
+
   return structdata ? (
-    <Grid xs={12} container item>
-    <Grid xs={3} container item alignContent="flex-start">
+    <Grid xs={12} container item spacing={1} style={{padding:"5px"}}>
+      <Grid xs={3} container item alignContent="flex-start">
 
-    <Card     >
-      <CardActionArea>
-
-        <CardMedia
-          // className={CardClasses.media}
-          image={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`}
-          title="Such and such ribosome"
-        />
-
-      </CardActionArea>
-        <List>
-          <StructCardField field="Species" value={structdata._organismName} />
-
-          {/* <ListItem className="annotation"><Typography variant="overline">Species:</Typography> {structdata._organismName} </ListItem> */}
-          <StructCardField field="Resolution" value={structdata.resolution} />
+        <Card     className={classes.card}> 
+        <CardHeader
+        title={`${structdata.rcsb_id}`}
+        subheader={structdata._organismName}
+      />
+          <CardActionArea>
+            <CardMedia 
+            image={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`} 
+            title="Such and such ribosome" 
+            // height={200}
+            className={classes.title}
+            />
+            {/* <img src={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`}/> */}
+          </CardActionArea>
+          <List>
+            <CardBodyAnnotation keyname="Species" value={structdata._organismName + ` id[${structdata._organismId}]`} />
+            <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
             <OverlayTrigger
               key="bottom-overlaytrigger"
               placement="bottom"
@@ -445,40 +489,64 @@ const StructurePage: React.FC<StructurePageProps> = (
                 </Tooltip>
               }
             >
-          <ListItem className="annotation"><Typography variant="overline">Experimental Method:</Typography><Typography variant="body2"> {structdata.expMethod}</Typography>
-          </ListItem>
+              < CardBodyAnnotation keyname="Experimental Method" value={structdata.expMethod} />
             </OverlayTrigger>
-            <ListItem className="annotation">Title: {structdata.citation_title}</ListItem>
-          <StructCardField field="Title" value={structdata.citation_title} />
-          <StructCardField field="Publication" value={structdata.citation_title} />
+            < CardBodyAnnotation keyname="Title" value={structdata.citation_title} />
 
-          <ListItem className="annotation">
-            Orgnaism Id: {structdata._organismId}
-          </ListItem>
-          <ListItem className="annotation">
-            Authors:{" "}
-            {structdata.citation_rcsb_authors.length > 1
-              ? structdata.citation_rcsb_authors.reduce((acc:any, curr:any) => {
-                  return acc.concat(curr, ",");
-                }, "")
-              : structdata.citation_rcsb_authors[0]}
-          </ListItem>
-          <ListItem className="annotation">Year: {structdata.citation_year}</ListItem>
-          <DashboardButton/>
-        </List>
-      <CardActions>
-        <Button size="small" color="primary">
-          Share
-        </Button>
-        <Button size="small" color="primary">
-          Learn More
-        </Button>
-      </CardActions>
-    {/* !!! ADD                                       DOI  <<<<<<<<<<<<<<<<<<<<<<<*/}
-    </Card>
+            <ListItem onClick={handleAuthorsToggle}><Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
+              component="div"
+            >
+              <Typography variant="caption" color="textSecondary" component="p" className={classes.annotation}>
+                Authors
+            </Typography>
+              {authorsOpen ? <ExpandLess /> : <ExpandMore />}
+            </Grid></ListItem>
+            <Collapse in={authorsOpen} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {structdata.citation_rcsb_authors.length > 1
+                  ? structdata.citation_rcsb_authors.map(author =>
+                    <ListItem button className={classes.nested}>
+                      <Typography variant="caption" color="textSecondary" component="p" className={classes.nested}>
+                        {author}
+                      </Typography>
+                    </ListItem>
+                  )
+                  : structdata.citation_rcsb_authors[0]}
+              </List>
+            </Collapse>
 
-    </Grid>
-        {renderSwitch(activecat)}
+            < CardBodyAnnotation keyname="Year" value={structdata.citation_year} />
+          </List>
+          <CardActions>
+            <Grid container justify="space-evenly" direction="row">
+
+<Grid item>
+
+            <Button size="small" color="primary">
+              PDB
+            </Button>
+</Grid>
+<Grid item>
+            <Button size="small" color="primary">
+              EMD
+            </Button>
+</Grid>
+<Grid item>
+            <Button size="small" color="primary">
+              DOI
+            </Button>
+</Grid>
+            </Grid>
+          </CardActions>
+            <DashboardButton />
+        </Card>
+
+      </Grid>
+      {renderSwitch(activecat)}
     </Grid>
   ) : (
     <LoadingSpinner annotation="Loading structure..." />

@@ -63,7 +63,7 @@ export const requestStaticCatalogue = () => {
       },
       error => {
         console.log("Didn't receive static files catalogue.");
-        alert("Didn't receive static files catalogue.");
+        // alert("Didn't receive static files catalogue.");
         dispatch(A_requestStaticFilesCatalogue([]));
       }
     );

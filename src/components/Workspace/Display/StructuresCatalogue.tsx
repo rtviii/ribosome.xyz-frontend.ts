@@ -5,7 +5,7 @@ import {small_subunit_map} from './../../../static/small-subunit-map'
 import Grid from '@material-ui/core/Grid';
 import { ListSubheader, TextField, Tooltip } from "@material-ui/core";
 import Slider from '@material-ui/core/Slider';
-import { connect, useStore  } from "react-redux";
+import { connect, useSelector, useStore  } from "react-redux";
 import { AppState } from "../../../redux/store";
 import { AppActions } from "../../../redux/AppActions";import LoadingSpinner  from '../../Other/LoadingSpinner'
 import StructHero from './../../../materialui/StructHero'
@@ -28,8 +28,9 @@ import { NeoStruct } from "../../../redux/DataInterfaces";
 import { FiltersReducerState, mapDispatchFilter, mapStateFilter, handleFilterChange } from "../../../redux/reducers/Filters/FiltersReducer";
 import DropdownTreeSelect from 'react-dropdown-tree-select'
 import 'react-dropdown-tree-select/dist/styles.css'
-
 import Pagination from './Pagination'
+import Backdrop from './../Backdrop'
+import { CSVLink } from "react-csv";
 
 const pageData ={
   title:"Whole Ribosome Structures",
@@ -162,7 +163,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
       </Grid>
     </div>
   ) : (
-    <LoadingSpinner annotation="Fetching data..." />
+    <Backdrop/>
   );
 };
 
@@ -405,6 +406,15 @@ type StructureFilterProps ={
   );
 
   const filterClasses = useFiltersStyles();
+  
+    const structs = useSelector((state: AppState) => state.structures.derived_filtered)
+    var bulkDownloads = [["rcsb_id"]]
+    structs.map(s => {
+      bulkDownloads.push(
+        [s.struct.rcsb_id]
+
+      )
+    })
 
   return (
     <Drawer
@@ -457,10 +467,18 @@ type StructureFilterProps ={
         <ListItem key={"select-species"} >
           <DropdownTreeSelect data={data} onChange={onChange} onAction={onAction} onNodeToggle={onNodeToggle} />
         </ListItem>
+        <ListItem key={"select-species"} >
+<CSVLink data={bulkDownloads}>
+<Typography variant="body2"> Download Fitlered</Typography>
+
+</CSVLink>
+        </ListItem>
       </List>
     </Drawer>
   );
 };
+
+
 
 
 export const StructureFilters = connect(null, mapResetFilters)(_StructureFilters);

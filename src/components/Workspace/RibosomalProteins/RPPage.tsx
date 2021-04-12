@@ -5,7 +5,7 @@ import { AppState } from "../../../redux/store";
 import { AppActions } from "../../../redux/AppActions";
 import { gotopage, nextpage, prevpage, requestBanClass } from "../../../redux/reducers/Proteins/ActionTypes";
 import { ThunkDispatch } from "redux-thunk";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import Pagination from './../Display/Pagination'
 import Grid from "@material-ui/core/Grid";
 import { _SpecList, _SearchField  } from "../Display/StructuresCatalogue";
@@ -27,6 +27,8 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
+import Backdrop from "@material-ui/core/Backdrop";
+import CSVDownloadElement from "../Cart/CSVDownloadElement";
 
 interface ReduxProps{
   current_rps      : RibosomalProtein[]
@@ -66,6 +68,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 const classes = useStyles();
 
+
+    const proteins = useSelector((state: AppState) => state.proteins.ban_class_derived)
+    var bulkDownloads = [["rcsb_id", "strand", "nomenclature", "sequence"]]
+    proteins.map(prot => bulkDownloads.push([prot.parent_rcsb_id, prot.entity_poly_strand_id, prot.nomenclature[0] || "Unspecified", prot.entity_poly_seq_one_letter_code]))
+
   return params!.nom ? (
     <Grid xs={12} container>
       <Grid item container xs={12} >
@@ -94,6 +101,9 @@ const classes = useStyles();
             <Cart/>
             </ListItem>
             <ListItem>
+            <CSVDownloadElement prop={"proteins"}/>
+            </ListItem>
+            <ListItem>
             <DashboardButton/>
             </ListItem>
           </List>
@@ -118,7 +128,7 @@ const classes = useStyles();
       </Grid>
     </Grid>
   ) : (
-    <div>"Fetching..."</div>
+    <Backdrop open={true}/>
   );
 };
 

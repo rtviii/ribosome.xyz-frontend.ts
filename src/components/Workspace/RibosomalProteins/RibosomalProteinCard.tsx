@@ -63,7 +63,11 @@ const useStyles = makeStyles({
         cursor: "pointer",
       }
   
+  },
+  fieldTypography:{
+    fontSize:"12px"
   }
+
 });
 
 interface OwnProps {
@@ -124,7 +128,7 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
   const open  =  Boolean(anchorEl);
   const id    =  open ? 'simple-popover' : undefined;
   return (
-    <Card className={classes.root} variant="outlined">
+    <Card className={classes.root} variant="elevation" >
 
       <CardContent>
         <Grid xs={12} container spacing={1}>
@@ -138,16 +142,16 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
             <Grid item xs={4}>
               <Tooltip
                 title={
-                  <Typography>
+                  <Typography className={classes.fieldTypography}>
                     Structure {prop.protein.parent_rcsb_id}:
                     <br />
-                    strand {prop.protein.entity_poly_strand_id}
+                    {prop.protein.entity_poly_strand_id}
                   </Typography>
                 }
                 placement="top-end"
               >
                 <Typography
-                  className={classes.hover}
+                  className={classes.hover + classes.fieldTypography}
                   onClick={() => {
                     history.push(`/structs/${prop.protein.parent_rcsb_id}`);
                   }}
@@ -169,12 +173,12 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
               item
               xs={6}
             >
-              <Typography variant="caption">{prop.protein.rcsb_source_organism_id[0]}</Typography>
+              <Typography variant="caption" className={classes.fieldTypography}>{prop.protein.rcsb_source_organism_id[0]}</Typography>
             </Grid>
           </Grid>
           <Grid item justify="space-between" container xs={12}></Grid>
           <Grid item justify="space-between" container xs={12}>
-            <Typography variant="body2" component="p">
+            <Typography className={classes.fieldTypography} variant="body2" component="p">
               {prop.protein.pfam_descriptions}
               <br /> {prop.protein.rcsb_pdbx_description}
             </Typography>
@@ -184,10 +188,11 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
       <CardActions>
         <Grid container xs={12}>
 <Grid container item xs={8}>
-            <Button size="small" aria-describedby={id} onClick={handleClick}>
+            <Button size="small" className={classes.fieldTypography} aria-describedby={id} onClick={handleClick}>
               Seq ({prop.protein.entity_poly_seq_length}AAs)
             </Button>
             <Button
+className={classes.fieldTypography}
               size="small"
               // onClic
               // href={`https://www.uniprot.org/uniprot/${prop.e.protein.uniprot_accession}`}
@@ -198,9 +203,11 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
               </a>
             </Button>
             <Button
+className={classes.fieldTypography}
               size="small"
               onClick={() =>
-                downloadChain(
+                downloadChain
+                (
                   prop.protein.parent_rcsb_id,
                   prop.protein.entity_poly_strand_id
                 )
@@ -223,7 +230,9 @@ const _RibosomalProteinCard:React.FC<RibosomalProtCardProps> = (prop) => {
 
 </Grid>
 <Grid container item xs={4}>
-            <Button  onClick={()=>{
+            <Button  
+className={classes.fieldTypography}
+            onClick={()=>{
 
 prop.addCartItem(prop.protein)
         
@@ -234,23 +243,24 @@ prop.addCartItem(prop.protein)
         </Grid>
       </CardActions>
       <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        className={classes.popover}
+        id         =  {id}
+        open       =  {open}
+        anchorEl   =  {anchorEl}
+        onClose    =  {handleClose}
+        className  =  {classes.popover}
+
         anchorOrigin={{
-          vertical: "bottom",
+          vertical:   "bottom",
           horizontal: "center",
         }}
         transformOrigin={{
-          vertical: "top",
+          vertical:   "top",
           horizontal: "center",
         }}
       >
         <Grid container xs={12}>
           <Typography
-            style={{width: "400px",wordBreak:"break-word"}}
+            style={{width: "400px",fontSize:"14px",wordBreak:"break-word"}}
             variant="body2"
             className={classes.popover}          >
             {prop.protein.entity_poly_seq_one_letter_code}
