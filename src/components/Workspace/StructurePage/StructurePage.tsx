@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+
 import {
   Ligand,
   RibosomalProtein,
   RibosomeStructure,
   rRNA,
 } from "../../../redux/RibosomeTypes";
+
 import "./StructurePage.css";
 import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import { flattenDeep } from "lodash";
@@ -31,19 +33,11 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import fileDownload from "js-file-download";
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import StarBorder from '@material-ui/icons/StarBorder';
-import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
 import CardHeader from "@material-ui/core/CardHeader";
-
-
-
-
+import SimpleBackdrop from "../Backdrop";
 
 
 
@@ -183,7 +177,6 @@ const RNACard = (prop: rRNA) => {
           horizontal: "center",
         }}
       >
-        {/* <Typography></Typography> */}
         <Grid container xs={12}>
           <Typography
             style={{ width: "400px", wordBreak: "break-word" }}
@@ -407,22 +400,30 @@ const StructurePage: React.FC<StructurePageProps> = (
 
 
   const classes=makeStyles({  
-  card: {
-    // width:300
-  },
-  title:{
-    fontSize:14,
-    height:300
-  },
-  heading: {
-    fontSize     : 12,
-    paddingTop   : 5,
-  },
-  annotation: {fontSize: 12,},
-  nested: {
-    paddingLeft: 20,
-    color:"black"
-  },
+    card: {
+      // width:300
+    },
+    title: {
+      fontSize: 14,
+      height: 300
+    },
+    heading: {
+      fontSize: 12,
+      paddingTop: 5,
+    },
+    annotation: { fontSize: 12, },
+    
+    authors:{
+          transition: "0.1s all",
+      "&:hover": {
+        background: "rgba(149,149,149,1)",
+        cursor: "pointer",
+      },
+    },
+    nested: {
+      paddingLeft: 20,
+      color: "black"
+    },
 
 })();
 
@@ -433,10 +434,7 @@ const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:an
       justify="space-between"
       alignItems="center"
       component="div"    >
-      <Typography variant="caption" color="textSecondary" component="p"
-        className={classes.annotation}
-
-      >
+      <Typography variant="caption" color="textSecondary" component="p" className={classes.annotation}>
         {keyname}:
             </Typography>
       <Typography variant="caption" color="textPrimary" component="p" noWrap
@@ -456,25 +454,24 @@ const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:an
 
 
   return structdata ? (
-    <Grid xs={12} container item spacing={1} style={{padding:"5px"}}>
+    <Grid xs={12} container item spacing={1} style={{ padding: "5px" }}>
       <Grid xs={3} container item alignContent="flex-start">
-
-        <Card     className={classes.card}> 
-        <CardHeader
-        title={`${structdata.rcsb_id}`}
-        subheader={structdata._organismName}
-      />
+        <Card className={classes.card}>
+          <CardHeader
+            title={`${structdata.rcsb_id}`}
+            subheader={structdata._organismName}
+          />
           <CardActionArea>
-            <CardMedia 
-            image={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`} 
-            title="Such and such ribosome" 
-            // height={200}
-            className={classes.title}
+            <CardMedia
+              image={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`}
+              title={ `${structdata.rcsb_id}\n${structdata.citation_title}` }
+              // height={200}
+              className={classes.title}
             />
             {/* <img src={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`}/> */}
           </CardActionArea>
           <List>
-            <CardBodyAnnotation keyname="Species" value={structdata._organismName + ` id[${structdata._organismId}]`} />
+            <CardBodyAnnotation keyname="Species" value={structdata._organismName} />
             <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
             <OverlayTrigger
               key="bottom-overlaytrigger"
@@ -499,6 +496,7 @@ const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:an
               justify="space-between"
               alignItems="center"
               component="div"
+              className={classes.authors}
             >
               <Typography variant="caption" color="textSecondary" component="p" className={classes.annotation}>
                 Authors
@@ -524,32 +522,32 @@ const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:an
           <CardActions>
             <Grid container justify="space-evenly" direction="row">
 
-<Grid item>
+              <Grid item>
 
-            <Button size="small" color="primary">
-              PDB
+                <Button size="small" color="primary">
+                  PDB
             </Button>
-</Grid>
-<Grid item>
-            <Button size="small" color="primary">
-              EMD
+              </Grid>
+              <Grid item>
+                <Button size="small" color="primary">
+                  EMD
             </Button>
-</Grid>
-<Grid item>
-            <Button size="small" color="primary">
-              DOI
+              </Grid>
+              <Grid item>
+                <Button size="small" color="primary">
+                  DOI
             </Button>
-</Grid>
+              </Grid>
             </Grid>
           </CardActions>
-            <DashboardButton />
+          <DashboardButton />
         </Card>
 
       </Grid>
       {renderSwitch(activecat)}
     </Grid>
   ) : (
-    <LoadingSpinner annotation="Loading structure..." />
+    <SimpleBackdrop/>
   );
 };
 

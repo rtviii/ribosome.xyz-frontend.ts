@@ -88,11 +88,8 @@ const usePopoverStyles = makeStyles((theme: Theme) =>
       <Grid container item xs={12} justify="space-between" alignContent="flex-end" alignItems="flex-end">
 
         <OverlayTrigger placement="left" overlay={renderTooltip}>
-
           <Grid item>
-
             <Button style={{ color: "blue" }} onClick={() => { history.push(`/rps/${prop.nom_class}`) }} variant='outlined'>{prop.nom_class}</Button>
-
           </Grid>
         </OverlayTrigger>
         <Grid item>

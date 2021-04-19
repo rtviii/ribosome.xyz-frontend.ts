@@ -9,23 +9,14 @@ import { connect, useSelector } from "react-redux";
 import Pagination from './../Display/Pagination'
 import Grid from "@material-ui/core/Grid";
 import { _SpecList, _SearchField  } from "../Display/StructuresCatalogue";
-import { FiltersReducerState, mapDispatchFilter, mapStateFilter, handleFilterChange } from "../../../redux/reducers/Filters/FiltersReducer";
+import {  mapDispatchFilter, mapStateFilter, handleFilterChange } from "../../../redux/reducers/Filters/FiltersReducer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import { Divider } from "@material-ui/core";
-import { ListSubheader } from "@material-ui/core";
-import { NeoHomolog } from "../../../redux/DataInterfaces";
 import RibosomalProteinCard from './RibosomalProteinCard'
 import Typography from "@material-ui/core/Typography";
 import { DashboardButton } from "../../../materialui/Dashboard/Dashboard";
 import Cart from "./../../Workspace/Cart/Cart";
-import Paper from "@material-ui/core/Paper/Paper";
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import Backdrop from "@material-ui/core/Backdrop";
 import CSVDownloadElement from "../Cart/CSVDownloadElement";
@@ -66,7 +57,6 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
 }));
-const classes = useStyles();
 
 
     const proteins = useSelector((state: AppState) => state.proteins.ban_class_derived)
