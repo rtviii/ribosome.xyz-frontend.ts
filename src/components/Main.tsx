@@ -56,9 +56,6 @@ const mapdispatch = (
 });
 
 export default connect(mapstate, mapdispatch)(Main);
-
-// --------------------------------------------
-
 export const truncate = (str:string, charlim:number, truncateto:number) =>{
   if (typeof str === 'undefined'){
     return str

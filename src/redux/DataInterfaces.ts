@@ -42,8 +42,12 @@ export interface LigandResponseShape  {
   ligand   : Ligand
   presentIn: StructureWithLigand[]
 };
+export interface BanClassMetadata{
+      banClass      :  string,     organisms  :  number[],
+      structs       :  string[],
+      avgseqlength  :  number
+      comments      :  string[][]
+    }
 
 
-
-
-export type RXZDataTypes= NeoStruct | RibosomalProtein | RNAProfile | LigandResponseShape;
+export type RXZDataTypes= NeoStruct | RibosomalProtein | RNAProfile | LigandResponseShape | BanClassMetadata;

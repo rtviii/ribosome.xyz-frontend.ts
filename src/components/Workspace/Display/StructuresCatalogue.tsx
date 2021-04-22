@@ -5,7 +5,7 @@ import {small_subunit_map} from './../../../static/small-subunit-map'
 import Grid from '@material-ui/core/Grid';
 import { ListSubheader, TextField, Tooltip } from "@material-ui/core";
 import Slider from '@material-ui/core/Slider';
-import { connect, useSelector, useStore  } from "react-redux";
+import { connect, useDispatch, useSelector, useStore  } from "react-redux";
 import { AppState } from "../../../redux/store";
 import { AppActions } from "../../../redux/AppActions";import LoadingSpinner  from '../../Other/LoadingSpinner'
 import StructHero from './../../../materialui/StructHero'
@@ -21,7 +21,7 @@ import {  FilterData, FilterType,filterChange, filterChangeActionCreator, resetA
 import {SpeciesGroupings} from './taxid_map'
 import _  from "lodash";
 import Cart from './../Cart/Cart'
-import {Link, useHistory} from "react-router-dom";
+import {Link, useHistory, useParams} from "react-router-dom";
 import {DashboardButton} from './../../../materialui/Dashboard/Dashboard'
 import PageAnnotation from './PageAnnotation'
 import { NeoStruct } from "../../../redux/DataInterfaces";
@@ -132,13 +132,31 @@ type WorkspaceCatalogueProps =  StateProps & DispatchProps;
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
+  
+  const history:any  =  useHistory();
+  const nomclass     =  history.location.state ? history.location.state.nomclass : ""
+  const dispatch     =  useDispatch();
+  const filters      =  useSelector((state:AppState)=>{
+    return state.filters
+  })
+  
+  useEffect(() => {
+    console.log("Got a parameter chagnge:: nomclass is", nomclass);
+    
+    dispatch({
+      type             :  "FILTER_CHANGE",
+      filttype         :  "PROTEINS_PRESENT",
+      newval           :  [nomclass],
+      set              :  true,
+      derived_filters  :  filters
+    })
+  }, [nomclass])
+
   return ! prop.loading ? (
     <div className="workspace-catalogue-grid">
       <div className="wspace-catalogue-filters-tools">
         <StructureFilters />
-
       </div>
-
       <Grid container item xs={12} spacing={3}>
         <PageAnnotation {...pageData}/>
         <Grid item xs={12}>
@@ -198,8 +216,8 @@ export const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
   }
   useEffect(() => {
     props.handleChange(props.allFilters as FiltersReducerState,debounced)
-
   }, [debounced])
+
   return(
       <TextField id="standard-basic" label="Search" value={value}  onChange={handleChange}/>
   )
@@ -271,8 +289,9 @@ const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
     })
   );
 
-
   const classes = useProteinsPresentStyles();
+
+  const filterstate = useSelector(( state:AppState ) => state.filters.filters.PROTEINS_PRESENT.value)
 
   return (
 
@@ -285,15 +304,19 @@ const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
         options={BanClassNames}
         getOptionLabel={(option) => option}
         defaultValue={[]}
+        value={filterstate as string[]}
         onChange={
+          
           (e:any, value:string[])=>{
             console.log(value)
             prop.handleChange(prop.allFilters as FiltersReducerState, value)
-          }}
+          }
+        }
         renderInput={(params) => { 
           return <TextField {...params} variant="outlined" label="Proteins Present" placeholder="" />
           }}
       />
+
     </div>
 
 
@@ -373,37 +396,42 @@ const mapResetFilters = (dispatch: Dispatch<AppActions>, ownprops:any):{
 type StructureFilterProps ={
   reset_filters: () =>void
 };
-// Filters component
- const _StructureFilters:React.FC<StructureFilterProps> = (props) => {
-  const drawerWidth = 240;
-  const useFiltersStyles = makeStyles((theme: Theme) =>
-    createStyles({
-      root: {
-        display: "flex",
-        zIndex: -1,
-        width:300
-      },
-      appBar: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: drawerWidth,
-      },
-      drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-      },
-      drawerPaper: {
-        width: drawerWidth,
-      },
-      toolbar: theme.mixins.toolbar,
-      home:{
-        cursor:"pointer",
-        fontSize:20,
-        "&:hover":{
-          background:"gray"
-        }
+
+const _StructureFilters:React.FC<StructureFilterProps> = (props) => {
+
+const drawerWidth       =  240;
+
+const useFiltersStyles  =  makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: "flex",
+      zIndex: -1,
+      width:300
+    },
+    appBar: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth,
+    },
+
+    drawer: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+
+    drawerPaper: {
+      width: drawerWidth,
+    },
+
+    toolbar: theme.mixins.toolbar,
+    home:{
+      cursor:"pointer",
+      fontSize:20,
+      "&:hover":{
+        background:"gray"
       }
-    })
-  );
+    }
+  })
+);
 
   const filterClasses = useFiltersStyles();
   
@@ -428,35 +456,21 @@ type StructureFilterProps ={
     >
       <div className={filterClasses.toolbar} />
       <List>
-      {/* <Divider />
-        <ListItem className={filterClasses.home} >
-          <Link to='/home'>
-              <ListItemText  primary={"Home"} />
-          </Link>
-        </ListItem>
-      <Divider /> */}
-
         <ListItem key={"search"}>
           <SearchField />
         </ListItem>
         <ListItem key={"year"}>
           <YearSlider min={2012} max={2021} name={"Deposition Date"} step={1} />
         </ListItem>
-        {/* <ListItem key={"number-of-proteins"}>
-          <ProtcountSlider min={25} max={150}  name={"Protein Count"} step={1}/> 
-        </ListItem> */}
         <ListItem key={"resolution"}>
           <ResolutionSlider min={1} max={6} name={"Resolution(A)"} step={0.1} />
         </ListItem>
         <ListItem key={"select-proteins"} >
           <SelectProteins />
         </ListItem>
-
-        {/* <ListSubheader> Species</ListSubheader> */}
         <ListItem key={"select-species"} >
           <SpeciesList />
         </ListItem>
-        {/* <button onClick={() => { props.reset_filters() }}>Reset Filters</button> */}
         <ListItem >
           <DashboardButton/>
         </ListItem>

@@ -186,7 +186,7 @@ export type BanClass =
   | "eS19"
   | "eS17"
   | "bS21"
-  | "es24"
+  | "eS24"
   | "eS1"
   | "eS21"
   | "bS6"

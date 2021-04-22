@@ -1,10 +1,12 @@
 import _ from "lodash";
+import BanClassHero from "../../../components/Workspace/RibosomalProteins/BanClassHero";
 import {
   RXZDataTypes,
   NeoStruct,
   NeoHomolog,
   RNAProfile,
   LigandResponseShape,
+  BanClassMetadata,
 } from "../../DataInterfaces";
 import { RibosomalProtein } from "../../RibosomeTypes";
 import { FiltersReducerState } from "./FiltersReducer";
@@ -46,7 +48,7 @@ export type FilterData = {
   allFilters?  :  FiltersReducerState;
 };
 
-type DataType = "STRUCTURE" | "PROTEIN" | "LIGAND" | "RNA";
+type DataType = "STRUCTURE" | "PROTEIN" | "LIGAND" | "RNA" | "BAN_METADATA";
 type PartialRecord<K extends keyof any, T> = { [P in K]?: T };
 
 // I would really love to get out of that cast inside each predicate. Not sure how to type this properly.

@@ -17,6 +17,7 @@ type Neo4jEndpoints =
   | getStructure
   | getAllStructures
   | getHomologs
+  | get_banclasses_metadata
   | listAvailableRPs
   | customCypher
   | gmoNomClass
@@ -33,6 +34,11 @@ type Neo4jEndpoints =
   | TEMP_classification_sample
 
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
+
+interface get_banclasses_metadata {
+  endpoint: 'get_banclasses_metadata',
+  params: null
+}
 interface downloadArchive {
   endpoint: 'downloadArchive',
   params: {

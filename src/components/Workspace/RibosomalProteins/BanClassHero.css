@@ -1,35 +1,4 @@
-.ban-class-hero {
-  outline: 1px solid black;
-  padding: 5px;
-  display:grid;
-  grid-template-rows: 1fr 1fr;
-  /* width  : 11em; */
-  /* height : 6em; */
-}
-.ban-class-hero :hover{
-  cursor: pointer;
-}
 
-#legacy-noms{
-  width:min-content;
-  white-space: nowrap;
-}
-
-.ban-class-hero h4{
-  text-align: left;
-}
-.ban-class-hero p{
-  font-size: 16px;
-  margin   : 0;
-  padding  : 0;
-}
-.ban-class-hero .members{
-  background-color: khaki;
-}
-.ban-class-hero .rp-class-member-table{
-  max-width: 400px;
-  color:red;
-}
 #member-chains{
   text-decoration: underline;
 }
@@ -62,22 +31,6 @@
   font-size: 14px;
 }
 
-.legacy-nomenclature > .tooltip-inner{
-  color:white;
-  font-size: 14px;
-  background-color: black;
-  max-width       : 600px;
-}
-
-.leg-nom-table{
-  width: 200px;
-  text-align: center;
-  vertical-align: middle;
-}
-
-.ban-class-hero .popover-body{
-  max-width: 400px;
-}
 
 .basic-content{
   overflow: scroll;
@@ -93,3 +46,29 @@
 
 }
 
+.ban-class-hero{
+ margin-top: 10px; 
+ padding: 10px; 
+  cursor: pointer;
+}
+.ban-class-hero:hover{
+  transform: translateY(3px);
+  box-shadow:  3px 5px 4px rgba(142, 175, 191, 0.775);
+transition: all 250ms;
+border: 1px solid black;
+
+}
+
+
+.commentstooltip{
+  
+  color:white;
+  font-size: 14px;
+  background-color: black;
+  width       : 600px;
+  
+}
+
+.helphidden{
+  visibility: hidden;
+}

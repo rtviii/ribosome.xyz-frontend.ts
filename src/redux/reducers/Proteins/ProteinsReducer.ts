@@ -1,7 +1,7 @@
 import {RibosomalProtein} from './../../RibosomeTypes'
 import { ProteinActions } from './ActionTypes'
-import {NeoHomolog} from './../../DataInterfaces'
 import { filterChange, FilterPredicates } from '../Filters/ActionTypes';
+import { BanClassMetadata } from '../../DataInterfaces';
 
 
 
@@ -12,22 +12,29 @@ interface ProteinsReducerState{
     error               : any,
     is_loading          : boolean;
     errored_out         : boolean;
+
     ban_class           : RibosomalProtein[];
     ban_class_derived   : RibosomalProtein[],
+
     all_proteins        : RibosomalProtein[];
     all_proteins_derived: RibosomalProtein[],
+
+
+    ban_classes          :  BanClassMetadata[],
+    ban_classes_derived  :  BanClassMetadata[],
 
     current_page        : number,
     pages_total         : number,
 }
 
 const initialStateProteinsReducer:ProteinsReducerState = {
-    ban_class           : [],
-    ban_class_derived   : [],
-
-    all_proteins        : [],
-    all_proteins_derived: [],
-    error               : null,
+    ban_class             :  [],
+    ban_class_derived     :  [],
+    all_proteins          :  [],
+    all_proteins_derived  :  [],
+    ban_classes           :  [ ],
+    ban_classes_derived   :  [ ],
+    error                 :  null,
     // pagination
     current_page  :  1,
     pages_total   :  1,
@@ -68,15 +75,35 @@ export const ProteinsReducer = (
       }
       return { ...state, current_page: state.current_page + 1 };
     case "PREV_PAGE_PROTEINS":
+
       if (state.current_page - 1 < 1) {
         return state;
       }
       return { ...state, current_page: state.current_page - 1 };
+
+
+
+
+    case "REQUEST_BAN_METADATA_GO":
+      return { ...state, is_loading: true };
+    case "REQUEST_BAN_METADATA_SUCCESS":
+      return { ...state, is_loading: false,
+      ban_classes  :  action.payload,
+    ban_classes_derived: action.payload };
+    case "REQUEST_BAN_METADATA_ERR":
+      return { ...state, is_loading: false, errored_out:true }
+    case "FILTER_BAN_METADATA":
+      if ( action.payload.trim() === "" ) {
+        return  {...state, ban_classes_derived: state.ban_classes} 
+      }
+      return {...state, 
+        ban_classes_derived: state.ban_classes.filter(
+        x => ( x.banClass.toLowerCase() 
+        ).includes(action.payload.toLocaleLowerCase())
+      )}
     case "FILTER_CHANGE":
       var newState = (action as filterChange).derived_filters;
-      // Type of the recently-change filte
       var ftype = (action as filterChange).filttype;
-
       var filtered_proteins =
         newState.applied_filters.length === 0
           ? state.ban_class
@@ -94,6 +121,7 @@ export const ProteinsReducer = (
       return {
         ...state,
         ban_class_derived: filtered_proteins,
+        // ban_classes_derived: filteredbanclasses,
         pages_total: Math.ceil(filtered_proteins.length / 20),
         current_page:1
 

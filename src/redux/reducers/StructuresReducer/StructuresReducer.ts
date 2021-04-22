@@ -61,20 +61,22 @@ export const _StructuresReducer = (
       return {...state, derived_filtered: state.neo_response,pages_total: Math.ceil(state.neo_response.length/20), current_page:1}
     case "FILTER_CHANGE":
 
+      console.log("Struct reducer action:", action);
+      
       // Filter change action emits new state of filters
-      var newState       =  (action as filterChange).derived_filters
-      // Type of the recently-change filte
-      var ftype             =  (action as filterChange).filttype
+      var newState  =  (action as filterChange).derived_filters
+      var ftype     =  (action as filterChange).filttype
 
       var filtered_structs  =  
-
        newState.applied_filters.length === 0
           ? state.neo_response
 
           : newState.applied_filters
           .reduce(
               (filteredStructs: NeoStruct[], filter:typeof ftype ) => {
-                return filteredStructs.filter(FilterPredicates[filter][ 'STRUCTURE' ]!(newState.filters[filter].value));
+
+                return filteredStructs.filter(FilterPredicates[filter][ 'STRUCTURE' ]!((newState.filters[filter].value as string[] ).filter(r=>r!=="")));
+
               },
               state.neo_response
             );
