@@ -13,6 +13,7 @@ import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import { flattenDeep } from "lodash";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../../redux/store";
+import { useHistory } from 'react-router-dom';
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../../../redux/AppActions";
 import LoadingSpinner from './../../Other/LoadingSpinner'
@@ -38,6 +39,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import Collapse from "@material-ui/core/Collapse";
 import CardHeader from "@material-ui/core/CardHeader";
 import SimpleBackdrop from "../Backdrop";
+import { struct_page_choice } from "../../../redux/reducers/Interface/ActionTypes";
 
 
 
@@ -247,8 +249,9 @@ const StructurePage: React.FC<StructurePageProps> = (
   const [rrnas, setrrnas]             =  useState<rRNA[]>([]);
   const [ligands, setligands]         =  useState<Ligand[]>([]);
   const [ions, setions]               =  useState(true);
+
   const activecat                     =  useSelector(( state:AppState ) => state.Interface.structure_page.component)
-  const dispatch                      =  useDispatch()
+  
 
   useEffect(() => {
     getNeo4jData("neo4j", {
@@ -286,21 +289,45 @@ const StructurePage: React.FC<StructurePageProps> = (
   const [ssu, setssu]     = useState<RibosomalProtein[]>([])
   const [other, setother] = useState<RibosomalProtein[]>([])
 
+const history = useHistory();
 
 
   useEffect(() => {
+
     var lsu   = protdata.filter(x=> x.nomenclature.length === 1 && flattenDeep(x.nomenclature.map(name => { return name.match(/L/)})).includes('L') )
     var ssu   = protdata.filter(x=> x.nomenclature.length === 1 && flattenDeep(x.nomenclature.map(name => { return name.match(/S/)})).includes('S'))
     var other = protdata.filter(x=> ![...lsu,...ssu].includes(x))
+
     setlsu(lsu)
     setssu(ssu)
     setother(other)
+
   }, [protdata])
+
+
+  const ligcardstyles = makeStyles({
+  root: {
+    minWidth: 275,
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+})();
   const renderSwitch = (activecategory: string) => {
+    
     switch (activecategory) {
       case "protein":
         return (
-          <Grid xs={9} container item spacing={1}>
+          lsu.length < 1 ? <SimpleBackdrop/> :
+          <Grid  container  spacing={1}>
 
             <Grid item justify="flex-start" alignItems='flex-start' alignContent='flex-start' container xs={4} spacing={1}>
               <Grid item xs={12} style={{ paddingTop: "10px" }} >
@@ -348,84 +375,93 @@ const StructurePage: React.FC<StructurePageProps> = (
             </Grid>
           </Grid>
         );
-
       case "rna":
 
       return (
 
-        <Grid container xs={10} spacing={1}>{
+        <Grid container    >{
           rrnas.map(obj => (
           <Grid item xs={12}>
             <RNACard {...obj} />
             </Grid>
           ))}
-        </Grid>);
+        </Grid>
+        );
 
       case "ligand":
 
         return (
-          <div className="struct-page-ligands">
+          <Grid  container  spacing={1}>
+            {
+              ligands.filter(lig => {
+                return ions ? true : !lig.chemicalName.includes("ION");
+              })
+                .map(lig => (
+                  <Grid item>
+                      <Card className = {ligcardstyles.root}>
+                      <CardContent>
+                        <Typography className = {ligcardstyles.pos} color = "textSecondary">{lig.chemicalId}</Typography>
+                        <Typography variant = "body2" component = "p">
+                          {lig.pdbx_description}
+                        </Typography>
+                        <Typography className = {ligcardstyles.title} color = "textSecondary" gutterBottom>
+                          Formula Weight: {lig.formula_weight}
+                        </Typography>
+                        <Typography className = {ligcardstyles.title} color = "textSecondary" gutterBottom>
+                          Residues ID: {lig.cif_residueId ? lig.cif_residueId : "not available"}
+                        </Typography>
+                      </CardContent>
+                      <CardActions>
+                        <Button onClick={()=>{history.push(`/bindingsites`)}} size = "small">Binding Sites</Button>
+                      </CardActions>
+                    </Card>
+        </Grid>
+              ))}
 
-            <div>
-              Hide Ions:{" "}
-              <input type="checkbox" id="ionscheck"
+          
+
+              <input type="checkbox" 
                 onChange={() => {
                   setions(!ions);
                 }}
               />
-            </div>
-            {ligands
-              .filter(lig => {
-                return ions ? true : !lig.chemicalName.includes("ION");
-              })
-              .map(lig => (
-                <div className="ligand-hero">
-                  <h3>
-                    <Link to={`/bindingsites`}>{lig.chemicalId}</Link>
-                  </h3>
-                  <div>Name: {lig.chemicalName}</div>
-                  <div>
-                    <code>cif</code> residue:{" "}
-                    {lig.cif_residueId ? lig.cif_residueId : "not calculated"}
-                  </div>
-                </div>
-              ))}
-          </div>
+            
+
+          </Grid>
         );
 
       default:
         return "Something went wrong";
     }
   };
-
+  const dispatch = useDispatch();
 
   const classes=makeStyles({  
-    card: {
-      // width:300
-    },
-    title: {
-      fontSize: 14,
-      height: 300
-    },
-    heading: {
-      fontSize: 12,
-      paddingTop: 5,
-    },
-    annotation: { fontSize: 12, },
-    
-    authors:{
-          transition: "0.1s all",
-      "&:hover": {
-        background: "rgba(149,149,149,1)",
-        cursor: "pointer",
-      },
-    },
-    nested: {
-      paddingLeft: 20,
-      color: "black"
-    },
+            card: {
+              // width:300
+            },
+            title: {
+              fontSize: 14,
+              height  : 300
+            },
+            heading: {
+              fontSize  : 12,
+              paddingTop: 5,
+            },
+            annotation: { fontSize: 12, },
+            authors   : {
+                transition: "0.1s all",
+                "&:hover" : {
+                  background: "rgba(149,149,149,1)",
+                  cursor    : "pointer",
+              },
+            },
 
-})();
+            nested:{
+              paddingLeft: 20,
+              color      : "black"
+            }
+          })();
 
 const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:any, value:string| string[]|number})=>{
   return     <ListItem onClick={onClick}><Grid
@@ -465,10 +501,8 @@ const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:an
             <CardMedia
               image={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`}
               title={ `${structdata.rcsb_id}\n${structdata.citation_title}` }
-              // height={200}
               className={classes.title}
             />
-            {/* <img src={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`}/> */}
           </CardActionArea>
           <List>
             <CardBodyAnnotation keyname="Species" value={structdata._organismName} />
@@ -542,9 +576,28 @@ const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:an
           </CardActions>
           <DashboardButton />
         </Card>
+      </Grid>
+
+
+      <Grid  container item xs={9}  spacing={1} alignContent="flex-start" alignItems="flex-start">
+
+
+<Grid item > 
+        <Button onClick = {()=>dispatch(struct_page_choice("component","rna"))}>RNAs</Button>
+</Grid>
+
+<Grid item >
+        <Button onClick = {()=>dispatch(struct_page_choice("component","ligand"))}>Ligands</Button>
+   </Grid>
+<Grid item >
+        <Button onClick = {()=>dispatch(struct_page_choice("component","protein"))}>Proteins</Button>
+  
+   </Grid>
+
+
+      {renderSwitch(activecat)}
 
       </Grid>
-      {renderSwitch(activecat)}
     </Grid>
   ) : (
     <SimpleBackdrop/>

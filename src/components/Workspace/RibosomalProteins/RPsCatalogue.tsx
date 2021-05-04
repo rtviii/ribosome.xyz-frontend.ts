@@ -46,7 +46,6 @@ const RPsCatalogue = () => {
     const u_SSU  = banClasses.filter(x=>x.banClass.toLowerCase().includes("u")  && !x.banClass.includes("L"))
 
     const Other  =  banClasses.filter(x=>["RACK1", "bTHX"].includes(x.banClass))
-
     const SSUMap : Record<string, BanPaperEntry>  =  small_subunit_map;
     const LSUMap : Record<string, BanPaperEntry>  =  large_subunit_map;
 
@@ -96,6 +95,7 @@ const RPsCatalogue = () => {
 
                 <Grid item container>
 
+        <Typography variant="caption"> Subunit </Typography>
                     <Button size="medium" color={subunit === "lsu" ? "primary" : "secondary"} onClick={() => { setSubunit("lsu") }}>LSU</Button>
                     <Button size="medium" color={subunit === "ssu" ? "primary" : "secondary"} onClick={() => { setSubunit("ssu") }}>SSU</Button>
                     {/* <Button size="medium" color={subunit === "other" ? "primary" : "secondary"} onClick={() => { setSubunit("other") }}>Other</Button> */}
@@ -103,6 +103,7 @@ const RPsCatalogue = () => {
                 </Grid>
 
                 <Grid item>
+        <Typography variant="caption">Search</Typography>
                     <input onChange={event => delayedQuery(event.target.value)} />
                 </Grid>
                 <Grid>
@@ -160,7 +161,7 @@ const RPsCatalogue = () => {
                 </Grid>
                 <Grid item xs={4} container direction={"column"}>
 
-        <Typography variant="h4">Bacterail</Typography>
+        <Typography variant="h4">Bacterial</Typography>
                     {(()=>{if ( subunit === "lsu" ){
                         return b_LSU;
                     }

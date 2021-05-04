@@ -88,16 +88,16 @@ const BanClassHero = ({ nom_class, inStructs, unique_organisms,  avgseqlength, c
 
   return (
     <Paper
-
       className="ban-class-hero"
-      // style={{ marginTop: "10px", padding: 10 }}
     >
 
-      <Grid container item xs={12} justify="space-between" alignContent="flex-end" alignItems="flex-end"
-        spacing={2}
-        className={classes.root}
-
-        // onClick={() => { history.push(`/rps/${nom_class}`) }}
+      <Grid container item 
+      xs={12} 
+      justify="space-between" 
+      alignContent="flex-end" alignItems="flex-end"
+      spacing={2}
+      className={classes.root}
+      // onClick={() => { history.push(`/rps/${nom_class}`) }}
         >
 
 
@@ -117,8 +117,10 @@ const BanClassHero = ({ nom_class, inStructs, unique_organisms,  avgseqlength, c
               </tbody>
             </table>
           }> */}
+
             <Typography
 
+        onClick={() => { history.push(`/rps/${nom_class}`) }}
               variant="body1"
             // color    =  "primary"
 
@@ -130,10 +132,10 @@ const BanClassHero = ({ nom_class, inStructs, unique_organisms,  avgseqlength, c
         <Grid item container xs={12}>
 
           <Grid item container justify="space-between"
-              onClick={() => { history.push({ 
- pathname: '/structs',
- state:{"nomclass":nom_class}
-})}}>
+                onClick={() => { history.push({ 
+          pathname: '/structs',
+          state:{"nomclass":nom_class}
+          })}}>
             <Button
               size="small"
               variant="outlined">
