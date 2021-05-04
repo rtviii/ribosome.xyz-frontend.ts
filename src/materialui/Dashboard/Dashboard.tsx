@@ -76,17 +76,21 @@ const _MenuItem:React.FC<{toggle_dash:()=>void; tooltip:boolean} & MenuItemData>
 
 const _DashboardButton: React.FC<DashProps> = (props) => {
   return <Grid 
-  onClick={() => props.toggle_dash()} container xs={12} 
+  onClick={() => props.toggle_dash()} container item xs={12} 
   style={{cursor:"pointer"}}
-  justify="flex-start" 
-  alignContent='center'
+  // justify="flex-start" 
+  // alignContent='center'
   // alignItems='center'
   direction='row' >
+
+
     <Grid item xs={4} > 
+
       <img style={{maxWidth:"100%",maxHeight:"100%"}} src={gear}/>
     </Grid>
   </Grid>
 }
+
 const _TemporaryDrawer: React.FC<DashProps> = (props) => {
 
   const classes = useStyles();

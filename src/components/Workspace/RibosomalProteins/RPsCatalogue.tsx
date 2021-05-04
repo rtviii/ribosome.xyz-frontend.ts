@@ -1,248 +1,193 @@
-import React, { useState, useEffect } from "react";
-import {  flattenDeep} from "lodash";
-import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
-import "./RPsCatalogue.css";
-import { BanClass } from "../../../redux/RibosomeTypes";
-import { ThunkDispatch } from "redux-thunk";
-import { AppActions } from "../../../redux/AppActions";
-import { AppState } from "../../../redux/store";
-import { connect } from "react-redux";
-import BanClassHero from './BanClassHero'
-import {large_subunit_map} from './../../../static/large-subunit-map'
-import {small_subunit_map} from './../../../static/small-subunit-map'
-import LoadingSpinner from "../../Other/LoadingSpinner";
-import PageAnnotation from "../Display/PageAnnotation";
-import Grid from "@material-ui/core/Grid";
-import Backdrop from './../Backdrop'
+import Grid from '@material-ui/core/Grid/Grid'
+import React, {useCallback, useEffect, useState } from 'react'
+import { makeStyles } from "@material-ui/core/styles";
+import { DashboardButton } from "../../../materialui/Dashboard/Dashboard";
+import SimpleBackdrop from "../Backdrop";
+import {useTypedDispatch} from '../../../hooks/typedDispatch'
+import { requestBanMetadata } from '../../../redux/reducers/Proteins/ActionTypes';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from '../../../redux/store';
+import BanClassHero from './BanClassHero';
+import {large_subunit_map} from '../../../static/large-subunit-map'
+import {small_subunit_map} from '../../../static/small-subunit-map'
+import { BanClass } from '../../../redux/RibosomeTypes';
+import Button from '@material-ui/core/Button/Button';
+import { useDebounce } from 'use-debounce';
+import {debounce}from 'lodash'
+import Cart from '../Cart/Cart';
+import Typography from '@material-ui/core/Typography/Typography';
+import { BanClassMetadata } from '../../../redux/DataInterfaces';
 
+export interface BanPaperEntry {
 
-const pageData={
+    pfamDomainAccession  :  Array<string>;
+    taxRange             :  Array<string>;
+    b                    :  string | null;
+    y                    :  string | null;
+    h                    :  string | null;
 
-  title:"Ribosomal Proteins",
-  text:"To enable comprehensive comparison of structures deposited by the community to the RCSB/PDB,\
-   we have provided a common ontology that allows to get access to the structure of ribosomal proteins across\
-    multiple files, by refering to their standard names \
-   This ontology is notably based on a nomenclature that was recently adopted for naming ribosomal proteins."
 }
+const RPsCatalogue = () => {
+
+    const dispatch    =  useDispatch()
+    const banClasses  =  useSelector(( state:AppState ) => state.proteins.ban_classes_derived)
+
+    useEffect(() => {dispatch(requestBanMetadata());}, [])
 
 
-export interface ERS {
-  nom_class  :  BanClass;
-  presentIn  :  Array<string>;
-  rps              : Array<{        
-    organism_desc: string
-    organism_id  : number
-    uniprot      : string
-    parent       : string
-    parent_reso  : number
-    strand_id    : string
-  }>
-}
 
-export interface BanPaperEntry{
-        pfamDomainAccession: Array<string>;
-        taxRange           : Array<string>;
-        b                  : string| null;
-        y                  : string | null;
-        h                  : string | null;
-}
 
-interface OwnProps {}
+    const e_LSU  = banClasses.filter(  x=>x.banClass.toLowerCase().includes("e")  && !x.banClass.includes("S"))
+    const b_LSU  = banClasses.filter(  x=>x.banClass.toLowerCase().includes("b")  && !x.banClass.includes("S"))
+    const u_LSU  = banClasses.filter(  x=>x.banClass.toLowerCase().includes("u")  && !x.banClass.includes("S"))
 
-interface ReduxProps {
-  globalFilter: string;
-}
+    const e_SSU  = banClasses.filter(x=>x.banClass.toLowerCase().includes("e")  && !x.banClass.includes("L"))
+    const b_SSU  = banClasses.filter(x=>x.banClass.toLowerCase().includes("b")  && !x.banClass.includes("L"))
+    const u_SSU  = banClasses.filter(x=>x.banClass.toLowerCase().includes("u")  && !x.banClass.includes("L"))
 
-interface DispatchProps {}
-type RPsCatalogueProps = DispatchProps & OwnProps & ReduxProps;
+    const Other  =  banClasses.filter(x=>["RACK1", "bTHX"].includes(x.banClass))
+    const SSUMap : Record<string, BanPaperEntry>  =  small_subunit_map;
+    const LSUMap : Record<string, BanPaperEntry>  =  large_subunit_map;
 
-const sortProts = (p1:ERS,p2:ERS) =>{
+    const [subunit, setSubunit]   =  useState<string>("lsu")
+    const [spec, setspec]         =  useState<string>("e")
 
-  var a = p1.nom_class
-  var b = p2.nom_class
-
-  const convert = ( letr:string)=>{
-    switch(letr){
-      case 'b':
-        return 1
-      case 'e':
-        return 2
-      case 'u':
-        return 3
-      default:
-        return 0
-    }
-  }
-  var cl1 =convert( a.slice(0,1) )
-  var cl2 =convert( b.slice(0,1) )
-  if(cl1 === cl2){
-    var numa = a.match(/\d+/g)![0] as unknown as number;
-    var numb = b.match(/\d+/g)![0] as unknown as  number;
-    return numa-numb
-  }
-  return cl1 - cl2
-}
-
-const RPsCatalogue: React.FC<RPsCatalogueProps> = (prop: RPsCatalogueProps) => {
-
-  const [available, setavailable] = useState<Array<ERS>>([]);
-  const [ssu, setssu]             = useState<Array<ERS>>([]);
-  const [lsu, setlsu]             = useState<Array<ERS>>([]);
-  const [other, setother]         = useState<Array<ERS>>([]);
-  const [activecat, setactivecat] = useState("lsu");
-
-  const KingdomGrid = ({
-    prots,
-    map,
-  }: {
-    prots: ERS[];
-    map  : Record<string, BanPaperEntry>
-  }) => {
-    const [kb, setkb] = useState<ERS[]>([]);
-    const [ke, setke] = useState<ERS[]>([]);
-    const [ku, setku] = useState<ERS[]>([]);
+    const [search, setSearch] = useState<string>("")
     useEffect(() => {
-      var u = prots.filter(x => x.nom_class.match(/^u/));
-      var b = prots.filter(x => x.nom_class.match(/^e/));
-      var e = prots.filter(x => x.nom_class.match(/^b/));
-      setkb(b);
-      setku(u);
-      setke(e);
-    }, [prots]);
+        dispatch({type:"FILTER_BAN_METADATA", payload:search})}, [search])
 
-    return (
-        <Grid container xs={12}>
+    const classes= makeStyles({  
 
-        <PageAnnotation  {...pageData}/>
-        
-        <Grid item xs={4} container>
-        <Grid component="div" id="e" spacing={2}>
-          <h4>Eukaryotic</h4>
-            {kb.map(x =>  
-                <BanClassHero prop={x}  paperinfo={map[x.nom_class]}/>
+        tools: {},
+        annotation: { fontSize: 12, },
+        authors: {
+            transition: "0.1s all",
+            "&:hover": {
+                background: "rgba(149,149,149,1)",
+                cursor: "pointer",
+            },
+        },
+        nested: {
+            paddingLeft: 20,
+            color: "black"
+        },
 
-  )}
-        </Grid>
+    })();
 
-        </Grid>
-        <Grid item xs={4} container>
-        <Grid component="div" id="b" spacing={2}>
-          <h4>Bacterial</h4>
-            {ke.map(x =>  
 
-              <BanClassHero prop={x}  paperinfo={map[x.nom_class]}/>
-  )}
-        </Grid>
+    const delayedQuery = useCallback(debounce(q =>setSearch(q), 750), []);
 
-        </Grid>
-        <Grid item xs={4} container>
+    const banClassObjComparator = (a:BanClassMetadata,b:BanClassMetadata)=>{
 
-        <Grid  id="u" spacing={2} >
-          <h4>Universal</h4>
-            {ku.map(x =>  
-              <BanClassHero prop={x}  paperinfo={map[x.nom_class]}/>
-  )}
-        </Grid>
-        </Grid>
-        </Grid>
-    );
-  };
-
-  const renderSwitchSubunit = (category: string) => {
-    switch (category) {
-      case "lsu":
-        return (
-              <KingdomGrid prots={lsu} map={large_subunit_map}/>
-        );
-      case "ssu":
-        return (
-              <KingdomGrid prots={ssu} map={small_subunit_map}/>
-        );
-      case "other":
-        return (
-            <div className='subunit-members'>
-            {other
-              .filter(x =>
-                x.nom_class.toLowerCase().includes(prop.globalFilter))
-              .sort()
-              .map(x => {
-              return <BanClassHero prop={x}  paperinfo={{ b:"",h:"",pfamDomainAccession:[], taxRange:[],y:""}}/>;
-              })}
-              </div>
-        );
-      default:
-        return "Something went wrong in the render switch.";
+        if (parseInt(a.banClass.slice(2))< parseInt(b.banClass.slice(2))){
+            return -1
+        }
+        else if (parseInt(a.banClass.slice(2))> parseInt(b.banClass.slice(2))){
+            return 1
+        }
+        else {
+            return 0
+        }
     }
-  };
+    return banClasses.length > 0 ? (
+        <Grid xs={12} container item spacing={1} style={{ padding: "5px" }}>
+            <Grid xs={2} container item alignContent="flex-start">
 
-  useEffect(() => {
-    getNeo4jData("neo4j", {
-      endpoint: "list_nom_classes",
-      params: null,
-    }).then(response => {
+                <Grid item container>
 
-      var uniquerps: Array<any> = flattenDeep(response.data);
+        <Typography variant="caption"> Subunit </Typography>
+                    <Button size="medium" color={subunit === "lsu" ? "primary" : "secondary"} onClick={() => { setSubunit("lsu") }}>LSU</Button>
+                    <Button size="medium" color={subunit === "ssu" ? "primary" : "secondary"} onClick={() => { setSubunit("ssu") }}>SSU</Button>
+                    {/* <Button size="medium" color={subunit === "other" ? "primary" : "secondary"} onClick={() => { setSubunit("other") }}>Other</Button> */}
 
-      setavailable(uniquerps);
-      setlsu(
-        uniquerps.filter(x => {
-          return (
-            x.nom_class.includes("L") && !x.nom_class.includes("S")
-          );
-        }).sort(sortProts)
-      );
+                </Grid>
 
-      setssu(
-        uniquerps.filter(x => {
-          return (x.nom_class.includes("S") && !x.nom_class.includes("L"));
-        }).sort(sortProts)
-      );
+                <Grid item>
+        <Typography variant="caption">Search</Typography>
+                    <input onChange={event => delayedQuery(event.target.value)} />
+                </Grid>
+                <Grid>
 
-      setother(
-        uniquerps.filter(x => {
-          return ["RACK1", "bTHX"].includes(x.nom_class);
-        })
-      );
-    });
-    return () => {};
+{/* <Cart/> */}
 
-  }, []);
-  return (
-    <div className="rps-catalogue">
-      <div className="filters-tools-rps">
-          <div
-            onClick={() => setactivecat("lsu")}
-            className={activecat === "lsu" ? "activecat" : "cat"}>
-            Large Subunit
-          </div>
-          <div
-            onClick={() => setactivecat("ssu")}
-            className={activecat === "ssu" ? "activecat" : "cat"}>
-            Small Subunit
-          </div>
-          <div
-            onClick={() => setactivecat("other")}
-            className={activecat === "other" ? "activecat" : "cat"}>
-            Other
-          </div>
-      </div>
-      <div className="rps-catalogue-classes">
+                </Grid>
 
-        { available.length > 1 ?  renderSwitchSubunit(activecat):
-    <Backdrop/>
+                <DashboardButton />
+            </Grid>
+            <Grid xs={10} container item spacing={1} >
+
+
+                <Grid item xs={4} container direction={"column"}>
+
+        <Typography variant="h4"> Universal</Typography>
+                    {(()=>{if ( subunit === "lsu" ){
+                        return u_LSU;
+                    }
+                    else {
+                        return u_SSU;
+                    }
+                    })().sort(banClassObjComparator).map(_ => {
+
+                        return <BanClassHero
+                            comments          =  {_.comments}
+                            avgseqlength      =  {_.avgseqlength}
+                            inStructs         =  {_.structs}
+                            unique_organisms  =  {_.organisms}
+                            nom_class         =  {_.banClass as BanClass}
+                            // paperinfo         =  {(subunit ==="lsu" ? LSUMap:SSUMap)[(_.banClass as BanClass)]}
+                             />
+                    })}
+                </Grid>
+                <Grid item xs={4} container direction={"column"}>
+
+        <Typography variant="h4"> Eukaryotic </Typography>
+                    {(()=>{if ( subunit === "ssu" ){
+                        return e_LSU;
+                    }
+                    else {
+                        return e_SSU;
+                    }
+                    })().sort(banClassObjComparator).map(_ => {
+
+                        return <BanClassHero
+                            comments          =  {_.comments}
+                            avgseqlength      =  {_.avgseqlength}
+                            inStructs         =  {_.structs}
+                            unique_organisms  =  {_.organisms}
+                            nom_class         =  {_.banClass as BanClass}
+                            // paperinfo         =  {(subunit ==="lsu" ? LSUMap:SSUMap)[(_.banClass as BanClass)]} 
+                            />
+                    })}
+                </Grid>
+                <Grid item xs={4} container direction={"column"}>
+
+        <Typography variant="h4">Bacterial</Typography>
+                    {(()=>{if ( subunit === "lsu" ){
+                        return b_LSU;
+                    }
+                    else {
+                        return b_SSU;
+                    }
+                    })().sort(banClassObjComparator).map(_ => {
+
+                        return <BanClassHero
+                            comments          =  {_.comments}
+                            avgseqlength      =  {_.avgseqlength}
+                            inStructs         =  {_.structs}
+                            unique_organisms  =  {_.organisms}
+                            nom_class         =  {_.banClass as BanClass}
+                            // paperinfo         =  {(subunit ==="lsu" ? LSUMap:SSUMap)[(_.banClass as BanClass)]} 
+                            />
+                    })}
+
+                </Grid>
+
+
+
+            </Grid>
+        </Grid>
+    ) :
+        <SimpleBackdrop />
 }
 
-      </div>
-    </div>
-  );
-};
-
-const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
-  globalFilter: ""
-});
-const mapdispatch = (
-  dispatch: ThunkDispatch<any, any, AppActions>,
-  ownprops: OwnProps
-): DispatchProps => ({});
-
-export default connect(mapstate, mapdispatch)(RPsCatalogue);
+export default RPsCatalogue

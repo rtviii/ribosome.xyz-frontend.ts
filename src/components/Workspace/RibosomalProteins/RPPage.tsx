@@ -137,7 +137,7 @@ const mapstate = (
 const mapdispatch = (
   dispatch: ThunkDispatch<any, any, AppActions>,
   ownProps:any):DispatchProps =>({
-    requestBanClass: (banclass)=>dispatch(requestBanClass(banclass)),
+    requestBanClass: (banclass)=>dispatch(requestBanClass(banclass, false)),
     goto_page      : (pid)=>dispatch(gotopage(pid)),
     next_page      : ()=>dispatch(nextpage()),
     prev_page      : ()=>dispatch(prevpage()),

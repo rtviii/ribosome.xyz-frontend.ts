@@ -82,19 +82,28 @@ export const FiltersReducer = (
 } 
     case "FILTER_CHANGE":
       var filtIndex = state.applied_filters.indexOf(action.filttype)
-      // shallow copy
       var appliedFilters = state.applied_filters;
+
+      
       if ( filtIndex === -1  && action.set) {
         appliedFilters.push(action.filttype);
       }
+
       if (!( filtIndex===-1 )&&  !action.set) {
         appliedFilters.splice(filtIndex, 1);
       }
 
+
+      console.log("FILTER CHANNGE, got newval: ", action.newval);
+      console.log("FILTER CHANNGE, cctions: ", action);
       var derived_state = {
         filters: {
           ...state.filters,
-          [action.filttype]: { set: action.set, value: action.newval },
+
+          [action.filttype]: { 
+            set    :  action.set,
+            value  :  action.newval
+           },
         },
         applied_filters: appliedFilters,
       };
