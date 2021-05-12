@@ -15,20 +15,6 @@ import { DashboardButton } from '../../../materialui/Dashboard/Dashboard';
 
 
 
-const useScript = ( url:string ) => {
-  useEffect(() => {
-    const script = document.createElement('script');
-
-    script.src = url;
-    script.async = true;
-
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    }
-  }, [url]);
-};
 
 type StructRespone = {
     struct : RibosomeStructure,
@@ -39,6 +25,7 @@ type StructRespone = {
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
+
 export default function ProteinAlignment() {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -119,15 +106,15 @@ const useStyles = makeStyles((theme: Theme) =>
       viewerInstance.render(viewerContainer, options);
   }, [])
 
-  const updateViewer = () =>{
-    console.log("Updating");
+  // const updateViewer = () =>{
+  //   console.log("Updating");
     
-    viewerInstance.visual.update(
-     { url: 'https://www.ebi.ac.uk/pdbe/coordinates/1cbs/chains?entityId=1&asymId=A&encoding=bcif', format: 'cif', binary:false } )
+  //   viewerInstance.visual.update(
+  //    { url: 'https://www.ebi.ac.uk/pdbe/coordinates/1cbs/chains?entityId=1&asymId=A&encoding=bcif', format: 'cif', binary:false } )
       
-      // {
-      // moleculeId:"1cbs"})
-  }
+  //     // {
+  //     // moleculeId:"1cbs"})
+  // }
 
 
   const pageData={

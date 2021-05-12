@@ -5,31 +5,34 @@ import { AppState } from "../redux/store";
 import "./Main.css";
 import Display from "./Workspace/Display/Display";
 import * as redux from '../redux/reducers/StructuresReducer/StructuresReducer'
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { TemporaryDrawer } from './../materialui/Dashboard/Dashboard'
 
 import {requestAllRNAs}from './../redux/reducers/RNA/ActionTypes'
 import { requestAllLigands } from "../redux/reducers/Ligands/ActionTypes";
 import { requestStaticCatalogue } from "../redux/reducers/Utilities/UtilitiesReducer";
+import { requestBanMetadata } from "../redux/reducers/Proteins/ActionTypes";
 
 interface OwnProps {}
 interface ReduxProps {}
 interface DispatchProps {
-  __rx_requestStructures  :  ()=>void
-  __rx_requestRNAs        :  ()=>void
-  __rx_requestAllLigands  :  ()=>void
-  __rx_staticCatalogue    :  ()=>void
+  __rx_requestStructures : ()=>void
+  __rx_requestRNAs       : ()=>void
+  __rx_requestAllLigands : ()=>void
+  __rx_staticCatalogue   : ()=>void
 }
 
 type MainProps = DispatchProps & OwnProps & ReduxProps;
 
 const Main: React.FC<MainProps> = (prop:MainProps) => {
 
-  useEffect(() => {
+    const dispatch    =  useDispatch()
+    useEffect(() => {
     prop.__rx_requestStructures()
     prop.__rx_requestRNAs()
     prop.__rx_requestAllLigands()
     prop.__rx_staticCatalogue()
+    dispatch(requestBanMetadata())
   }, [])
 
   return (
@@ -52,7 +55,7 @@ const mapdispatch = (
   __rx_requestStructures: ()=> dispatch(redux.requestAllStructuresDjango()),
   __rx_requestRNAs      : ()=> dispatch(requestAllRNAs()),
   __rx_requestAllLigands: ()=> dispatch(requestAllLigands()),
-  __rx_staticCatalogue  : ()=> dispatch(requestStaticCatalogue())
+  __rx_staticCatalogue  : ()=> dispatch(requestStaticCatalogue()),
 });
 
 export default connect(mapstate, mapdispatch)(Main);

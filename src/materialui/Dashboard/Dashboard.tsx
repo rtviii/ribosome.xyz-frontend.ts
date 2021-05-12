@@ -60,9 +60,10 @@ const md = (
 
 const _MenuItem:React.FC<{toggle_dash:()=>void; tooltip:boolean} & MenuItemData> = (props)=>{
   const history = useHistory();
+
   return (
     <ListItem button key={props.key}  onClick={()=>{
-      
+
       props.toggle_dash()
       history.push(props.linkto)}}>
 
@@ -78,9 +79,6 @@ const _DashboardButton: React.FC<DashProps> = (props) => {
   return <Grid 
   onClick={() => props.toggle_dash()} container item xs={12} 
   style={{cursor:"pointer"}}
-  // justify="flex-start" 
-  // alignContent='center'
-  // alignItems='center'
   direction='row' >
 
 
@@ -112,17 +110,18 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
       <List>
         <ListSubheader>Available Data</ListSubheader>
         <MenuItem key='new' menutext="Structures" linkto='/structs'/>
-        <MenuItem key='new' menutext="Proteins" linkto='/rps'/>
-        <MenuItem key='new' menutext="rRNA" linkto='/rnas'/>
-        <MenuItem key='new' menutext="Ligands" linkto='/ligands'/>
+        <MenuItem key='new' menutext="Proteins"   linkto='/rps'    />
+        <MenuItem key='new' menutext="rRNA"       linkto='/rnas'   />
+        <MenuItem key='new' menutext="Ligands"    linkto='/ligands'/>
       </List>
       <Divider />
       <List>
         <ListSubheader>Tools</ListSubheader>
-        <MenuItem key='new1' menutext="Binding Sites" linkto='/bindingsites'/>
+        <MenuItem key='new1' menutext="Binding Sites"          linkto='/bindingsites'    />
         <MenuItem key='new1' menutext="Protein Classification" linkto='/rpclassification'/>
-        <MenuItem key='new1' menutext="Protein Alignment" linkto='/rpalign'/>
-        <MenuItem key='new1' menutext="Exit Tunnel" linkto='/tunnel'/>
+        <MenuItem key='new1' menutext="Protein Alignment"      linkto='/rpalign'         />
+        <MenuItem key='new1' menutext="Exit Tunnel"            linkto='/tunnel'          />
+        <MenuItem key='new1' menutext="Visualization Page"     linkto='/vis'             />
       </List>
     </div>
   );

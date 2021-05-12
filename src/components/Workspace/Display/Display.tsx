@@ -13,6 +13,7 @@ import ExitTunnel from './../ExitTunnel/ExitTunnel'
 import WorkInProgress from './../WorkInProgress'
 import ProteinAlignment from './../ProteinAlign/ProteinAlignment'
 import RPClassification from './../RPClassification/RPClassification'
+import VisualizationPage from './../../VisualizationPage/VisualizationPage'
 
 const Display = () => {
   return (
@@ -43,7 +44,7 @@ const Display = () => {
 
         <Route exact path = "/rpclassification"                     component= {RPClassification} />
         <Route exact path = "/rpnomenclature"               component= {WorkInProgress} />
-
+        <Route exact path = "/vis"               component= {VisualizationPage} />
       </Switch>
     </div>
   );
