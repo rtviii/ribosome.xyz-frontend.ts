@@ -14,11 +14,11 @@ import { useDispatch } from 'react-redux';
 import HelpIcon from '@material-ui/icons/Help';
 import Tooltip from '@material-ui/core/Tooltip';
 
-export interface BanClassMetadata {
-  nom_class: BanClass;
-  inStructs: Array<string>;
-  unique_organisms: number[]
-}
+// export interface BanClassMetadata {
+//   nom_class: BanClass;
+//   inStructs: Array<string>;
+//   unique_organisms: number[]
+// }
 const BanClassHero = ({ nom_class, inStructs, unique_organisms,  avgseqlength, comments
 
 }:

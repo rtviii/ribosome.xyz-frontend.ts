@@ -9,8 +9,8 @@ import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import { AppState } from '../../redux/store';
 import { useSelector } from 'react-redux';
-import { BanClassMetadata } from '../Workspace/RibosomalProteins/BanClassHero';
-import { RNAProfile } from '../../redux/DataInterfaces';
+// import { BanClassMetadata } from '../Workspace/RibosomalProteins/BanClassHero';
+import { BanClassMetadata, RNAProfile } from '../../redux/DataInterfaces';
 const useSelectStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
@@ -56,6 +56,33 @@ const styles= useSelectStyles();
     )
 }
 
+const SelectProtein = ({proteins, selectItem}:{proteins:BanClassMetadata[], selectItem:(_:string, s:string)=>void}) => {
+const styles= useSelectStyles();
+console.log("Got proteinds:" , proteins);
+
+  const [curVal, setVal] = React.useState('');
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+      let item = event.target.value as string
+    setVal(item);
+    // selectItem(_,s)
+  };
+    return (
+        <FormControl className={styles.formControl}>
+        <InputLabel id="demo-simple-select-label">Proteins</InputLabel>
+        <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={curVal}
+            onChange={handleChange}
+        >
+        {proteins.map(( i:BanClassMetadata )  =>
+            <MenuItem value={ i.banClass}>{i.banClass}</MenuItem>
+        )}
+        </Select>
+        </FormControl>
+    )
+}
+
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
 
@@ -70,25 +97,32 @@ const VisualizationPage = () => {
       viewerInstance.render(viewerContainer, options);
   }, [])
 
-  const proteins   = useSelector(( state:AppState ) => state.proteins.ban_classes)
-  const structures = useSelector(( state:AppState ) => state.structures.neo_response.map(
+  const prot_classes:BanClassMetadata[] = useSelector(( state:AppState ) => state.proteins.ban_classes)
+  const structures   = useSelector(( state:AppState ) => state.structures.neo_response.map(
       r=>{return { rcsb_id: r.struct.rcsb_id, title: r.struct.citation_title } }))
-  const rnas       = useSelector(( state:AppState ) => state.rna.all_rna)
+
+  const rnas         = useSelector(( state:AppState ) => state.rna.all_rna)
   const selectStruct = (rcsb_id:string) =>{
-      console.log("select fired", rcsb_id.toLocaleLowerCase());
-      
-            viewerInstance.visual.update({
-                moleculeId:rcsb_id.toLowerCase()
-            });
+    console.log("select fired", rcsb_id.toLocaleLowerCase());
+    viewerInstance.visual.update({
+        moleculeId:rcsb_id.toLowerCase()
+    });
   }
 
+  useEffect(() => {
+    console.log("ban classes: " ,prot_classes);
+
+    
+  }, [prot_classes])
+  const selectProtein = (banclass:string, parent_struct:string) =>{
+      console.log("select fired", banclass.toLocaleLowerCase());
+  }
 
     return (
         <Grid>
-
-<SelectStruct  items={structures} selectItem={selectStruct}/>
-
-      <div id="molstar-viewer">Molstar Viewer</div>
+        <SelectStruct  items={                structures} selectItem={ selectStruct  }/>
+        <SelectProtein proteins={                prot_classes  } selectItem={ selectProtein}/ >
+        <div           id   ="molstar-viewer">Molstar     Viewer     </div             >
         {/* <Button variant="outlined"
           onClick={() => {
             viewerInstance.visual.update({
