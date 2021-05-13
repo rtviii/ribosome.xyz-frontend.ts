@@ -242,7 +242,7 @@ const useStyles = makeStyles((theme: Theme) =>
           viewerInstance.visual.update({
             customData: {
               url:
-                "https://ribosome.xyz:8000/static_files/pairwise_align/?struct1=3j9m&struct2=7k00&strand1=AF&strand2=k",
+                `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${struct1}&struct2=${struct2}&strand1=${strand1}&strand2=${strand2}`,
               format: "cif",
               binary: false,
             },
@@ -257,7 +257,7 @@ const useStyles = makeStyles((theme: Theme) =>
           onClick={() => {
             viewerInstance.visual.update({
               customData: {
-                url: `https://ribosome.xyz:8000/static_files/pairwise_align/?struct1=${struct1}&struct2=${struct2}&strand1=${strand1}&strand2=${strand2}`,
+                url: `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${struct1}&struct2=${struct2}&strand1=${strand1}&strand2=${strand2}`,
                 format: "cif",
                 binary: false,
               },

@@ -12,8 +12,57 @@ type StaticFilesEndpoints =
   | pairwise_align
   | get_static_catalogue
   | downloadArchive
+  | cif_chain_by_class
 
+
+  interface cif_chain_by_class{
+    endpoint: "cif_chain_by_class",
+            params:{
+    classid: string,
+    struct : string
+          }
+  }
+interface downloadCifChain{
+  endpoint: "cif_chain",
+  params:{
+    structid: string,
+    chainid : string
+  }
+}
+interface download_ligand_nbhd {
+  endpoint:"download_ligand_nbhd",
+  params:{
+    structid: string,
+    chemid  : string;
+  }
+}
+interface get_tunnel {
+  endpoint: "tunnel",
+  params:{
+    struct: string;
+    filetype: "report" | "centerline";
+  }
+}
+interface pairwise_align{
+  endpoint:"pairwise_align",
+  params:{
+      struct1: string,
+      struct2: string,
+      strand1: string,
+      strand2: string
+  }}
+interface get_static_catalogue{
+  endpoint: 'get_static_catalogue',
+  params  : null
+}
+interface downloadArchive {
+  endpoint: 'downloadArchive',
+  params: {
+    [key:string]:string
+  }
+}
 type Neo4jEndpoints =
+   nomclass_visualize
   | getStructure
   | getAllStructures
   | getHomologs
@@ -35,15 +84,17 @@ type Neo4jEndpoints =
 
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
+
+interface nomclass_visualize{
+  endpoint: "nomclass_visualize",
+  params:{
+    ban:string
+  }
+}
+
 interface get_banclasses_metadata {
   endpoint: 'get_banclasses_metadata',
   params: null
-}
-interface downloadArchive {
-  endpoint: 'downloadArchive',
-  params: {
-    [key:string]:string
-  }
 }
 
 interface get_individual_ligand{
@@ -51,10 +102,6 @@ interface get_individual_ligand{
   params  : {
     chemId:string
   }
-}
-interface get_static_catalogue{
-  endpoint: 'get_static_catalogue',
-  params  : null
 }
 
 interface TEMP_classification_sample {
@@ -69,27 +116,11 @@ interface get_surface_ratios{
   }
 }
 
-interface pairwise_align{
-  endpoint:"pairwise_align",
-  params:{
-      struct1: string,
-      struct2: string,
-      strand1: string,
-      strand2: string
-  }
 
-}
 interface match_structs_by_proteins{
   endpoint:"match_structs",
   params:{
     proteins:string
-  }
-}
-interface get_tunnel {
-  endpoint: "tunnel",
-  params:{
-    struct: string;
-    filetype: "report" | "centerline";
   }
 }
 
@@ -100,21 +131,7 @@ interface get_ligand_nbhd {
     chemid: string;
   };
 }
-interface download_ligand_nbhd {
-  endpoint:"download_ligand_nbhd",
-  params:{
-    structid: string,
-    chemid  : string;
-  }
-}
 
-interface downloadCifChain{
-  endpoint: "cif_chain",
-  params:{
-    structid: string,
-    chainid : string
-  }
-}
 interface getRnasByStruct{
   endpoint: "get_rnas_by_struct",
   params  : null

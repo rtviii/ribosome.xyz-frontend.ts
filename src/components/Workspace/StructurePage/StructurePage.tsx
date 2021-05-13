@@ -42,6 +42,27 @@ import SimpleBackdrop from "../Backdrop";
 import { struct_page_choice } from "../../../redux/reducers/Interface/ActionTypes";
 
 
+ export const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:any, value:string| string[]|number})=>{
+
+  const classes=makeStyles({  
+            annotation: { fontSize: 12, },
+          })();
+  return     <ListItem onClick={onClick}><Grid
+      container
+      direction="row"
+      justify="space-between"
+      alignItems="center"
+      component="div"    >
+      <Typography variant="caption" color="textSecondary" component="p" className={classes.annotation}>
+        {keyname}:
+            </Typography>
+      <Typography variant="caption" color="textPrimary" component="p" noWrap
+        className={classes.annotation}
+      >
+        {value}
+      </Typography>
+    </Grid></ListItem>
+  }
 
 const RNACard = (prop: rRNA) => {
   const useRNAStyles = makeStyles({
@@ -282,7 +303,6 @@ const StructurePage: React.FC<StructurePageProps> = (
       }
     );
 
-    return () => {};
   }, [pdbid]);
 
   const [lsu, setlsu]     = useState<RibosomalProtein[]>([])
@@ -463,23 +483,6 @@ const history = useHistory();
             }
           })();
 
-const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:any, value:string| string[]|number})=>{
-  return     <ListItem onClick={onClick}><Grid
-      container
-      direction="row"
-      justify="space-between"
-      alignItems="center"
-      component="div"    >
-      <Typography variant="caption" color="textSecondary" component="p" className={classes.annotation}>
-        {keyname}:
-            </Typography>
-      <Typography variant="caption" color="textPrimary" component="p" noWrap
-        className={classes.annotation}
-      >
-        {value}
-      </Typography>
-    </Grid></ListItem>
-  }
 
 
   const [authorsOpen, setOpen] = React.useState(false);
@@ -559,17 +562,28 @@ const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:an
               <Grid item>
 
                 <Button size="small" color="primary">
+                  <a href={ `https://www.rcsb.org/structure/${structdata.rcsb_id}` }>
                   PDB
+                  </a>
             </Button>
               </Grid>
               <Grid item>
                 <Button size="small" color="primary">
+                  <a href={
+                    
+                    structdata.rcsb_external_ref_link[0]
+                     }>
                   EMD
+                  </a>
             </Button>
               </Grid>
               <Grid item>
                 <Button size="small" color="primary">
+                  <a href={
+                     `https://doi.org/${structdata.citation_pdbx_doi}`
+                     }>
                   DOI
+                  </a>
             </Button>
               </Grid>
             </Grid>
