@@ -53,10 +53,11 @@ import { struct_page_choice } from "../../../redux/reducers/Interface/ActionType
       justify="space-between"
       alignItems="center"
       component="div"    >
-      <Typography variant="caption" color="textSecondary" component="p" className={classes.annotation}>
+      <Typography variant="caption"  color="textSecondary" component="p" className={classes.annotation}>
         {keyname}:
             </Typography>
-      <Typography variant="caption" color="textPrimary" component="p" noWrap
+      <Typography variant="caption" color="textPrimary" component="p" 
+      
         className={classes.annotation}
       >
         {value}

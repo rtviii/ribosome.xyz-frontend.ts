@@ -29,7 +29,7 @@ import Paper from '@material-ui/core/Paper/Paper';
 import CardHeader from '@material-ui/core/CardHeader/CardHeader';
 import Card from '@material-ui/core/Card/Card';
 import { RibosomeStructure } from '../../redux/RibosomeTypes';
-import { flattenDeep } from 'lodash';
+import { flattenDeep, uniq } from 'lodash';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { Widgets } from '@material-ui/icons';
 
@@ -272,7 +272,7 @@ const VisualizationPage = () => {
         return protClassInfo.class ? <List>
           <ListSubheader>Ribosomal Protein Class {protClassInfo.class}</ListSubheader>
 {
-flattenDeep(protClassInfo.comments).filter(r=>r!=="NULL").map(r => 
+uniq(flattenDeep(protClassInfo.comments)).filter(r=>r!=="NULL").map(r => 
 <ListItem>
 <Typography className={"s"}>{r}</Typography> 
 </ListItem>
@@ -402,7 +402,10 @@ flattenDeep(protClassInfo.comments).filter(r=>r!=="NULL").map(r =>
           <ListItem>
 <Typography variant="overline">Currently Selected:</Typography>
           </ListItem>
+          <ListItem>
+
 <RenderInViewInfo type={inViewData.type} structdata={structdata as RibosomeStructure} protClassInfo={protClassInfo}/>
+          </ListItem>
 
           <ListItem>
             <DashboardButton />
