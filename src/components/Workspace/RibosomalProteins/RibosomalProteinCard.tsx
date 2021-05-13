@@ -139,30 +139,6 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
             container
             xs={12}
           >
-            <Grid item xs={4}>
-              <Tooltip
-                title={
-                  <Typography className={classes.fieldTypography }>
-                    Structure {prop.protein.parent_rcsb_id}:
-                    <br />
-                    strand {prop.protein.entity_poly_strand_id}
-                  </Typography>
-                }
-                placement="top-end"
-              >
-                <Typography
-                  className={classes.hover + classes.fieldTypography}
-                  onClick={() => {
-                    history.push(`/structs/${prop.protein.parent_rcsb_id}`);
-                  }}
-                  variant="body1"
-                >
-                  {/* {prop.protein.parent_rcsb_id}.{prop.protein.entity_poly_strand_id} */}
-
-                  (<i>strand</i>  {prop.protein.entity_poly_strand_id})
-                </Typography>
-              </Tooltip>
-            </Grid>
             <Grid
               className={classes.hover}
               onClick={() => {
@@ -233,6 +209,15 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
                 />
               )}
             </Button>
+        <Button 
+        
+        className={classes.fieldTypography}
+        size="small"
+        onClick={()=>{ history.push({pathname:`/vis`, state:{banClass:prop.protein.nomenclature[0], parent:prop.protein.parent_rcsb_id} })}}>
+
+          Visualize
+          
+          </Button>
 
           </Grid>
           <Grid container item xs={4}>

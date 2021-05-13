@@ -32,6 +32,7 @@ import { RibosomeStructure } from '../../redux/RibosomeTypes';
 import { flattenDeep, uniq } from 'lodash';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { Widgets } from '@material-ui/icons';
+import { useHistory, useParams } from 'react-router';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -57,8 +58,8 @@ const useSelectStyles = makeStyles((theme: Theme) =>
 
 interface StructSnip {
   rcsb_id: string,
-  title: string,
-  any?: any
+  title  : string,
+  any?   : any
 }
 
 
@@ -179,7 +180,25 @@ const SelectRna = ({ rnas, selectItem }: { rnas: RNAProfile[], selectItem: (stra
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
-const VisualizationPage = () => {
+const VisualizationPage = (props:any) => {
+  const history:any= useHistory();
+  const params:{struct:string}|{} =  history.location.state; 
+  useEffect(() => {
+    console.log(
+    params
+    )
+  }, [history])
+
+
+
+
+  useEffect(() => {
+
+    // if (para)
+  }, [params])
+
+
+
   const [inView, setInView]          = useState<any>({});
   const [inViewData, setInViewData] = useState<any>({});
 
@@ -237,7 +256,6 @@ const VisualizationPage = () => {
     }).then(
       resp => {
         const respdata:RibosomeStructure =  ( flattenDeep(resp.data)[0] as any ).structure;
-        console.log("got resp", respdata);
         setstruct(respdata);
         setInViewData({ type:"struct", data:respdata})
       },
@@ -252,7 +270,6 @@ const VisualizationPage = () => {
     else if (inView.type =="chain"){
 
       getNeo4jData("neo4j",{endpoint:"nomclass_visualize", params:{ban:inView.id}}).then(r =>{
-        console.log("selected class", r.data)
         setInViewData({type:"chain", data:r.data})
         setProtClassInfo(r.data[0])
       })
@@ -266,7 +283,6 @@ const VisualizationPage = () => {
     comments:string[][],
     members:{parent:string, chain:string}[]
   } })=>{
-     console.log(protClassInfo);
    switch (type){
       case "chain":
         return protClassInfo.class ? <List>
@@ -289,6 +305,7 @@ uniq(flattenDeep(protClassInfo.comments)).filter(r=>r!=="NULL").map(r =>
           />
           <CardActionArea>
             <CardMedia
+              onClick={()=>{history.push(`/structs/${structdata.rcsb_id.toUpperCase()}`)}}
               image={process.env.PUBLIC_URL + `/ray_templates/_ray_${structdata.rcsb_id.toUpperCase()}.png`}
               title={ `${structdata.rcsb_id}\n${structdata.citation_title}` }
               className={classes.title}
@@ -341,9 +358,6 @@ uniq(flattenDeep(protClassInfo.comments)).filter(r=>r!=="NULL").map(r =>
     return <Typography variant="caption"> Select a structure or a protein.</Typography>
   }}
 
-  useEffect(() => {
-    console.log("sturtcdata chagneD: ", structdata);
-  }, [structdata])
 
   const classes=makeStyles({  
             pageDescription:{

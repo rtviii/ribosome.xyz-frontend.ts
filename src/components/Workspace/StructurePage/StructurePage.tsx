@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Route, useParams } from "react-router-dom";
 
 import {
   Ligand,
@@ -40,6 +40,7 @@ import Collapse from "@material-ui/core/Collapse";
 import CardHeader from "@material-ui/core/CardHeader";
 import SimpleBackdrop from "../Backdrop";
 import { struct_page_choice } from "../../../redux/reducers/Interface/ActionTypes";
+import VisualizationPage from "../../VisualizationPage/VisualizationPage";
 
 
  export const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:any, value:string| string[]|number})=>{
@@ -589,8 +590,13 @@ const history = useHistory();
               </Grid>
             </Grid>
           </CardActions>
-          <DashboardButton />
         </Card>
+        <Button onClick={()=>{ history.push({pathname:`/vis`, state:{struct:structdata.rcsb_id} })}}>
+
+          Visualize
+          
+          </Button>
+        <DashboardButton />
       </Grid>
 
 
