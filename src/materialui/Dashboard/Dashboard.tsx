@@ -118,9 +118,9 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
       <List>
         <ListSubheader>Tools</ListSubheader>
         <MenuItem key='new1' menutext="Binding Sites"          linkto='/bindingsites'    />
-        <MenuItem key='new1' menutext="Protein Classification" linkto='/rpclassification'/>
+        {/* <MenuItem key='new1' menutext="Protein Classification" linkto='/rpclassification'/> */}
         <MenuItem key='new1' menutext="Protein Alignment"      linkto='/rpalign'         />
-        <MenuItem key='new1' menutext="Exit Tunnel"            linkto='/tunnel'          />
+        {/* <MenuItem key='new1' menutext="Exit Tunnel"            linkto='/tunnel'          /> */}
         <MenuItem key='new1' menutext="Visualization Page"     linkto='/vis'             />
       </List>
     </div>

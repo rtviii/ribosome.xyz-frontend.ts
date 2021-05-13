@@ -181,26 +181,33 @@ const SelectRna = ({ rnas, selectItem }: { rnas: RNAProfile[], selectItem: (stra
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
 const VisualizationPage = (props:any) => {
+
   const history:any= useHistory();
-  const params:{struct:string}|{} =  history.location.state; 
-  useEffect(() => {
-    console.log(
-    params
-    )
-  }, [history])
 
-
-
+  const params =  history.location.state;
 
   useEffect(() => {
 
-    // if (para)
+    if ( params == undefined || Object.keys(params).length < 1 ){return}
+
+    if (( params as {banClass:string, parent:string}  ).parent){
+      
+      getCifChainByClass(params.banClass,params.parent)
+      
+    }
+    
+    else 
+    if (( params as {struct:string}  ).struct){
+      selectStruct(params.struct)
+    }
   }, [params])
 
 
 
-  const [inView, setInView]          = useState<any>({});
-  const [inViewData, setInViewData] = useState<any>({});
+  const [inView, setInView]               = useState<any>({});
+  const [inViewData, setInViewData]       = useState<any>({});
+  const [structdata, setstruct]           = useState<RibosomeStructure>({} as RibosomeStructure);
+  const [protClassInfo, setProtClassInfo] = useState<any>({});
 
   useEffect(() => {
     var options = {
@@ -209,6 +216,19 @@ const VisualizationPage = (props:any) => {
     }
     var viewerContainer = document.getElementById('molstar-viewer');
     viewerInstance.render(viewerContainer, options);
+
+    if ( params == undefined || Object.keys(params).length < 1 ){return}
+
+    if (( params as {banClass:string, parent:string}  ).parent){
+      
+      getCifChainByClass(params.banClass,params.parent)
+      
+    }
+    
+    else 
+    if (( params as {struct:string}  ).struct){
+      selectStruct(params.struct)
+    }
   }, [])
 
   const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => state.proteins.ban_classes)
@@ -227,9 +247,10 @@ const VisualizationPage = (props:any) => {
       moleculeId: rcsb_id.toLowerCase()
     });
   }
-
   const getCifChainByClass = (banclass: string, parent_struct: string) => {
 
+    console.log("triggered cifchain");
+    
     viewerInstance.visual.update({
       customData: {
         url: `${process.env.REACT_APP_DJANGO_URL}/static_files/cif_chain_by_class/?classid=${banclass}&struct=${parent_struct}`,
@@ -244,11 +265,8 @@ const VisualizationPage = (props:any) => {
     })
   }
 
-  const [structdata, setstruct]       =  useState<RibosomeStructure>({
-
-  } as RibosomeStructure);
-  const [protClassInfo, setProtClassInfo]       =  useState<any>({});
   useEffect(() => {
+
     if ( inView.type =="struct" ){
     getNeo4jData("neo4j", {
       endpoint: "get_struct",

@@ -149,11 +149,9 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
                 );
               }}
               item
-              xs={6}
+              xs = {6}
             >
-
-
-              <Typography variant="caption" className={classes.fieldTypography}
+              <Typography variant = "caption" className = {classes.fieldTypography}
               
               onClick={()=>{
                 return prop.protein.nomenclature[0] ? history.push(`/rps/${prop.protein.nomenclature[0]}`) : ""

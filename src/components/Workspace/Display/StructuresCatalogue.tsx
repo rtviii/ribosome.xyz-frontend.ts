@@ -159,6 +159,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
       </div>
       <Grid container item xs={12} spacing={3}>
         <PageAnnotation {...pageData}/>
+        <Grid item xs={12}><Typography variant="overline" style={{color:"red"}}>Sort By [1]   [2]  [3]</Typography></Grid>
         <Grid item xs={12}>
           <Pagination
             {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}
