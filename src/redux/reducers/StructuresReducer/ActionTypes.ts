@@ -12,7 +12,7 @@ export const PREV_PAGE_STRUCTS               = "PREV_PAGE_STRUCTS"
 export const STRUCTS_FILTER_CHANGE               = "STRUCTS_FILTER_CHANGE"
 
 export type StructFilterType =
-  | "PROTEIN_COUNT"
+  // | "PROTEIN_COUNT"
   | "YEAR"
   | "RESOLUTION"
   | "PROTEINS_PRESENT"
@@ -41,15 +41,15 @@ export interface structsFilterChange      {
 
 export const structsFilterChangeAC = (
   newval     : any,
-  filter_type: FilterType
+  filter_type: StructFilterType
   ): structsFilterChange =>{
 
   let filterTypeIsSet: boolean = (() => {
     switch (filter_type) {
       case "PROTEINS_PRESENT":
         return !(newval.length === 0);
-      case "PROTEIN_COUNT":
-        return !(newval[0] === 25 && newval[1] === 150);
+      // case "PROTEIN_COUNT":
+      //   return !(newval[0] === 25 && newval[1] === 150);
       case "RESOLUTION":
         return !(newval[0] === 1 && newval[1] === 6);
       case "SEARCH":

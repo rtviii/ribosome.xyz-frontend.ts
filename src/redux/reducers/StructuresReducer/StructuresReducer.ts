@@ -22,24 +22,31 @@ export interface StructReducerState {
 
 const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
   filtstate:{
-   "PROTEIN_COUNT"   : {
-     value:[],
-     set:false,
-     predicate:(value) =>(struct) =>
-        struct.rps.length >= (value as number[])[0] &&
-        struct.rps.length <= (value as number[])[1]
-   },
+  //  "PROTEIN_COUNT"   : {
+  //    value:[2],
+  //    set:false,
+  //    predicate:(value) =>(struct) =>
+  //       struct.rps.length >= (value as number[])[0] &&
+  //       struct.rps.length <= (value as number[])[1]
+  //  },
    "YEAR": {
      value    : [2012,2021],
      set      : false,
-     predicate: (value) => (struct) => struct.struct.citation_year >= (value as number[])[0] && struct.struct.citation_year <= (value as number[])[1]
-      
+     predicate: (value) => (struct) => 
+     {
+       console.log("PAssed value into predicate year", value)
+     return struct.struct.citation_year >= (value as number[])[0] && struct.struct.citation_year <= (value as number[])[1]
+     }
     },
    "RESOLUTION"      : {
-     value:[],
+     value:[1,6],
      set:false,
-
-     predicate:(value) =>(struct) =>      struct.struct.citation_year >= (value as number[])[0] && struct.struct.citation_year <= (value as number[])[1]
+     predicate:(value) =>(struct) =>
+     {
+       console.log("PAssed value into predicate", value)
+      return struct.struct.resolution >= (value as number[])[0] && struct.struct.resolution <= (value as number[])[1]  
+    }
+    
    },
    "PROTEINS_PRESENT": {
      value:[],
@@ -61,7 +68,10 @@ const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
      set:false,
 
      predicate:(value) =>(struct) =>
-              { return  (
+              { 
+                
+       console.log("PAssed value into predicate search", value)
+                return  (
           struct.struct.rcsb_id +
           struct.struct.citation_title +
           struct.struct.citation_year +
@@ -135,14 +145,14 @@ export const _StructuresReducer = (
     case "STRUCTS_FILTER_CHANGE":
 
 
-      const updateAppliedFilters = (type: StructFilterType, set: boolean, applied: StructFilterType[]): StructFilterType[] => {
-        if ((set) && !(applied.includes(type))) {
-          return [...applied, type]
+      const updateAppliedFilters = (filter_type: StructFilterType, set: boolean, applied: StructFilterType[]): StructFilterType[] => {
+        if ((set) && !(applied.includes(filter_type))) {
+          return [...applied, filter_type]
         }
-        else if (!(set) && (applied.includes(type))) {
-          return applied.filter(t => t !== type)
+        else if (!(set) && (applied.includes(filter_type))) {
+          return applied.filter(t => t !== filter_type)
         }
-        else if (set && applied.includes(type)) {
+        else if (set && applied.includes(filter_type)) {
           return applied
         }
         else {
@@ -152,14 +162,22 @@ export const _StructuresReducer = (
 
      var filtered   = state.neo_response
      var newApplied = updateAppliedFilters(action.filter_type,action.set, state.filter_registry.applied)
+
      var newFilterState:Filter<NeoStruct> =  {
        set      : action.set,
        value    : action.newval,
        predicate: state.filter_registry.filtstate[action.filter_type].predicate
      }
-     var nextFilters = Object.assign(state.filter_registry,{filtstate:{...state.filter_registry.filtstate, ...{[action.filter_type]:newFilterState}}}, { applied:newApplied })
+     var nextFilters = Object.assign({},state.filter_registry,{filtstate:{...state.filter_registry.filtstate, ...{[action.filter_type]:newFilterState}}}, { applied:newApplied })
+
      for (var filter of newApplied){
-       filtered= filtered.filter(nextFilters.filtstate[filter as StructFilterType].predicate(nextFilters.filtstate[action.filter_type].value))
+
+       
+      var filtered = filtered.filter(
+
+        nextFilters.filtstate[filter as StructFilterType]
+        .predicate(nextFilters.filtstate[filter].value)
+        )
      }
      return {...state, filter_registry:nextFilters, derived_filtered:filtered, pages_total: Math.ceil(filtered.length/20), current_page:1}
 

@@ -31,7 +31,7 @@ import 'react-dropdown-tree-select/dist/styles.css'
 import Pagination from './Pagination'
 import Backdrop from './../Backdrop'
 import { CSVLink } from "react-csv";
-import { structsFilterChangeAC } from "../../../redux/reducers/StructuresReducer/ActionTypes";
+import { StructFilterType, structsFilterChangeAC } from "../../../redux/reducers/StructuresReducer/ActionTypes";
 
 const pageData ={
   title:"Whole Ribosome Structures",
@@ -250,14 +250,14 @@ export const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
   )
 }
 
-interface OwnSliderFilterProps {
+interface SliderFilterProps {
+  filter_type: StructFilterType;
   name               :  string;
   max                :  number;
   min                :  number;
   step               :  number;
 }
-const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterChange>
- = (prop:OwnSliderFilterProps & FilterData & handleFilterChange) => {
+const ValueSlider= (prop:SliderFilterProps ) => {
 
   const useSliderStyles = makeStyles({
     root: {
@@ -265,6 +265,7 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
     },
   });
 
+  const dispatch = useDispatch();
   const classes           = useSliderStyles();
   const [value, setValue] = React.useState<number[]>([prop.min, prop.max]);
   const [debounced_val]   = useDebounce(value,500)
@@ -273,7 +274,7 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
     setValue(newValue as number[]);
   };
   useEffect(() => {
-      prop.handleChange(prop.allFilters as FiltersReducerState,debounced_val)
+    dispatch(structsFilterChangeAC(value,prop.filter_type))
   }, [debounced_val])
 
   return (
@@ -281,7 +282,6 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
       <Typography id="range-slider" gutterBottom>
         {prop.name}
       </Typography>
-
       <Slider
         marks
         min               = {prop.min}
@@ -297,45 +297,46 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
 };
 
 
-const DepositionDateFilter = () => {
+// const DepositionDateFilter = ValueSlider({filter_type: "YEAR",max:2021,min:2012,name:"Deposition Date", step:1})
 
-  const useSliderStyles = makeStyles({
-    root: {
-      width: 300,
-    },
-  });
 
-  const dispatch = useDispatch();
-  const classes           = useSliderStyles();
-  const [value, setValue] = React.useState<number[]>([2012, 2021]);
-  const [debounced_val]   = useDebounce(value,500)
+// const DepositionDateFilter = () => {
 
-  const handleChange = (event: any, newValue: number | number[]) => {
-    setValue(newValue as number[]);
-  };
-  useEffect(() => {
-    dispatch(structsFilterChangeAC(value,"YEAR"))
-  }, [debounced_val])
+//   const useSliderStyles = makeStyles({
+//     root: {
+//       width: 300,
+//     },
+//   });
 
-  return (
-    <div className={classes.root}>
-      <Typography id="range-slider" gutterBottom>
-        Deposition Date
-      </Typography>
+//   const classes           = useSliderStyles();
+//   const [value, setValue] = React.useState<number[]>([2012, 2021]);
+//   const [debounced_val]   = useDebounce(value,500)
 
-      <Slider
-        marks
-        min               = {2012}
-        max               = {2021}
-        step              = {1}
-        value             = {value as any}
-        onChange          = {handleChange}
-        valueLabelDisplay = "auto"
-        aria-labelledby   = "range-slider"
-      />
-    </div>
-  );
-};
+//   const handleChange = (event: any, newValue: number | number[]) => {
+//     setValue(newValue as number[]);
+//   };
+//   useEffect(() => {
+//     dispatch(structsFilterChangeAC(value,"YEAR"))
+//   }, [debounced_val])
+
+//   return (
+//     <div className={classes.root}>
+//       <Typography id="range-slider" gutterBottom>
+//         Deposition Date
+//       </Typography>
+//       <Slider
+//         marks
+//         min               = {2012}
+//         max               = {2021}
+//         step              = {1}
+//         value             = {value as any}
+//         onChange          = {handleChange}
+//         valueLabelDisplay = "auto"
+//         aria-labelledby   = "range-slider"
+//       />
+//     </div>
+//   );
+// };
 
 
 
@@ -445,9 +446,9 @@ export const _SpecList: React.FC<SpecListProps> = (prop) => {
   );
 }
 export const SelectProteins    =  connect(mapStateFilter("PROTEINS_PRESENT"), mapDispatchFilter("PROTEINS_PRESENT"))(_SelectProteins)
-export const YearSlider        =  connect(mapStateFilter("YEAR"),          mapDispatchFilter("YEAR"))(_ValueSlider)
-export const ProtcountSlider   =  connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
-export const ResolutionSlider  =  connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
+// export const YearSlider        =  connect(mapStateFilter("YEAR"),          mapDispatchFilter("YEAR"))(_ValueSlider)
+// export const ProtcountSlider   =  connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
+// export const ResolutionSlider  =  connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
 export const SearchField       =  connect(mapStateFilter("SEARCH"),       mapDispatchFilter("SEARCH"))(_SearchField)
 export const SpeciesList       =  connect(mapStateFilter("SPECIES"),      mapDispatchFilter("SPECIES"))(_SpecList)
 
@@ -524,11 +525,10 @@ const useFiltersStyles  =  makeStyles((theme: Theme) =>
           <StructuresSearchField/>
         </ListItem>
         <ListItem key={"year"}>
-          <DepositionDateFilter/>
-          {/* <YearSlider min={2012} max={2021} name={"Deposition Date"} step={1} /> */}
+          <ValueSlider {...{filter_type: "YEAR",max:2021,min:2012,name:"Deposition Date", step:1}}/>
         </ListItem>
         <ListItem key={"resolution"}>
-          {/* <ResolutionSlider min={1} max={6} name={"Resolution( Å )"} step={0.1} /> */}
+          <ValueSlider {...{filter_type: "RESOLUTION",max:6,min:1,name:"Resolution", step:0.1}}/>
         </ListItem>
         <ListItem key={"select-proteins"} >
           {/* <SelectProteins /> */}
