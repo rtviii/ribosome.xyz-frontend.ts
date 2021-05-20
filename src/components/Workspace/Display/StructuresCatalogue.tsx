@@ -45,6 +45,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Divider from "@material-ui/core/Divider";
+import ReactDOM from 'react-dom'
+import 'react-dropdown-tree-select/dist/styles.css'
+
 
 const pageData ={
   title:"Ribosome Structures",
@@ -61,81 +64,6 @@ interface StateProps {
   pages_total   :  number
 }
 
-
-const data = {
-  label     :  'Species Filter',
-  value     :  'All',
-  children  :  [
-    {
-      label: "Viruses",
-      value: "Viruses",
-      children: []
-    },
-    {
-      label: "Archea",
-      value: "Archea",
-      children: [
-
-        {
-          label: "Candidatus Diapherotrites archaeon ADurb.Bin253",
-          value: "Candidatus Diapherotrites archaeon ADurb.Bin253",
-        },
-        {
-          label: "Thermococcus celer Vu 13 = JCM 8558",
-          value: "Thermococcus celer Vu 13 = JCM 8558",
-        }
-      ]
-    },
-    {
-      label: "Eukaryota",
-      value: "Eukaryota",
-      children: [
-        {
-          label: "Leishmania braziliensis MHOM/BR/75/M2904",
-          value: "Leishmania braziliensis MHOM/BR/75/M2904",
-        },
-        {
-          label: "Cryptosporidium hominis TU502",
-          value: "Cryptosporidium hominis TU502",
-        },
-        {
-          label: "Yarrowia lipolytica CLIB122",
-          value: "Yarrowia lipolytica CLIB122",
-        }
-
-
-      ]
-    },
-    {
-      label: "Bacteria",
-      value: "Bacteria",
-      children: [
-
-        {
-          label: "Acinetobacter sp. RUH2624",
-          value: "Acinetobacter sp. RUH2624",
-        },
-        {
-          label: "Gluconobacter oxydans 621H",
-          value: "Gluconobacter oxydans 621H",
-        }
-      ]
-    },
-  ],
-}
-
-//@ts-ignore
-const onChange = (currentNode, selectedNodes) => {
-  console.log('onChange::', currentNode, selectedNodes)
-}
-//@ts-ignore
-const onAction = (node, action) => {
-  console.log('onAction::', action, node)
-}
-//@ts-ignore
-const onNodeToggle = currentNode => {
-  console.log('onNodeToggle::', currentNode)
-}
  
 interface DispatchProps{
   next_page: ()=>void;
@@ -189,21 +117,39 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
         <Grid item container xs={12} alignContent={"center"} alignItems={"center"} justify="space-between" direction='row'>
 
           <Grid item container>
-          <Typography variant="overline" style={{color:"gray", padding:"5px"}}>Page: </Typography>
+          <Typography variant="overline" style={{color:"gray"}}>Page: </Typography>
           <Pagination {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}/>
           </Grid>
 
-          <Grid item container>
-          <Typography variant="overline" style={{color:"gray", padding:"5px"}}>Sort By: </Typography>
+          <Grid item container alignContent={"center"} alignItems={"center"} spacing={1} >
+            <Grid item>
 
-            <Button onClick={() =>{dispatch(structsSortChangeAC("RESOLUTION"))}}>
+          <Typography variant="overline" style={{color:"gray" }}>Sort By: </Typography>
+            </Grid>
+            <Grid item>
+
+            <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("RESOLUTION"))}}>
               Resolution</Button>
-            <Button onClick={() =>{dispatch(structsSortChangeAC("YEAR"))}}>
+            </Grid>
+
+
+            <Grid item>
+            <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("YEAR"))}}>
               Year</Button>
-            <Button onClick={() =>{dispatch(structsSortChangeAC("NUMBER_OF_PROTEINS"))}}>
+
+            </Grid>
+
+            <Grid item>
+
+            <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("NUMBER_OF_PROTEINS"))}}>
               Number of Proteins</Button>
-              <Button onClick={() =>{dispatch(structsSortChangeAC("EXPERIMENTAL_METHOD"))}}>
-              Experimental Method</Button>
+            </Grid>
+
+            <Grid item>
+
+            <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("EXPERIMENTAL_METHOD"))}}>
+            Experimental Method</Button>
+            </Grid>
           
           </Grid>
           </Grid>
@@ -261,14 +207,9 @@ const StructuresSearchField = () =>
   const handleChange = (e:any)=>{
     setValue(e.target.value)
   }
-
   useEffect(() => {
-
-    // handleChange(props.allFilters as FiltersReducerState,debounced)
     dispatch(structsFilterChangeAC(value,'SEARCH'))
-
   }, [debounced])
-
   return(
       <TextField id="standard-basic" label="Search" value={value}  onChange={handleChange}/>
   )
@@ -392,7 +333,6 @@ const ProteinsPresentFilter =()=> {
 
 type SpecListProps = handleFilterChange & FilterData;
 export const _SpecList: React.FC<SpecListProps> = (prop) => {
-
   const useSpecListStyles = makeStyles((theme: Theme) =>
     createStyles({
       root: {
@@ -583,11 +523,8 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
 
 
 
-type StructureFilterProps ={
-  reset_filters: () =>void
-};
 
-const _StructureFilters:React.FC<StructureFilterProps> = (props) => {
+const _StructureFilters = () => {
 
 const drawerWidth       =  240;
 const useFiltersStyles  =  makeStyles((theme: Theme) =>
@@ -632,6 +569,450 @@ const useFiltersStyles  =  makeStyles((theme: Theme) =>
       )
     })
 
+
+const data = {
+  label: 'All Species',
+  value: 'all_species',
+  expanded:true,
+  children: [
+    {
+      label: 'Bacteria',
+      value: '2',
+      props:[1977881,
+243230,
+562,
+224308,
+574,
+262724,
+585,
+474186,
+575584,
+1217649,
+544404,
+663,
+1217710,
+421052,
+367830,
+1772,
+1773,
+1280,
+274,
+1299,
+287,
+300852,
+1351,
+585035,
+1144663,
+1144670,
+331111,
+480119,
+83333,
+93061,
+83334,
+93062,
+1931,
+1223565,
+52133,
+1310637,
+246196,
+679895,
+470,
+1310678,
+1960940
+],
+      children: [
+    {
+        "label": "Acinetobacter sp. ANC 4470",
+        "value": 1977881
+    },
+    {
+        "label": "Deinococcus radiodurans R1",
+        "value": 243230
+    },
+    {
+        "label": "Escherichia coli",
+        "value": 562
+    },
+    {
+        "label": "Bacillus subtilis subsp. subtilis str. 168",
+        "value": 224308
+    },
+    {
+        "label": "Klebsiella pneumoniae subsp. ozaenae",
+        "value": 574
+    },
+    {
+        "label": "Thermus thermophilus HB27",
+        "value": 262724
+    },
+    {
+        "label": "Proteus vulgaris",
+        "value": 585
+    },
+    {
+        "label": "Enterococcus faecalis OG1RF",
+        "value": 474186
+    },
+    {
+        "label": "Acinetobacter baumannii ATCC 19606 = CIP 70.34 = JCM 6841",
+        "value": 575584
+    },
+    {
+        "label": "Acinetobacter beijerinckii ANC 3835",
+        "value": 1217649
+    },
+    {
+        "label": "Escherichia coli O157:H7 str. TW14359",
+        "value": 544404
+    },
+    {
+        "label": "Vibrio alginolyticus",
+        "value": 663
+    },
+    {
+        "label": "Acinetobacter sp. NIPH 899",
+        "value": 1217710
+    },
+    {
+        "label": "Acinetobacter rudis CIP 110305",
+        "value": 421052
+    },
+    {
+        "label": "Staphylococcus aureus subsp. aureus USA300",
+        "value": 367830
+    },
+    {
+        "label": "Mycolicibacterium smegmatis",
+        "value": 1772
+    },
+    {
+        "label": "Mycobacterium tuberculosis",
+        "value": 1773
+    },
+    {
+        "label": "Staphylococcus aureus",
+        "value": 1280
+    },
+    {
+        "label": "Thermus thermophilus",
+        "value": 274
+    },
+    {
+        "label": "Deinococcus radiodurans",
+        "value": 1299
+    },
+    {
+        "label": "Pseudomonas aeruginosa",
+        "value": 287
+    },
+    {
+        "label": "Thermus thermophilus HB8",
+        "value": 300852
+    },
+    {
+        "label": "Enterococcus faecalis",
+        "value": 1351
+    },
+    {
+        "label": "Escherichia coli S88",
+        "value": 585035
+    },
+    {
+        "label": "Acinetobacter sp. CIP 102082",
+        "value": 1144663
+    },
+    {
+        "label": "Acinetobacter sp. CIP 51.11",
+        "value": 1144670
+    },
+    {
+        "label": "Escherichia coli O139:H28 str. E24377A",
+        "value": 331111
+    },
+    {
+        "label": "Acinetobacter baumannii AB0057",
+        "value": 480119
+    },
+    {
+        "label": "Escherichia coli K-12",
+        "value": 83333
+    },
+    {
+        "label": "Staphylococcus aureus subsp. aureus NCTC 8325",
+        "value": 93061
+    },
+    {
+        "label": "Escherichia coli O157:H7",
+        "value": 83334
+    },
+    {
+        "label": "Staphylococcus aureus subsp. aureus COL",
+        "value": 93062
+    },
+    {
+        "label": "Streptomyces sp.",
+        "value": 1931
+    },
+    {
+        "label": "Rhizobium sp. Pop5",
+        "value": 1223565
+    },
+    {
+        "label": "Acinetobacter venetianus",
+        "value": 52133
+    },
+    {
+        "label": "Acinetobacter sp. 809848",
+        "value": 1310637
+    },
+    {
+        "label": "Mycolicibacterium smegmatis MC2 155",
+        "value": 246196
+    },
+    {
+        "label": "Escherichia coli BW25113",
+        "value": 679895
+    },
+    {
+        "label": "Acinetobacter baumannii",
+        "value": 470
+    },
+    {
+        "label": "Acinetobacter sp. 263903-1",
+        "value": 1310678
+    },
+    {
+        "label": "Acinetobacter sp. ANC 5600",
+        "value": 1960940
+    }
+      ],
+    },
+    {
+      label: 'Eyukaryota',
+      value: '2759',
+      props:[
+9739,
+5661,
+5693,
+5702,
+5722,
+9823,
+1177187,
+3702,
+55431,
+37000,
+5811,
+9913,
+559292,
+9986,
+7460,
+28985,
+4932,
+285006,
+7536,
+9606,
+209285,
+9615,
+6039,
+284590,
+1247190,
+759272,
+36329,
+3562
+
+      ],
+      children:[
+    {
+        "label": "Tursiops truncatus",
+        "value": 9739
+    },
+    {
+        "label": "Leishmania donovani",
+        "value": 5661
+    },
+    {
+        "label": "Trypanosoma cruzi",
+        "value": 5693
+    },
+    {
+        "label": "Trypanosoma brucei brucei",
+        "value": 5702
+    },
+    {
+        "label": "Trichomonas vaginalis",
+        "value": 5722
+    },
+    {
+        "label": "Sus scrofa",
+        "value": 9823
+    },
+    {
+        "label": "Saccharomyces cerevisiae P283",
+        "value": 1177187
+    },
+    {
+        "label": "Arabidopsis thaliana",
+        "value": 3702
+    },
+    {
+        "label": "Palomena prasina",
+        "value": 55431
+    },
+    {
+        "label": "Pyrrhocoris apterus",
+        "value": 37000
+    },
+    {
+        "label": "Toxoplasma gondii",
+        "value": 5811
+    },
+    {
+        "label": "Bos taurus",
+        "value": 9913
+    },
+    {
+        "label": "Saccharomyces cerevisiae S288C",
+        "value": 559292
+    },
+    {
+        "label": "Oryctolagus cuniculus",
+        "value": 9986
+    },
+    {
+        "label": "Apis mellifera",
+        "value": 7460
+    },
+    {
+        "label": "Kluyveromyces lactis",
+        "value": 28985
+    },
+    {
+        "label": "Saccharomyces cerevisiae",
+        "value": 4932
+    },
+    {
+        "label": "Saccharomyces cerevisiae RM11-1a",
+        "value": 285006
+    },
+    {
+        "label": "Oncopeltus fasciatus",
+        "value": 7536
+    },
+    {
+        "label": "Homo sapiens",
+        "value": 9606
+    },
+    {
+        "label": "Chaetomium thermophilum",
+        "value": 209285
+    },
+    {
+        "label": "Canis lupus familiaris",
+        "value": 9615
+    },
+    {
+        "label": "Vairimorpha necatrix",
+        "value": 6039
+    },
+    {
+        "label": "Kluyveromyces lactis NRRL Y-1140",
+        "value": 284590
+    },
+    {
+        "label": "Saccharomyces cerevisiae BY4741",
+        "value": 1247190
+    },
+    {
+        "label": "Chaetomium thermophilum var. thermophilum DSM 1495",
+        "value": 759272
+    },
+    {
+        "label": "Plasmodium falciparum 3D7",
+        "value": 36329
+    },
+    {
+        "label": "Spinacia oleracea",
+        "value": 3562
+    }
+      ]
+    },
+    {
+      label: 'Archaea',
+      value: '2',
+      props:[
+311400,
+273057,
+1293037,
+2287,
+69014,
+272844
+
+      ],
+
+      children:[
+    {
+        "label": "Thermococcus kodakarensis",
+        "value": 311400
+    },
+    {
+        "label": "Saccharolobus solfataricus P2",
+        "value": 273057
+    },
+    {
+        "label": "Thermococcus celer Vu 13 = JCM 8558",
+        "value": 1293037
+    },
+    {
+        "label": "Saccharolobus solfataricus",
+        "value": 2287
+    },
+    {
+        "label": "Thermococcus kodakarensis KOD1",
+        "value": 69014
+    },
+    {
+        "label": "Pyrococcus abyssi GE5",
+        "value": 272844
+    }
+      ]
+    },
+    {
+      label: 'Viruses',
+      value: '10239',
+      props:[194966,10655],
+      children:[
+    {
+        "label": "Salmonella virus SP6",
+        "value": 194966
+    },
+    {
+        "label": "Escherichia virus T4",
+        "value": 10665
+    }
+      ]
+    },
+
+  ],
+}
+// @ts-ignore
+const onChange = (currentNode, selectedNodes) => {
+  // console.log('onChange::', currentNode, selectedNodes)
+  console.log("selected:", selectedNodes)
+  console.log("Chosen:", currentNode)
+
+}
+// @ts-ignore
+const onAction = (node, action) => {
+  // console.log('onAction::', action, node)
+}
+// @ts-ignore
+const onNodeToggle = currentNode => {
+  // console.log('onNodeToggle::', currentNode)
+}
+
+const [selectedSpecies, setSelectedSpecies] = useState([])
+
+
   return (
     <Drawer
       style={{ zIndex: -20 }}
@@ -656,22 +1037,18 @@ const useFiltersStyles  =  makeStyles((theme: Theme) =>
         <ListItem key={"select-proteins"} >
           <ProteinsPresentFilter/>
         </ListItem>
-        <ListItem >
-          <DashboardButton/>
+        <ListItem key={"bulkdownload"} >
+<BulkDownloadMenu/>
         </ListItem>
 
         <ListItem >
          <Cart/>
         </ListItem>
-        <ListItem key={"select-species"} >
-          <DropdownTreeSelect data={data} onChange={onChange} onAction={onAction} onNodeToggle={onNodeToggle} />
+        <ListItem >
+  <DropdownTreeSelect data={data} onChange={onChange} onAction={onAction} onNodeToggle={onNodeToggle} />,
         </ListItem>
-        <ListItem key={"bulkdownload"} >
-{/* <CSVLink data={bulkDownloads}>
-<Typography variant="body2"> Download Fitlered</Typography>
-
-</CSVLink> */}
-<BulkDownloadMenu/>
+        <ListItem >
+          <DashboardButton/>
         </ListItem>
       </List>
     </Drawer>

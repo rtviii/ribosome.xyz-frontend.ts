@@ -1,0 +1,114 @@
+[
+    {
+        "label": "Tursiops truncatus",
+        "value": 9739
+    },
+    {
+        "label": "Leishmania donovani",
+        "value": 5661
+    },
+    {
+        "label": "Trypanosoma cruzi",
+        "value": 5693
+    },
+    {
+        "label": "Trypanosoma brucei brucei",
+        "value": 5702
+    },
+    {
+        "label": "Trichomonas vaginalis",
+        "value": 5722
+    },
+    {
+        "label": "Sus scrofa",
+        "value": 9823
+    },
+    {
+        "label": "Saccharomyces cerevisiae P283",
+        "value": 1177187
+    },
+    {
+        "label": "Arabidopsis thaliana",
+        "value": 3702
+    },
+    {
+        "label": "Palomena prasina",
+        "value": 55431
+    },
+    {
+        "label": "Pyrrhocoris apterus",
+        "value": 37000
+    },
+    {
+        "label": "Toxoplasma gondii",
+        "value": 5811
+    },
+    {
+        "label": "Bos taurus",
+        "value": 9913
+    },
+    {
+        "label": "Saccharomyces cerevisiae S288C",
+        "value": 559292
+    },
+    {
+        "label": "Oryctolagus cuniculus",
+        "value": 9986
+    },
+    {
+        "label": "Apis mellifera",
+        "value": 7460
+    },
+    {
+        "label": "Kluyveromyces lactis",
+        "value": 28985
+    },
+    {
+        "label": "Saccharomyces cerevisiae",
+        "value": 4932
+    },
+    {
+        "label": "Saccharomyces cerevisiae RM11-1a",
+        "value": 285006
+    },
+    {
+        "label": "Oncopeltus fasciatus",
+        "value": 7536
+    },
+    {
+        "label": "Homo sapiens",
+        "value": 9606
+    },
+    {
+        "label": "Chaetomium thermophilum",
+        "value": 209285
+    },
+    {
+        "label": "Canis lupus familiaris",
+        "value": 9615
+    },
+    {
+        "label": "Vairimorpha necatrix",
+        "value": 6039
+    },
+    {
+        "label": "Kluyveromyces lactis NRRL Y-1140",
+        "value": 284590
+    },
+    {
+        "label": "Saccharomyces cerevisiae BY4741",
+        "value": 1247190
+    },
+    {
+        "label": "Chaetomium thermophilum var. thermophilum DSM 1495",
+        "value": 759272
+    },
+    {
+        "label": "Plasmodium falciparum 3D7",
+        "value": 36329
+    },
+    {
+        "label": "Spinacia oleracea",
+        "value": 3562
+    }
+]

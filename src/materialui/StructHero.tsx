@@ -64,7 +64,7 @@ export const StructHero=(d:NeoStruct)=> {
 
   const history = useHistory();
   return (
-    <Card className={classes.card} >
+    <Card className={classes.card} style={{backgroundColor: d.struct.expMethod.toLowerCase().includes("micro") ? "rgba(227,234,246,0.6)":"rgba(227,246,231,0.6)"}} >
       
       <Link to={ `/structs/${d.struct.rcsb_id}` } >
       
@@ -77,9 +77,6 @@ export const StructHero=(d:NeoStruct)=> {
             image={process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`}
             title="Ribosome Banner"
           />
-
-
-
           <Grid
             container
             direction="row"
