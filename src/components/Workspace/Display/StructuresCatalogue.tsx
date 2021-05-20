@@ -33,9 +33,21 @@ import Backdrop from './../Backdrop'
 import { CSVLink } from "react-csv";
 import { StructFilterType, structsFilterChangeAC, structsSortChangeAC } from "../../../redux/reducers/StructuresReducer/ActionTypes";
 import Paper from "@material-ui/core/Paper";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Checkbox from '@material-ui/core/Checkbox';
+import Divider from "@material-ui/core/Divider";
 
 const pageData ={
-  title:"Whole Ribosome Structures",
+  title:"Ribosome Structures",
   text:'This database presents a catalogue of all the ribosome structures deposited to the RCSB/PDB.\
    These structures are processed here for an easy search and access of the structures and their components\
    (listed below). Various modules (gear icon) are also available to process and analyze the structures'
@@ -172,9 +184,6 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
       </div>
       <Grid container item xs={12} spacing={3}>
         <PageAnnotation {...pageData}/>
-        {/* <Grid item container xs={12}  >
-          
-          </Grid> */}
         <Grid item xs={12} alignContent={"center"} alignItems={"center"} >
           <Paper variant="outlined" style={{padding:"10px"}}>
         <Grid item container xs={12} alignContent={"center"} alignItems={"center"} justify="space-between" direction='row'>
@@ -443,6 +452,137 @@ const mapResetFilters = (dispatch: Dispatch<AppActions>, ownprops:any):{
   reset_filters: ()=>    { dispatch(resetAllFilters()) }
 })
 
+
+
+const BulkDownloadMenu=()=> {
+  const [open, setOpen] = React.useState(false);
+  const structs = useSelector(( state:AppState ) => state.structures.derived_filtered)
+const useCheckboxStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    formControl: {
+      margin: theme.spacing(3),
+    },
+  }),
+);
+  const classes = useCheckboxStyles();
+  const [summaryOpts, setSummaryOpts] = React.useState({
+            all:false,
+            experimental_method           : false,
+            resolution                    : false,
+            organisms                     : false,
+            present_ligands               : false,
+            universal_protein_nomenclature: false,
+  });
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSummaryOpts({ ...summaryOpts, [event.target.name]: event.target.checked });
+  };
+  const { all,experimental_method, resolution,organisms,present_ligands,
+    // universal_protein_nomenclature 
+  } = summaryOpts;
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+  const createSummary = ():any[][] =>{
+
+  var bulkDownload:Array<Array<any>> = [
+    ['rcsb_id'],
+    ...structs.map(r =>[ r.struct.rcsb_id ])
+  ]
+
+          if ( summaryOpts.experimental_method ){
+          bulkDownload[0].push("experimental_method")
+          structs.map((v,i)=>bulkDownload[i+1].push(v.struct.expMethod))
+          }
+          if ( summaryOpts.resolution ){
+          bulkDownload[0].push("resolution")
+          structs.map((v,i)=>bulkDownload[i+1].push(v.struct.resolution))
+          }
+          if ( summaryOpts.organisms ){
+          bulkDownload[0].push("organisms")
+          structs.map((v,i)=>bulkDownload[i+1].push(v.struct._organismName
+            ))}
+          if ( summaryOpts.present_ligands ){
+          bulkDownload[0].push("ligands")
+          structs.map((v,i)=>bulkDownload[i+1].push(v.ligands))
+          }
+      
+
+    return bulkDownload
+  }
+
+  return (
+    <div>
+      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+        Bulk Download
+      </Button>
+
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+
+        <DialogTitle id="form-dialog-title">Bulk Download Options</DialogTitle>
+        <DialogContent>
+      <FormControl component="fieldset" className={classes.formControl}>
+        <FormLabel component="legend">
+          
+            Please select the fields that you would like the summary to contain.
+          </FormLabel>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={all} onChange={()=>setSummaryOpts({all:!all, experimental_method:!all,organisms:!all,resolution:!all,present_ligands:!all,universal_protein_nomenclature:!all})} name="all" />}
+            label="All Options"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={resolution} onChange={handleChange} name="resolution" />}
+            label="Resolution"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={experimental_method} onChange={handleChange} name="experimental_method" />}
+            label="Experimental Method"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={organisms} onChange={handleChange} name="organisms" />}
+            label="Organisms"
+          />
+          {/* <FormControlLabel
+            control={<Checkbox checked={universal_protein_nomenclature} onChange={handleChange} name="universal_protein_nomenclature" />}
+            label="Universal r-Protein Nomenclature"
+          /> */}
+          <FormControlLabel
+            control={<Checkbox checked={present_ligands} onChange={handleChange} name="present_ligands" />}
+            label="Present Ligands"
+          />
+        </FormGroup>
+        <FormHelperText>You have {structs.length} structures in scope.</FormHelperText>
+      </FormControl>																									
+    <CSVLink data={createSummary()}>
+                <Button onClick={handleClose} color="primary">
+
+            Download Summary (.csv)
+          </Button>
+</CSVLink>
+          <Divider/>
+            <DialogContentText style={{marginTop:"10px"}}>
+            Filtered models of the whole ribosome structures that you have filtered will be packed into a .zip archive and downloaded.
+          </DialogContentText>
+          <Button onClick={handleClose} color="primary">
+            Download Models (.zip)
+          </Button>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+
+
+
 type StructureFilterProps ={
   reset_filters: () =>void
 };
@@ -489,7 +629,6 @@ const useFiltersStyles  =  makeStyles((theme: Theme) =>
     structs.map(s => {
       bulkDownloads.push(
         [s.struct.rcsb_id]
-
       )
     })
 
@@ -528,10 +667,11 @@ const useFiltersStyles  =  makeStyles((theme: Theme) =>
           <DropdownTreeSelect data={data} onChange={onChange} onAction={onAction} onNodeToggle={onNodeToggle} />
         </ListItem>
         <ListItem key={"bulkdownload"} >
-<CSVLink data={bulkDownloads}>
+{/* <CSVLink data={bulkDownloads}>
 <Typography variant="body2"> Download Fitlered</Typography>
 
-</CSVLink>
+</CSVLink> */}
+<BulkDownloadMenu/>
         </ListItem>
       </List>
     </Drawer>
