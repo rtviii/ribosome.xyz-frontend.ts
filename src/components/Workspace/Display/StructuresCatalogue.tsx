@@ -31,6 +31,7 @@ import 'react-dropdown-tree-select/dist/styles.css'
 import Pagination from './Pagination'
 import Backdrop from './../Backdrop'
 import { CSVLink } from "react-csv";
+import { structsFilterChangeAC } from "../../../redux/reducers/StructuresReducer/ActionTypes";
 
 const pageData ={
   title:"Whole Ribosome Structures",
@@ -205,6 +206,31 @@ export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
 
 
 
+const StructuresSearchField = () =>
+{
+
+  const dispatch = useDispatch();
+  // dispatch(structsFilterChangeAC(
+
+  // ))
+  const [value, setValue] = useState('')
+  const [debounced] = useDebounce(value,250)
+
+  const handleChange = (e:any)=>{
+    setValue(e.target.value)
+  }
+
+  useEffect(() => {
+
+    // handleChange(props.allFilters as FiltersReducerState,debounced)
+    dispatch(structsFilterChangeAC(value,'SEARCH'))
+
+  }, [debounced])
+
+  return(
+      <TextField id="standard-basic" label="Search" value={value}  onChange={handleChange}/>
+  )
+}
 
 
 export const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
@@ -232,6 +258,7 @@ interface OwnSliderFilterProps {
 }
 const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterChange>
  = (prop:OwnSliderFilterProps & FilterData & handleFilterChange) => {
+
   const useSliderStyles = makeStyles({
     root: {
       width: 300,
@@ -270,9 +297,50 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
 };
 
 
+const DepositionDateFilter = () => {
+
+  const useSliderStyles = makeStyles({
+    root: {
+      width: 300,
+    },
+  });
+
+  const dispatch = useDispatch();
+  const classes           = useSliderStyles();
+  const [value, setValue] = React.useState<number[]>([2012, 2021]);
+  const [debounced_val]   = useDebounce(value,500)
+
+  const handleChange = (event: any, newValue: number | number[]) => {
+    setValue(newValue as number[]);
+  };
+  useEffect(() => {
+    dispatch(structsFilterChangeAC(value,"YEAR"))
+  }, [debounced_val])
+
+  return (
+    <div className={classes.root}>
+      <Typography id="range-slider" gutterBottom>
+        Deposition Date
+      </Typography>
+
+      <Slider
+        marks
+        min               = {2012}
+        max               = {2021}
+        step              = {1}
+        value             = {value as any}
+        onChange          = {handleChange}
+        valueLabelDisplay = "auto"
+        aria-labelledby   = "range-slider"
+      />
+    </div>
+  );
+};
+
 
 
 type SelectedProteinsFilterProps =  handleFilterChange & FilterData 
+
 const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
 
   const BanClassNames = Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
@@ -291,7 +359,6 @@ const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
   );
 
   const classes = useProteinsPresentStyles();
-
   const filterstate = useSelector(( state:AppState ) => state.filters.filters.PROTEINS_PRESENT.value)
 
   return (
@@ -324,8 +391,6 @@ const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
 
   );
 }
-
-
 type SpecListProps = handleFilterChange & FilterData;
 export const _SpecList: React.FC<SpecListProps> = (prop) => {
 
@@ -379,8 +444,6 @@ export const _SpecList: React.FC<SpecListProps> = (prop) => {
     </div>
   );
 }
-
-
 export const SelectProteins    =  connect(mapStateFilter("PROTEINS_PRESENT"), mapDispatchFilter("PROTEINS_PRESENT"))(_SelectProteins)
 export const YearSlider        =  connect(mapStateFilter("YEAR"),          mapDispatchFilter("YEAR"))(_ValueSlider)
 export const ProtcountSlider   =  connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
@@ -458,19 +521,20 @@ const useFiltersStyles  =  makeStyles((theme: Theme) =>
       <div className={filterClasses.toolbar} />
       <List>
         <ListItem key={"search"}>
-          <SearchField />
+          <StructuresSearchField/>
         </ListItem>
         <ListItem key={"year"}>
-          <YearSlider min={2012} max={2021} name={"Deposition Date"} step={1} />
+          <DepositionDateFilter/>
+          {/* <YearSlider min={2012} max={2021} name={"Deposition Date"} step={1} /> */}
         </ListItem>
         <ListItem key={"resolution"}>
-          <ResolutionSlider min={1} max={6} name={"Resolution(A)"} step={0.1} />
+          {/* <ResolutionSlider min={1} max={6} name={"Resolution( Å )"} step={0.1} /> */}
         </ListItem>
         <ListItem key={"select-proteins"} >
-          <SelectProteins />
+          {/* <SelectProteins /> */}
         </ListItem>
         <ListItem key={"select-species"} >
-          <SpeciesList />
+          {/* <SpeciesList /> */}
         </ListItem>
         <ListItem >
           <DashboardButton/>
@@ -479,10 +543,10 @@ const useFiltersStyles  =  makeStyles((theme: Theme) =>
         <ListItem >
          <Cart/>
         </ListItem>
-        <ListItem key={"select-species"} >
+        {/* <ListItem key={"select-species"} >
           <DropdownTreeSelect data={data} onChange={onChange} onAction={onAction} onNodeToggle={onNodeToggle} />
-        </ListItem>
-        <ListItem key={"select-species"} >
+        </ListItem> */}
+        <ListItem key={"bulkdownload"} >
 <CSVLink data={bulkDownloads}>
 <Typography variant="body2"> Download Fitlered</Typography>
 

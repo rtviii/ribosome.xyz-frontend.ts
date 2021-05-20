@@ -97,16 +97,11 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
       console.log("got dahsborad change", props.dashboard_hidden)
   }, [props.dashboard_hidden])
 
-  const current_path = useHistory().location.pathname;
-
-
   const list = (anchor: Anchor) => (
     <div
       className={clsx(classes.list, {[classes.fullList]: anchor === 'left' || anchor === 'top',})}
       role="presentation">
-
-        <MenuItem key='new' menutext="Home" linkto='/home'/>
-
+      <MenuItem key='new' menutext="Home" linkto='/home'/>
       <List>
         <ListSubheader>Available Data</ListSubheader>
         <MenuItem key='new' menutext="Structures" linkto='/structs'/>

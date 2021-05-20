@@ -11,6 +11,17 @@ import {
 import { RibosomalProtein } from "../../RibosomeTypes";
 import { FiltersReducerState } from "./FiltersReducer";
 
+export interface Filter<T>{
+  value    : any,
+  set      : boolean
+  predicate: (val:any) =>(item:T)=>boolean
+}
+
+export interface FilterRegistry<ComponentFilters extends string, X>  {
+  filtstate: Record<ComponentFilters, Filter<X>>,
+  applied  : ComponentFilters[]
+}
+
 const RESET_ALL_FILTERS = "RESET_ALL_FILTERS"
 export interface filterChange {
   type             :  typeof FILTER_CHANGE;
@@ -38,9 +49,8 @@ export type FilterType =
   | "PROTEINS_PRESENT"
   | "SEARCH"
   | "SPECIES";
-export type FilterPredicate = (
-  value: string[] | string | number[] | number
-) => (item: RXZDataTypes) => boolean;
+
+export type FilterPredicate = (value: string[] | string | number[] | number) => (item: RXZDataTypes) => boolean;
 
 export type FilterData = {
   set          :  boolean;

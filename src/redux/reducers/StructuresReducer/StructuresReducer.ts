@@ -1,28 +1,102 @@
 import * as actions from "./ActionTypes";
+import _ from "lodash";
 import { getNeo4jData } from "../../AsyncActions/getNeo4jData";
 import {  Dispatch } from "redux";
 import { NeoStruct } from "./../../DataInterfaces";
 import { flattenDeep } from "lodash";
-import { filterChange, FilterPredicates } from "../Filters/ActionTypes";
+import { Filter, filterChange, FilterPredicates, FilterRegistry } from "../Filters/ActionTypes";
+import { SwitchCamera } from "@material-ui/icons";
+import { StructFilterType } from "./ActionTypes";
+import { log } from "console";
 
 export interface StructReducerState {
+
   neo_response    : NeoStruct[]
   derived_filtered: NeoStruct[],
   Loading         : boolean;
   Error           : null | Error;
   current_page    : number;
   pages_total     : number
-  
+  filter_registry : FilterRegistry<StructFilterType, NeoStruct>
 }
+
+const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
+  filtstate:{
+   "PROTEIN_COUNT"   : {
+     value:[],
+     set:false,
+     predicate:(value) =>(struct) =>
+        struct.rps.length >= (value as number[])[0] &&
+        struct.rps.length <= (value as number[])[1]
+   },
+   "YEAR": {
+     value    : [2012,2021],
+     set      : false,
+     predicate: (value) => (struct) => struct.struct.citation_year >= (value as number[])[0] && struct.struct.citation_year <= (value as number[])[1]
+      
+    },
+   "RESOLUTION"      : {
+     value:[],
+     set:false,
+
+     predicate:(value) =>(struct) =>      struct.struct.citation_year >= (value as number[])[0] && struct.struct.citation_year <= (value as number[])[1]
+   },
+   "PROTEINS_PRESENT": {
+     value:[],
+     set:false,
+     predicate:(value) =>(struct) =>
+        {var presence = struct.rps.reduce((accumulator: string[], instance) => {
+        return instance.noms.length === 0
+          ? accumulator
+          : value.includes(instance.noms[0])
+          ? [...accumulator, instance.noms[0]]
+          : accumulator;
+      }, []);
+      // If accumulator contains the same elements as the passed value ==> the struct passes
+      return _.isEmpty(_.xor(value, presence));
+     }
+   },
+   "SEARCH"          : {
+     value:"",
+     set:false,
+
+     predicate:(value) =>(struct) =>
+              { return  (
+          struct.struct.rcsb_id +
+          struct.struct.citation_title +
+          struct.struct.citation_year +
+          struct.struct.citation_rcsb_authors +
+          struct.struct._organismName
+        ).toLowerCase().includes(value as string) }
+   },
+   "SPECIES"         : {
+     value:[],
+     set:false,
+     predicate:(value) =>(struct) =>
+       struct.struct._organismId.reduce(
+        (accumulator: boolean, taxid) =>
+          accumulator || (value as number[]).includes(taxid),
+        false
+      )
+   },
+
+  },
+  applied:[]
+}
+
 
 const structReducerDefaultState: StructReducerState = {
   Loading         : false,
   Error           : null,
   neo_response    : [],
+  derived_filtered: [],
   current_page    : 1,
   pages_total     : 1,
-  derived_filtered: [],
+  filter_registry : StructsFilterRegistry
+
+  
 };
+
 
 
 
@@ -31,7 +105,6 @@ export const _StructuresReducer = (
   action: actions.StructActionTypes
 ): StructReducerState => {
   switch (action.type) {
-
     case "REQUEST_STRUCTS_GO":
       return { ...state, Loading: true };
     case "REQUEST_STRUCTS_ERR":
@@ -59,29 +132,37 @@ export const _StructuresReducer = (
       }
     case "RESET_ALL_FILTERS":
       return {...state, derived_filtered: state.neo_response,pages_total: Math.ceil(state.neo_response.length/20), current_page:1}
-    case "FILTER_CHANGE":
+    case "STRUCTS_FILTER_CHANGE":
 
-      console.log("Struct reducer action:", action);
-      
-      // Filter change action emits new state of filters
-      var newState  =  (action as filterChange).derived_filters
-      var ftype     =  (action as filterChange).filttype
 
-      var filtered_structs  =  
-       newState.applied_filters.length === 0
-          ? state.neo_response
+      const updateAppliedFilters = (type: StructFilterType, set: boolean, applied: StructFilterType[]): StructFilterType[] => {
+        if ((set) && !(applied.includes(type))) {
+          return [...applied, type]
+        }
+        else if (!(set) && (applied.includes(type))) {
+          return applied.filter(t => t !== type)
+        }
+        else if (set && applied.includes(type)) {
+          return applied
+        }
+        else {
+         return applied
+       }
+     }
 
-          : newState.applied_filters
-          .reduce(
-              (filteredStructs: NeoStruct[], filter:typeof ftype ) => {
+     var filtered   = state.neo_response
+     var newApplied = updateAppliedFilters(action.filter_type,action.set, state.filter_registry.applied)
+     var newFilterState:Filter<NeoStruct> =  {
+       set      : action.set,
+       value    : action.newval,
+       predicate: state.filter_registry.filtstate[action.filter_type].predicate
+     }
+     var nextFilters = Object.assign(state.filter_registry,{filtstate:{...state.filter_registry.filtstate, ...{[action.filter_type]:newFilterState}}}, { applied:newApplied })
+     for (var filter of newApplied){
+       filtered= filtered.filter(nextFilters.filtstate[filter as StructFilterType].predicate(nextFilters.filtstate[action.filter_type].value))
+     }
+     return {...state, filter_registry:nextFilters, derived_filtered:filtered, pages_total: Math.ceil(filtered.length/20), current_page:1}
 
-                return filteredStructs.filter(FilterPredicates[filter][ 'STRUCTURE' ]!((newState.filters[filter].value as string[] ).filter(r=>r!=="")));
-
-              },
-              state.neo_response
-            );
-       
-      return {...state, derived_filtered:filtered_structs, pages_total: Math.ceil(filtered_structs.length/20), current_page:1}
     default:
       return state;
   }
@@ -92,7 +173,6 @@ export const _StructuresReducer = (
 
 
 export const requestAllStructuresDjango =  () => {
-
   return async (dispatch: Dispatch<actions.StructActionTypes>) => {
     dispatch({
       type: actions.REQUEST_STRUCTS_GO,
@@ -115,16 +195,15 @@ export const requestAllStructuresDjango =  () => {
 };
 
 
-// ---------------------------------------Pagination
-
-
 export const gotopage = (pid: number): actions.gotopage => ({
   type: actions.GOTO_PAGE_STRUCTS,
   page_id: pid,
 });
+
 export const nextpage = (): actions.nextpage => ({
   type: actions.NEXT_PAGE_STRUCTS,
 });
+
 export const prevpage = (): actions.prevpage => ({
   type: actions.PREV_PAGE_STRUCTS,
 });
