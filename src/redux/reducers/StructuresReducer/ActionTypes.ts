@@ -10,15 +10,17 @@ export const NEXT_PAGE_STRUCTS               = "NEXT_PAGE_STRUCTS"
 export const PREV_PAGE_STRUCTS               = "PREV_PAGE_STRUCTS"
 
 export const STRUCTS_FILTER_CHANGE               = "STRUCTS_FILTER_CHANGE"
+export const STRUCTS_SORT_CHANGE= "STRUCTS_SORT_CHANGE"
 
 export type StructFilterType =
-  // | "PROTEIN_COUNT"
   | "YEAR"
   | "RESOLUTION"
   | "PROTEINS_PRESENT"
   | "SEARCH"
   | "SPECIES";
 
+export type StructSortType = 
+"YEAR"|"NUMBER_OF_PROTEINS"|"RESOLUTION" | "EXPERIMENTAL_METHOD"
 
 
 
@@ -31,6 +33,8 @@ export interface requestStructsSuccess  {type: typeof REQUEST_STRUCTS_SUCCESS;pa
 export interface requestStructsGo       {type: typeof REQUEST_STRUCTS_GO;}
 export interface requestStructsErr      {type: typeof REQUEST_STRUCTS_ERR;error: Error;}
 
+export interface structsSortChange{type: typeof STRUCTS_SORT_CHANGE;sortType: StructSortType;}
+
 export interface structsFilterChange      {
   type       : typeof STRUCTS_FILTER_CHANGE;
   set        : boolean,
@@ -38,7 +42,7 @@ export interface structsFilterChange      {
   filter_type: StructFilterType
 }
 
-
+export const structsSortChangeAC = (sortType: StructSortType) => ({ type:  STRUCTS_SORT_CHANGE, sortType })
 export const structsFilterChangeAC = (
   newval     : any,
   filter_type: StructFilterType
@@ -82,3 +86,4 @@ export type StructActionTypes =
   | prevpage
   | resetFilters
   | structsFilterChange
+  | structsSortChange

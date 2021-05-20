@@ -6,11 +6,10 @@ import { NeoStruct } from "./../../DataInterfaces";
 import { flattenDeep } from "lodash";
 import { Filter, filterChange, FilterPredicates, FilterRegistry } from "../Filters/ActionTypes";
 import { SwitchCamera } from "@material-ui/icons";
-import { StructFilterType } from "./ActionTypes";
+import { StructFilterType, StructSortType } from "./ActionTypes";
 import { log } from "console";
 
 export interface StructReducerState {
-
   neo_response    : NeoStruct[]
   derived_filtered: NeoStruct[],
   Loading         : boolean;
@@ -18,23 +17,96 @@ export interface StructReducerState {
   current_page    : number;
   pages_total     : number
   filter_registry : FilterRegistry<StructFilterType, NeoStruct>
+  last_sort_set   : StructSortType,
+  sorts_registry  : Record<StructSortType,           {
+  reverse:boolean,
+  compareFn: (a:NeoStruct, b:NeoStruct) => 1 | 0 | -1
+}>
 }
+
+
+const StructsSortsState:Record<StructSortType,{
+  reverse:boolean,
+  compareFn: (a:NeoStruct, b:NeoStruct) => 1 | 0 | -1
+}> = {
+  "EXPERIMENTAL_METHOD": {
+    reverse:false,
+    compareFn: (a,b)=>{
+      var first  = a.struct.expMethod.toLowerCase()
+      var second = b.struct.expMethod.toLowerCase()
+      if (first.includes("microscopy") && second.includes("diff")){
+        return 1
+      }
+      if (first.includes("diff") && second.includes("microscopy")){
+        return -1
+      }
+      else return 0
+    }
+  },
+  "NUMBER_OF_PROTEINS" : {
+    reverse:false,
+    compareFn: (a,b)=>{
+      var first  = a.rps.length
+      var second = b.rps.length
+
+      if (first==second){
+        return 0
+      }
+      if (first>second){
+        return 1
+      }
+      if (second>first){
+        return -1
+      }
+      else return 0
+    }
+
+  },
+  "RESOLUTION"         : {
+    reverse:false,
+    compareFn: (a,b)=>{
+      var first  = a.struct.resolution
+      var second = b.struct.resolution
+      if (first==second){
+        return 0
+      }
+      if (first>second){
+        return 1
+      }
+      if (second>first){
+        return -1
+      }
+      else return 0
+    }
+  },
+  "YEAR"               : {
+    reverse:false,
+    compareFn: (a,b)=>{
+
+      var first  = a.struct.citation_year
+      var second = b.struct.citation_year
+      if (first==second){
+        return 0
+      }
+      if (first>second){
+        return 1
+      }
+      if (second>first){
+        return -1
+      }
+      else return 0
+    }
+  }
+}
+
 
 const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
   filtstate:{
-  //  "PROTEIN_COUNT"   : {
-  //    value:[2],
-  //    set:false,
-  //    predicate:(value) =>(struct) =>
-  //       struct.rps.length >= (value as number[])[0] &&
-  //       struct.rps.length <= (value as number[])[1]
-  //  },
    "YEAR": {
      value    : [2012,2021],
      set      : false,
      predicate: (value) => (struct) => 
      {
-       console.log("PAssed value into predicate year", value)
      return struct.struct.citation_year >= (value as number[])[0] && struct.struct.citation_year <= (value as number[])[1]
      }
     },
@@ -43,7 +115,6 @@ const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
      set:false,
      predicate:(value) =>(struct) =>
      {
-       console.log("PAssed value into predicate", value)
       return struct.struct.resolution >= (value as number[])[0] && struct.struct.resolution <= (value as number[])[1]  
     }
     
@@ -70,7 +141,6 @@ const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
      predicate:(value) =>(struct) =>
               { 
                 
-       console.log("PAssed value into predicate search", value)
                 return  (
           struct.struct.rcsb_id +
           struct.struct.citation_title +
@@ -89,11 +159,9 @@ const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
         false
       )
    },
-
   },
   applied:[]
 }
-
 
 const structReducerDefaultState: StructReducerState = {
   Loading         : false,
@@ -102,13 +170,10 @@ const structReducerDefaultState: StructReducerState = {
   derived_filtered: [],
   current_page    : 1,
   pages_total     : 1,
-  filter_registry : StructsFilterRegistry
-
-  
+  filter_registry : StructsFilterRegistry,
+  sorts_registry  : StructsSortsState,
+  last_sort_set   : "YEAR"
 };
-
-
-
 
 export const _StructuresReducer = (
   state: StructReducerState = structReducerDefaultState,
@@ -169,17 +234,29 @@ export const _StructuresReducer = (
        predicate: state.filter_registry.filtstate[action.filter_type].predicate
      }
      var nextFilters = Object.assign({},state.filter_registry,{filtstate:{...state.filter_registry.filtstate, ...{[action.filter_type]:newFilterState}}}, { applied:newApplied })
-
      for (var filter of newApplied){
-
-       
       var filtered = filtered.filter(
-
         nextFilters.filtstate[filter as StructFilterType]
         .predicate(nextFilters.filtstate[filter].value)
         )
      }
      return {...state, filter_registry:nextFilters, derived_filtered:filtered, pages_total: Math.ceil(filtered.length/20), current_page:1}
+    case "STRUCTS_SORT_CHANGE":
+      
+    console.log("prefilt:", state.derived_filtered);
+    
+    var sorted = state.derived_filtered.sort(
+      state.sorts_registry[action.sortType].compareFn
+      )
+
+    var newSortRegistry = {...state.sorts_registry}
+    newSortRegistry[action.sortType].reverse =!newSortRegistry[action.sortType].reverse
+    if(newSortRegistry[action.sortType].reverse){
+      sorted= sorted.reverse()
+    }
+
+    
+    return Object.assign({}, state, {sorts_registry:newSortRegistry},{derived_filtered: sorted},{last_sort_set:action.sortType})
 
     default:
       return state;

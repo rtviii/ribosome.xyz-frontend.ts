@@ -3,7 +3,7 @@ import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/sty
 import {large_subunit_map} from './../../../static/large-subunit-map'
 import {small_subunit_map} from './../../../static/small-subunit-map'
 import Grid from '@material-ui/core/Grid';
-import { ListSubheader, TextField, Tooltip } from "@material-ui/core";
+import { Button, ListSubheader, TextField, Tooltip } from "@material-ui/core";
 import Slider from '@material-ui/core/Slider';
 import { connect, useDispatch, useSelector, useStore  } from "react-redux";
 import { AppState } from "../../../redux/store";
@@ -31,7 +31,8 @@ import 'react-dropdown-tree-select/dist/styles.css'
 import Pagination from './Pagination'
 import Backdrop from './../Backdrop'
 import { CSVLink } from "react-csv";
-import { StructFilterType, structsFilterChangeAC } from "../../../redux/reducers/StructuresReducer/ActionTypes";
+import { StructFilterType, structsFilterChangeAC, structsSortChangeAC } from "../../../redux/reducers/StructuresReducer/ActionTypes";
+import Paper from "@material-ui/core/Paper";
 
 const pageData ={
   title:"Whole Ribosome Structures",
@@ -153,6 +154,17 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
     })
   }, [nomclass])
 
+
+  const last_sort_set = useSelector(( state:AppState ) => state.structures.last_sort_set)
+  const sortPredicates = useSelector(( state:AppState ) => state.structures.sorts_registry)
+  
+  useEffect(() => {
+    prop.structures.sort(sortPredicates[last_sort_set].compareFn)
+  }, [last_sort_set])
+
+  useEffect(() => {
+    console.log(_.uniq(prop.structures.map(s => s.struct.expMethod)))
+  }, [prop.structures])
   return ! prop.loading ? (
     <div className="workspace-catalogue-grid">
       <div className="wspace-catalogue-filters-tools">
@@ -160,11 +172,33 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
       </div>
       <Grid container item xs={12} spacing={3}>
         <PageAnnotation {...pageData}/>
-        <Grid item xs={12}><Typography variant="overline" style={{color:"red"}}>Sort By [1]   [2]  [3]</Typography></Grid>
-        <Grid item xs={12}>
-          <Pagination
-            {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}
-          />
+        {/* <Grid item container xs={12}  >
+          
+          </Grid> */}
+        <Grid item xs={12} alignContent={"center"} alignItems={"center"} >
+          <Paper variant="outlined" style={{padding:"10px"}}>
+        <Grid item container xs={12} alignContent={"center"} alignItems={"center"} justify="space-between" direction='row'>
+
+          <Grid item container>
+          <Typography variant="overline" style={{color:"gray", padding:"5px"}}>Page: </Typography>
+          <Pagination {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}/>
+          </Grid>
+
+          <Grid item container>
+          <Typography variant="overline" style={{color:"gray", padding:"5px"}}>Sort By: </Typography>
+
+            <Button onClick={() =>{dispatch(structsSortChangeAC("RESOLUTION"))}}>
+              Resolution</Button>
+            <Button onClick={() =>{dispatch(structsSortChangeAC("YEAR"))}}>
+              Year</Button>
+            <Button onClick={() =>{dispatch(structsSortChangeAC("NUMBER_OF_PROTEINS"))}}>
+              Number of Proteins</Button>
+              <Button onClick={() =>{dispatch(structsSortChangeAC("EXPERIMENTAL_METHOD"))}}>
+              Experimental Method</Button>
+          
+          </Grid>
+          </Grid>
+          </Paper>
         </Grid>
         <Grid container item xs={12} spacing={3}  alignItems="flex-start">
           {prop.structures
@@ -203,7 +237,6 @@ const mapdispatch =(
   })
 
 export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
-
 
 
 const StructuresSearchField = () =>
@@ -296,53 +329,7 @@ const ValueSlider= (prop:SliderFilterProps ) => {
   );
 };
 
-
-// const DepositionDateFilter = ValueSlider({filter_type: "YEAR",max:2021,min:2012,name:"Deposition Date", step:1})
-
-
-// const DepositionDateFilter = () => {
-
-//   const useSliderStyles = makeStyles({
-//     root: {
-//       width: 300,
-//     },
-//   });
-
-//   const classes           = useSliderStyles();
-//   const [value, setValue] = React.useState<number[]>([2012, 2021]);
-//   const [debounced_val]   = useDebounce(value,500)
-
-//   const handleChange = (event: any, newValue: number | number[]) => {
-//     setValue(newValue as number[]);
-//   };
-//   useEffect(() => {
-//     dispatch(structsFilterChangeAC(value,"YEAR"))
-//   }, [debounced_val])
-
-//   return (
-//     <div className={classes.root}>
-//       <Typography id="range-slider" gutterBottom>
-//         Deposition Date
-//       </Typography>
-//       <Slider
-//         marks
-//         min               = {2012}
-//         max               = {2021}
-//         step              = {1}
-//         value             = {value as any}
-//         onChange          = {handleChange}
-//         valueLabelDisplay = "auto"
-//         aria-labelledby   = "range-slider"
-//       />
-//     </div>
-//   );
-// };
-
-
-
-type SelectedProteinsFilterProps =  handleFilterChange & FilterData 
-
-const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
+const ProteinsPresentFilter =()=> {
 
   const BanClassNames = Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
   const useProteinsPresentStyles = makeStyles((theme: Theme) =>
@@ -358,9 +345,9 @@ const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
       },
     })
   );
-
-  const classes = useProteinsPresentStyles();
-  const filterstate = useSelector(( state:AppState ) => state.filters.filters.PROTEINS_PRESENT.value)
+  const classes         = useProteinsPresentStyles();
+  const proteinsPresent = useSelector(( state:AppState ) => state.structures.filter_registry.filtstate.PROTEINS_PRESENT.value)
+  const dispatch = useDispatch();
 
   return (
 
@@ -373,12 +360,12 @@ const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
         options={BanClassNames}
         getOptionLabel={(option) => option}
         defaultValue={[]}
-        value={filterstate as string[]}
+        value={proteinsPresent as string[]}
         onChange={
           
           (e:any, value:string[])=>{
             console.log(value)
-            prop.handleChange(prop.allFilters as FiltersReducerState, value)
+            dispatch(structsFilterChangeAC( value, "PROTEINS_PRESENT"))
           }
         }
         renderInput={(params) => { 
@@ -392,6 +379,8 @@ const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
 
   );
 }
+
+
 type SpecListProps = handleFilterChange & FilterData;
 export const _SpecList: React.FC<SpecListProps> = (prop) => {
 
@@ -445,10 +434,6 @@ export const _SpecList: React.FC<SpecListProps> = (prop) => {
     </div>
   );
 }
-export const SelectProteins    =  connect(mapStateFilter("PROTEINS_PRESENT"), mapDispatchFilter("PROTEINS_PRESENT"))(_SelectProteins)
-// export const YearSlider        =  connect(mapStateFilter("YEAR"),          mapDispatchFilter("YEAR"))(_ValueSlider)
-// export const ProtcountSlider   =  connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
-// export const ResolutionSlider  =  connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
 export const SearchField       =  connect(mapStateFilter("SEARCH"),       mapDispatchFilter("SEARCH"))(_SearchField)
 export const SpeciesList       =  connect(mapStateFilter("SPECIES"),      mapDispatchFilter("SPECIES"))(_SpecList)
 
@@ -465,7 +450,6 @@ type StructureFilterProps ={
 const _StructureFilters:React.FC<StructureFilterProps> = (props) => {
 
 const drawerWidth       =  240;
-
 const useFiltersStyles  =  makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -531,10 +515,7 @@ const useFiltersStyles  =  makeStyles((theme: Theme) =>
           <ValueSlider {...{filter_type: "RESOLUTION",max:6,min:1,name:"Resolution", step:0.1}}/>
         </ListItem>
         <ListItem key={"select-proteins"} >
-          {/* <SelectProteins /> */}
-        </ListItem>
-        <ListItem key={"select-species"} >
-          {/* <SpeciesList /> */}
+          <ProteinsPresentFilter/>
         </ListItem>
         <ListItem >
           <DashboardButton/>
@@ -543,9 +524,9 @@ const useFiltersStyles  =  makeStyles((theme: Theme) =>
         <ListItem >
          <Cart/>
         </ListItem>
-        {/* <ListItem key={"select-species"} >
+        <ListItem key={"select-species"} >
           <DropdownTreeSelect data={data} onChange={onChange} onAction={onAction} onNodeToggle={onNodeToggle} />
-        </ListItem> */}
+        </ListItem>
         <ListItem key={"bulkdownload"} >
 <CSVLink data={bulkDownloads}>
 <Typography variant="body2"> Download Fitlered</Typography>
