@@ -5,9 +5,7 @@ import {  Dispatch } from "redux";
 import { NeoStruct } from "./../../DataInterfaces";
 import { flattenDeep } from "lodash";
 import { Filter, filterChange, FilterPredicates, FilterRegistry } from "../Filters/ActionTypes";
-import { SwitchCamera } from "@material-ui/icons";
 import { StructFilterType, StructSortType } from "./ActionTypes";
-import { log } from "console";
 
 export interface StructReducerState {
   neo_response    : NeoStruct[]
@@ -18,15 +16,15 @@ export interface StructReducerState {
   pages_total     : number
   filter_registry : FilterRegistry<StructFilterType, NeoStruct>
   last_sort_set   : StructSortType,
-  sorts_registry  : Record<StructSortType,           {
-  reverse:boolean,
+  sorts_registry  : Record<StructSortType, {
+  reverse  : boolean,
   compareFn: (a:NeoStruct, b:NeoStruct) => 1 | 0 | -1
 }>
 }
 
 
 const StructsSortsState:Record<StructSortType,{
-  reverse:boolean,
+  reverse  : boolean,
   compareFn: (a:NeoStruct, b:NeoStruct) => 1 | 0 | -1
 }> = {
   "EXPERIMENTAL_METHOD": {
@@ -48,7 +46,6 @@ const StructsSortsState:Record<StructSortType,{
     compareFn: (a,b)=>{
       var first  = a.rps.length
       var second = b.rps.length
-
       if (first==second){
         return 0
       }
@@ -60,7 +57,6 @@ const StructsSortsState:Record<StructSortType,{
       }
       else return 0
     }
-
   },
   "RESOLUTION"         : {
     reverse:false,

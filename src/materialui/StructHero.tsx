@@ -64,7 +64,7 @@ export const StructHero=(d:NeoStruct)=> {
 
   const history = useHistory();
   return (
-    <Card className={classes.card} style={{backgroundColor: d.struct.expMethod.toLowerCase().includes("micro") ? "rgba(227,234,246,0.6)":"rgba(227,246,231,0.6)"}} >
+    <Card className={classes.card} >
       
       <Link to={ `/structs/${d.struct.rcsb_id}` } >
       

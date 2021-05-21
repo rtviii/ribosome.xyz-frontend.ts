@@ -163,15 +163,17 @@ for t in e_arr:
     tax = [*ncbi.get_taxid_translator( [str(t)] ).values()][0]
     e_dict.append({
         "label":tax,
-        "value":id
+        "value":[ id ],
+        "checked":False
     })
 
 for f in a_arr:
-    id  = [* ncbi.get_taxid_translator( [str(f)] ).keys() ][0]
+    id  = [*ncbi.get_taxid_translator( [str(f)] ).keys() ][0]
     tax = [*ncbi.get_taxid_translator( [str(f)] ).values()][0]
     a_dict.append({
-        "label":tax,
-        "value":id
+    "label":tax,
+    "value":[ id ],
+    "checked":False
     })
 
 for c in b_arr:
@@ -179,15 +181,42 @@ for c in b_arr:
     tax = [*ncbi.get_taxid_translator( [str(c)] ).values()][0]
     b_dict.append({
         "label":tax,
-        "value":id
+        "value":[ id ],
+        "checked":False
     })
 for g in v_arr:
-    id  = [* ncbi.get_taxid_translator( [str(g)] ).keys() ][0]
-    tax = [*ncbi.get_taxid_translator( [str(g)] ).values()][0]
+    id  = [* ncbi.get_taxid_translator( [str(g)] ).keys  () ][0]
+    tax = [* ncbi.get_taxid_translator( [str(g)] ).values() ][0]
     v_dict.append({
         "label":tax,
-        "value":id
+        "value":[ id ],
+        "checked":False
     })
+
+v_dict= {
+    "label":"Viruses",
+    "value":v_arr,
+    "checked":False,
+    "children":v_dict
+}
+b_dict= {
+    "label":"Bacteria",
+    "value":b_arr,
+    "checked":False,
+    "children":b_dict
+}
+a_dict= {
+    "label":"Archaea",
+    "value":a_arr,
+    "checked":False,
+    "children":a_dict
+}
+e_dict= {
+    "label":"Eukaryota",
+    "value":e_arr,
+    "checked":False,
+    "children":e_dict
+}
 
 
 with open('viruses.json','w') as infile:
