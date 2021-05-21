@@ -34,6 +34,7 @@ interface StateProps{
 const Cart:React.FC<StateProps> = (prop) => {
     const useCartStyles = makeStyles((theme) => ({
         root: {
+            zIndex:-200,
             width: '100%',
             maxWidth: 360,
             backgroundColor: theme.palette.background.paper,
@@ -57,20 +58,28 @@ const Cart:React.FC<StateProps> = (prop) => {
 
   const handleClose = () => {
     setOpen(false);
+    console.log("closing?");
+    
   };
 
     return (
-        <Paper variant="outlined">
-            <List className={classes.root}>
-                <ListSubheader onClick={handleClickOpen} style={{cursor:"pointer"}}>
-            <Typography variant="h6"> Workspace</Typography>
-                </ListSubheader>
+            <Button
+            variant="outlined"
+            color="primary"
+            
+        onClick={handleClickOpen} 
+        style={{
+            // zIndex:-100,
+                         cursor:"pointer", width:"100%", fontWeight:500, color:"black" }}
+            >
+
+             Workspace
+
             {prop.cartitems.map(i => 
                 <ListItem>
-             {i.entity_poly_strand_id + " [" +i.nomenclature[0]+"]" }
+                {i.entity_poly_strand_id + " [" +i.nomenclature[0]+"]" }
                 </ListItem>
             )}
-            </List>
 
             <Dialog fullScreen open={open} onClose={handleClose}>
 
@@ -81,7 +90,7 @@ const Cart:React.FC<StateProps> = (prop) => {
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
                             Workspace
-            </Typography>
+                        </Typography>
                         <Button autoFocus color="inherit" onClick={() => {
 
 
@@ -102,7 +111,7 @@ const Cart:React.FC<StateProps> = (prop) => {
                                 e => { console.log(e); })
                         }}>
                             Download
-            </Button>
+                    </Button>
                     </Toolbar>
                 </AppBar>
 
@@ -132,7 +141,10 @@ const Cart:React.FC<StateProps> = (prop) => {
                 </List>
 
             </Dialog>
-        </Paper>
+
+            </Button>
+
+            
     )
 
 }
