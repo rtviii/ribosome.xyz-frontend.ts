@@ -3,7 +3,7 @@ import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/sty
 import {large_subunit_map} from './../../../static/large-subunit-map'
 import {small_subunit_map} from './../../../static/small-subunit-map'
 import Grid from '@material-ui/core/Grid';
-import { Button, ListSubheader, TextField, Tooltip } from "@material-ui/core";
+import { Button, ListItemText, ListSubheader, TextField, Tooltip } from "@material-ui/core";
 import Slider from '@material-ui/core/Slider';
 import { connect, useDispatch, useSelector, useStore  } from "react-redux";
 import { AppState } from "../../../redux/store";
@@ -608,11 +608,10 @@ useEffect(() => {
         </ListItem>
         <Divider/>
 
-        <ListItem style={{position:"relative"}}>
+        <ListItem >
         <DropdownTreeSelect data={data} onChange={onChange}  keepOpenOnSelect={true} keepTreeOnSearch={true} keepChildrenOnSearch={true}/>
         </ListItem>
 
-        {/* <Divider/> */}
         <ListItem >
         <Cart />
         </ListItem>

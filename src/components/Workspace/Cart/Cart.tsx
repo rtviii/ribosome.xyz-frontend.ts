@@ -63,6 +63,9 @@ const Cart:React.FC<StateProps> = (prop) => {
   };
 
     return (
+
+
+<>
             <Button
             variant="outlined"
             color="primary"
@@ -80,6 +83,8 @@ const Cart:React.FC<StateProps> = (prop) => {
                 {i.entity_poly_strand_id + " [" +i.nomenclature[0]+"]" }
                 </ListItem>
             )}
+
+            </Button>
 
             <Dialog fullScreen open={open} onClose={handleClose}>
 
@@ -142,7 +147,7 @@ const Cart:React.FC<StateProps> = (prop) => {
 
             </Dialog>
 
-            </Button>
+</>
 
             
     )
