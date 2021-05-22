@@ -46,7 +46,12 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Divider from "@material-ui/core/Divider";
 import 'react-dropdown-tree-select/dist/styles.css'
 import './StructuresCatalogue.css'
-import { relative } from "path";
+import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
+import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter';
+import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
+import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 const pageData ={
   title:"Ribosome Structures",
@@ -144,11 +149,6 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
               Number of Proteins</Button>
             </Grid>
 
-            <Grid item>
-
-            <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("EXPERIMENTAL_METHOD"))}}>
-            Experimental Method</Button>
-            </Grid>
           
           </Grid>
           </Grid>
@@ -459,7 +459,7 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
 
   return (
     <div style={{width:"100%"}}>
-      <Button variant="outlined" style={{width:"100%"}} color="primary" onClick={handleClickOpen}>
+      <Button variant="outlined" style={{width:"100%", color:"black"}} color="primary" onClick={handleClickOpen}>
         Bulk Download
       </Button>
 
@@ -534,7 +534,8 @@ const _StructureFilters = () => {
     })
 
 
-const dispatch = useDispatch();
+
+const dispatch                  = useDispatch();
 const [ data, setDropdownData ] = useState([
 {"label": "Bacteria", "value": [1977881, 243230, 562, 224308, 574, 262724, 585, 474186, 575584, 1217649, 544404, 663, 1217710, 421052, 367830, 1772, 1773, 1280, 274, 1299, 287, 300852, 1351, 585035, 1144663, 1144670, 331111, 480119, 83333, 93061, 83334, 93062, 1931, 1223565, 52133, 1310637, 246196, 679895, 470, 1310678, 1960940], "checked": false, "children": [{"label": "Acinetobacter sp. ANC 4470", "value": [1977881], "checked": false}, {"label": "Deinococcus radiodurans R1", "value": [243230], "checked": false}, {"label": "Escherichia coli", "value": [562], "checked": false}, {"label": "Bacillus subtilis subsp. subtilis str. 168", "value": [224308], "checked": false}, {"label": "Klebsiella pneumoniae subsp. ozaenae", "value": [574], "checked": false}, {"label": "Thermus thermophilus HB27", "value": [262724], "checked": false}, {"label": "Proteus vulgaris", "value": [585], "checked": false}, {"label": "Enterococcus faecalis OG1RF", "value": [474186], "checked": false}, {"label": "Acinetobacter baumannii ATCC 19606 = CIP 70.34 = JCM 6841", "value": [575584], "checked": false}, {"label": "Acinetobacter beijerinckii ANC 3835", "value": [1217649], "checked": false}, {"label": "Escherichia coli O157:H7 str. TW14359", "value": [544404], "checked": false}, {"label": "Vibrio alginolyticus", "value": [663], "checked": false}, {"label": "Acinetobacter sp. NIPH 899", "value": [1217710], "checked": false}, {"label": "Acinetobacter rudis CIP 110305", "value": [421052], "checked": false}, {"label": "Staphylococcus aureus subsp. aureus USA300", "value": [367830], "checked": false}, {"label": "Mycolicibacterium smegmatis", "value": [1772], "checked": false}, {"label": "Mycobacterium tuberculosis", "value": [1773], "checked": false}, {"label": "Staphylococcus aureus", "value": [1280], "checked": false}, {"label": "Thermus thermophilus", "value": [274], "checked": false}, {"label": "Deinococcus radiodurans", "value": [1299], "checked": false}, {"label": "Pseudomonas aeruginosa", "value": [287], "checked": false}, {"label": "Thermus thermophilus HB8", "value": [300852], "checked": false}, {"label": "Enterococcus faecalis", "value": [1351], "checked": false}, {"label": "Escherichia coli S88", "value": [585035], "checked": false}, {"label": "Acinetobacter sp. CIP 102082", "value": [1144663], "checked": false}, {"label": "Acinetobacter sp. CIP 51.11", "value": [1144670], "checked": false}, {"label": "Escherichia coli O139:H28 str. E24377A", "value": [331111], "checked": false}, {"label": "Acinetobacter baumannii AB0057", "value": [480119], "checked": false}, {"label": "Escherichia coli K-12", "value": [83333], "checked": false}, {"label": "Staphylococcus aureus subsp. aureus NCTC 8325", "value": [93061], "checked": false}, {"label": "Escherichia coli O157:H7", "value": [83334], "checked": false}, {"label": "Staphylococcus aureus subsp. aureus COL", "value": [93062], "checked": false}, {"label": "Streptomyces sp.", "value": [1931], "checked": false}, {"label": "Rhizobium sp. Pop5", "value": [1223565], "checked": false}, {"label": "Acinetobacter venetianus", "value": [52133], "checked": false}, {"label": "Acinetobacter sp. 809848", "value": [1310637], "checked": false}, {"label": "Mycolicibacterium smegmatis MC2 155", "value": [246196], "checked": false}, {"label": "Escherichia coli BW25113", "value": [679895], "checked": false}, {"label": "Acinetobacter baumannii", "value": [470], "checked": false}, {"label": "Acinetobacter sp. 263903-1", "value": [1310678], "checked": false}, {"label": "Acinetobacter sp. ANC 5600", "value": [1960940], "checked": false}].sort()},
   
@@ -545,29 +546,26 @@ const [ data, setDropdownData ] = useState([
  [{"label": "Salmonella virus SP6", "value": [194966], "checked": false}, {"label": "Escherichia virus T4", "value": [10665], "checked": false}].sort()}
 ]
 )
-
-
-
 // @ts-ignore
 const onChange = (currentNode, selectedNodes) => {
 for (var parent of data){
   if (_.isEmpty(_.xor(parent.value, currentNode.value))){
-   var updatedIn = parent.children.map(child => { return {...child, checked:currentNode.checkedk} }) 
-   var parentIndex = data.findIndex(d=> d.label === parent.label)
-   var newdata = data;
-   newdata[parentIndex].checked=currentNode.checked
-   newdata[parentIndex].children=updatedIn
+   var     updatedIn             = parent.children.map(child => { return {...child, checked:currentNode.checkedk} })
+   var     parentIndex           = data.findIndex(d=> d.label === parent.label)
+   var     newdata               = data;
+   newdata[parentIndex].checked  = currentNode.checked
+   newdata[parentIndex].children = updatedIn
 
     setDropdownData(newdata)
   }
   else if( parent.value.includes( currentNode.value[0] ) ) 
   {
-  var childindex = parent.children.findIndex(x => currentNode.label === x.label)
-  var newChildren = [...parent.children ]
-  newChildren[childindex].checked = currentNode.checked
-  var parentIndex = data.findIndex(d=> d.label === parent.label)
-  var newdata = data;
-  newdata[parentIndex].children = newChildren
+  var         childindex            = parent.children.findIndex(x => currentNode.label === x.label)
+  var         newChildren           = [...parent.children ]
+  newChildren[childindex].checked   = currentNode.checked
+  var         parentIndex           = data.findIndex(d=> d.label === parent.label)
+  var         newdata               = data;
+  newdata    [parentIndex].children = newChildren
   setDropdownData(newdata)
 
   }
@@ -579,18 +577,31 @@ for (var parent of data){
   }
 
 }
-
-
-
-
 const [selectedSpecies, setSelectedSpecies] = useState<any>([])
-
 useEffect(() => {
-  console.log(selectedSpecies);
-  
   dispatch(structsFilterChangeAC(selectedSpecies,"SPECIES"))
 }, [selectedSpecies])
 
+
+
+
+
+
+  const [method, setMethod] = React.useState<string | null>('');
+  const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: string | null) => {
+    setMethod(newAlignment);
+  };
+  const MethodClasses =  makeStyles({
+    root:{
+        width:"100%",
+    }
+  })();
+
+  useEffect(() => {
+    dispatch(structsFilterChangeAC(method,"EXPERIMENTAL_METHOD"))
+  }, [method])
+
+// () =>{dispatch(structsSortChangeAC("EXPERIMENTAL_METHOD"))}
   return (
       <List>
 
@@ -605,6 +616,29 @@ useEffect(() => {
         </ListItem>
         <ListItem key={"select-proteins"} >
           <ProteinsPresentFilter/>
+        </ListItem>
+        <ListItem key={"method-toggle"} >
+    <ToggleButtonGroup
+      value = {method}
+      // exclusive
+      onChange={handleAlignment}
+      aria-label="text alignment"
+      className={MethodClasses.root}
+    >
+      <ToggleButton 
+      className={MethodClasses.root}
+      value="X-RAY DIFFRACTION" aria-label="left aligned">
+        XRAY
+      </ToggleButton>
+
+      <ToggleButton 
+      
+      className={MethodClasses.root}
+      value="ELECTRON MICROSCOPY" aria-label="right aligned" >
+        EM
+      </ToggleButton>
+
+    </ToggleButtonGroup>
         </ListItem>
         <Divider/>
 

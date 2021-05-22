@@ -17,10 +17,11 @@ export type StructFilterType =
   | "RESOLUTION"
   | "PROTEINS_PRESENT"
   | "SEARCH"
-  | "SPECIES";
+  | "SPECIES"
+  | "EXPERIMENTAL_METHOD";
 
 export type StructSortType = 
-"YEAR"|"NUMBER_OF_PROTEINS"|"RESOLUTION" | "EXPERIMENTAL_METHOD"
+"YEAR"|"NUMBER_OF_PROTEINS"|"RESOLUTION";
 
 
 
@@ -52,6 +53,8 @@ export const structsFilterChangeAC = (
     switch (filter_type) {
       case "PROTEINS_PRESENT":
         return !(newval.length === 0);
+      case "EXPERIMENTAL_METHOD":
+        return !(newval.length < 1);
       // case "PROTEIN_COUNT":
       //   return !(newval[0] === 25 && newval[1] === 150);
       case "RESOLUTION":

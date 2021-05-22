@@ -65,17 +65,23 @@ const Cart:React.FC<StateProps> = (prop) => {
     return (
 <>
             <Button
-            variant = "outlined"
-            color   = "primary"
-            onClick = {handleClickOpen}
-            style   = {{cursor: "pointer", width: "100%", fontWeight: 500, color: "black"}}
+            variant="outlined"
+            color="primary"
+            
+        onClick={handleClickOpen} 
+        style={{
+            // zIndex:-100,
+                         cursor:"pointer", width:"100%", fontWeight:500, color:"black" }}
             >
-            Workspace
-            {prop.cartitems.map(( i:any ) => 
+
+             Workspace
+
+            {prop.cartitems.map(i => 
                 <ListItem>
                 {i.entity_poly_strand_id + " [" +i.nomenclature[0]+"]" }
                 </ListItem>
             )}
+
             </Button>
 
             <Dialog fullScreen open={open} onClose={handleClose}>

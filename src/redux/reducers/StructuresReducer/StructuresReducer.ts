@@ -27,20 +27,6 @@ const StructsSortsState:Record<StructSortType,{
   reverse  : boolean,
   compareFn: (a:NeoStruct, b:NeoStruct) => 1 | 0 | -1
 }> = {
-  "EXPERIMENTAL_METHOD": {
-    reverse:false,
-    compareFn: (a,b)=>{
-      var first  = a.struct.expMethod.toLowerCase()
-      var second = b.struct.expMethod.toLowerCase()
-      if (first.includes("microscopy") && second.includes("diff")){
-        return 1
-      }
-      if (first.includes("diff") && second.includes("microscopy")){
-        return -1
-      }
-      else return 0
-    }
-  },
   "NUMBER_OF_PROTEINS" : {
     reverse:false,
     compareFn: (a,b)=>{
@@ -155,6 +141,16 @@ const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
         false
       )
    },
+   "EXPERIMENTAL_METHOD":{
+     value:[],
+     set:false,
+     predicate: (value) => (struct) =>{
+       if (value.length <1 ){return true}
+       else{return value.includes(struct.struct.expMethod)}
+     }
+
+   }
+   
   },
   applied:[]
 }
