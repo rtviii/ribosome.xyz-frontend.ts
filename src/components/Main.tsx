@@ -23,7 +23,6 @@ interface DispatchProps {
 }
 
 type MainProps = DispatchProps & OwnProps & ReduxProps;
-
 const Main: React.FC<MainProps> = (prop:MainProps) => {
 
     const dispatch    =  useDispatch()
@@ -32,7 +31,15 @@ const Main: React.FC<MainProps> = (prop:MainProps) => {
     prop.__rx_requestRNAs()
     prop.__rx_requestAllLigands()
     prop.__rx_staticCatalogue()
-    dispatch(requestBanMetadata())
+
+    dispatch(requestBanMetadata('b','LSU'))
+    dispatch(requestBanMetadata('e','LSU'))
+    dispatch(requestBanMetadata('u','LSU'))
+
+
+    dispatch(requestBanMetadata('b','SSU'))
+    dispatch(requestBanMetadata('e','SSU'))
+    dispatch(requestBanMetadata('u','SSU'))
   }, [])
 
   return (

@@ -175,7 +175,6 @@ export const _StructuresReducer = (
     case "REQUEST_STRUCTS_GO":
       return { ...state, Loading: true };
     case "REQUEST_STRUCTS_ERR":
-      console.log('Errored out requesting structs')
       return { ...state, Loading: false, Error: action.error };
     case "REQUEST_STRUCTS_SUCCESS":
         return { ...state,
@@ -235,7 +234,6 @@ export const _StructuresReducer = (
      return {...state, filter_registry:nextFilters, derived_filtered:filtered, pages_total: Math.ceil(filtered.length/20), current_page:1}
     case "STRUCTS_SORT_CHANGE":
       
-    console.log("prefilt:", state.derived_filtered);
     
     var sorted = state.derived_filtered.sort(
       state.sorts_registry[action.sortType].compareFn

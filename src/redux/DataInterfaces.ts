@@ -45,8 +45,6 @@ export interface LigandResponseShape  {
 export interface BanClassMetadata{
       banClass    : BanClass,
       organisms   : number[],
-      structs     : string[],
-      avgseqlength: number
       comments    : string[][]
     }
 

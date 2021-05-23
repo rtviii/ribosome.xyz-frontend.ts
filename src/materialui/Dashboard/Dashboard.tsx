@@ -92,11 +92,6 @@ const _DashboardButton: React.FC<DashProps> = (props) => {
 const _TemporaryDrawer: React.FC<DashProps> = (props) => {
 
   const classes = useStyles();
-
-  useEffect(() => {
-      console.log("got dahsborad change", props.dashboard_hidden)
-  }, [props.dashboard_hidden])
-
   const list = (anchor: Anchor) => (
     <div
       className={clsx(classes.list, {[classes.fullList]: anchor === 'left' || anchor === 'top',})}

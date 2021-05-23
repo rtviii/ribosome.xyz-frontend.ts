@@ -94,7 +94,9 @@ interface nomclass_visualize{
 
 interface get_banclasses_metadata {
   endpoint: 'get_banclasses_metadata',
-  params: null
+  params: {
+    family:string,subunit:string
+  }
 }
 
 interface get_individual_ligand{

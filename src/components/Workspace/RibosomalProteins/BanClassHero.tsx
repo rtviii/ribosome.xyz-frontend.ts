@@ -14,16 +14,11 @@ import { useDispatch } from 'react-redux';
 import HelpIcon from '@material-ui/icons/Help';
 import Tooltip from '@material-ui/core/Tooltip';
 
-// export interface BanClassMetadata {
-//   nom_class: BanClass;
-//   inStructs: Array<string>;
-//   unique_organisms: number[]
-// }
-const BanClassHero = ({ nom_class, inStructs, unique_organisms,  avgseqlength, comments
+const BanClassHero = ({ nom_class,  unique_organisms  , comments
 
 }:
   {
-    nom_class: BanClass, inStructs: string[], unique_organisms: number[],  avgseqlength: number, comments: string[][]
+    nom_class: BanClass,  unique_organisms: number[],   comments: string[][]
 
   }) => {
 
@@ -72,10 +67,8 @@ const BanClassHero = ({ nom_class, inStructs, unique_organisms,  avgseqlength, c
 
 
 
-  const dispatch = useDispatch();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -97,7 +90,7 @@ const BanClassHero = ({ nom_class, inStructs, unique_organisms,  avgseqlength, c
       alignContent="flex-end" alignItems="flex-end"
       spacing={2}
       className={classes.root}
-      // onClick={() => { history.push(`/rps/${nom_class}`) }}
+      onClick={() => { history.push(`/rps/${nom_class}`) }}
         >
 
 
@@ -107,25 +100,11 @@ const BanClassHero = ({ nom_class, inStructs, unique_organisms,  avgseqlength, c
 
 
 
-          {/* <Tooltip title={
-            <table className="leg-nom-table">
-              <th>In Terms of Legacy Nomenclature:</th>
-              <tbody>
-                <tr><td>Human</td><td>{paperinfo.h ? paperinfo.h : "-"}</td></tr>
-                <tr>Bacteria<td>{paperinfo.b ? paperinfo.b : "-"}</td></tr>
-                <tr>Yeast<td>{paperinfo.y ? paperinfo.y : "-"}</td></tr>
-              </tbody>
-            </table>
-          }> */}
 
             <Typography
-
-        onClick={() => { history.push(`/rps/${nom_class}`) }}
+              onClick={() => { history.push(`/rps/${nom_class}`) }}
               variant="body1"
-            // color    =  "primary"
-
-            ><b>{nom_class}</b> Ribosomal Protein Class ({inStructs.length} strands)</Typography>
-          {/* </Tooltip> */}
+            ><b>{nom_class}</b> Ribosomal Protein Class </Typography>
         </Grid>
 
 
@@ -161,7 +140,7 @@ const BanClassHero = ({ nom_class, inStructs, unique_organisms,  avgseqlength, c
               </ul>}>
               <HelpIcon
                 onClick={() => {
-                  console.log(pfamcomments)
+                  // console.log(pfamcomments)
                 }}
                 className={pfamcomments.length > 0 ? 'helpvisible' : 'helphidden'} style={{ cursor: "pointer" }} />
             </Tooltip>
@@ -174,41 +153,6 @@ const BanClassHero = ({ nom_class, inStructs, unique_organisms,  avgseqlength, c
 
 
 
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}>
-          {
-            inStructs.map(struct => {
-              return (
-                <Grid
-                  className={classes.rowHover}
-                  xs={12}
-                  container
-                  justify="space-between"
-                  style={{ padding: "10px" }}
-                  onClick={
-                    () => {
-                      history.push(`structs/${struct}`);
-                    }}>
-
-                  <Grid item xs={6}>
-                    <Typography variant="overline"> {struct} </Typography>
-                  </Grid>
-
-                </Grid>
-              );
-            })}
-        </Popover>
       </Grid>
 
     </Paper>

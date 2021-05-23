@@ -79,24 +79,9 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
   
-  const history:any  =  useHistory();
-  const nomclass     =  history.location.state ? history.location.state.nomclass : ""
-  const dispatch     =  useDispatch();
-  const filters      =  useSelector((state:AppState)=>{
-    return state.filters
-  })
   
-  useEffect(() => {
-    console.log("Got a parameter chagnge:: nomclass is", nomclass);
-    
-    dispatch({
-      type             :  "FILTER_CHANGE",
-      filttype         :  "PROTEINS_PRESENT",
-      newval           :  [nomclass],
-      set              :  true,
-      derived_filters  :  filters
-    })
-  }, [nomclass])
+  const dispatch     =  useDispatch();
+  
 
 
   const last_sort_set = useSelector(( state:AppState ) => state.structures.last_sort_set)
@@ -106,9 +91,6 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
     prop.structures.sort(sortPredicates[last_sort_set].compareFn)
   }, [last_sort_set])
 
-  useEffect(() => {
-    console.log(_.uniq(prop.structures.map(s => s.struct.expMethod)))
-  }, [prop.structures])
   return ! prop.loading ? (
     <Grid container xs={12} spacing={1}>
       <Grid item xs={2} style={{padding:"10px"}}>
@@ -197,9 +179,6 @@ const StructuresSearchField = () =>
 {
 
   const dispatch = useDispatch();
-  // dispatch(structsFilterChangeAC(
-
-  // ))
   const [value, setValue] = useState('')
   const [debounced] = useDebounce(value,250)
 
@@ -280,10 +259,22 @@ const ValueSlider= (prop:SliderFilterProps ) => {
 
 const ProteinsPresentFilter =()=> {
 
-  const BanClassNames = Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
+  
+  const history:any  =  useHistory();
+  const nomclass     =  history.location.state ? history.location.state.nomclass : ""
+
+  useEffect(() => {
+    console.log("Got a parameter chagnge:: nomclass is", nomclass);
+
+    if (nomclass.length > 1){
+      dispatch(structsFilterChangeAC([nomclass],"PROTEINS_PRESENT"))
+    }
+  }, [nomclass])
+
+
+  const BanClassNames            = Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
   const useProteinsPresentStyles = makeStyles((theme: Theme) =>
     createStyles({
-      
       root: {
         fontSize: 6,
         width: "100%",
@@ -295,8 +286,9 @@ const ProteinsPresentFilter =()=> {
     })
   );
   const classes         = useProteinsPresentStyles();
+
   const proteinsPresent = useSelector(( state:AppState ) => state.structures.filter_registry.filtstate.PROTEINS_PRESENT.value)
-  const dispatch = useDispatch();
+  const dispatch        = useDispatch();
 
   return (
 
@@ -313,7 +305,6 @@ const ProteinsPresentFilter =()=> {
         onChange={
           
           (e:any, value:string[])=>{
-            console.log(value)
             dispatch(structsFilterChangeAC( value, "PROTEINS_PRESENT"))
           }
         }

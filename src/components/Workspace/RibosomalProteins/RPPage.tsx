@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
           <List>
 
             <ListItem>
-              <SearchField />
+              {/* <SearchField /> */}
             </ListItem>
             <ListItem>
               <SpeciesList />
@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
   );
 };
 
-export const SearchField       =  connect(mapStateFilter("SEARCH"),       mapDispatchFilter("SEARCH"))(_SearchField)
+// export const SearchField       =  connect(mapStateFilter("SEARCH"),       mapDispatchFilter("SEARCH"))(_SearchField)
 export const SpeciesList       =  connect(mapStateFilter("SPECIES"),      mapDispatchFilter("SPECIES"))(_SpecList)
 
 const mapstate = (
