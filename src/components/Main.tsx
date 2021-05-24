@@ -16,10 +16,12 @@ import { requestBanMetadata } from "../redux/reducers/Proteins/ActionTypes";
 interface OwnProps {}
 interface ReduxProps {}
 interface DispatchProps {
+
   __rx_requestStructures : ()=>void
   __rx_requestRNAs       : ()=>void
   __rx_requestAllLigands : ()=>void
   __rx_staticCatalogue   : ()=>void
+
 }
 
 type MainProps = DispatchProps & OwnProps & ReduxProps;

@@ -15,18 +15,19 @@ export const REQUEST_BAN_METADATA_GO       =  "REQUEST_BAN_METADATA_GO"
 export const REQUEST_BAN_METADATA_SUCCESS  =  "REQUEST_BAN_METADATA_SUCCESS"
 export const REQUEST_BAN_METADATA_ERR      =  "REQUEST_BAN_METADATA_ERR"
 
-export const FILTER_BAN_METADATA           =  "FILTER_BAN_METADATA"
+export const FILTER_BAN_METADATA       = "FILTER_BAN_METADATA"
+export const FILTER_PROTEIN_CLASS      = "FILTER_PROTEIN_CLASS"
 
-export const REQUEST_BAN_CLASS_GO          =  "REQUEST_BAN_CLASS_GO";
-export const REQUEST_BAN_CLASS_SUCCESS     =  "REQUEST_BAN_CLASS_SUCCESS";
-export const REQUEST_BAN_CLASS_ERR         =  "REQUEST_BAN_CLASS_ERR";
-
-export const GOTO_PAGE_PROTEINS               = "GOTO_PAGE_PROTEINS"
-export const NEXT_PAGE_PROTEINS               = "NEXT_PAGE_PROTEINS"
-export const PREV_PAGE_PROTEINS               = "PREV_PAGE_PROTEINS"
-
+export const REQUEST_BAN_CLASS_GO      = "REQUEST_BAN_CLASS_GO";
+export const REQUEST_BAN_CLASS_SUCCESS = "REQUEST_BAN_CLASS_SUCCESS";
+export const REQUEST_BAN_CLASS_ERR     = "REQUEST_BAN_CLASS_ERR";
+export const GOTO_PAGE_PROTEINS        = "GOTO_PAGE_PROTEINS"
+export const NEXT_PAGE_PROTEINS        = "NEXT_PAGE_PROTEINS"
+export const PREV_PAGE_PROTEINS        = "PREV_PAGE_PROTEINS"
 
 
+
+export type ProteinClassFilterTypes  = "SPECIES" | "SEARCH"
 export type BanClassMetadataFiltType = "SEARCH" | "SPECIES"
 
 export interface requestBanMetadataGo      {type: typeof REQUEST_BAN_METADATA_GO }
@@ -38,6 +39,12 @@ export interface filterBanMetadata         {type: typeof FILTER_BAN_METADATA,
   newvalue: string, 
   filter_type:BanClassMetadataFiltType
   set:boolean
+}
+export interface filterProteinClass         {
+  type       : typeof FILTER_PROTEIN_CLASS,
+  newvalue   : string,
+  filter_type: ProteinClassFilterTypes
+  set        : boolean
 }
 
 export interface requestAllProteinsGo       {type: typeof REQUEST_ALL_PROTEINS_GO;}
@@ -57,6 +64,7 @@ export type ProteinActions =
   | requestBanMetadataSuccess 
   | requestBanMetadataErr
   | filterBanMetadata
+  | filterProteinClass
   | requestAllProteinsGo
   | requestAllProteinsError
   | requestAllProteinsSuccess
@@ -65,14 +73,12 @@ export type ProteinActions =
   | requestBanClassSuccess
   | requestBanClassErr
 
-  | filterChange
 
   | nextPageProts
   | prevPageProts
   | gotoPageProts
 
 export const BanMetadataFilterChangeAC = (newvalue:any,filter_type:BanClassMetadataFiltType):filterBanMetadata=>{
-
   
   let filterTypeIsSet: boolean = (() => {
     switch (filter_type) {
@@ -85,8 +91,6 @@ export const BanMetadataFilterChangeAC = (newvalue:any,filter_type:BanClassMetad
     }
   })();
 
-
-
   
   return{
     set: filterTypeIsSet,
@@ -96,7 +100,27 @@ export const BanMetadataFilterChangeAC = (newvalue:any,filter_type:BanClassMetad
   }
 }
 
+export const ProteinClassFilterChangeAC = (newvalue:any,filter_type:ProteinClassFilterTypes):filterProteinClass=>{
+  
+  let filterTypeIsSet: boolean = (() => {
+    switch (filter_type) {
+      case "SEARCH":
+        return !(newvalue.length === 0);
+      case "SPECIES":
+        return !(newvalue.length === 0);
+      default:
+        return false;
+    }
+  })();
 
+  
+  return{
+    set: filterTypeIsSet,
+    filter_type,
+    newvalue,
+    type: FILTER_PROTEIN_CLASS
+  }
+}
 
 export const requestBanMetadata =  (family:string, subunit:string) => {
 

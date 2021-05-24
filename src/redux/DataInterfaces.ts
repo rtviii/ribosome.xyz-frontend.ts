@@ -43,9 +43,11 @@ export interface LigandResponseShape  {
   presentIn: StructureWithLigand[]
 };
 export interface BanClassMetadata{
-      banClass    : BanClass,
-      organisms   : number[],
-      comments    : string[][]
+      banClass : BanClass,
+      organisms: number[],
+      comments : string[][],
+      structs  : RibosomeStructure[]
+
     }
 
 // export interface BanClassMetadata{

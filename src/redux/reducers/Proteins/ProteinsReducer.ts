@@ -1,11 +1,13 @@
 import { RibosomalProtein } from './../../RibosomeTypes'
-import { BanClassMetadataFiltType, ProteinActions } from './ActionTypes'
+import { BanClassMetadataFiltType, ProteinActions, ProteinClassFilterTypes } from './ActionTypes'
 import { Filter, filterChange, FilterPredicates, FilterRegistry } from '../Filters/ActionTypes';
 import { BanClassMetadata } from '../../DataInterfaces';
 import { StructFilterType } from '../StructuresReducer/ActionTypes';
 import { UpdateBundleProject } from 'typescript';
 import { toInteger } from 'lodash';
 import _ from 'lodash';
+import { stat } from 'fs';
+import { log } from 'console';
 
 
 // !hack
@@ -32,12 +34,34 @@ const BanClassesFilterRegistry: FilterRegistry<BanClassMetadataFiltType, BanClas
     "SPECIES": {
       value: [],
       set: false,
-      predicate: (value) => (banclass) => { return _.difference(banclass.organisms, value).length > 0 }
+      predicate: (value) => (banclass) => {
+        return _.difference(banclass.organisms, value).length > 0 
+      }
     },
   },
   applied: []
 }
 
+
+const ProteinClassFilterRegistry: FilterRegistry<ProteinClassFilterTypes, RibosomalProtein> = {
+  filtstate: {
+    "SEARCH": {
+      value: "",
+      set: false,
+      predicate: (value) => (rp) => {
+        return ( rp.nomenclature.reduce((x,y)=>{ return x+y},'') + rp.parent_rcsb_id +rp.rcsb_pdbx_description + rp.pfam_descriptions + rp.rcsb_source_organism_description ).toLowerCase().includes(value)
+      }
+    },
+    "SPECIES": {
+      value    : [],
+      set      : false,
+      predicate: (value) => (rp) => {
+        return _.intersection(value, rp.rcsb_source_organism_id).length > 0 
+      }
+    },
+  },
+  applied: []
+}
 
 
 
@@ -50,12 +74,13 @@ interface ProteinsReducerState {
   is_loading: boolean;
   errored_out: boolean;
 
-  ban_class: RibosomalProtein[];
+  ban_class        : RibosomalProtein[];
   ban_class_derived: RibosomalProtein[],
+  protein_clas_filter_registry: FilterRegistry<ProteinClassFilterTypes, RibosomalProtein>,
 
-  all_proteins: RibosomalProtein[];
+  all_proteins        : RibosomalProtein[];
   all_proteins_derived: RibosomalProtein[],
-  ban_classes: {
+  ban_classes         : {
     e_LSU: BanClassMetadata[],
     b_LSU: BanClassMetadata[],
     u_LSU: BanClassMetadata[],
@@ -83,6 +108,7 @@ interface ProteinsReducerState {
 const initialStateProteinsReducer: ProteinsReducerState = {
   ban_class: [],
   ban_class_derived: [],
+  protein_clas_filter_registry:ProteinClassFilterRegistry,
   all_proteins: [],
   all_proteins_derived: [],
   ban_classes: {
@@ -118,38 +144,98 @@ export const ProteinsReducer = (
   action: ProteinActions
 ): ProteinsReducerState => {
   switch (action.type) {
-    // case "REQUEST_BAN_CLASS_GO":
-    //   return { ...state, is_loading: true };
-    // case "REQUEST_BAN_CLASS_SUCCESS":
-    //   return {
-    //     ...state,
-    //     ban_class: action.payload,
-    //     ban_class_derived: action.payload,
-    //     pages_total: Math.ceil(action.payload.length / 20),
-    //   };
-    // case "REQUEST_BAN_CLASS_ERR":
-    //   return {
-    //     ...state,
-    //     is_loading: false,
-    //     error: action.error,
-    //     errored_out: true,
-    //   };
-    // case "GOTO_PAGE_PROTEINS":
-    //   if (action.pid <= state.pages_total && action.pid >= 1) {
-    //     return { ...state, current_page: action.pid };
-    //   }
-    //   return state;
-    // case "NEXT_PAGE_PROTEINS":
-    //   if (state.current_page + 1 === state.pages_total) {
-    //     return state;
-    //   }
-    //   return { ...state, current_page: state.current_page + 1 };
-    // case "PREV_PAGE_PROTEINS":
+    case "REQUEST_BAN_CLASS_GO":
+      return { ...state, is_loading: true };
+    case "REQUEST_BAN_CLASS_SUCCESS":
+      return {
+        ...state,
+        ban_class: action.payload,
+        ban_class_derived: action.payload,
+        pages_total: Math.ceil(action.payload.length / 20),
+        is_loading:false
+      };
+    case "REQUEST_BAN_CLASS_ERR":
+      return {
+        ...state,
+        is_loading: false,
+        error: action.error,
+        errored_out: true,
+      };
 
-    //   if (state.current_page - 1 < 1) {
-    //     return state;
-    //   }
-    //   return { ...state, current_page: state.current_page - 1 };
+
+    case "FILTER_PROTEIN_CLASS":
+
+      const updateProteinFilters = (filter_type: ProteinClassFilterTypes, set: boolean, applied: ProteinClassFilterTypes[]): ProteinClassFilterTypes[] => {
+
+        if ((set) && !(applied.includes(filter_type))) {
+          return [...applied, filter_type]
+        }
+        else if (!(set) && (applied.includes(filter_type))) {
+          return applied.filter(t => t !== filter_type)
+        }
+        else if (set && applied.includes(filter_type)) {
+          return applied
+        }
+        else {
+          return applied
+        }
+      }
+
+      var filtered_class =[...state.ban_class]
+
+      var newProteinsFiltersApplied = 
+      updateProteinFilters(
+         action.filter_type,
+         action.set,
+         state.protein_clas_filter_registry.applied)
+
+      var newProteinFilterState: Filter<RibosomalProtein> = {
+        set      : action.set,
+        value    : action.newvalue,
+        predicate: state.protein_clas_filter_registry.filtstate[action.filter_type].predicate
+      }
+
+      
+      var nextProteinFilters = Object.assign(
+          {},
+          state.protein_clas_filter_registry,
+          {
+            filtstate: {
+              ...state.protein_clas_filter_registry.filtstate,
+              ...{ [action.filter_type]: newProteinFilterState }
+            }
+          },
+          { applied: newProteinsFiltersApplied }
+        )
+
+        for (var filter of nextProteinFilters.applied){
+          filtered_class = filtered_class.filter(state.protein_clas_filter_registry.filtstate[action.filter_type].predicate(action.newvalue))
+        }
+      
+     return {...state, protein_clas_filter_registry:nextProteinFilters, ban_class_derived:filtered_class}
+
+
+
+
+
+
+
+    case "GOTO_PAGE_PROTEINS":
+      if (action.pid <= state.pages_total && action.pid >= 1) {
+        return { ...state, current_page: action.pid };
+      }
+      return state;
+    case "NEXT_PAGE_PROTEINS":
+      if (state.current_page + 1 === state.pages_total) {
+        return state;
+      }
+      return { ...state, current_page: state.current_page + 1 };
+    case "PREV_PAGE_PROTEINS":
+
+      if (state.current_page - 1 < 1) {
+        return state;
+      }
+      return { ...state, current_page: state.current_page - 1 };
 
 
     case "REQUEST_BAN_METADATA_GO":
@@ -212,7 +298,6 @@ export const ProteinsReducer = (
 
 
       for (var filter of newApplied) {
-        
         for (var key of Object.keys(state.ban_classes)) {
 
         var filtx = [...state.ban_classes[key as subunit_families]].filter(state.ban_classes_filter_registry.filtstate[action.filter_type].predicate(action.newvalue))

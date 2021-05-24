@@ -75,8 +75,6 @@ export interface RibosomalProtein {
   entity_poly_entity_type              :  string;
   surface_ratio                        :  number | null;
   nomenclature                         :  Array<BanClass>;
-
-
 }
 
 export interface Ligand {
