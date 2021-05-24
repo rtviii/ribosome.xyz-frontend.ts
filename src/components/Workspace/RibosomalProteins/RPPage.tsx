@@ -46,7 +46,7 @@ import DialogContentText from "@material-ui/core/DialogContentText/DialogContent
 
 const BulkDownloadMenu=()=> {
   const [open, setOpen] = React.useState(false);
-  const proteins = useSelector(( state:AppState ) => state.proteins.ban_class)
+  const proteins        = useSelector(( state:AppState ) => state.proteins.ban_class)
 
 const useCheckboxStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,20 +60,33 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
 
   // ! options
   const [summaryOpts, setSummaryOpts] = React.useState({
-            all:false,
-            experimental_method           : false,
-            resolution                    : false,
-            organisms                     : false,
-            present_ligands               : false,
-            universal_protein_nomenclature: false,
+            all                                : false,
+            pfam_accessions                    : false,
+            rcsb_source_organism_id            : false,
+            rcsb_source_organism_description   : false,
+            uniprot_accession                  : false,
+            rcsb_pdbx_description              : false,
+            entity_poly_strand_id              : false,
+            entity_poly_seq_one_letter_code    : false,
+            entity_poly_seq_length             : false,
+            nomenclature                       : false,
   });
-
   // ! options
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSummaryOpts({ ...summaryOpts, [event.target.name]: event.target.checked });
   };
-  const { all,experimental_method, resolution,organisms,present_ligands} = summaryOpts;
+  const {     all                             ,
+              pfam_accessions                 ,
+              rcsb_source_organism_id         ,
+              rcsb_source_organism_description,
+              uniprot_accession               ,
+              rcsb_pdbx_description           ,
+              entity_poly_strand_id           ,
+              entity_poly_seq_one_letter_code ,
+              entity_poly_seq_length          ,
+              nomenclature
+      } =     summaryOpts                     ;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -90,24 +103,42 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
     ['parent_struct_rcsb_id'],
     ...proteins.map(r =>[ r.parent_rcsb_id ])
   ]
-
-          // if ( summaryOpts.experimental_method ){
-          // bulkDownload[0].push("experimental_method")
-          // structs.map((v,i)=>bulkDownload[i+1].push(v.struct.expMethod))
-          // }
-          // if ( summaryOpts.resolution ){
-          // bulkDownload[0].push("resolution")
-          // structs.map((v,i)=>bulkDownload[i+1].push(v.struct.resolution))
-          // }
-          // if ( summaryOpts.organisms ){
-          // bulkDownload[0].push("organisms")
-          // structs.map((v,i)=>bulkDownload[i+1].push(v.struct._organismName
-          //   ))}
-          // if ( summaryOpts.present_ligands ){
-          // bulkDownload[0].push("ligands")
-          // structs.map((v,i)=>bulkDownload[i+1].push(v.ligands))
-          // }
-      
+  if ( summaryOpts.pfam_accessions){
+    bulkDownload[0].push("pfam_accessions")
+    proteins.map((v,i) => bulkDownload[i+1].push(v.pfam_accessions))
+  }
+  if ( summaryOpts.rcsb_source_organism_id){
+    bulkDownload[0].push("source_organisms_id")
+    proteins.map((v,i) => bulkDownload[i+1].push(v.rcsb_source_organism_id))
+  }
+  if ( summaryOpts.rcsb_source_organism_description){
+    bulkDownload[0].push("source_organisms_description")
+    proteins.map((v,i) => bulkDownload[i+1].push(v.rcsb_source_organism_description))
+  }
+  if ( summaryOpts.uniprot_accession){
+    bulkDownload[0].push("uniprot_accession")
+    proteins.map((v,i) => bulkDownload[i+1].push(v.uniprot_accession))
+  }
+  if ( summaryOpts.rcsb_pdbx_description){
+    bulkDownload[0].push("rcsb_description")
+    proteins.map((v,i) => bulkDownload[i+1].push(v.rcsb_pdbx_description))
+  }
+  if ( summaryOpts.entity_poly_strand_id){
+    bulkDownload[0].push("strand_id(in-structure_identifier)")
+    proteins.map((v,i) => bulkDownload[i+1].push(v.entity_poly_strand_id))
+  }
+  if ( summaryOpts.entity_poly_seq_one_letter_code){
+    bulkDownload[0].push("sequence_one_letter_code")
+    proteins.map((v,i) => bulkDownload[i+1].push(v.entity_poly_seq_one_letter_code))
+  }
+  if ( summaryOpts.entity_poly_seq_length){
+    bulkDownload[0].push("seq_length")
+    proteins.map((v,i) => bulkDownload[i+1].push(v.entity_poly_seq_length))
+  }
+  if ( summaryOpts.nomenclature){
+    bulkDownload[0].push("universal_rp_nomeclature")
+    proteins.map((v,i) => bulkDownload[i+1].push(v.nomenclature))
+  }
 
     return bulkDownload
   }
@@ -118,6 +149,8 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
         Bulk Download
       </Button>
 
+
+
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
 
         <DialogTitle id="form-dialog-title">Bulk Download Options</DialogTitle>
@@ -127,32 +160,57 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
             Please select the fields that you would like the summary to contain.
           </FormLabel>
         <FormGroup>
+
           <FormControlLabel
-            control={<Checkbox checked={all} onChange={()=>setSummaryOpts({all:!all, experimental_method:!all,organisms:!all,resolution:!all,present_ligands:!all,universal_protein_nomenclature:!all})} name="all" />}
+            control={
+            
+            <Checkbox
+              checked={all} 
+            onChange={()=>{setSummaryOpts(Object.fromEntries(Object.entries(summaryOpts).map((v,i)=>[v[0],(!v[1])])) as any)}}
+            />
+          }
+
             label="All Options"
           />
           <FormControlLabel
-            control={<Checkbox checked={resolution} onChange={handleChange} name="resolution" />}
-            label="Resolution"
+            control = {<Checkbox checked={pfam_accessions} onChange={handleChange} name="pfam_accessions" />}
+            label   = "PFAM Accession Codes"
           />
           <FormControlLabel
-            control={<Checkbox checked={experimental_method} onChange={handleChange} name="experimental_method" />}
-            label="Experimental Method"
+            control = {<Checkbox checked={rcsb_pdbx_description} onChange={handleChange} name="rcsb_pdbx_description" />}
+            label   = "Description"
           />
           <FormControlLabel
-            control={<Checkbox checked={organisms} onChange={handleChange} name="organisms" />}
-            label="Organisms"
+            control = {<Checkbox checked={rcsb_source_organism_id} onChange={handleChange} name="rcsb_source_organism_id" />}
+            label   = "Source Organisms' Taxonomic Ids"
           />
-          {/* <FormControlLabel
-            control={<Checkbox checked={universal_protein_nomenclature} onChange={handleChange} name="universal_protein_nomenclature" />}
-            label="Universal r-Protein Nomenclature"
-          /> */}
           <FormControlLabel
-            control={<Checkbox checked={present_ligands} onChange={handleChange} name="present_ligands" />}
-            label="Present Ligands"
+            control = {<Checkbox checked={rcsb_source_organism_description} onChange={handleChange} name="rcsb_source_organism_description" />}
+            label   = "Source Organisms' Descriptions "
           />
+          <FormControlLabel
+            control = {<Checkbox checked={uniprot_accession} onChange={handleChange} name="uniprot_accession" />}
+            label   = "Uniprot Accession Codes"
+          />
+          <FormControlLabel
+            control = {<Checkbox checked={entity_poly_seq_length} onChange={handleChange} name="entity_poly_seq_length" />}
+            label   = "Sequence Length"
+          />
+          <FormControlLabel
+            control = {<Checkbox checked={entity_poly_seq_one_letter_code} onChange={handleChange} name="entity_poly_seq_one_letter_code" />}
+            label   = "Amino Acid Sequence"
+          />
+          <FormControlLabel
+            control = {<Checkbox checked={entity_poly_strand_id} onChange={handleChange} name="entity_poly_strand_id" />}
+            label   = "Strand Id (Parent-structure specific identifier)"
+          />
+          <FormControlLabel
+            control = {<Checkbox checked={nomenclature} onChange={handleChange} name="nomenclature" />}
+            label   = "Universal Nomenclature"
+          />
+
         </FormGroup>
-        <FormHelperText>You have {proteins.length} structures in scope.</FormHelperText>
+        <FormHelperText>You have {proteins.length} protein strands in scope.</FormHelperText>
       </FormControl>																									
     <CSVLink data={createSummary()}>
                 <Button onClick={handleClose} color="primary">
@@ -162,7 +220,7 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
 </CSVLink>
           <Divider/>
             <DialogContentText style={{marginTop:"10px"}}>
-            Filtered models of the whole ribosome structures that you have filtered will be packed into a .zip archive and downloaded.
+            Protein strands that you have filtered will be packed into a .zip archive and downloaded.
           </DialogContentText>
           <Button onClick={handleClose} color="primary">
             Download Models (.zip)
@@ -172,17 +230,6 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 interface ReduxProps{
@@ -198,23 +245,25 @@ interface DispatchProps{
   prev_page        :  ()=>void;
 }
 
-type  RPPageProps = ReduxProps &  DispatchProps
+type  RPPageProps                  = ReduxProps &  DispatchProps
 const RPPage:React.FC<RPPageProps> = (prop) => {
 
-  var params: any = useParams();
-  var nameparam = params.nom
-  var className = nameparam.slice(0,1).toLowerCase() + nameparam.slice(1,2).toUpperCase() + nameparam.slice(2)
+var params: any = useParams();
+var nameparam   = params.nom
+var className   = nameparam.slice(0,1).toLowerCase() + nameparam.slice(1,2).toUpperCase() + nameparam.slice(2)
+var isloading =  useSelector(( state:AppState ) => state.proteins.is_loading)
+
 
 useEffect(() => {
-    console.log("requesting", className);
-    prop.requestBanClass(className)
-  }, [])
+  console.log("nampd,",nameparam);
+  
+  dispatch(requestBanClass(nameparam,false))
 
 
-
-  const proteins = useSelector((state: AppState) => state.proteins.ban_class_derived)
-  var bulkDownloads = [["rcsb_id", "strand", "nomenclature", "sequence"]]
-  proteins.map(prot => bulkDownloads.push([prot.parent_rcsb_id, prot.entity_poly_strand_id, prot.nomenclature[0] || "Unspecified", prot.entity_poly_seq_one_letter_code]))
+}, [nameparam])
+const proteins      = useSelector((state: AppState) => state.proteins.ban_class_derived)
+var   bulkDownloads = [["rcsb_id", "strand", "nomenclature", "sequence"]]
+proteins.map(prot => bulkDownloads.push([prot.parent_rcsb_id, prot.entity_poly_strand_id, prot.nomenclature[0] || "Unspecified", prot.entity_poly_seq_one_letter_code]))
 
 
 
@@ -284,7 +333,7 @@ useEffect(() => {
         var change = e.target.value
         setSearch(change)
     }
-  return params!.nom ? (
+  return !isloading ? (
     <Grid xs={12} container>
       <Grid item container xs={12} >
         <Typography variant="h3" style={{ padding: "20px" }}>
@@ -297,39 +346,34 @@ useEffect(() => {
         <Grid item container xs={2} direction="column">
           <List>
 
-                    <ListItem key={"rps-searchfield"} >
+            <ListItem key={"rps-searchfield"} >
 
-                        <TextField id="standard-basic" label="Search" value={search} onChange={handleSearchChange} />
+              <TextField id="standard-basic" label="Search" value={search} onChange={handleSearchChange} />
 
-                    </ListItem>
-<ListItem>
+            </ListItem>
+            <ListItem>
 
-        <DropdownTreeSelect data                 = {data}
-                            onChange             = {onChange}
-                            keepOpenOnSelect     = {true}
-                            keepTreeOnSearch     = {true}
-                            keepChildrenOnSearch = {true}
-             />
+              <DropdownTreeSelect data={data}
+                onChange={onChange}
+                keepOpenOnSelect={true}
+                keepTreeOnSearch={true}
+                keepChildrenOnSearch={true}
+              />
 
-</ListItem>
+            </ListItem>
             <ListItem>
               <Pagination
                 {...{ gotopage: prop.goto_page, pagecount: prop.pagestotal }}
               />
             </ListItem>
             <ListItem>
-            <Cart/>
+              <Cart />
+            </ListItem>
+            <ListItem key={"rps-searchfield"} >
+              <BulkDownloadMenu />
             </ListItem>
             <ListItem>
-            <CSVDownloadElement prop={"proteins"}/>
-            </ListItem>
-                    <ListItem key={"rps-searchfield"} >
-
-<BulkDownloadMenu/>
-
-                    </ListItem>
-            <ListItem>
-            <DashboardButton/>
+              <DashboardButton />
             </ListItem>
           </List>
         </Grid>

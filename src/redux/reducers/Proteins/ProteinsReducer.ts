@@ -2,12 +2,8 @@ import { RibosomalProtein } from './../../RibosomeTypes'
 import { BanClassMetadataFiltType, ProteinActions, ProteinClassFilterTypes } from './ActionTypes'
 import { Filter, filterChange, FilterPredicates, FilterRegistry } from '../Filters/ActionTypes';
 import { BanClassMetadata } from '../../DataInterfaces';
-import { StructFilterType } from '../StructuresReducer/ActionTypes';
-import { UpdateBundleProject } from 'typescript';
 import { toInteger } from 'lodash';
 import _ from 'lodash';
-import { stat } from 'fs';
-import { log } from 'console';
 
 
 // !hack
@@ -74,13 +70,13 @@ interface ProteinsReducerState {
   is_loading: boolean;
   errored_out: boolean;
 
-  ban_class        : RibosomalProtein[];
-  ban_class_derived: RibosomalProtein[],
+  ban_class                   : RibosomalProtein[];
+  ban_class_derived           : RibosomalProtein[],
   protein_clas_filter_registry: FilterRegistry<ProteinClassFilterTypes, RibosomalProtein>,
 
-  all_proteins        : RibosomalProtein[];
-  all_proteins_derived: RibosomalProtein[],
-  ban_classes         : {
+  all_proteins                : RibosomalProtein[];
+  all_proteins_derived        : RibosomalProtein[],
+  ban_classes                 : {
     e_LSU: BanClassMetadata[],
     b_LSU: BanClassMetadata[],
     u_LSU: BanClassMetadata[],
@@ -128,14 +124,14 @@ const initialStateProteinsReducer: ProteinsReducerState = {
     u_SSU: [],
   },
   ban_classes_filter_registry: BanClassesFilterRegistry,
-  error: null,
+  error                      : null,
 
   // pagination
   current_page: 1,
-  pages_total: 1,
+  pages_total : 1,
 
   // net
-  is_loading: false,
+  is_loading : false,
   errored_out: false
 
 }
@@ -145,20 +141,27 @@ export const ProteinsReducer = (
 ): ProteinsReducerState => {
   switch (action.type) {
     case "REQUEST_BAN_CLASS_GO":
-      return { ...state, is_loading: true };
+
+      return { 
+        ...state,
+        is_loading: true };
+
     case "REQUEST_BAN_CLASS_SUCCESS":
+
       return {
         ...state,
-        ban_class: action.payload,
+        ban_class        : action.payload,
         ban_class_derived: action.payload,
-        pages_total: Math.ceil(action.payload.length / 20),
-        is_loading:false
+        pages_total      : Math.ceil(action.payload.length / 20),
+        is_loading       : false
       };
+
     case "REQUEST_BAN_CLASS_ERR":
+
       return {
         ...state,
-        is_loading: false,
-        error: action.error,
+        is_loading : false,
+        error      : action.error,
         errored_out: true,
       };
 
@@ -212,7 +215,7 @@ export const ProteinsReducer = (
           filtered_class = filtered_class.filter(state.protein_clas_filter_registry.filtstate[action.filter_type].predicate(action.newvalue))
         }
       
-     return {...state, protein_clas_filter_registry:nextProteinFilters, ban_class_derived:filtered_class}
+     return {...state, protein_clas_filter_registry:nextProteinFilters, ban_class_derived:filtered_class, pages_total: Math.ceil(filtered_class.length/20), current_page:1}
 
 
 
