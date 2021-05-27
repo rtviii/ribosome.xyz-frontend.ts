@@ -94,14 +94,8 @@ export const FilterPredicates: Record<
     },
     RNA: (value: any) => (item: RXZDataTypes) => {
       var rna = item as RNAProfile;
+      return true
 
-      return (
-        rna.title +
-        rna.parent +
-        rna.orgname.reduce((acc, name) => acc + name, "")
-      )
-        .toLowerCase()
-        .includes(value as string);
     },
     LIGAND: (value: any) => (item: RXZDataTypes) => {
       var lig = item as LigandResponseShape;

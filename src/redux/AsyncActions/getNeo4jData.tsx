@@ -1,5 +1,6 @@
 import Axios from "axios";
 import qs from 'qs'
+import { RnaClass } from "../reducers/RNA/RNAReducer";
 
 const BACKEND: any  =  process.env.REACT_APP_DJANGO_URL;
 type  DjangoAPIs    =  "neo4j" | "static_files"
@@ -71,7 +72,8 @@ type Neo4jEndpoints =
   | customCypher
   | gmoNomClass
   | getAllLigands
-  | getAllRnas
+  | get_rna_class
+  | get_uncategorized_rna
   | getRnasByStruct
   | getLigandsByStruct
   | get_surface_ratios
@@ -118,7 +120,6 @@ interface get_surface_ratios{
   }
 }
 
-
 interface match_structs_by_proteins{
   endpoint:"match_structs",
   params:{
@@ -143,9 +144,17 @@ interface getLigandsByStruct{
   params  : null
 }
 
-interface getAllRnas{
-endpoint: "get_all_rnas";
-params  : null
+
+interface get_uncategorized_rna {
+  endpoint:"get_rna_class";
+  params: null
+}
+
+interface get_rna_class {
+  endpoint: "get_rna_class";
+  params  : {
+    rna_class: RnaClass 
+  }
 }
 
 interface getStructure {
@@ -186,9 +195,13 @@ interface getAllLigands{
 }
 
 export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {
+
   const URI = encodeURI(`${BACKEND}/${api}/${ep.endpoint}/`);
-  return ep.params != null ? Axios.get(URI, { params: ep.params , paramsSerializer:params => qs.stringify(params, {
+
+  return ep.params != null ? Axios.get(URI, { params: ep.params , paramsSerializer:params => qs.stringify(params, 
+    {
     arrayFormat:"repeat"
-    
-  })}) : Axios.get(URI);
+    }
+  )}) : Axios.get(URI);
+
 };

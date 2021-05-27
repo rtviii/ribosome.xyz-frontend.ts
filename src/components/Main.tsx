@@ -8,17 +8,19 @@ import * as redux from '../redux/reducers/StructuresReducer/StructuresReducer'
 import { connect, useDispatch } from "react-redux";
 import { TemporaryDrawer } from './../materialui/Dashboard/Dashboard'
 
-import {requestAllRNAs}from './../redux/reducers/RNA/ActionTypes'
+// import {requestAllRNAs}from './../redux/reducers/RNA/ActionTypes'
 import { requestAllLigands } from "../redux/reducers/Ligands/ActionTypes";
 import { requestStaticCatalogue } from "../redux/reducers/Utilities/UtilitiesReducer";
 import { requestBanMetadata } from "../redux/reducers/Proteins/ActionTypes";
+import { requestRnaClass } from "../redux/reducers/RNA/ActionTypes";
+import { RnaClass } from "../redux/reducers/RNA/RNAReducer";
 
 interface OwnProps {}
 interface ReduxProps {}
 interface DispatchProps {
 
   __rx_requestStructures : ()=>void
-  __rx_requestRNAs       : ()=>void
+  // __rx_requestRNAs       : ()=>void
   __rx_requestAllLigands : ()=>void
   __rx_staticCatalogue   : ()=>void
 
@@ -30,7 +32,7 @@ const Main: React.FC<MainProps> = (prop:MainProps) => {
     const dispatch    =  useDispatch()
     useEffect(() => {
     prop.__rx_requestStructures()
-    prop.__rx_requestRNAs()
+    // prop.__rx_requestRNAs()
     prop.__rx_requestAllLigands()
     prop.__rx_staticCatalogue()
 
@@ -42,6 +44,11 @@ const Main: React.FC<MainProps> = (prop:MainProps) => {
     dispatch(requestBanMetadata('b','SSU'))
     dispatch(requestBanMetadata('e','SSU'))
     dispatch(requestBanMetadata('u','SSU'))
+
+
+    for (var k of ["mrna" , "trna"  , "5.8" , "12" , "16", "21", "23" , "25" ,"28" ,"35" , 'other', "5"]){
+    dispatch(requestRnaClass(k as RnaClass))
+    }
   }, [])
 
   return (
@@ -62,7 +69,7 @@ const mapdispatch = (
   ownprops: OwnProps
 ): DispatchProps => ({
   __rx_requestStructures: ()=> dispatch(redux.requestAllStructuresDjango()),
-  __rx_requestRNAs      : ()=> dispatch(requestAllRNAs()),
+  // __rx_requestRNAs      : ()=> dispatch(requestAllRNAs()),
   __rx_requestAllLigands: ()=> dispatch(requestAllLigands()),
   __rx_staticCatalogue  : ()=> dispatch(requestStaticCatalogue()),
 });

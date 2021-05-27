@@ -9,7 +9,6 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import Pagination from './../Display/Pagination'
 import Grid from "@material-ui/core/Grid";
 import { _SpecList, _SearchField  } from "../Display/StructuresCatalogue";
-import {  mapDispatchFilter, mapStateFilter, handleFilterChange } from "../../../redux/reducers/Filters/FiltersReducer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import RibosomalProteinCard from './RibosomalProteinCard'
@@ -18,7 +17,6 @@ import { DashboardButton } from "../../../materialui/Dashboard/Dashboard";
 import Cart from "./../../Workspace/Cart/Cart";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import Backdrop from "@material-ui/core/Backdrop";
-import CSVDownloadElement from "../Cart/CSVDownloadElement";
 import _ from "lodash";
 import DropdownTreeSelect from "react-dropdown-tree-select";
 import TextField from "@material-ui/core/TextField";
@@ -255,7 +253,6 @@ var isloading =  useSelector(( state:AppState ) => state.proteins.is_loading)
 
 
 useEffect(() => {
-  console.log("nampd,",nameparam);
   
   dispatch(requestBanClass(nameparam,false))
 
@@ -397,7 +394,8 @@ useEffect(() => {
       </Grid>
     </Grid>
   ) : (
-    <Backdrop open={true}/>
+    <Backdrop open={true} 
+    />
   );
 };
 

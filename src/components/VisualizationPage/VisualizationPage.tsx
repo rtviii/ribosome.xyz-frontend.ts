@@ -168,10 +168,10 @@ const SelectRna = ({ rnas, selectItem }: { rnas: RNAProfile[], selectItem: (stra
           value={curRna}
           onChange={chooseRna}>
 
-          {rnas.map((i) => <MenuItem value={i.rna.entity_poly_strand_id}>
+          {/* {rnas.map((i) => <MenuItem value={i.rna.entity_poly_strand_id}>
             {i.rna.entity_poly_strand_id}
 
-          </MenuItem>)}
+          </MenuItem>)} */}
         </Select>
       </FormControl>
 

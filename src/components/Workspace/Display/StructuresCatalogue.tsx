@@ -73,18 +73,15 @@ interface DispatchProps{
   next_page: ()=>void;
   prev_page: ()=>void;
   goto_page: (pid:number)=>void;
-}
+  }
 type WorkspaceCatalogueProps =  StateProps & DispatchProps;
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
   
   
-  const dispatch     =  useDispatch();
-  
-
-
-  const last_sort_set = useSelector(( state:AppState ) => state.structures.last_sort_set)
+  const dispatch       = useDispatch(                                                     );
+  const last_sort_set  = useSelector(( state:AppState ) => state.structures.last_sort_set )
   const sortPredicates = useSelector(( state:AppState ) => state.structures.sorts_registry)
   
   useEffect(() => {
@@ -93,11 +90,13 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
 
   return ! prop.loading ? (
     <Grid container xs={12} spacing={1}>
+      <Grid item xs={12}>
+        <PageAnnotation {...pageData} />
+      </Grid>
       <Grid item xs={2} style={{padding:"10px"}}>
         <StructureFilters />
       </Grid>
       <Grid container item xs={10} spacing={1}>
-        <PageAnnotation {...pageData}/>
         <Grid item xs={12} alignContent={"center"} alignItems={"center"} >
           <Paper variant="outlined" style={{padding:"10px"}}>
         <Grid item container xs={12} alignContent={"center"} alignItems={"center"} justify="space-between" direction='row'>

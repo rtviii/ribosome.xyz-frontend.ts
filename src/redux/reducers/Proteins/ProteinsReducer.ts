@@ -18,9 +18,11 @@ type subunit_families =
 
 const BanClassesFilterRegistry: FilterRegistry<BanClassMetadataFiltType, BanClassMetadata> = {
   filtstate: {
+
     "SEARCH": {
       value: "",
       set: false,
+
       predicate: (value) => (banclass) => {
         
         if (value.length <1){return true}
@@ -37,7 +39,6 @@ const BanClassesFilterRegistry: FilterRegistry<BanClassMetadataFiltType, BanClas
   },
   applied: []
 }
-
 
 const ProteinClassFilterRegistry: FilterRegistry<ProteinClassFilterTypes, RibosomalProtein> = {
   filtstate: {
@@ -58,10 +59,6 @@ const ProteinClassFilterRegistry: FilterRegistry<ProteinClassFilterTypes, Riboso
   },
   applied: []
 }
-
-
-
-
 
 
 interface ProteinsReducerState {

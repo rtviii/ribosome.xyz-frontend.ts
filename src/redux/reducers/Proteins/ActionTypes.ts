@@ -36,9 +36,9 @@ export interface requestBanMetadataSuccess {type: typeof REQUEST_BAN_METADATA_SU
 export interface requestBanMetadataErr     {type: typeof REQUEST_BAN_METADATA_ERR, error: Error}
 
 export interface filterBanMetadata         {type: typeof FILTER_BAN_METADATA, 
-  newvalue: string, 
-  filter_type:BanClassMetadataFiltType
-  set:boolean
+  newvalue   : string,
+  filter_type: BanClassMetadataFiltType
+  set        : boolean
 }
 export interface filterProteinClass         {
   type       : typeof FILTER_PROTEIN_CLASS,

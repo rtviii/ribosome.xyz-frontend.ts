@@ -253,10 +253,6 @@ export const _StructuresReducer = (
   }
 };
 
-
-// --------------------------------- Action Creators
-
-
 export const requestAllStructuresDjango =  () => {
   return async (dispatch: Dispatch<actions.StructActionTypes>) => {
     dispatch({

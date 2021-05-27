@@ -5,7 +5,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import { NeoHomolog } from "../../../redux/DataInterfaces";
 import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -207,14 +207,13 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
                 />
               )}
             </Button>
-        <Button 
-        
+                <Button 
+                
         className={classes.fieldTypography}
         size="small"
-        onClick={()=>{ history.push({pathname:`/vis`, state:{banClass:prop.protein.nomenclature[0], parent:prop.protein.parent_rcsb_id} })}}>
-
+                onClick={() => {  history.push({pathname:`/vis`, state:{banClass:prop.protein.nomenclature[0], parent:prop.protein.parent_rcsb_id} })}}>
           Visualize
-          
+                  <VisibilityIcon />
           </Button>
 
           </Grid>
