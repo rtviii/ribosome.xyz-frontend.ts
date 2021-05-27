@@ -15,7 +15,7 @@ import StarBorder from '@material-ui/icons/StarBorder';
 import { AppBar, Grid } from '@material-ui/core';
 import { Typography } from '@material-ui/core'
 import { useHistory } from 'react-router-dom';
-import {SearchField, YearSlider, ProtcountSlider, SpeciesList, ResolutionSlider}  from './../../Workspace/Display/StructuresCatalogue'
+// import {SearchField, YearSlider, ProtcountSlider, SpeciesList, ResolutionSlider}  from './../../Workspace/Display/StructuresCatalogue'
 import { Divider } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -363,16 +363,16 @@ const RPClassification = () => {
               </ListItem>
               <Divider/>
               <ListItem>
-                <SearchField />
+                {/* <SearchField /> */}
               </ListItem>
               <ListItem>
-                <ProtcountSlider min={25} max={150}  name={"Protein Count"} step={1}/>
+                {/* <ProtcountSlider min={25} max={150}  name={"Protein Count"} step={1}/> */}
               </ListItem>
               <ListItem>
-                <ResolutionSlider min={1} max={6}  name={"Resolution(A)"} step={0.1}/>
+                {/* <ResolutionSlider min={1} max={6}  name={"Resolution(A)"} step={0.1}/> */}
               </ListItem>
               <ListItem>
-                <YearSlider min={2012} max={2021}  name={"Deposition Date"} step={1}/>
+                {/* <YearSlider min={2012} max={2021}  name={"Deposition Date"} step={1}/> */}
               </ListItem>
 
 

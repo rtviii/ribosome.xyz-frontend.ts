@@ -20,7 +20,7 @@ import {  FilterData  } from '../../../redux/reducers/Filters/ActionTypes';
 
 const useStyles = makeStyles({
   tooltiproot: {
-    width: 500,
+    // width: 500,
 
   },
   root: {
@@ -111,9 +111,9 @@ const RNACard:React.FC<RNACardProps> = (prop) => {
               <Tooltip
                 title={
                   <Typography>
-                   <b> {prop.e.parent}</b>:
+                   <b> {prop.e.struct}</b>:
                     <br />
-                    {prop.e.title}
+                    {prop.e.description}
                   </Typography>
                 }
                 placement="top-end"
@@ -121,11 +121,11 @@ const RNACard:React.FC<RNACardProps> = (prop) => {
                 <Typography
                   className={classes.hover}
                   onClick={() => {
-                    history.push(`/structs/${prop.e.parent}`);
+                    history.push(`/structs/${prop.e.struct}`);
                   }}
                   variant="body1"
                 >
-                  {prop.e.parent}.{prop.e.rna.entity_poly_strand_id}
+                {prop.e.description}
                 </Typography>
               </Tooltip>
             </Grid>
@@ -140,7 +140,12 @@ const RNACard:React.FC<RNACardProps> = (prop) => {
               item
               xs={6}
             >
-              <Typography variant="caption">{prop.e.orgname[0]}</Typography>
+              {/* <Typography variant="caption">{prop.e.orgid[0]}</Typography> */}
+              <Typography variant="caption">
+                  {prop.e.struct}.{prop.e.strand}
+                
+                
+                </Typography>
             </Grid>
           </Grid>
           <Grid item justify="space-between" container xs={12}>
@@ -154,14 +159,14 @@ const RNACard:React.FC<RNACardProps> = (prop) => {
         <Grid container xs={12}>
 <Grid container item xs={8}>
             <Button size="small" aria-describedby={id} onClick={handleClick}>
-              Seq ({prop.e.rna.entity_poly_seq_length}AAs)
+              Seq ({prop.e.seq.length}AAs)
             </Button>
             <Button
               size="small"
               onClick={() =>
                 downloadChain(
-                  prop.e.parent,
-                  prop.e.rna.entity_poly_strand_id
+                  prop.e.struct,
+                  prop.e.strand
                 )
               }
             >
@@ -197,14 +202,13 @@ const RNACard:React.FC<RNACardProps> = (prop) => {
           horizontal: "center",
         }}
       >
-        {/* <Typography></Typography> */}
         <Grid container xs={12}>
           <Typography
             style={{ width: "400px", wordBreak: "break-word" }}
             variant="body2"
             className={classes.popover}
           >
-            {prop.e.rna.entity_poly_seq_one_letter_code}
+            {prop.e.seq}
           </Typography>
         </Grid>
       </Popover>

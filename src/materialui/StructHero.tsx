@@ -77,9 +77,6 @@ export const StructHero=(d:NeoStruct)=> {
             image={process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`}
             title="Ribosome Banner"
           />
-
-
-
           <Grid
             container
             direction="row"

@@ -18,13 +18,26 @@ export interface NeoHomolog {
   title  : string
 }
 
+
 export interface RNAProfile {
-  rna    : rRNA
-  parent : string
-  orgname: string[]
-  orgid  : number[]
-  title  : string
+        struct     : string,
+        orgid      : number[]
+        description: string
+        seq        : string
+        strand     : string
 }
+
+
+// export interface RNAProfile {
+
+
+
+//   rna    : rRNA
+//   parent : string
+//   orgname: string[]
+//   orgid  : number[]
+//   title  : string
+// }
 
 export interface StructureWithLigand{
   _organismId          : number[];
@@ -43,11 +56,11 @@ export interface LigandResponseShape  {
   presentIn: StructureWithLigand[]
 };
 export interface BanClassMetadata{
-      banClass    : BanClass,
-      organisms   : number[],
-      structs     : string[],
-      avgseqlength: number
-      comments    : string[][]
+      banClass : BanClass,
+      organisms: number[],
+      comments : string[][],
+      structs  : RibosomeStructure[]
+
     }
 
 // export interface BanClassMetadata{

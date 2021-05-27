@@ -38,11 +38,11 @@ const RNAHero = ({rna}:{rna:RNAProfile}) => {
         />
       </button> */}
       {/* <p><span className='rna-hero-title' style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>{truncate(rna.rna.rcsb_pdbx_description)}</span></p> */}
-      <p>Parent structure: <Link to={`/structs/${rna.parent}`}>{rna.parent}</Link></p>
+      {/* <p>Parent structure: <Link to={`/structs/${rna.parent}`}>{rna.parent}</Link></p> */}
       {/* <p>RCSB strand id: {rna.strand}</p> */}
       {/* <p>AA Length: {rna.length}</p> */}
-      <p>Tax Id:{rna.orgid[0]} </p>
-    <p>Name: {rna.orgname[0]}</p>
+      {/* <p>Tax Id:{rna.orgid[0]} </p>
+    <p>Name: {rna.orgname[0]}</p> */}
 
   </div>;
 }

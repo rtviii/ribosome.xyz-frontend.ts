@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, Route, useParams } from "react-router-dom";
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 import {
   Ligand,
@@ -41,6 +42,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 import SimpleBackdrop from "../Backdrop";
 import { struct_page_choice } from "../../../redux/reducers/Interface/ActionTypes";
 import VisualizationPage from "../../VisualizationPage/VisualizationPage";
+import Icon from "@material-ui/core/Icon/Icon";
 
 
  export const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:any, value:string| string[]|number})=>{
@@ -559,7 +561,8 @@ const history = useHistory();
             < CardBodyAnnotation keyname="Year" value={structdata.citation_year} />
           </List>
           <CardActions>
-            <Grid container justify="space-evenly" direction="row">
+            <Grid container> 
+            <Grid item container justify="space-evenly" direction="row" xs={12}>
 
               <Grid item>
 
@@ -589,13 +592,23 @@ const history = useHistory();
             </Button>
               </Grid>
             </Grid>
+            <Grid item container justify="space-evenly" direction="row" xs={12}>
+
+              <Grid item>
+
+                <Button onClick={() => { history.push({ pathname: `/vis`, state: { struct: structdata.rcsb_id } }) }}>
+                  <VisibilityIcon />
+          Visualize
+          </Button>
+              </Grid>
+              <Grid item>
+                <Button onClick={()=>{}}>
+Add To Workspace
+          </Button>
+              </Grid>
+ </Grid>           </Grid>
           </CardActions>
         </Card>
-        <Button onClick={()=>{ history.push({pathname:`/vis`, state:{struct:structdata.rcsb_id} })}}>
-
-          Visualize
-          
-          </Button>
         <DashboardButton />
       </Grid>
 

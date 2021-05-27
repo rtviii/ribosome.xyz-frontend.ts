@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";import "./StructuresCatalogue.css";
+import React, { Component, useEffect, useState } from "react";import "./StructuresCatalogue.css";
 import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import {large_subunit_map} from './../../../static/large-subunit-map'
 import {small_subunit_map} from './../../../static/small-subunit-map'
 import Grid from '@material-ui/core/Grid';
-import { ListSubheader, TextField, Tooltip } from "@material-ui/core";
+import { Button, ListItemText, ListSubheader, TextField, Tooltip } from "@material-ui/core";
 import Slider from '@material-ui/core/Slider';
 import { connect, useDispatch, useSelector, useStore  } from "react-redux";
 import { AppState } from "../../../redux/store";
@@ -19,7 +19,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import {useDebounce} from 'use-debounce'
 import {  FilterData, FilterType,filterChange, filterChangeActionCreator, resetAllFilters} from "../../../redux/reducers/Filters/ActionTypes"
 import {SpeciesGroupings} from './taxid_map'
-import _  from "lodash";
+import _, { isEqual }  from "lodash";
 import Cart from './../Cart/Cart'
 import {Link, useHistory, useParams} from "react-router-dom";
 import {DashboardButton} from './../../../materialui/Dashboard/Dashboard'
@@ -27,13 +27,34 @@ import PageAnnotation from './PageAnnotation'
 import { NeoStruct } from "../../../redux/DataInterfaces";
 import { FiltersReducerState, mapDispatchFilter, mapStateFilter, handleFilterChange } from "../../../redux/reducers/Filters/FiltersReducer";
 import DropdownTreeSelect from 'react-dropdown-tree-select'
-import 'react-dropdown-tree-select/dist/styles.css'
 import Pagination from './Pagination'
 import Backdrop from './../Backdrop'
 import { CSVLink } from "react-csv";
+import { StructFilterType, structsFilterChangeAC, structsSortChangeAC } from "../../../redux/reducers/StructuresReducer/ActionTypes";
+import Paper from "@material-ui/core/Paper";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Checkbox from '@material-ui/core/Checkbox';
+import Divider from "@material-ui/core/Divider";
+import 'react-dropdown-tree-select/dist/styles.css'
+import './StructuresCatalogue.css'
+import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
+import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter';
+import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
+import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 const pageData ={
-  title:"Whole Ribosome Structures",
+  title:"Ribosome Structures",
   text:'This database presents a catalogue of all the ribosome structures deposited to the RCSB/PDB.\
    These structures are processed here for an easy search and access of the structures and their components\
    (listed below). Various modules (gear icon) are also available to process and analyze the structures'
@@ -47,123 +68,72 @@ interface StateProps {
   pages_total   :  number
 }
 
-
-const data = {
-  label     :  'Species Filter',
-  value     :  'All',
-  children  :  [
-    {
-      label: "Viruses",
-      value: "Viruses",
-      children: []
-    },
-    {
-      label: "Archea",
-      value: "Archea",
-      children: [
-
-        {
-          label: "Candidatus Diapherotrites archaeon ADurb.Bin253",
-          value: "Candidatus Diapherotrites archaeon ADurb.Bin253",
-        },
-        {
-          label: "Thermococcus celer Vu 13 = JCM 8558",
-          value: "Thermococcus celer Vu 13 = JCM 8558",
-        }
-      ]
-    },
-    {
-      label: "Eukaryota",
-      value: "Eukaryota",
-      children: [
-        {
-          label: "Leishmania braziliensis MHOM/BR/75/M2904",
-          value: "Leishmania braziliensis MHOM/BR/75/M2904",
-        },
-        {
-          label: "Cryptosporidium hominis TU502",
-          value: "Cryptosporidium hominis TU502",
-        },
-        {
-          label: "Yarrowia lipolytica CLIB122",
-          value: "Yarrowia lipolytica CLIB122",
-        }
-
-
-      ]
-    },
-    {
-      label: "Bacteria",
-      value: "Bacteria",
-      children: [
-
-        {
-          label: "Acinetobacter sp. RUH2624",
-          value: "Acinetobacter sp. RUH2624",
-        },
-        {
-          label: "Gluconobacter oxydans 621H",
-          value: "Gluconobacter oxydans 621H",
-        }
-      ]
-    },
-  ],
-}
-
-//@ts-ignore
-const onChange = (currentNode, selectedNodes) => {
-  console.log('onChange::', currentNode, selectedNodes)
-}
-//@ts-ignore
-const onAction = (node, action) => {
-  console.log('onAction::', action, node)
-}
-//@ts-ignore
-const onNodeToggle = currentNode => {
-  console.log('onNodeToggle::', currentNode)
-}
  
 interface DispatchProps{
   next_page: ()=>void;
   prev_page: ()=>void;
   goto_page: (pid:number)=>void;
-}
+  }
 type WorkspaceCatalogueProps =  StateProps & DispatchProps;
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
   
-  const history:any  =  useHistory();
-  const nomclass     =  history.location.state ? history.location.state.nomclass : ""
-  const dispatch     =  useDispatch();
-  const filters      =  useSelector((state:AppState)=>{
-    return state.filters
-  })
+  
+  const dispatch       = useDispatch(                                                     );
+  const last_sort_set  = useSelector(( state:AppState ) => state.structures.last_sort_set )
+  const sortPredicates = useSelector(( state:AppState ) => state.structures.sorts_registry)
   
   useEffect(() => {
-    console.log("Got a parameter chagnge:: nomclass is", nomclass);
-    
-    dispatch({
-      type             :  "FILTER_CHANGE",
-      filttype         :  "PROTEINS_PRESENT",
-      newval           :  [nomclass],
-      set              :  true,
-      derived_filters  :  filters
-    })
-  }, [nomclass])
+    prop.structures.sort(sortPredicates[last_sort_set].compareFn)
+  }, [last_sort_set])
 
   return ! prop.loading ? (
-    <div className="workspace-catalogue-grid">
-      <div className="wspace-catalogue-filters-tools">
+    <Grid container xs={12} spacing={1}>
+      <Grid item xs={12}>
+        <PageAnnotation {...pageData} />
+      </Grid>
+      <Grid item xs={2} style={{padding:"10px"}}>
         <StructureFilters />
-      </div>
-      <Grid container item xs={12} spacing={3}>
-        <PageAnnotation {...pageData}/>
-        <Grid item xs={12}><Typography variant="overline" style={{color:"red"}}>Sort By [1]   [2]  [3]</Typography></Grid>
-        <Grid item xs={12}>
-          <Pagination
-            {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}
-          />
+      </Grid>
+      <Grid container item xs={10} spacing={1}>
+        <Grid item xs={12} alignContent={"center"} alignItems={"center"} >
+          <Paper variant="outlined" style={{padding:"10px"}}>
+        <Grid item container xs={12} alignContent={"center"} alignItems={"center"} justify="space-between" direction='row'>
+
+          <Grid item container>
+          <Typography variant="overline" style={{color:"gray"}}>Page: </Typography>
+          <Pagination {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}/>
+          </Grid>
+
+          <Grid item container alignContent={"center"} alignItems={"center"} spacing={1} >
+            <Grid item>
+
+          <Typography variant="overline" style={{color:"gray" }}>Sort By: </Typography>
+            </Grid>
+            <Grid item>
+
+            <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("RESOLUTION"))}}>
+              Resolution</Button>
+            </Grid>
+
+
+            <Grid item>
+            <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("YEAR"))}}>
+              Year</Button>
+
+            </Grid>
+
+            <Grid item>
+
+            <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("NUMBER_OF_PROTEINS"))}}>
+              Number of Proteins</Button>
+            </Grid>
+
+          
+          </Grid>
+          </Grid>
+          </Paper>
         </Grid>
         <Grid container item xs={12} spacing={3}  alignItems="flex-start">
           {prop.structures
@@ -180,7 +150,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
           />
         </Grid>
       </Grid>
-    </div>
+        </Grid>
   ) : (
     <Backdrop/>
   );
@@ -204,7 +174,23 @@ const mapdispatch =(
 export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
 
 
+const StructuresSearchField = () =>
+{
 
+  const dispatch = useDispatch();
+  const [value, setValue] = useState('')
+  const [debounced] = useDebounce(value,250)
+
+  const handleChange = (e:any)=>{
+    setValue(e.target.value)
+  }
+  useEffect(() => {
+    dispatch(structsFilterChangeAC(value,'SEARCH'))
+  }, [debounced])
+  return(
+      <TextField id="standard-basic" label="Search" value={value}  onChange={handleChange}/>
+  )
+}
 
 
 export const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
@@ -224,20 +210,22 @@ export const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
   )
 }
 
-interface OwnSliderFilterProps {
+interface SliderFilterProps {
+  filter_type: StructFilterType;
   name               :  string;
   max                :  number;
   min                :  number;
   step               :  number;
 }
-const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterChange>
- = (prop:OwnSliderFilterProps & FilterData & handleFilterChange) => {
+const ValueSlider= (prop:SliderFilterProps ) => {
+
   const useSliderStyles = makeStyles({
     root: {
       width: 300,
     },
   });
 
+  const dispatch = useDispatch();
   const classes           = useSliderStyles();
   const [value, setValue] = React.useState<number[]>([prop.min, prop.max]);
   const [debounced_val]   = useDebounce(value,500)
@@ -246,7 +234,7 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
     setValue(newValue as number[]);
   };
   useEffect(() => {
-      prop.handleChange(prop.allFilters as FiltersReducerState,debounced_val)
+    dispatch(structsFilterChangeAC(value,prop.filter_type))
   }, [debounced_val])
 
   return (
@@ -254,7 +242,6 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
       <Typography id="range-slider" gutterBottom>
         {prop.name}
       </Typography>
-
       <Slider
         marks
         min               = {prop.min}
@@ -269,16 +256,24 @@ const _ValueSlider: React.FC<OwnSliderFilterProps & FilterData & handleFilterCha
   );
 };
 
+const ProteinsPresentFilter =()=> {
+
+  
+  const history:any  =  useHistory();
+  const nomclass     =  history.location.state ? history.location.state.nomclass : ""
+
+  useEffect(() => {
+    console.log("Got a parameter chagnge:: nomclass is", nomclass);
+
+    if (nomclass.length > 1){
+      dispatch(structsFilterChangeAC([nomclass],"PROTEINS_PRESENT"))
+    }
+  }, [nomclass])
 
 
-
-type SelectedProteinsFilterProps =  handleFilterChange & FilterData 
-const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
-
-  const BanClassNames = Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
+  const BanClassNames            = Object.keys(large_subunit_map).concat(Object.keys(small_subunit_map))
   const useProteinsPresentStyles = makeStyles((theme: Theme) =>
     createStyles({
-      
       root: {
         fontSize: 6,
         width: "100%",
@@ -289,10 +284,10 @@ const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
       },
     })
   );
+  const classes         = useProteinsPresentStyles();
 
-  const classes = useProteinsPresentStyles();
-
-  const filterstate = useSelector(( state:AppState ) => state.filters.filters.PROTEINS_PRESENT.value)
+  const proteinsPresent = useSelector(( state:AppState ) => state.structures.filter_registry.filtstate.PROTEINS_PRESENT.value)
+  const dispatch        = useDispatch();
 
   return (
 
@@ -305,12 +300,11 @@ const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
         options={BanClassNames}
         getOptionLabel={(option) => option}
         defaultValue={[]}
-        value={filterstate as string[]}
+        value={proteinsPresent as string[]}
         onChange={
           
           (e:any, value:string[])=>{
-            console.log(value)
-            prop.handleChange(prop.allFilters as FiltersReducerState, value)
+            dispatch(structsFilterChangeAC( value, "PROTEINS_PRESENT"))
           }
         }
         renderInput={(params) => { 
@@ -328,7 +322,6 @@ const _SelectProteins:React.FC<SelectedProteinsFilterProps> =(prop)=> {
 
 type SpecListProps = handleFilterChange & FilterData;
 export const _SpecList: React.FC<SpecListProps> = (prop) => {
-
   const useSpecListStyles = makeStyles((theme: Theme) =>
     createStyles({
       root: {
@@ -379,12 +372,6 @@ export const _SpecList: React.FC<SpecListProps> = (prop) => {
     </div>
   );
 }
-
-
-export const SelectProteins    =  connect(mapStateFilter("PROTEINS_PRESENT"), mapDispatchFilter("PROTEINS_PRESENT"))(_SelectProteins)
-export const YearSlider        =  connect(mapStateFilter("YEAR"),          mapDispatchFilter("YEAR"))(_ValueSlider)
-export const ProtcountSlider   =  connect(mapStateFilter("PROTEIN_COUNT"), mapDispatchFilter("PROTEIN_COUNT"))(_ValueSlider)
-export const ResolutionSlider  =  connect(mapStateFilter("RESOLUTION"),    mapDispatchFilter("RESOLUTION"))(_ValueSlider)
 export const SearchField       =  connect(mapStateFilter("SEARCH"),       mapDispatchFilter("SEARCH"))(_SearchField)
 export const SpeciesList       =  connect(mapStateFilter("SPECIES"),      mapDispatchFilter("SPECIES"))(_SpecList)
 
@@ -394,106 +381,272 @@ const mapResetFilters = (dispatch: Dispatch<AppActions>, ownprops:any):{
   reset_filters: ()=>    { dispatch(resetAllFilters()) }
 })
 
-type StructureFilterProps ={
-  reset_filters: () =>void
-};
 
-const _StructureFilters:React.FC<StructureFilterProps> = (props) => {
 
-const drawerWidth       =  240;
-
-const useFiltersStyles  =  makeStyles((theme: Theme) =>
+const BulkDownloadMenu=()=> {
+  const [open, setOpen] = React.useState(false);
+  const structs = useSelector(( state:AppState ) => state.structures.derived_filtered)
+const useCheckboxStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      display: "flex",
-      zIndex: -1,
-      width:300
+    formControl: {
+      margin: theme.spacing(3),
     },
-    appBar: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-    },
-
-    drawer: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-
-    drawerPaper: {
-      width: drawerWidth,
-    },
-
-    toolbar: theme.mixins.toolbar,
-    home:{
-      cursor:"pointer",
-      fontSize:20,
-      "&:hover":{
-        background:"gray"
-      }
-    }
-  })
+  }),
 );
+  const classes = useCheckboxStyles();
+  const [summaryOpts, setSummaryOpts] = React.useState({
+            all:false,
+            experimental_method           : false,
+            resolution                    : false,
+            organisms                     : false,
+            present_ligands               : false,
+            universal_protein_nomenclature: false,
+  });
 
-  const filterClasses = useFiltersStyles();
-  
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSummaryOpts({ ...summaryOpts, [event.target.name]: event.target.checked });
+  };
+  const { all,experimental_method, resolution,organisms,present_ligands,
+    // universal_protein_nomenclature 
+  } = summaryOpts;
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+  const createSummary = ():any[][] =>{
+
+  var bulkDownload:Array<Array<any>> = [
+    ['rcsb_id'],
+    ...structs.map(r =>[ r.struct.rcsb_id ])
+  ]
+
+          if ( summaryOpts.experimental_method ){
+          bulkDownload[0].push("experimental_method")
+          structs.map((v,i)=>bulkDownload[i+1].push(v.struct.expMethod))
+          }
+          if ( summaryOpts.resolution ){
+          bulkDownload[0].push("resolution")
+          structs.map((v,i)=>bulkDownload[i+1].push(v.struct.resolution))
+          }
+          if ( summaryOpts.organisms ){
+          bulkDownload[0].push("organisms")
+          structs.map((v,i)=>bulkDownload[i+1].push(v.struct._organismName
+            ))}
+          if ( summaryOpts.present_ligands ){
+          bulkDownload[0].push("ligands")
+          structs.map((v,i)=>bulkDownload[i+1].push(v.ligands))
+          }
+      
+
+    return bulkDownload
+  }
+
+  return (
+    <div style={{width:"100%"}}>
+      <Button variant="outlined" style={{width:"100%", color:"black"}} color="primary" onClick={handleClickOpen}>
+        Bulk Download
+      </Button>
+
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+
+        <DialogTitle id="form-dialog-title">Bulk Download Options</DialogTitle>
+        <DialogContent>
+      <FormControl component="fieldset" className={classes.formControl}>
+        <FormLabel component="legend">
+          
+            Please select the fields that you would like the summary to contain.
+          </FormLabel>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={all} onChange={()=>setSummaryOpts({all:!all, experimental_method:!all,organisms:!all,resolution:!all,present_ligands:!all,universal_protein_nomenclature:!all})} name="all" />}
+            label="All Options"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={resolution} onChange={handleChange} name="resolution" />}
+            label="Resolution"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={experimental_method} onChange={handleChange} name="experimental_method" />}
+            label="Experimental Method"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={organisms} onChange={handleChange} name="organisms" />}
+            label="Organisms"
+          />
+          {/* <FormControlLabel
+            control={<Checkbox checked={universal_protein_nomenclature} onChange={handleChange} name="universal_protein_nomenclature" />}
+            label="Universal r-Protein Nomenclature"
+          /> */}
+          <FormControlLabel
+            control={<Checkbox checked={present_ligands} onChange={handleChange} name="present_ligands" />}
+            label="Present Ligands"
+          />
+        </FormGroup>
+        <FormHelperText>You have {structs.length} structures in scope.</FormHelperText>
+      </FormControl>																									
+    <CSVLink data={createSummary()}>
+                <Button onClick={handleClose} color="primary">
+
+            Download Summary (.csv)
+          </Button>
+</CSVLink>
+          <Divider/>
+            <DialogContentText style={{marginTop:"10px"}}>
+            Filtered models of the whole ribosome structures that you have filtered will be packed into a .zip archive and downloaded.
+          </DialogContentText>
+          <Button onClick={handleClose} color="primary">
+            Download Models (.zip)
+          </Button>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+
+
+
+
+const _StructureFilters = () => {
+
     const structs = useSelector((state: AppState) => state.structures.derived_filtered)
     var bulkDownloads = [["rcsb_id"]]
     structs.map(s => {
       bulkDownloads.push(
         [s.struct.rcsb_id]
-
       )
     })
 
+
+
+const dispatch                  = useDispatch();
+const [ data, setDropdownData ] = useState([
+{"label": "Bacteria", "value": [1977881, 243230, 562, 224308, 574, 262724, 585, 474186, 575584, 1217649, 544404, 663, 1217710, 421052, 367830, 1772, 1773, 1280, 274, 1299, 287, 300852, 1351, 585035, 1144663, 1144670, 331111, 480119, 83333, 93061, 83334, 93062, 1931, 1223565, 52133, 1310637, 246196, 679895, 470, 1310678, 1960940], "checked": false, "children": [{"label": "Acinetobacter sp. ANC 4470", "value": [1977881], "checked": false}, {"label": "Deinococcus radiodurans R1", "value": [243230], "checked": false}, {"label": "Escherichia coli", "value": [562], "checked": false}, {"label": "Bacillus subtilis subsp. subtilis str. 168", "value": [224308], "checked": false}, {"label": "Klebsiella pneumoniae subsp. ozaenae", "value": [574], "checked": false}, {"label": "Thermus thermophilus HB27", "value": [262724], "checked": false}, {"label": "Proteus vulgaris", "value": [585], "checked": false}, {"label": "Enterococcus faecalis OG1RF", "value": [474186], "checked": false}, {"label": "Acinetobacter baumannii ATCC 19606 = CIP 70.34 = JCM 6841", "value": [575584], "checked": false}, {"label": "Acinetobacter beijerinckii ANC 3835", "value": [1217649], "checked": false}, {"label": "Escherichia coli O157:H7 str. TW14359", "value": [544404], "checked": false}, {"label": "Vibrio alginolyticus", "value": [663], "checked": false}, {"label": "Acinetobacter sp. NIPH 899", "value": [1217710], "checked": false}, {"label": "Acinetobacter rudis CIP 110305", "value": [421052], "checked": false}, {"label": "Staphylococcus aureus subsp. aureus USA300", "value": [367830], "checked": false}, {"label": "Mycolicibacterium smegmatis", "value": [1772], "checked": false}, {"label": "Mycobacterium tuberculosis", "value": [1773], "checked": false}, {"label": "Staphylococcus aureus", "value": [1280], "checked": false}, {"label": "Thermus thermophilus", "value": [274], "checked": false}, {"label": "Deinococcus radiodurans", "value": [1299], "checked": false}, {"label": "Pseudomonas aeruginosa", "value": [287], "checked": false}, {"label": "Thermus thermophilus HB8", "value": [300852], "checked": false}, {"label": "Enterococcus faecalis", "value": [1351], "checked": false}, {"label": "Escherichia coli S88", "value": [585035], "checked": false}, {"label": "Acinetobacter sp. CIP 102082", "value": [1144663], "checked": false}, {"label": "Acinetobacter sp. CIP 51.11", "value": [1144670], "checked": false}, {"label": "Escherichia coli O139:H28 str. E24377A", "value": [331111], "checked": false}, {"label": "Acinetobacter baumannii AB0057", "value": [480119], "checked": false}, {"label": "Escherichia coli K-12", "value": [83333], "checked": false}, {"label": "Staphylococcus aureus subsp. aureus NCTC 8325", "value": [93061], "checked": false}, {"label": "Escherichia coli O157:H7", "value": [83334], "checked": false}, {"label": "Staphylococcus aureus subsp. aureus COL", "value": [93062], "checked": false}, {"label": "Streptomyces sp.", "value": [1931], "checked": false}, {"label": "Rhizobium sp. Pop5", "value": [1223565], "checked": false}, {"label": "Acinetobacter venetianus", "value": [52133], "checked": false}, {"label": "Acinetobacter sp. 809848", "value": [1310637], "checked": false}, {"label": "Mycolicibacterium smegmatis MC2 155", "value": [246196], "checked": false}, {"label": "Escherichia coli BW25113", "value": [679895], "checked": false}, {"label": "Acinetobacter baumannii", "value": [470], "checked": false}, {"label": "Acinetobacter sp. 263903-1", "value": [1310678], "checked": false}, {"label": "Acinetobacter sp. ANC 5600", "value": [1960940], "checked": false}].sort()},
+  
+{"label": "Eukaryota", "value": [9739, 5661, 5693, 5702, 5722, 9823, 1177187, 3702, 55431, 37000, 5811, 9913, 559292, 9986, 7460, 28985, 4932, 285006, 7536, 9606, 209285, 9615, 6039, 284590, 1247190, 759272, 36329, 3562], "checked": false, "children": [{"label": "Tursiops truncatus", "value": [9739], "checked": false}, {"label": "Leishmania donovani", "value": [5661], "checked": false}, {"label": "Trypanosoma cruzi", "value": [5693], "checked": false}, {"label": "Trypanosoma brucei brucei", "value": [5702], "checked": false}, {"label": "Trichomonas vaginalis", "value": [5722], "checked": false}, {"label": "Sus scrofa", "value": [9823], "checked": false}, {"label": "Saccharomyces cerevisiae P283", "value": [1177187], "checked": false}, {"label": "Arabidopsis thaliana", "value": [3702], "checked": false}, {"label": "Palomena prasina", "value": [55431], "checked": false}, {"label": "Pyrrhocoris apterus", "value": [37000], "checked": false}, {"label": "Toxoplasma gondii", "value": [5811], "checked": false}, {"label": "Bos taurus", "value": [9913], "checked": false}, {"label": "Saccharomyces cerevisiae S288C", "value": [559292], "checked": false}, {"label": "Oryctolagus cuniculus", "value": [9986], "checked": false}, {"label": "Apis mellifera", "value": [7460], "checked": false}, {"label": "Kluyveromyces lactis", "value": [28985], "checked": false}, {"label": "Saccharomyces cerevisiae", "value": [4932], "checked": false}, {"label": "Saccharomyces cerevisiae RM11-1a", "value": [285006], "checked": false}, {"label": "Oncopeltus fasciatus", "value": [7536], "checked": false}, {"label": "Homo sapiens", "value": [9606], "checked": false}, {"label": "Chaetomium thermophilum", "value": [209285], "checked": false}, {"label": "Canis lupus familiaris", "value": [9615], "checked": false}, {"label": "Vairimorpha necatrix", "value": [6039], "checked": false}, {"label": "Kluyveromyces lactis NRRL Y-1140", "value": [284590], "checked": false}, {"label": "Saccharomyces cerevisiae BY4741", "value": [1247190], "checked": false}, {"label": "Chaetomium thermophilum var. thermophilum DSM 1495", "value": [759272], "checked": false}, {"label": "Plasmodium falciparum 3D7", "value": [36329], "checked": false}, {"label": "Spinacia oleracea", "value": [3562], "checked": false}].sort()},
+
+{"label": "Archaea", "value": [311400, 273057, 1293037, 2287, 69014, 272844], "checked": false, "children": [{"label": "Thermococcus kodakarensis", "value": [311400], "checked": false}, {"label": "Saccharolobus solfataricus P2", "value": [273057], "checked": false}, {"label": "Thermococcus celer Vu 13 = JCM 8558", "value": [1293037], "checked": false}, {"label": "Saccharolobus solfataricus", "value": [2287], "checked": false}, {"label": "Thermococcus kodakarensis KOD1", "value": [69014], "checked": false}, {"label": "Pyrococcus abyssi GE5", "value": [272844], "checked": false}].sort()},
+{"label": "Viruses", "value": [194966, 10665], "checked": false, "children":
+ [{"label": "Salmonella virus SP6", "value": [194966], "checked": false}, {"label": "Escherichia virus T4", "value": [10665], "checked": false}].sort()}
+]
+)
+// @ts-ignore
+const onChange = (currentNode, selectedNodes) => {
+for (var parent of data){
+  if (_.isEmpty(_.xor(parent.value, currentNode.value))){
+   var     updatedIn             = parent.children.map(child => { return {...child, checked:currentNode.checkedk} })
+   var     parentIndex           = data.findIndex(d=> d.label === parent.label)
+   var     newdata               = data;
+   newdata[parentIndex].checked  = currentNode.checked
+   newdata[parentIndex].children = updatedIn
+
+    setDropdownData(newdata)
+  }
+  else if( parent.value.includes( currentNode.value[0] ) ) 
+  {
+  var         childindex            = parent.children.findIndex(x => currentNode.label === x.label)
+  var         newChildren           = [...parent.children ]
+  newChildren[childindex].checked   = currentNode.checked
+  var         parentIndex           = data.findIndex(d=> d.label === parent.label)
+  var         newdata               = data;
+  newdata    [parentIndex].children = newChildren
+  setDropdownData(newdata)
+
+  }
+}
+  if ( currentNode.checked ){
+  setSelectedSpecies([...selectedSpecies, ...currentNode.value])
+  }else{
+  setSelectedSpecies(selectedSpecies.filter(( r:any )=> !currentNode.value.includes(r)))
+  }
+
+}
+const [selectedSpecies, setSelectedSpecies] = useState<any>([])
+useEffect(() => {
+  dispatch(structsFilterChangeAC(selectedSpecies,"SPECIES"))
+}, [selectedSpecies])
+
+
+
+
+
+
+  const [method, setMethod] = React.useState<string | null>('');
+  const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: string | null) => {
+    setMethod(newAlignment);
+  };
+  const MethodClasses =  makeStyles({
+    root:{
+        width:"100%",
+    }
+  })();
+
+  useEffect(() => {
+    dispatch(structsFilterChangeAC(method,"EXPERIMENTAL_METHOD"))
+  }, [method])
+
+// () =>{dispatch(structsSortChangeAC("EXPERIMENTAL_METHOD"))}
   return (
-    <Drawer
-      style={{ zIndex: -20 }}
-      className={filterClasses.drawer}
-      variant="permanent"
-      classes={{
-        paper: filterClasses.drawerPaper,
-      }}
-      anchor="left"
-    >
-      <div className={filterClasses.toolbar} />
       <List>
+
         <ListItem key={"search"}>
-          <SearchField />
+          <StructuresSearchField/>
         </ListItem>
         <ListItem key={"year"}>
-          <YearSlider min={2012} max={2021} name={"Deposition Date"} step={1} />
+          <ValueSlider {...{filter_type: "YEAR",max:2021,min:2012,name:"Deposition Date", step:1}}/>
         </ListItem>
         <ListItem key={"resolution"}>
-          <ResolutionSlider min={1} max={6} name={"Resolution(A)"} step={0.1} />
+          <ValueSlider {...{filter_type: "RESOLUTION",max:6,min:1,name:"Resolution", step:0.1}}/>
         </ListItem>
         <ListItem key={"select-proteins"} >
-          <SelectProteins />
+          <ProteinsPresentFilter/>
         </ListItem>
-        <ListItem key={"select-species"} >
-          <SpeciesList />
+        <ListItem key={"method-toggle"} >
+    <ToggleButtonGroup
+      value = {method}
+      // exclusive
+      onChange={handleAlignment}
+      aria-label="text alignment"
+      className={MethodClasses.root}
+    >
+      <ToggleButton 
+      className={MethodClasses.root}
+      value="X-RAY DIFFRACTION" aria-label="left aligned">
+        XRAY
+      </ToggleButton>
+
+      <ToggleButton 
+      
+      className={MethodClasses.root}
+      value="ELECTRON MICROSCOPY" aria-label="right aligned" >
+        EM
+      </ToggleButton>
+
+    </ToggleButtonGroup>
         </ListItem>
+        <Divider/>
+
         <ListItem >
-          <DashboardButton/>
+        <DropdownTreeSelect data={data} onChange={onChange}  keepOpenOnSelect={true} keepTreeOnSearch={true} keepChildrenOnSearch={true}/>
         </ListItem>
 
         <ListItem >
-         <Cart/>
+        <Cart />
         </ListItem>
-        <ListItem key={"select-species"} >
-          <DropdownTreeSelect data={data} onChange={onChange} onAction={onAction} onNodeToggle={onNodeToggle} />
+        <ListItem key={"bulkdownload"} >
+        <BulkDownloadMenu/>
         </ListItem>
-        <ListItem key={"select-species"} >
-<CSVLink data={bulkDownloads}>
-<Typography variant="body2"> Download Fitlered</Typography>
-
-</CSVLink>
+        <ListItem >
+        <DashboardButton/>
         </ListItem>
       </List>
-    </Drawer>
   );
 };
-
-
-
 
 export const StructureFilters = connect(null, mapResetFilters)(_StructureFilters);

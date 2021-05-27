@@ -50,66 +50,67 @@ export const FiltersReducer = (
   action: FiltersActionTypes
 ): FiltersReducerState => {
   switch (action.type) {
-    case "RESET_ALL_FILTERS":
-      return {
-  applied_filters : [],
-  filters         : {
-    PROTEIN_COUNT: {
-      set: false,
-      value: [25, 150],
-    },
-    YEAR: {
-      set: false,
-      value: [2012, 2021],
-    },
-    RESOLUTION: {
-      set: false,
-      value: [1, 6],
-    },
-    PROTEINS_PRESENT: {
-      set: false,
-      value: [],
-    },
-    SEARCH: {
-      set: false,
-      value: "",
-    },
-    SPECIES: {
-      set: false,
-      value: [],
-    },
-  },
-} 
-    case "FILTER_CHANGE":
-      var filtIndex = state.applied_filters.indexOf(action.filttype)
-      var appliedFilters = state.applied_filters;
+    
+//     case "RESET_ALL_FILTERS":
+//       return {
+//   applied_filters : [],
+//   filters         : {
+//     PROTEIN_COUNT: {
+//       set: false,
+//       value: [25, 150],
+//     },
+//     YEAR: {
+//       set: false,
+//       value: [2012, 2021],
+//     },
+//     RESOLUTION: {
+//       set: false,
+//       value: [1, 6],
+//     },
+//     PROTEINS_PRESENT: {
+//       set: false,
+//       value: [],
+//     },
+//     SEARCH: {
+//       set: false,
+//       value: "",
+//     },
+//     SPECIES: {
+//       set: false,
+//       value: [],
+//     },
+//   },
+// } 
+//     case "FILTER_CHANGE":
+//       var filtIndex = state.applied_filters.indexOf(action.filttype)
+//       var appliedFilters = state.applied_filters;
 
       
-      if ( filtIndex === -1  && action.set) {
-        appliedFilters.push(action.filttype);
-      }
+//       if ( filtIndex === -1  && action.set) {
+//         appliedFilters.push(action.filttype);
+//       }
 
-      if (!( filtIndex===-1 )&&  !action.set) {
-        appliedFilters.splice(filtIndex, 1);
-      }
+//       if (!( filtIndex===-1 )&&  !action.set) {
+//         appliedFilters.splice(filtIndex, 1);
+//       }
 
 
-      console.log("FILTER CHANNGE, got newval: ", action.newval);
-      console.log("FILTER CHANNGE, cctions: ", action);
-      var derived_state = {
-        filters: {
-          ...state.filters,
+//       console.log("FILTER CHANNGE, got newval: ", action.newval);
+//       console.log("FILTER CHANNGE, cctions: ", action);
+//       var derived_state = {
+//         filters: {
+//           ...state.filters,
 
-          [action.filttype]: { 
-            set    :  action.set,
-            value  :  action.newval
-           },
-        },
-        applied_filters: appliedFilters,
-      };
+//           [action.filttype]: { 
+//             set    :  action.set,
+//             value  :  action.newval
+//            },
+//         },
+//         applied_filters: appliedFilters,
+//       };
 
       
-      return derived_state
+//       return derived_state
     default:
       return state;
   }

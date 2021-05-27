@@ -1,30 +1,83 @@
-import { RNAActions } from './ActionTypes'
+import { RNAActions, RnaFilter } from './ActionTypes'
 import { RNAProfile} from '../../DataInterfaces'
-import { filterChange, FilterPredicates } from '../Filters/ActionTypes';
-import { filter } from 'lodash';
+import { Filter ,FilterRegistry } from '../Filters/ActionTypes';
+import _ from 'lodash';
 
 
 
 
+export type RnaClass  =  "mrna" | "trna" | "5" | "5.8" | "12" | "16"| "21" | "23" | "25" |"28" |"35" | 'other'
 
+const RnaClassFilterRegistry: FilterRegistry<RnaFilter, RNAProfile> = {
+  filtstate: {
+    "SEARCH": {
+      value: "",
+      set: false,
+      predicate: (value) => (rna) => {
+        return ( rna.description + rna.orgid.reduce((a,b)=>a+b, '') ).toLowerCase().includes(value.toLowerCase())
+      }
+    },
+    "SPECIES": {
+      value    : [],
+      set      : false,
+      predicate: (value) => (rna) => {
+        return _.intersection(value, rna.orgid).length > 0 
+      }
+    },
+  },
+  applied: []
+}
 interface RNAReducerState{
 
+    current_rna_class : RnaClass
     error          : any,
     is_loading     : boolean;
     errored_out    : boolean;
 
-    all_rna        : RNAProfile[],
-    all_rna_derived: RNAProfile[],
+    rna_filters:  FilterRegistry<RnaFilter, RNAProfile>,
+
+    rna_classes:{
+      [K in RnaClass]: RNAProfile[]
+    },
+    rna_classes_derived:{
+      [K in RnaClass]: RNAProfile[]
+    }
 
     current_page   : number,
     pages_total    : number,
 }
 
 const initialStateRNAReducer:RNAReducerState = {
-
-    all_rna        : [],
-    all_rna_derived: [],
-    // pagination
+  current_rna_class:"5",
+  rna_classes:{
+    '5'    : [],
+    "5.8"  : [],
+    "12"   : [],
+    "16"   : [],
+    "21"   : [],
+    "23"   : [],
+    "25"   : [],
+    "28"   : [],
+    "35"   : [],
+    "other": [],
+    "mrna" : [],
+    "trna" : [],
+  },
+  rna_classes_derived:{
+    '5'    : [],
+    "5.8"  : [],
+    "12"   : [],
+    "16"   : [],
+    "21"   : [],
+    "23"   : [],
+    "25"   : [],
+    "28"   : [],
+    "35"   : [],
+    "other": [],
+    "mrna" : [],
+    "trna" : [],
+  },
+    rna_filters:RnaClassFilterRegistry,
     current_page  :  1,
     pages_total   :  1,
     // net
@@ -38,14 +91,75 @@ export const RNAReducer = (
   action: RNAActions
 ): RNAReducerState => {
   switch (action.type) {
-    case "REQUEST_ALL_RNA_GO":
-      return {...state, is_loading:true}
-    case "REQUEST_ALL_RNA_SUCCESS":
-      return {...state, is_loading:false, all_rna:action.payload, all_rna_derived:action.payload,
-        pages_total: Math.ceil(action.payload.length / 20),
+
+    case "REQUEST_RNA_CLASS_GO":
+
+    return {...state, is_loading:true}
+    case "REQUEST_RNA_CLASS_ERR":
+      return {...state, is_loading:false, errored_out:true, error:action.error}
+    case "REQUEST_RNA_CLASS_SUCCESS":
+      var   base              = Object.assign({}, state.rna_classes)
+      var   deriv             = Object.assign({}, state.rna_classes_derived)
+
+      base [action.rna_class] = action.payload
+      deriv[action.rna_class] = action.payload
+
+      return {...state, ...{rna_classes: base, rna_classes_derived: deriv} , is_loading:false}
+    case "FILTER_RNA_CLASS":
+
+      const updateAppliedRnaFilters = (filter_type: RnaFilter, set: boolean, applied: RnaFilter[]): RnaFilter[] => {
+        if ((set) && !(applied.includes(filter_type))) {
+          return [...applied, filter_type]
+        }
+        else if (!(set) && (applied.includes(filter_type))) {
+          return applied.filter(t => t !== filter_type)
+        }
+        else if (set && applied.includes(filter_type)) {
+          return applied
+        }
+        else {
+          return applied
+        }
       }
-    case "REQUEST_ALL_RNA_ERR":
-      return {...state, is_loading:false, errored_out:true,error:action.error}
+      var filtered_classes                   = Object.assign({},state.rna_classes)
+      var newApplied                         = updateAppliedRnaFilters(action.filter_type, action.set, state.rna_filters.applied)
+      var newFilterState: Filter<RNAProfile> = {
+        set      : action.set,
+        value    : action.newvalue,
+        predicate: state.rna_filters.filtstate[action.filter_type].predicate
+      }
+
+      
+      var nextFilters = Object.assign({},
+        state.rna_filters,
+        {
+          filtstate: {
+            ...state.rna_filters.filtstate,
+            ...{ [action.filter_type]: newFilterState }
+          }
+        },
+        { applied: newApplied }
+        )
+
+
+      for (var filter of newApplied) {
+        for (var key of Object.keys(state.rna_classes)) {
+
+        var filtx = [...state.rna_classes[key as RnaClass]].filter(state.rna_filters.filtstate[action.filter_type].predicate(action.newvalue))
+        Object.assign(filtered_classes, {[key] : filtx  })
+        }
+
+      }
+      
+     return {...state, rna_filters:nextFilters, rna_classes_derived:filtered_classes, pages_total: Math.ceil(filtered_classes[state.current_rna_class].length/20) }
+
+    case "SELECT_RNA_CLASS":
+      return {...state,
+         current_rna_class: action.rna_class,
+         pages_total      : Math.ceil(state.rna_classes_derived[action.rna_class].length/20),
+         current_page     : 1,
+        }
+
     case "GOTO_PAGE_RNA":
       if (action.pid <= state.pages_total && action.pid >= 1) {
         return { ...state, current_page: action.pid };
@@ -61,33 +175,6 @@ export const RNAReducer = (
         return state;
       }
       return { ...state, current_page: state.current_page - 1 };
-    case "FILTER_CHANGE":
-      var newState = (action as filterChange).derived_filters;
-      // Type of the recently-change filte
-      var ftype = (action as filterChange).filttype;
-
-      var filtered_rna =
-        newState.applied_filters.length === 0
-          ? state.all_rna
-          : newState.applied_filters.reduce(
-              (filteredRNA: RNAProfile[], filtertype: typeof ftype) => {
-                return filteredRNA.filter(
-                  FilterPredicates[filtertype]["RNA"]!(
-                    newState.filters[filtertype].value
-                  )
-                );
-              },
-              state.all_rna
-            );
-
-      return {
-        ...state,
-        all_rna_derived: filtered_rna,
-        pages_total: Math.ceil(filtered_rna.length / 20),
-        current_page:1
-
-      };
-
     default:
       return state;
   }

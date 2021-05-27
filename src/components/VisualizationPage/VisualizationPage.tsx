@@ -33,6 +33,7 @@ import { flattenDeep, uniq } from 'lodash';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { Widgets } from '@material-ui/icons';
 import { useHistory, useParams } from 'react-router';
+import _ from 'lodash'
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -167,10 +168,10 @@ const SelectRna = ({ rnas, selectItem }: { rnas: RNAProfile[], selectItem: (stra
           value={curRna}
           onChange={chooseRna}>
 
-          {rnas.map((i) => <MenuItem value={i.rna.entity_poly_strand_id}>
+          {/* {rnas.map((i) => <MenuItem value={i.rna.entity_poly_strand_id}>
             {i.rna.entity_poly_strand_id}
 
-          </MenuItem>)}
+          </MenuItem>)} */}
         </Select>
       </FormControl>
 
@@ -231,7 +232,7 @@ const VisualizationPage = (props:any) => {
     }
   }, [])
 
-  const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => state.proteins.ban_classes)
+  const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => _.flattenDeep ( Object.values(state.proteins.ban_classes )))
   const structures = useSelector((state: AppState) => state.structures.neo_response.map(
     r => { return { rcsb_id: r.struct.rcsb_id, title: r.struct.citation_title } }))
 
