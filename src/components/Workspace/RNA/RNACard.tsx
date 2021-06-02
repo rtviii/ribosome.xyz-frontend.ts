@@ -158,8 +158,8 @@ const RNACard:React.FC<RNACardProps> = (prop) => {
       <CardActions>
         <Grid container xs={12}>
 <Grid container item xs={8}>
-            <Button size="small" aria-describedby={id} onClick={handleClick}>
-              Seq ({prop.e.seq.length}AAs)
+            <Button size="small" style={{textTransform:"none"}}aria-describedby={id} onClick={handleClick}>
+              Seq ({prop.e.seq.length}NTs)
             </Button>
             <Button
               size="small"

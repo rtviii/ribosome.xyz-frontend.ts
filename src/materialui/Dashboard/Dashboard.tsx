@@ -10,8 +10,17 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { ListSubheader, Tooltip } from '@material-ui/core';
 import { Link, useHistory } from 'react-router-dom';
+
 import gear from './../../static/gear.png'
 import enzymes from './../../static/enzymes-icon.png'
+import ligands from './../../static/ligand_icon.svg'
+import home from './../../static/mainpage_icon.svg'
+import proteins from './../../static/protein_icon.svg'
+import rnas from './../../static/rna_icon.svg'
+import align from './../../static/align_icon.svg'
+import eye from './../../static/eye_icon.svg'
+import workspace from './../../static/bookmark_icon.svg'
+
 import Typography from '@material-ui/core/Typography';
 import {toggle_dashboard} from './../../redux/reducers/Interface/ActionTypes'
 import { AppState } from '../../redux/store';
@@ -19,6 +28,8 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AppActions } from '../../redux/AppActions';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VerticalAlignCenterIcon from '@material-ui/icons/VerticalAlignCenter';
 import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles({
@@ -58,7 +69,11 @@ const md = (
   toggle_dash: () =>dispatch(toggle_dashboard())
 });
 
-const _MenuItem:React.FC<{toggle_dash:()=>void; tooltip:boolean} & MenuItemData> = (props)=>{
+const _MenuItem:React.FC<{
+  icon:string
+  toggle_dash: ()=>void;
+  tooltip    : boolean
+  } & MenuItemData> = (props)=>{
   const history = useHistory();
 
   return (
@@ -68,7 +83,7 @@ const _MenuItem:React.FC<{toggle_dash:()=>void; tooltip:boolean} & MenuItemData>
       history.push(props.linkto)}}>
 
       <ListItemIcon>
-        {<img src={enzymes} style={{ height: "20px", width: "20px" }} />}
+        {<img src={props.icon} style={{ height: "30px", width: "30px" }} />}
       </ListItemIcon>
 
         <ListItemText primary={props.menutext} />
@@ -96,22 +111,27 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
     <div
       className={clsx(classes.list, {[classes.fullList]: anchor === 'left' || anchor === 'top',})}
       role="presentation">
-      <MenuItem key='new' menutext="Home" linkto='/home'/>
+      <MenuItem key='new'  icon={home} menutext="Home" linkto='/home'/>
       <List>
+
         <ListSubheader>Available Data</ListSubheader>
-        <MenuItem key='new' menutext="Structures" linkto='/structs'/>
-        <MenuItem key='new' menutext="Proteins"   linkto='/rps'    />
-        <MenuItem key='new' menutext="rRNA"       linkto='/rnas'   />
-        <MenuItem key='new' menutext="Ligands"    linkto='/ligands'/>
+
+        <MenuItem key='new'  icon={enzymes}   menutext="Structures" linkto='/structs' />
+        <MenuItem key='new'  icon={proteins} menutext="Proteins"   linkto='/rps'     />
+        <MenuItem key='new'  icon={rnas} menutext="RNA"        linkto='/rnas'    />
+        {/* <MenuItem key='new'  icon={enzymes} menutext="Ligands"    linkto='/ligands' /> */}
+
       </List>
       <Divider />
       <List>
+
         <ListSubheader>Tools</ListSubheader>
-        <MenuItem key='new1' menutext="Binding Sites"          linkto='/bindingsites'    />
+        <MenuItem key='new1' icon={eye}  menutext="Visualization Page" linkto='/vis'          />
+        <MenuItem key='new1' icon={align}  menutext="Alignment"          linkto='/rpalign'      />
+        <MenuItem key='new1' icon={ligands}  menutext="Binding Sites"      linkto='/bindingsites' />
+        <MenuItem key='new1' icon={workspace}  menutext="Workspace"          linkto='/rpalign'      />
         {/* <MenuItem key='new1' menutext="Protein Classification" linkto='/rpclassification'/> */}
-        <MenuItem key='new1' menutext="Protein Alignment"      linkto='/rpalign'         />
         {/* <MenuItem key='new1' menutext="Exit Tunnel"            linkto='/tunnel'          /> */}
-        <MenuItem key='new1' menutext="Visualization Page"     linkto='/vis'             />
       </List>
     </div>
   );

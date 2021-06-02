@@ -364,7 +364,7 @@ const history = useHistory();
               {lsu.map(protein => {
 
                 return <Grid item xs={12}>
-                  <RibosomalProteinCard protein={protein} />
+                  <RibosomalProteinCard  displayPill={false} protein={protein} />
                 </Grid>
               })}
 
@@ -378,7 +378,7 @@ const history = useHistory();
               </Grid>
               {ssu.map(protein => {
                 return <Grid item xs={12}>
-                  <RibosomalProteinCard protein={protein} />
+                  <RibosomalProteinCard displayPill={false} protein={protein} />
                 </Grid>
               })}
 
@@ -392,7 +392,7 @@ const history = useHistory();
               </Grid>
               {other.map(protein => {
                 return <Grid item xs={12}>
-                  <RibosomalProteinCard protein={protein} />
+                  <RibosomalProteinCard  displayPill={false} protein={protein} />
                 </Grid>
               })}
 
@@ -611,6 +611,8 @@ Add To Workspace
         </Card>
         <DashboardButton />
       </Grid>
+
+
 
 
       <Grid  container item xs={9}  spacing={1} alignContent="flex-start" alignItems="flex-start">

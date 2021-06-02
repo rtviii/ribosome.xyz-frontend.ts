@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { MouseEventHandler } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import "./BanClassHero.css";
 import { BanPaperEntry } from './RPsCatalogue';
@@ -14,47 +15,43 @@ import { useDispatch } from 'react-redux';
 import HelpIcon from '@material-ui/icons/Help';
 import Tooltip from '@material-ui/core/Tooltip';
 
+
+
 const BanClassHero = ({ nom_class,  unique_organisms  , comments, structures}:
   {
     nom_class: BanClass,  unique_organisms: number[],   comments: string[][], structures: RibosomeStructure[]
   }) => {
   const pfamcomments = _.flattenDeep(comments).filter(s => s !== "NULL")
-  const history = useHistory();
-  const useStyles = makeStyles(() =>
+  const history      = useHistory();
+  const useStyles    = makeStyles(() =>
     createStyles({
 
       root: {
       },
       tooltipwidth: {
         maxWidth: 600
-
       },
+
       paragraph: {
         fontSize: 14
       },
+
       classbtn: {
         fontSize: 16,
         fontWeight: 700,
       },
+
       headstat: {
         outline: "1px solid gray"
       },
+
       comments: {
-        height: 100,
-        width: "100%",
-        padding: 10,
-        fontSize: 12,
+        height   : 100,
+        width    : "100%",
+        padding  : 10,
+        fontSize : 12,
         overflowY: "auto",
-        // overflow:"scroll"
       },
-      rowHover: {
-        '&:hover': {
-
-          background: "gray",
-          cursor: "pointer"
-
-        }
-      }
     }),
   )
 
@@ -70,7 +67,7 @@ const BanClassHero = ({ nom_class,  unique_organisms  , comments, structures}:
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id   = open ? 'simple-popover' : undefined;
 
   return (
     <Paper
@@ -78,12 +75,12 @@ const BanClassHero = ({ nom_class,  unique_organisms  , comments, structures}:
     >
 
       <Grid container item 
-      xs={12} 
-      justify="space-between" 
-      alignContent="flex-end" alignItems="flex-end"
-      spacing={2}
-      className={classes.root}
-      onClick={() => { history.push(`/rps/${nom_class}`) }}
+      xs           = {12}
+      justify      = "space-between"
+      alignContent = "flex-end" alignItems = "flex-end"
+      spacing      = {2}
+      className    = {classes.root}
+
         >
 
 
@@ -95,32 +92,41 @@ const BanClassHero = ({ nom_class,  unique_organisms  , comments, structures}:
 
 
             <Typography
-              onClick={() => { history.push(`/rps/${nom_class}`) }}
               variant="body1"
-            ><b>{nom_class}</b> Ribosomal Protein Class  ( {structures.length} structures ) </Typography>
+            >
+              <b>{nom_class}</b> Ribosomal Protein Class  ( {structures.length} structures ) 
+              </Typography>
         </Grid>
 
 
         <Grid item container xs={12}>
 
           <Grid item container justify="space-between"
-                onClick={() => { history.push({ 
-          pathname: '/structs',
-          state:{"nomclass":nom_class}
-          })}}>
+                  >
             <Button
-              size="small"
-              variant="outlined">
+              size    = "small"
+              variant = "outlined"
+              id      = "ban-class-parents"
+
+              onClick = {() => { 
+                  history.push({ 
+                  pathname: '/structs',
+                  state   : {"nomclass":nom_class}
+                  })}
+                }
+              >
               Parent Structures
           </Button>
 
 
 
             <Button
-              onClick={() => { history.push(`/rps/${nom_class}`) }}
-              size="small"
-              variant="outlined">
-              Export
+              size    = "small"
+              variant = "outlined"
+              id      = "ban-class-chains"
+              onClick = {() => { history.push(`/rps/${nom_class}`) }}
+              >
+                Individual Chains
           </Button>
             <Tooltip
               className={classes.tooltipwidth}
@@ -140,12 +146,7 @@ const BanClassHero = ({ nom_class,  unique_organisms  , comments, structures}:
 
 
           </Grid>
-
-
         </Grid>
-
-
-
       </Grid>
 
     </Paper>

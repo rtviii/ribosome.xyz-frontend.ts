@@ -14,16 +14,29 @@ import fileDownload from "js-file-download";
 import loading from "./../../../static/loading.gif";
 import { useHistory } from 'react-router-dom'
 
+import BookmarkIcon from '@material-ui/icons/Bookmark';
 import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import Popover from '@material-ui/core/Popover';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { FiltersReducerState } from "../../../redux/reducers/Filters/FiltersReducer";
 import { filterChangeActionCreator, FilterData, FilterType } from '../../../redux/reducers/Filters/ActionTypes';
 import { CartItem, cart_add_item } from '../../../redux/reducers/Cart/ActionTypes';
 import { AppState } from '../../../redux/store';
 import { Dispatch } from 'redux'
 import { AppActions } from '../../../redux/AppActions';
-import { RibosomalProtein } from '../../../redux/RibosomeTypes';
+import { RibosomalProtein, RibosomeStructure } from '../../../redux/RibosomeTypes';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar/Avatar';
+import CardHeader from '@material-ui/core/CardHeader/CardHeader';
+import CardActionArea from '@material-ui/core/CardActionArea/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia/CardMedia';
+import List from '@material-ui/core/List/List';
+import { CardBodyAnnotation } from '../StructurePage/StructurePage';
+import ListItem from '@material-ui/core/ListItem/ListItem';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import { flattenDeep } from 'lodash';
+import { useEffect } from 'react';
+
 
 const RPLoader = () => (
   <div className="prot-loading">
@@ -33,7 +46,201 @@ const RPLoader = () => (
 );
 
 
+export const ChainParentPill = ({ strand_id, parent_id }:{strand_id:string, parent_id:string}) =>{
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    popover: {
+      pointerEvents: 'none',
+    },
+    popoverContent:{
+      pointerEvents:"auto"
+    },
+    paper: {
+      padding: theme.spacing(1),
+    },
+          card: {
+            width:300,
+          },
+          title: {
+            fontSize: 12,
+            height  : 200
+          },
+          heading: {
+            fontSize  : 12,
+            paddingTop: 5,
+          },
+          annotation: { fontSize: 12, },
+          authors   : {
 
+              transition: "0.1s all",
+              "&:hover" : {
+                background: "rgba(149,149,149,1)",
+                cursor    : "pointer",
+            },
+
+          },
+
+          nested:{
+            paddingLeft: 20,
+            color      : "black"
+          }
+  }),
+);
+
+
+ const classes                 = useStyles();
+ const history                 = useHistory();
+ const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+ const [structdata, setstruct] = useState<RibosomeStructure>();
+
+  useEffect(() => {
+    getNeo4jData("neo4j", {
+      endpoint: "get_struct",
+      params: { pdbid: parent_id },
+    }).then(
+      resp => {
+        const respdat:any = flattenDeep(
+          resp.data
+        )[0];
+        setstruct(respdat.structure);
+
+      },
+
+      err => {
+        console.log("Got error on /neo request", err);
+      }
+    );
+
+  }, []);
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+const open = Boolean(anchorEl);
+const id = open ? 'simple-popover' : undefined;
+  return (
+    <>
+ <Typography
+        onMouseEnter={handlePopoverOpen}
+      >
+
+  <Chip  color="primary" variant="outlined" label={<Typography style={{fontSize:"12px"}}>chain <b>{strand_id}</b> of <b>{parent_id}</b></Typography>  }/>
+
+      </Typography>
+      <Popover
+
+          id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handlePopoverClose}
+
+
+        className={classes.popover}
+        classes={{
+          paper: classes.popoverContent,
+        }}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+
+{
+              structdata ? 
+        <Card className={classes.card}
+        onMouseLeave={handlePopoverClose}
+        
+        >
+          <CardHeader
+          style={{cursor:"pointer"}}
+        onClick={() => { history.push({ pathname: `/structs/${parent_id}`}) }}
+            title={`${structdata.rcsb_id}`}
+            subheader={structdata._organismName}
+          />
+          <CardActionArea>
+            <CardMedia
+              image={process.env.PUBLIC_URL + `/ray_templates/_ray_${parent_id.toUpperCase()}.png`}
+              title={ `${structdata.rcsb_id}\n${structdata.citation_title}` }
+              className={classes.title}
+            />
+          </CardActionArea>
+          <List>
+            <CardBodyAnnotation keyname="Species" value={structdata._organismName} />
+            <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
+            < CardBodyAnnotation keyname="Title" value={structdata.citation_title} />
+
+
+            < CardBodyAnnotation keyname="Year" value={structdata.citation_year} />
+          </List>
+          <CardActions>
+            <Grid container> 
+            <Grid item container justify="space-evenly" direction="row" xs={12}>
+
+              <Grid item>
+
+                <Button size="small" color="primary">
+                  <a href={ `https://www.rcsb.org/structure/${structdata.rcsb_id}` }>
+                  PDB
+                  </a>
+            </Button>
+              </Grid>
+              <Grid item>
+                <Button size="small" color="primary">
+                  <a href={
+                    
+                    structdata.rcsb_external_ref_link[0]
+                     }>
+                  EMD
+                  </a>
+            </Button>
+              </Grid>
+              <Grid item>
+                <Button size="small" color="primary">
+                  <a href={
+                     `https://doi.org/${structdata.citation_pdbx_doi}`
+                     }>
+                  DOI
+                  </a>
+            </Button>
+              </Grid>
+            </Grid>
+            <Grid item container justify="space-evenly" direction="row" xs={12}>
+
+              <Grid item>
+
+                <Button onClick={() => { history.push({ pathname: `/vis`, state: { struct: structdata.rcsb_id } }) }} style={{textTransform:"none"}}>
+                  <VisibilityIcon />
+          Visualize
+          </Button>
+              </Grid>
+              <Grid item>
+                <Button onClick={()=>{}} style={{textTransform:"none"}} >
+                  <BookmarkIcon/>
+Add To Workspace
+          </Button>
+              </Grid>
+ </Grid>           </Grid>
+          </CardActions>
+          </Card>
+
+ :<LinearProgress/>
+
+
+}
+
+
+      </Popover>
+    </>
+  )
+}
 
 const useStyles = makeStyles({
   tooltiproot: {
@@ -56,14 +263,17 @@ const useStyles = makeStyles({
   popover: {
     padding: "20px"
   },
-  hover: {
-    "&:hover": {
-      transition: "0.05s all",
-      transform: "scale(1.01)",
-      cursor: "pointer",
-    }
-
+  banclass:{
+    fontSize:20
   },
+  // hover: {
+  //   "&:hover": {
+  //     transition: "0.05s all",
+  //     transform: "scale(1.01)",
+  //     cursor: "pointer",
+  //   }
+
+  // },
   fieldTypography: {
     fontSize: "12px"
   }
@@ -72,6 +282,7 @@ const useStyles = makeStyles({
 
 interface OwnProps {
   protein: RibosomalProtein
+  displayPill: boolean
 }
 
 interface StateProps {
@@ -87,11 +298,9 @@ interface DispatchProps {
 
 type RibosomalProtCardProps = DispatchProps & StateProps & OwnProps
 const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
-
-  const history = useHistory()
+  const history                     = useHistory()
   const [isFetching, setisFetching] = useState<boolean>(false);
-  const downloadChain = (pdbid: string, cid: string) => {
-
+  const downloadChain               = (pdbid: string, cid: string) => {
     var chain = cid;
     if (cid.includes(",")) {
       chain = cid.split(",")[0]
@@ -114,7 +323,7 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
         }
       );
   }
-  const classes = useStyles();
+  const classes                 = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -140,7 +349,7 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
             xs={12}
           >
             <Grid
-              className={classes.hover}
+              // className={classes.hover}
               onClick={() => {
                 prop.handleFilterChange(
                   prop.allFilters as FiltersReducerState,
@@ -149,14 +358,30 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
                 );
               }}
               item
-              xs = {6}
+              container
+              xs           = {6}
+              alignItems   = "center"
+              alignContent = "center"
+              spacing={2}
+              // justify="space-between"
             >
-              <Typography variant = "caption" className = {classes.fieldTypography}
-              
-              onClick={()=>{
-                return prop.protein.nomenclature[0] ? history.push(`/rps/${prop.protein.nomenclature[0]}`) : ""
-            }}
-              >{prop.protein.nomenclature[0]? <b>{ prop.protein.nomenclature[0] } </b>: " " }</Typography>
+
+
+
+
+              <Grid item>
+                <Typography className={classes.banclass} onClick={() => { return prop.protein.nomenclature[0] ? history.push(`/rps/${prop.protein.nomenclature[0]}`) : "" }}>
+                  {prop.protein.nomenclature[0] ? prop.protein.nomenclature[0] : " "} 
+                </Typography>
+              </Grid>
+
+{prop.displayPill ? 
+              <Grid item >
+                <ChainParentPill strand_id={prop.protein.entity_poly_strand_id} parent_id={prop.protein.parent_rcsb_id} />
+
+              </Grid>:null
+}
+
             </Grid>
           </Grid>
           <Grid item justify="space-between" container xs={12}></Grid>
@@ -171,11 +396,14 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
       <CardActions>
         <Grid container xs={12}>
           <Grid container item xs={8}>
-            <Button size="small" className={classes.fieldTypography} aria-describedby={id} onClick={handleClick}>
-              Seq ({prop.protein.entity_poly_seq_length}AAs)
+            <Button 
+            
+              style={{textTransform:"none"}}
+            size="small" className={classes.fieldTypography} aria-describedby={id} onClick={handleClick}>
+              Sequence ({prop.protein.entity_poly_seq_length}AAs)
             </Button>
             <Button
-              className={classes.fieldTypography}
+              style={{textTransform:"none"}}
               size="small">
               <a style={{ color: "black", textDecoration: "none" }}
                 href={`https://www.uniprot.org/uniprot/${prop.protein.uniprot_accession}`}>
@@ -183,7 +411,8 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
               </a>
             </Button>
             <Button
-              className={classes.fieldTypography}
+              // className={classes.fieldTypography}
+              style={{textTransform:"none"}}
               size="small"
               onClick={() =>
                 downloadChain
@@ -209,7 +438,7 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
             </Button>
                 <Button 
                 
-        className={classes.fieldTypography}
+              style={{textTransform:"none"}}
         size="small"
                 onClick={() => {  history.push({pathname:`/vis`, state:{banClass:prop.protein.nomenclature[0], parent:prop.protein.parent_rcsb_id} })}}>
           Visualize
@@ -219,7 +448,7 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
           </Grid>
           <Grid container item xs={4}>
             <Button
-              className={classes.fieldTypography}
+              style={{textTransform:"none"}}
               onClick={() => {
 
                 prop.addCartItem(prop.protein)
@@ -273,3 +502,4 @@ const mapdispatch = (dispatch: Dispatch<AppActions>, ownprops: any): DispatchPro
 const RibosomalProteinCard = connect(mapstate, mapdispatch)(_RibosomalProteinCard)
 
 export default RibosomalProteinCard;
+

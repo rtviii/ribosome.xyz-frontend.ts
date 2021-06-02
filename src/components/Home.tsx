@@ -335,18 +335,12 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
             <Paper className={classes.section} elevation={2} variant="outlined">
               <Typography variant="h5">Tools & Analytics</Typography>
 
-            <Link to='/rpclassification'>
+            <Link to='/vis'>
               <Container
                 className={classes.tool}
               >
                 <Typography variant="h6" className={classes.tool}>
-                  Protein Classification
-                </Typography>
-                <Typography variant="body2">
-                  A tool to filter and compare r-proteins present according to
-                  their classes, spatial localization, conservation profiles and
-                  contact sites with crucial components of the ribosome like the
-                  PTC.
+                  Visualization 
                 </Typography>
               </Container>
 </Link>
@@ -357,10 +351,6 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                 <Typography variant="h6" className={classes.tool}>
                   Subcomponent Alignment
                 </Typography>
-                <Typography variant="body2">
-                  A tool is to spatially align, superimpose and export sets of
-                  sub-components from different ribosomal structures.
-                </Typography>
               </Container>
 </Link>
             <Link to='/bindingsites'>
@@ -369,33 +359,6 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
               >
                 <Typography variant="h6" className={classes.tool}>
                   Ligand Binding Sites
-                </Typography>
-                <Typography variant="body2">
-                  A interface to navigate and export ligands present across the
-                  deposited strucutres and their binding sites.
-                </Typography>
-              </Container>
-</Link>
-            <Link to='/tunnel'>
-              <Container
-                className={classes.tool}
-              >
-                <Typography variant="h6" className={classes.tool}>
-                  Exit Tunnel
-                </Typography>
-                <Typography variant="body2">
-                  The database contains ribosome exit-tunnel models from some
-                  selected structures in the current version, which will be
-                  extended to more structures in the future. Data export is
-                  available, focusing on the three following main features:
-                  Residue profile of the RPs that interface with the tunnel.
-                  (Each protein is identified by its new nomenclature (ex. uL4)
-                  where is possible and can thus be compared against homologous
-                  chains in other structures. The in-chain IDs of the
-                  tunnel-interfacing residues are provided for each protein.)
-                  Nucleotides of the RNA that interface with the tunnel.
-                  Ligands, ions or small molecules if any are found embedded in
-                  the walls of the tunnel.
                 </Typography>
               </Container>
 </Link>
@@ -407,8 +370,8 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
     </Card>
   );
 };
-const MainContentCard = connect(mapstate, null)(_MainContentCard);
 
+const MainContentCard = connect(mapstate, null)(_MainContentCard);
 const AcknPlug: React.FC = children => {
   const plugstyles = makeStyles({
     root: {
@@ -418,6 +381,7 @@ const AcknPlug: React.FC = children => {
       width: "100%",
       height: "100%"},
   })();
+
   return (
     <Paper elevation={1} className={plugstyles.root}>
       <Grid>
@@ -434,13 +398,13 @@ const AcknPlug: React.FC = children => {
       </Grid>
     </Paper>
   );
+
 };
 const AcknowlegementsList = () => {
   const plugstyles = makeStyles({
     root: {
       padding: 10,
       width: "100%",
-      // backgroundColor:"cyan"
     },
     ackntext: {
       maxWidth: 100,
@@ -494,18 +458,6 @@ const AcknowlegementsList = () => {
                 context for grouping ribosomal proteins into families.
               </Typography>
               <img src={pfam} className={plugstyles.cardmedia} />
-            </Grid>
-          </Paper>
-        </Grid>
-        <Grid item>
-          <Paper elevation={1} className={plugstyles.root}>
-            <Grid container direction="row">
-              <Typography variant="caption">
-                <a href="https://jcheminf.biomedcentral.com/articles/10.1186/1758-2946-5-39">
-                  MOLE
-                </a>{" "}
-                software is used to extract the ribosomal exit tunnel.
-              </Typography>
             </Grid>
           </Paper>
         </Grid>

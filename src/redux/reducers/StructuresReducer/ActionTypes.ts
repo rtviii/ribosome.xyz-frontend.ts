@@ -9,8 +9,8 @@ export const GOTO_PAGE_STRUCTS               = "GOTO_PAGE_STRUCTS"
 export const NEXT_PAGE_STRUCTS               = "NEXT_PAGE_STRUCTS"
 export const PREV_PAGE_STRUCTS               = "PREV_PAGE_STRUCTS"
 
-export const STRUCTS_FILTER_CHANGE               = "STRUCTS_FILTER_CHANGE"
-export const STRUCTS_SORT_CHANGE= "STRUCTS_SORT_CHANGE"
+export const STRUCTS_FILTER_CHANGE = "STRUCTS_FILTER_CHANGE"
+export const STRUCTS_SORT_CHANGE   = "STRUCTS_SORT_CHANGE"
 
 export type StructFilterType =
   | "YEAR"
@@ -21,7 +21,7 @@ export type StructFilterType =
   | "EXPERIMENTAL_METHOD";
 
 export type StructSortType = 
-"YEAR"|"NUMBER_OF_PROTEINS"|"RESOLUTION";
+"YEAR"|"NUMBER_OF_PROTEINS"|"RESOLUTION" | "PDB_CODENAME"
 
 
 

@@ -3,12 +3,10 @@ import { RNAProfile} from '../../DataInterfaces'
 import { Filter ,FilterRegistry } from '../Filters/ActionTypes';
 import _ from 'lodash';
 
-
-
-
 export type RnaClass  =  "mrna" | "trna" | "5" | "5.8" | "12" | "16"| "21" | "23" | "25" |"28" |"35" | 'other'
 
 const RnaClassFilterRegistry: FilterRegistry<RnaFilter, RNAProfile> = {
+
   filtstate: {
     "SEARCH": {
       value: "",
@@ -17,6 +15,7 @@ const RnaClassFilterRegistry: FilterRegistry<RnaFilter, RNAProfile> = {
         return ( rna.description + rna.orgid.reduce((a,b)=>a+b, '') ).toLowerCase().includes(value.toLowerCase())
       }
     },
+
     "SPECIES": {
       value    : [],
       set      : false,
@@ -25,31 +24,32 @@ const RnaClassFilterRegistry: FilterRegistry<RnaFilter, RNAProfile> = {
       }
     },
   },
+
   applied: []
+
 }
 interface RNAReducerState{
 
-    current_rna_class : RnaClass
-    error          : any,
-    is_loading     : boolean;
-    errored_out    : boolean;
-
-    rna_filters:  FilterRegistry<RnaFilter, RNAProfile>,
-
-    rna_classes:{
+    current_rna_class: RnaClass
+    error            : any,
+    is_loading       : boolean;
+    errored_out      : boolean;
+    rna_filters      : FilterRegistry<RnaFilter, RNAProfile>,
+    rna_classes      : {
       [K in RnaClass]: RNAProfile[]
     },
     rna_classes_derived:{
       [K in RnaClass]: RNAProfile[]
-    }
-
-    current_page   : number,
-    pages_total    : number,
+    },
+    current_rna_class_derived:RNAProfile[],
+    current_page: number,
+    pages_total : number,
 }
 
 const initialStateRNAReducer:RNAReducerState = {
-  current_rna_class:"5",
-  rna_classes:{
+  current_rna_class        : "5",
+  current_rna_class_derived: [],
+  rna_classes              : {
     '5'    : [],
     "5.8"  : [],
     "12"   : [],
@@ -77,13 +77,12 @@ const initialStateRNAReducer:RNAReducerState = {
     "mrna" : [],
     "trna" : [],
   },
-    rna_filters:RnaClassFilterRegistry,
-    current_page  :  1,
-    pages_total   :  1,
-    // net
-    error               : null,
-    is_loading          :  false,
-    errored_out         :  false
+    rna_filters : RnaClassFilterRegistry,
+    current_page: 1,
+    pages_total : 1,
+    error       : null,
+    is_loading  : false,
+    errored_out : false
 
 }
 export const RNAReducer = (
@@ -98,11 +97,14 @@ export const RNAReducer = (
     case "REQUEST_RNA_CLASS_ERR":
       return {...state, is_loading:false, errored_out:true, error:action.error}
     case "REQUEST_RNA_CLASS_SUCCESS":
+
       var   base              = Object.assign({}, state.rna_classes)
       var   deriv             = Object.assign({}, state.rna_classes_derived)
 
       base [action.rna_class] = action.payload
       deriv[action.rna_class] = action.payload
+      console.log("payload" ,action.payload);
+      
 
       return {...state, ...{rna_classes: base, rna_classes_derived: deriv} , is_loading:false}
     case "FILTER_RNA_CLASS":

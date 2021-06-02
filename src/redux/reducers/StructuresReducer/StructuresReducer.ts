@@ -27,6 +27,24 @@ const StructsSortsState:Record<StructSortType,{
   reverse  : boolean,
   compareFn: (a:NeoStruct, b:NeoStruct) => 1 | 0 | -1
 }> = {
+  "PDB_CODENAME":{
+    reverse:false,
+    compareFn: (a,b)=>{
+      var first  = a.struct.rcsb_id
+      var second = b.struct.rcsb_id
+      if (first==second){
+        return 0
+      }
+      if (first>second){
+        return 1
+      }
+      if (second>first){
+        return -1
+      }
+      else return 0
+    }
+
+  },
   "NUMBER_OF_PROTEINS" : {
     reverse:false,
     compareFn: (a,b)=>{
@@ -271,7 +289,13 @@ export const requestAllStructuresDjango =  () => {
          error: error,
         });
       }
-    );
+    ).then(
+      r=>{
+        dispatch({type:"STRUCTS_SORT_CHANGE",sortType:"PDB_CODENAME"})
+        dispatch({type:"STRUCTS_SORT_CHANGE",sortType:"PDB_CODENAME"})
+      }
+
+    )
   };
 };
 

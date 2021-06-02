@@ -27,8 +27,9 @@ export const PREV_PAGE_PROTEINS        = "PREV_PAGE_PROTEINS"
 
 
 
+export type BanClassMetadataFiltType = "SEARCH" | "SPECIES"  
 export type ProteinClassFilterTypes  = "SPECIES" | "SEARCH"
-export type BanClassMetadataFiltType = "SEARCH" | "SPECIES"
+// "YEAR" | "RESOLUTION" | "EXPERIMENTAL_METHOD"
 
 export interface requestBanMetadataGo      {type: typeof REQUEST_BAN_METADATA_GO }
 export interface requestBanMetadataSuccess {type: typeof REQUEST_BAN_METADATA_SUCCESS, payload:BanClassMetadata[], 

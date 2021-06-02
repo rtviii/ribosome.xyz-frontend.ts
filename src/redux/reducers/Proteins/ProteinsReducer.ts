@@ -6,9 +6,9 @@ import { toInteger } from 'lodash';
 import _ from 'lodash';
 
 
-// !hack
+//! hacky.
 type subunit_families =
- "e_SSU" |
+  "e_SSU" |
   "b_SSU" |
   "u_SSU" |
   "u_LSU" |
@@ -18,7 +18,6 @@ type subunit_families =
 
 const BanClassesFilterRegistry: FilterRegistry<BanClassMetadataFiltType, BanClassMetadata> = {
   filtstate: {
-
     "SEARCH": {
       value: "",
       set: false,
@@ -42,6 +41,26 @@ const BanClassesFilterRegistry: FilterRegistry<BanClassMetadataFiltType, BanClas
 
 const ProteinClassFilterRegistry: FilterRegistry<ProteinClassFilterTypes, RibosomalProtein> = {
   filtstate: {
+
+    // "EXPERIMENTAL_METHOD":{
+    //   predicate: (value)=>(rp)=>{},
+    //   value    : [],
+    //   set      : false
+    // },
+
+    // "RESOLUTION":{
+    //   predicate:()=>()=>true,
+    //   value:[],
+    //   set:false
+    // },
+
+    // "YEAR":{
+    //   predicate:()=>()=>true,
+    //   value:[],
+    //   set:false
+    // },
+    // !!+++++++++++++++++++++
+
     "SEARCH": {
       value: "",
       set: false,
@@ -213,11 +232,6 @@ export const ProteinsReducer = (
         }
       
      return {...state, protein_clas_filter_registry:nextProteinFilters, ban_class_derived:filtered_class, pages_total: Math.ceil(filtered_class.length/20), current_page:1}
-
-
-
-
-
 
 
     case "GOTO_PAGE_PROTEINS":

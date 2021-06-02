@@ -54,10 +54,8 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 const pageData ={
-  title:"Ribosome Structures",
-  text:'This database presents a catalogue of all the ribosome structures deposited to the RCSB/PDB.\
-   These structures are processed here for an easy search and access of the structures and their components\
-   (listed below). Various modules (gear icon) are also available to process and analyze the structures'
+  title: "Ribosome Structures",
+  text : ''
 }
 
 // Workspace itself
@@ -79,7 +77,6 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
   
-  
   const dispatch       = useDispatch(                                                     );
   const last_sort_set  = useSelector(( state:AppState ) => state.structures.last_sort_set )
   const sortPredicates = useSelector(( state:AppState ) => state.structures.sorts_registry)
@@ -87,6 +84,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   useEffect(() => {
     prop.structures.sort(sortPredicates[last_sort_set].compareFn)
   }, [last_sort_set])
+
 
   return ! prop.loading ? (
     <Grid container xs={12} spacing={1}>
@@ -125,9 +123,15 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
             </Grid>
 
             <Grid item>
-
             <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("NUMBER_OF_PROTEINS"))}}>
-              Number of Proteins</Button>
+              Number of Proteins
+              </Button>
+            </Grid>
+
+            <Grid item>
+            <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("PDB_CODENAME"))}}>
+              PDB Codename
+              </Button>
             </Grid>
 
           
@@ -172,7 +176,6 @@ const mapdispatch =(
   })
 
 export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
-
 
 const StructuresSearchField = () =>
 {
@@ -395,7 +398,7 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
 );
   const classes = useCheckboxStyles();
   const [summaryOpts, setSummaryOpts] = React.useState({
-            all:false,
+            all                           : false,
             experimental_method           : false,
             resolution                    : false,
             organisms                     : false,
@@ -418,14 +421,12 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
     setOpen(false);
   };
 
-
   const createSummary = ():any[][] =>{
 
   var bulkDownload:Array<Array<any>> = [
     ['rcsb_id'],
     ...structs.map(r =>[ r.struct.rcsb_id ])
   ]
-
           if ( summaryOpts.experimental_method ){
           bulkDownload[0].push("experimental_method")
           structs.map((v,i)=>bulkDownload[i+1].push(v.struct.expMethod))
@@ -449,8 +450,8 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
 
   return (
     <div style={{width:"100%"}}>
-      <Button variant="outlined" style={{width:"100%", color:"black"}} color="primary" onClick={handleClickOpen}>
-        Bulk Download
+      <Button variant="outlined" style={{width:"100%", color:"black", textTransform:"none"}} color="primary" onClick={handleClickOpen}>
+        Download (<i>{structs.length} structures</i>)
       </Button>
 
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -528,12 +529,8 @@ const _StructureFilters = () => {
 const dispatch                  = useDispatch();
 const [ data, setDropdownData ] = useState([
 {"label": "Bacteria", "value": [1977881, 243230, 562, 224308, 574, 262724, 585, 474186, 575584, 1217649, 544404, 663, 1217710, 421052, 367830, 1772, 1773, 1280, 274, 1299, 287, 300852, 1351, 585035, 1144663, 1144670, 331111, 480119, 83333, 93061, 83334, 93062, 1931, 1223565, 52133, 1310637, 246196, 679895, 470, 1310678, 1960940], "checked": false, "children": [{"label": "Acinetobacter sp. ANC 4470", "value": [1977881], "checked": false}, {"label": "Deinococcus radiodurans R1", "value": [243230], "checked": false}, {"label": "Escherichia coli", "value": [562], "checked": false}, {"label": "Bacillus subtilis subsp. subtilis str. 168", "value": [224308], "checked": false}, {"label": "Klebsiella pneumoniae subsp. ozaenae", "value": [574], "checked": false}, {"label": "Thermus thermophilus HB27", "value": [262724], "checked": false}, {"label": "Proteus vulgaris", "value": [585], "checked": false}, {"label": "Enterococcus faecalis OG1RF", "value": [474186], "checked": false}, {"label": "Acinetobacter baumannii ATCC 19606 = CIP 70.34 = JCM 6841", "value": [575584], "checked": false}, {"label": "Acinetobacter beijerinckii ANC 3835", "value": [1217649], "checked": false}, {"label": "Escherichia coli O157:H7 str. TW14359", "value": [544404], "checked": false}, {"label": "Vibrio alginolyticus", "value": [663], "checked": false}, {"label": "Acinetobacter sp. NIPH 899", "value": [1217710], "checked": false}, {"label": "Acinetobacter rudis CIP 110305", "value": [421052], "checked": false}, {"label": "Staphylococcus aureus subsp. aureus USA300", "value": [367830], "checked": false}, {"label": "Mycolicibacterium smegmatis", "value": [1772], "checked": false}, {"label": "Mycobacterium tuberculosis", "value": [1773], "checked": false}, {"label": "Staphylococcus aureus", "value": [1280], "checked": false}, {"label": "Thermus thermophilus", "value": [274], "checked": false}, {"label": "Deinococcus radiodurans", "value": [1299], "checked": false}, {"label": "Pseudomonas aeruginosa", "value": [287], "checked": false}, {"label": "Thermus thermophilus HB8", "value": [300852], "checked": false}, {"label": "Enterococcus faecalis", "value": [1351], "checked": false}, {"label": "Escherichia coli S88", "value": [585035], "checked": false}, {"label": "Acinetobacter sp. CIP 102082", "value": [1144663], "checked": false}, {"label": "Acinetobacter sp. CIP 51.11", "value": [1144670], "checked": false}, {"label": "Escherichia coli O139:H28 str. E24377A", "value": [331111], "checked": false}, {"label": "Acinetobacter baumannii AB0057", "value": [480119], "checked": false}, {"label": "Escherichia coli K-12", "value": [83333], "checked": false}, {"label": "Staphylococcus aureus subsp. aureus NCTC 8325", "value": [93061], "checked": false}, {"label": "Escherichia coli O157:H7", "value": [83334], "checked": false}, {"label": "Staphylococcus aureus subsp. aureus COL", "value": [93062], "checked": false}, {"label": "Streptomyces sp.", "value": [1931], "checked": false}, {"label": "Rhizobium sp. Pop5", "value": [1223565], "checked": false}, {"label": "Acinetobacter venetianus", "value": [52133], "checked": false}, {"label": "Acinetobacter sp. 809848", "value": [1310637], "checked": false}, {"label": "Mycolicibacterium smegmatis MC2 155", "value": [246196], "checked": false}, {"label": "Escherichia coli BW25113", "value": [679895], "checked": false}, {"label": "Acinetobacter baumannii", "value": [470], "checked": false}, {"label": "Acinetobacter sp. 263903-1", "value": [1310678], "checked": false}, {"label": "Acinetobacter sp. ANC 5600", "value": [1960940], "checked": false}].sort()},
-  
 {"label": "Eukaryota", "value": [9739, 5661, 5693, 5702, 5722, 9823, 1177187, 3702, 55431, 37000, 5811, 9913, 559292, 9986, 7460, 28985, 4932, 285006, 7536, 9606, 209285, 9615, 6039, 284590, 1247190, 759272, 36329, 3562], "checked": false, "children": [{"label": "Tursiops truncatus", "value": [9739], "checked": false}, {"label": "Leishmania donovani", "value": [5661], "checked": false}, {"label": "Trypanosoma cruzi", "value": [5693], "checked": false}, {"label": "Trypanosoma brucei brucei", "value": [5702], "checked": false}, {"label": "Trichomonas vaginalis", "value": [5722], "checked": false}, {"label": "Sus scrofa", "value": [9823], "checked": false}, {"label": "Saccharomyces cerevisiae P283", "value": [1177187], "checked": false}, {"label": "Arabidopsis thaliana", "value": [3702], "checked": false}, {"label": "Palomena prasina", "value": [55431], "checked": false}, {"label": "Pyrrhocoris apterus", "value": [37000], "checked": false}, {"label": "Toxoplasma gondii", "value": [5811], "checked": false}, {"label": "Bos taurus", "value": [9913], "checked": false}, {"label": "Saccharomyces cerevisiae S288C", "value": [559292], "checked": false}, {"label": "Oryctolagus cuniculus", "value": [9986], "checked": false}, {"label": "Apis mellifera", "value": [7460], "checked": false}, {"label": "Kluyveromyces lactis", "value": [28985], "checked": false}, {"label": "Saccharomyces cerevisiae", "value": [4932], "checked": false}, {"label": "Saccharomyces cerevisiae RM11-1a", "value": [285006], "checked": false}, {"label": "Oncopeltus fasciatus", "value": [7536], "checked": false}, {"label": "Homo sapiens", "value": [9606], "checked": false}, {"label": "Chaetomium thermophilum", "value": [209285], "checked": false}, {"label": "Canis lupus familiaris", "value": [9615], "checked": false}, {"label": "Vairimorpha necatrix", "value": [6039], "checked": false}, {"label": "Kluyveromyces lactis NRRL Y-1140", "value": [284590], "checked": false}, {"label": "Saccharomyces cerevisiae BY4741", "value": [1247190], "checked": false}, {"label": "Chaetomium thermophilum var. thermophilum DSM 1495", "value": [759272], "checked": false}, {"label": "Plasmodium falciparum 3D7", "value": [36329], "checked": false}, {"label": "Spinacia oleracea", "value": [3562], "checked": false}].sort()},
-
 {"label": "Archaea", "value": [311400, 273057, 1293037, 2287, 69014, 272844], "checked": false, "children": [{"label": "Thermococcus kodakarensis", "value": [311400], "checked": false}, {"label": "Saccharolobus solfataricus P2", "value": [273057], "checked": false}, {"label": "Thermococcus celer Vu 13 = JCM 8558", "value": [1293037], "checked": false}, {"label": "Saccharolobus solfataricus", "value": [2287], "checked": false}, {"label": "Thermococcus kodakarensis KOD1", "value": [69014], "checked": false}, {"label": "Pyrococcus abyssi GE5", "value": [272844], "checked": false}].sort()},
-{"label": "Viruses", "value": [194966, 10665], "checked": false, "children":
- [{"label": "Salmonella virus SP6", "value": [194966], "checked": false}, {"label": "Escherichia virus T4", "value": [10665], "checked": false}].sort()}
 ]
 )
 // @ts-ignore
@@ -571,9 +568,6 @@ const [selectedSpecies, setSelectedSpecies] = useState<any>([])
 useEffect(() => {
   dispatch(structsFilterChangeAC(selectedSpecies,"SPECIES"))
 }, [selectedSpecies])
-
-
-
 
 
 

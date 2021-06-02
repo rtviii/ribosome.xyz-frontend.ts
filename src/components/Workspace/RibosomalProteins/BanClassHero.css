@@ -49,15 +49,26 @@
 .ban-class-hero{
  margin-top: 10px; 
  padding: 10px; 
-  cursor: pointer;
+  /* cursor: pointer; */
 }
-.ban-class-hero:hover{
-  transform: translateY(3px);
-  box-shadow:  3px 5px 4px rgba(142, 175, 191, 0.775);
-transition: all 250ms;
-border: 1px solid black;
+#ban-class-parents:hover{
+  color:rgba(0,93,241,0.6);
 
 }
+#ban-class-chains:hover{
+  color:rgba(0,93,241,0.6);
+}
+.ban-class-chains{
+
+}
+
+/* .ban-class-hero:hover{
+  transform : translateY(3px);
+  box-shadow: 3px 5px 4px rgba(142, 175, 191, 0.775);
+  transition: all 250ms;
+  border    : 1px solid black;
+
+} */
 
 
 .commentstooltip{
