@@ -66,16 +66,17 @@ export const StructHero=(d:NeoStruct)=> {
   return (
     <Card className={classes.card} >
       
-      <Link to={ `/structs/${d.struct.rcsb_id}` } >
       
       <CardActionArea >
-        <CardContent >
+        <CardContent 
+        
+            onClick={()=>{history.push(`/structs/${d.struct.rcsb_id}`)}}
+        >
           <CardMedia
             component="img"
             alt="Ribosome Banner"
             height="150"
             image={process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`}
-            title="Ribosome Banner"
           />
           <Grid
             container
@@ -130,7 +131,6 @@ export const StructHero=(d:NeoStruct)=> {
           EMDB
         </Button>
       </CardActions>
-      </Link>
     </Card>
   );
 }

@@ -6,24 +6,26 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import { NeoHomolog, RNAProfile } from "../../../redux/DataInterfaces";
+import { RNAProfile } from "../../../redux/DataInterfaces";
 import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
 import fileDownload from "js-file-download";
 import {useHistory} from 'react-router-dom'
 
 import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import Popover from '@material-ui/core/Popover';
-import { connect } from 'react-redux';
-import {  mapDispatchFilter, mapStateFilter, handleFilterChange, FiltersReducerState } from "../../../redux/reducers/Filters/FiltersReducer";
-import {  FilterData  } from '../../../redux/reducers/Filters/ActionTypes';
+
+import {ChainParentPill} from './../RibosomalProteins/RibosomalProteinCard'
+import bookmark from './../../../static/bookmark_icon.svg'
+import GetAppIcon from '@material-ui/icons/GetApp';
+import { cart_add_item } from '../../../redux/reducers/Cart/ActionTypes';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles({
   tooltiproot: {
-    // width: 500,
 
   },
   root: {
+    width:"100%"
 
   },
   bullet: {
@@ -50,10 +52,11 @@ const useStyles = makeStyles({
   }
 });
 
-interface OwnProps{e:RNAProfile}
-type RNACardProps = handleFilterChange & FilterData & OwnProps
+interface OwnProps{e:RNAProfile,
+displayPill:boolean}
+type RNACardProps =  OwnProps
 
-const RNACard:React.FC<RNACardProps> = (prop) => {
+export const RNACard:React.FC<RNACardProps> = (prop) => {
 
   const history                     = useHistory()
   const [isFetching, setisFetching] = useState<boolean>(false);
@@ -88,6 +91,7 @@ const RNACard:React.FC<RNACardProps> = (prop) => {
     setAnchorEl(event.currentTarget);
   };
 
+  const dispatch = useDispatch();
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -102,51 +106,31 @@ const RNACard:React.FC<RNACardProps> = (prop) => {
           <Grid
             item
             style={{ borderBottom: "1px solid gray" }}
-            justify="space-between"
             container
-            xs={12}
+            xs           = {12}
+            alignContent = "center"
+            alignItems   = "center"
+
+            spacing={2}
           >
 
-            <Grid item xs={4}>
-              <Tooltip
-                title={
-                  <Typography>
-                   <b> {prop.e.struct}</b>:
-                    <br />
-                    {prop.e.description}
-                  </Typography>
-                }
-                placement="top-end"
-              >
+            <Grid item >
                 <Typography
-                  className={classes.hover}
                   onClick={() => {
-                    history.push(`/structs/${prop.e.struct}`);
                   }}
                   variant="body1"
                 >
                 {prop.e.description}
                 </Typography>
-              </Tooltip>
-            </Grid>
-            <Grid
-              className={classes.hover}
-              onClick={() => {
-                prop.handleChange(
-                  prop.allFilters as FiltersReducerState,
-                  prop.e.orgid
-                );
-              }}
-              item
-              xs={6}
-            >
-              {/* <Typography variant="caption">{prop.e.orgid[0]}</Typography> */}
-              <Typography variant="caption">
-                  {prop.e.struct}.{prop.e.strand}
-                
-                
-                </Typography>
-            </Grid>
+            </Grid>dd
+            {
+              prop.displayPill?
+
+            <Grid item >
+              <ChainParentPill parent_id={prop.e.struct}strand_id={prop.e.strand}/>
+
+            </Grid>:""
+            }
           </Grid>
           <Grid item justify="space-between" container xs={12}>
             <Typography variant="body2" component="p">
@@ -159,10 +143,11 @@ const RNACard:React.FC<RNACardProps> = (prop) => {
         <Grid container xs={12}>
 <Grid container item xs={8}>
             <Button size="small" style={{textTransform:"none"}}aria-describedby={id} onClick={handleClick}>
-              Seq ({prop.e.seq.length}NTs)
+              Sequence (<i>{prop.e.seq.length} NTs</i>)
             </Button>
             <Button
               size="small"
+              style={{textTransform:"none"}}
               onClick={() =>
                 downloadChain(
                   prop.e.struct,
@@ -170,30 +155,42 @@ const RNACard:React.FC<RNACardProps> = (prop) => {
                 )
               }
             >
-              Download Chain
-                <img
-                  id="download-protein"
-                  src={process.env.PUBLIC_URL + `/public/icons/download.png`}
-                  alt=""
-                />
+              Download Chain | .cif
+
+              <GetAppIcon/>
             </Button>
 
 </Grid>
 <Grid container item xs={4}>
-            <Button  onClick={()=>{
-            }}size="small" disabled={true}>
+            <Button  
+            
+            onClick={()=>{
+
+
+              dispatch(cart_add_item(prop.e))
+            }}
+            
+            size="small" 
+            
+            style={{textTransform:"none"}}
+            >
               Add to Workspace
+
+<img src={bookmark} style={{width:"30px",height:"30px"}}/>
             </Button>
             </Grid>
         </Grid>
       </CardActions>
+
+
+
       <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        className={classes.popover}
-        anchorOrigin={{
+        id           = {id}
+        open         = {open}
+        anchorEl     = {anchorEl}
+        onClose      = {handleClose}
+        className    = {classes.popover}
+        anchorOrigin = {{
           vertical: "bottom",
           horizontal: "center",
         }}
@@ -210,10 +207,27 @@ const RNACard:React.FC<RNACardProps> = (prop) => {
           >
             {prop.e.seq}
           </Typography>
+
+
+<Button 
+
+style={{textTransform:"none"}}
+onClick={()=>{
+
+
+}}>
+
+  .fasta
+  <GetAppIcon/>
+
+</Button>
+
+
         </Grid>
       </Popover>
+
+
+
     </Card>
   );
 }
-
-export default connect (mapStateFilter("SPECIES"), mapDispatchFilter("SPECIES")) (RNACard);

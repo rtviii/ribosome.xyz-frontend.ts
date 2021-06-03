@@ -13,11 +13,13 @@ import downicon from "./../../../static/download.png"
 import fileDownload from "js-file-download";
 import loading from "./../../../static/loading.gif";
 import { useHistory } from 'react-router-dom'
+import GetAppIcon from '@material-ui/icons/GetApp';
+import bookmark from './../../../static/bookmark_icon.svg'
 
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import Popover from '@material-ui/core/Popover';
-import { connect, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { FiltersReducerState } from "../../../redux/reducers/Filters/FiltersReducer";
 import { filterChangeActionCreator, FilterData, FilterType } from '../../../redux/reducers/Filters/ActionTypes';
 import { CartItem, cart_add_item } from '../../../redux/reducers/Cart/ActionTypes';
@@ -93,7 +95,10 @@ const useStyles = makeStyles((theme: Theme) =>
  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
  const [structdata, setstruct] = useState<RibosomeStructure>();
 
-  useEffect(() => {
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+
+
+    if (! structdata ){
     getNeo4jData("neo4j", {
       endpoint: "get_struct",
       params: { pdbid: parent_id },
@@ -105,14 +110,11 @@ const useStyles = makeStyles((theme: Theme) =>
         setstruct(respdat.structure);
 
       },
-
       err => {
         console.log("Got error on /neo request", err);
       }
     );
-
-  }, []);
-  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    }
     setAnchorEl(event.currentTarget);
   };
 
@@ -120,8 +122,9 @@ const useStyles = makeStyles((theme: Theme) =>
     setAnchorEl(null);
   };
 
-const open = Boolean(anchorEl);
-const id = open ? 'simple-popover' : undefined;
+const open     = Boolean(anchorEl);
+const id       = open ? 'simple-popover' : undefined;
+const dispatch = useDispatch();
   return (
     <>
  <Typography
@@ -222,7 +225,10 @@ const id = open ? 'simple-popover' : undefined;
           </Button>
               </Grid>
               <Grid item>
-                <Button onClick={()=>{}} style={{textTransform:"none"}} >
+                <Button onClick={()=>{
+
+dispatch(cart_add_item(structdata))
+                }} style={{textTransform:"none"}} >
                   <BookmarkIcon/>
 Add To Workspace
           </Button>
@@ -231,7 +237,13 @@ Add To Workspace
           </CardActions>
           </Card>
 
- :<LinearProgress/>
+ :
+        <Card className={classes.card}>
+
+
+ <LinearProgress/>
+ </Card>
+ 
 
 
 }
@@ -455,6 +467,7 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
 
               }} size="small" >
               Add to Workspace
+<img src={bookmark} style={{width:"30px",height:"30px"}}/>
             </Button>
           </Grid>
         </Grid>
@@ -482,6 +495,20 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
             className={classes.popover}          >
             {prop.protein.entity_poly_seq_one_letter_code}
           </Typography>
+
+
+<Button 
+
+style={{textTransform:"none"}}
+onClick={()=>{
+
+
+}}>
+
+  .fasta
+  <GetAppIcon/>
+
+</Button>
         </Grid>
       </Popover>
     </Card>

@@ -28,8 +28,11 @@ const RnaClassFilterRegistry: FilterRegistry<RnaFilter, RNAProfile> = {
   applied: []
 
 }
+
+
 interface RNAReducerState{
 
+    seq_sort_applied : boolean
     current_rna_class: RnaClass
     error            : any,
     is_loading       : boolean;
@@ -41,14 +44,13 @@ interface RNAReducerState{
     rna_classes_derived:{
       [K in RnaClass]: RNAProfile[]
     },
-    current_rna_class_derived:RNAProfile[],
     current_page: number,
     pages_total : number,
 }
 
 const initialStateRNAReducer:RNAReducerState = {
+  seq_sort_applied         : false,
   current_rna_class        : "5",
-  current_rna_class_derived: [],
   rna_classes              : {
     '5'    : [],
     "5.8"  : [],
@@ -103,7 +105,6 @@ export const RNAReducer = (
 
       base [action.rna_class] = action.payload
       deriv[action.rna_class] = action.payload
-      console.log("payload" ,action.payload);
       
 
       return {...state, ...{rna_classes: base, rna_classes_derived: deriv} , is_loading:false}
@@ -154,6 +155,34 @@ export const RNAReducer = (
       }
       
      return {...state, rna_filters:nextFilters, rna_classes_derived:filtered_classes, pages_total: Math.ceil(filtered_classes[state.current_rna_class].length/20) }
+
+    // 
+     case"SORT_BY_SEQLEN":
+
+      var sorted_classes:any ={} 
+      
+      for (var x of Object.entries(state.rna_classes_derived)){
+
+        var sorted_class = x[1].sort((a, b) => {
+        var al = a.seq.length;
+        var bl = b.seq.length;
+        if (al > bl) { 
+         return 1 }
+        if (bl > al) { 
+          return -1 }
+        return 0
+      })
+        if(state.seq_sort_applied){
+          sorted_class = sorted_class.reverse()
+        }
+                    
+        sorted_classes[x[0]] = sorted_class
+      }
+      
+      var newstate =  Object.assign({},state,
+          { rna_classes_derived: sorted_classes },
+          { seq_sort_applied   : !state.seq_sort_applied }  )
+      return newstate
 
     case "SELECT_RNA_CLASS":
       return {...state,

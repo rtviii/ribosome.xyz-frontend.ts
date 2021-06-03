@@ -1,13 +1,13 @@
 import { Dispatch } from "redux";
 import { LigandResponseShape, NeoHomolog, NeoStruct, RNAProfile } from "../../DataInterfaces";
-import { RibosomalProtein } from "../../RibosomeTypes";
+import { RibosomalProtein, RibosomeStructure } from "../../RibosomeTypes";
 
 export const TOGGLE_CART       =  "TOGGLE_CART";
 export const CART_REMOVE_ITEM  =  "CART_REMOVE_ITEM";
 export const CART_ADD_ITEM     =  "CART_ADD_ITEM";
 export const CART_CLEAR_ITEMS  =  "CART_CLEAR_ITEMS";
 
-export type CartItem = RibosomalProtein
+export type CartItem = RibosomalProtein | RibosomeStructure | RNAProfile
 
 export interface toggleCart     {type: typeof TOGGLE_CART}
 interface cartRemoveItem        {type: typeof CART_REMOVE_ITEM, item:CartItem}

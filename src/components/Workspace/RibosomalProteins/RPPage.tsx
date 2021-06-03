@@ -14,7 +14,7 @@ import ListItem from                                                            
 import RibosomalProteinCard from                                                          './RibosomalProteinCard'
 import Typography from                                                                    "@material-ui/core/Typography"                         ;
 import { DashboardButton } from                                                           "../../../materialui/Dashboard/Dashboard"              ;
-import Cart from                                                                          "./../../Workspace/Cart/Cart"                          ;
+import { Cart } from                                                                          "./../../Workspace/Cart/Cart"                          ;
 import { RibosomalProtein } from                                                          "../../../redux/RibosomeTypes"                         ;
 import Backdrop from                                                                      "@material-ui/core/Backdrop"                           ;
 import _ from                                                                             "lodash"                                               ;

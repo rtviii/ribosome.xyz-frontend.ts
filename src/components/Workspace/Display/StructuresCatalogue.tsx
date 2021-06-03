@@ -20,7 +20,7 @@ import {useDebounce} from 'use-debounce'
 import {  FilterData, FilterType,filterChange, filterChangeActionCreator, resetAllFilters} from "../../../redux/reducers/Filters/ActionTypes"
 import {SpeciesGroupings} from './taxid_map'
 import _, { isEqual }  from "lodash";
-import Cart from './../Cart/Cart'
+import { Cart } from './../Cart/Cart'
 import {Link, useHistory, useParams} from "react-router-dom";
 import {DashboardButton} from './../../../materialui/Dashboard/Dashboard'
 import PageAnnotation from './PageAnnotation'

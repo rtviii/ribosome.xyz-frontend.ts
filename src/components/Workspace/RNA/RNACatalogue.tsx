@@ -11,7 +11,7 @@ import List from                                                       "@materia
 import ListItem from                                                   "@material-ui/core/ListItem"                            ;
 import { connect, useDispatch, useSelector } from                      "react-redux"                                           ;
 import { AppActions } from                                             "../../../redux/AppActions"                             ;
-import { gotopage_rna, RnaClassFilterChangeAC, select_rna_class } from "../../../redux/reducers/RNA/ActionTypes"               ;
+import { gotopage_rna, RnaClassFilterChangeAC, select_rna_class, sort_by_seqlen } from "../../../redux/reducers/RNA/ActionTypes"               ;
 import { Dispatch } from                                               "redux"                                                 ;
 import { DashboardButton } from                                        "../../../materialui/Dashboard/Dashboard"               ;
 import makeStyles from                                                 "@material-ui/core/styles/makeStyles"                   ;
@@ -20,7 +20,7 @@ import Typography from                                                 "@materia
 import { Button } from                                                 "@material-ui/core"                                     ;
 import TextField from                                                  "@material-ui/core/TextField/TextField"                 ;
 import { AppState } from                                               "../../../redux/store"                                  ;
-import RNACard from                                                    "./RNACard"                                             ;
+import { RNACard } from                                                    "./RNACard"                                             ;
 import Pagination from                                                 "@material-ui/lab/Pagination/Pagination"                ;
 import LinearProgress from                                             "@material-ui/core/LinearProgress"                      ;
 import _ from                                                          "lodash"                                                ;
@@ -38,6 +38,7 @@ import Divider from                                                    "@materia
 import DialogContentText from                                          "@material-ui/core/DialogContentText/DialogContentText" ;
 import { RnaClass } from                                               "../../../redux/reducers/RNA/RNAReducer"                ;
 import FormHelperText from                                             "@material-ui/core/FormHelperText/FormHelperText"       ;
+import { Cart } from "../Cart/Cart";
 
 const pageData = {
   title: "Ribosomal, messenger, transfer RNA",
@@ -257,339 +258,379 @@ useEffect(() => {
             <TextField id="standard-basic" label="Search" value={search} onChange={handleSearchChange} />
           </ListItem>
           <ListItem>
-
             <DropdownTreeSelect data={data} onChange={onChange} keepOpenOnSelect={true} keepTreeOnSearch={true} keepChildrenOnSearch={true} />
           </ListItem>
           <ListItem>
 
-            <BulkDownloadMenu />
-          </ListItem>
+<Button 
+variant="outlined"
+color="primary"
+style={{textTransform:"none", width:"100%"}}
+
+onClick={()=>{
+  dispatch(sort_by_seqlen())
+}}>
+Sort By Sequence Length
+
+</Button>
+
+        </ListItem>
+        <ListItem>
+          <BulkDownloadMenu />
+        </ListItem>
+        <ListItem>
+<Cart/>
+        </ListItem>
 
 
+        <DashboardButton />
 
-          <DashboardButton />
+      </List>
+    </Grid>
 
-        </List>
-      </Grid>
+    <Grid item xs={10} container spacing={1}>
+      <Grid item xs={12}>
+        <Paper style={{ padding: '5px', marginBottom: "5px", display: "flex", justifyItems: "spaceBetween" }} variant="elevation" elevation={0}>
 
-      <Grid item xs={10} container spacing={1}>
-        <Grid item xs={12}>
-          <Paper style={{ padding: '5px', marginBottom: "5px", display: "flex", justifyItems: "spaceBetween" }} variant="elevation" elevation={0}>
-
-            <Grid container spacing={2}>
-              <Grid item>
-                <Button style={{
-                  marginRight: "5px",
-                  textTransform: "none"
-                }} variant={'outlined'}
-                  onClick={() => {
-                    dispatch(select_rna_class("5"))
-                    setRnaSubgrop('ribosomal')
-                  }}
-                  color={rnaSubgroup == 'ribosomal' ? 'primary' : 'default'}> Ribosomal RNA</Button>
-              </Grid>
-
-              <Grid item>
-                <Button style={{ marginRight: "5px", textTransform: "none" }} variant={'outlined'} onClick={() => {
-                  setRnaSubgrop('exogenous')
-                  dispatch(select_rna_class("trna"))
+          <Grid container spacing={2}>
+            <Grid item>
+              <Button style={{
+                marginRight: "5px",
+                textTransform: "none"
+              }} variant={'outlined'}
+                onClick={() => {
+                  dispatch(select_rna_class("5"))
+                  setRnaSubgrop('ribosomal')
                 }}
-
-                  color={rnaSubgroup == 'exogenous' ? 'primary' : 'default'}> Non-ribosomal RNA</Button>
-              </Grid>
-
-              {/* <Grid item>
-  <Button style={{marginRight:"5px"}}variant = {'outlined'}  onClick={()=>{setRnaSubgrop('other')
-                dispatch(select_rna_class("other"))
-}}
-  color={ rnaSubgroup == 'other' ? 'primary' : 'default' }> Uncategorized Strands</Button>
-    </Grid>  */}
-
-              <Grid item xs={12}>
-
-
-                <Pagination
-                  count={pages_total}
-                  page={current_page}
-                  variant="outlined"
-                  color="primary"
-                  onChange={(e, page) => { dispatch(gotopage_rna(page)) }} />
-
-              </Grid>
+                color={rnaSubgroup == 'ribosomal' ? 'primary' : 'default'}> Ribosomal RNA</Button>
             </Grid>
-          </Paper>
-          {((_: 'exogenous' | 'ribosomal' | 'other') => {
-            switch (_) {
-              case 'ribosomal':
-                return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <RRNATabs tagname={'rrna'} />
 
-              case 'exogenous':
-                return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <ExogenousTabs tagname={'exo-rna'} />
-              case 'other':
-                return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <List>{other.slice((current_page - 1) * 20, current_page * 20).map(other => <ListItem><RNACard e={other} /></ListItem>)}</List>
-              default:
-                return <></>
-            }
-          })(rnaSubgroup)}
+            <Grid item>
+              <Button style={{ marginRight: "5px", textTransform: "none" }} variant={'outlined'} onClick={() => {
+                setRnaSubgrop('exogenous')
+                dispatch(select_rna_class("trna"))
+              }}
 
-        </Grid>
+                color={rnaSubgroup == 'exogenous' ? 'primary' : 'default'}> Non-ribosomal RNA</Button>
+            </Grid>
+
+            {/* <Grid item>
+<Button style={{marginRight:"5px"}}variant = {'outlined'}  onClick={()=>{setRnaSubgrop('other')
+              dispatch(select_rna_class("other"))
+}}
+color={ rnaSubgroup == 'other' ? 'primary' : 'default' }> Uncategorized Strands</Button>
+  </Grid>  */}
+
+            <Grid item xs={12}>
+
+
+              <Pagination
+                count={pages_total}
+                page={current_page}
+                variant="outlined"
+                color="primary"
+                onChange={(e, page) => { dispatch(gotopage_rna(page)) }} />
+
+            </Grid>
+          </Grid>
+        </Paper>
+        {((_: 'exogenous' | 'ribosomal' | 'other') => {
+          switch (_) {
+            case 'ribosomal':
+              return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <RRNATabs tagname={'rrna'} />
+            case 'exogenous':
+              return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <ExogenousTabs tagname={'exo-rna'} />
+            case 'other':
+              return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <List>{other.slice((current_page - 1) * 20, current_page * 20).map(other => <ListItem><RNACard 
+                
+                displayPill={true}
+                e={other} /></ListItem>)}</List>
+            default:
+              return <></>
+          }
+        })(rnaSubgroup)}
+
       </Grid>
     </Grid>
-  );
+  </Grid>
+);
 };
 
 const  ExogenousTabs= ({tagname}:{tagname:string})=> {
 
 interface TabPanelProps {
-  children?: React.ReactNode;
-  index: any;
-  value: any;
+children?: React.ReactNode;
+index: any;
+value: any;
 }
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div
-      role            = "tabpanel"
-      hidden          = {value !== index}
-      id              = {`simple-tabpanel-${tagname}-${index}`}
-      aria-labelledby = {`simple-tab-${tagname}-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
+const { children, value, index, ...other } = props;
+return (
+  <div
+    role            = "tabpanel"
+    hidden          = {value !== index}
+    id              = {`simple-tabpanel-${tagname}-${index}`}
+    aria-labelledby = {`simple-tab-${tagname}-${index}`}
+    {...other}
+  >
+    {value === index && (
+      <Box p={3}>
+        <Typography>{children}</Typography>
+      </Box>
+    )}
+  </div>
+);
 }
-  function a11yProps(index: any) {
-    return {
-      id             : `simple-tab-${tagname}-${index}`,
-      'aria-controls': `simple-tabpanel-${tagname}-${index}`,
-    };
-  }
-
-  const dispatch = useDispatch()
-  const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-      flexGrow: 1,
-      backgroundColor: theme.palette.background.paper,
-    },
-  }));
-  const classes           = useStyles();
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-
-    
-    if (newValue === 0){
-        dispatch(select_rna_class("trna"))
-    }
-    if (newValue === 1){
-        dispatch(select_rna_class("mrna"))
-    }
-    setValue(newValue);
+function a11yProps(index: any) {
+  return {
+    id             : `simple-tab-${tagname}-${index}`,
+    'aria-controls': `simple-tabpanel-${tagname}-${index}`,
   };
-  const indexlabels = [ [0,'tRNA'],[ 1,'mRNA' ] ];
-  const mrna = useSelector(( state:AppState ) => state.rna.rna_classes_derived.mrna)
-  const trna = useSelector(( state:AppState ) => state.rna.rna_classes_derived.trna)
-  const current_page = useSelector(( state:AppState ) => state.rna.current_page)
+}
 
-  return (
-    <div className={classes.root}>
-        <Tabs value={value} onChange={handleChange}
+const dispatch = useDispatch()
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+const classes           = useStyles();
+const [value, setValue] = React.useState(0);
 
-        indicatorColor="primary"
-        aria-label="simple tabs example">
+const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 
-          {
-          indexlabels.map(i =>
-          <Tab label = {<Typography style={{ textTransform:"none"}}>{i[1]} </Typography>}   {...a11yProps(i[0])} />
-            )
-            }
+  
+  if (newValue === 0){
+      dispatch(select_rna_class("trna"))
+  }
+  if (newValue === 1){
+      dispatch(select_rna_class("mrna"))
+  }
+  setValue(newValue);
+};
+const indexlabels = [ [0,'tRNA'],[ 1,'mRNA' ] ];
+const current_page = useSelector(( state:AppState ) => state.rna.current_page)
 
-        </Tabs>
+const whole   = useSelector(( state:AppState ) => state.rna.rna_classes_derived)
 
-      <TabPanel value={value} index={0}>
+const [mrna, setmrna] = useState<RNAProfile[]>([])
+const [trna, settrna] = useState<RNAProfile[]>([])
 
-        <List>
-          {trna.slice(( current_page-1 )*20, current_page*20).map(trna => <ListItem><RNACard e={trna}/></ListItem>)}
-        </List>
+useEffect(() => {
+settrna(whole.trna)
+setmrna(whole.mrna)
+}, [whole])
 
+
+
+return (
+  <div className={classes.root}>
+      <Tabs value={value} onChange={handleChange}
+
+      indicatorColor = "primary"
+      aria-label     = "simple tabs">
+
+        {
+        indexlabels.map(i =>
+        <Tab label = {<Typography style={{ textTransform:"none"}}>{i[1]} </Typography>}   {...a11yProps(i[0])} />)
+          }
+
+      </Tabs>
+
+    <TabPanel value={value} index={0}>
+
+      <List>
+        {trna.slice(( current_page-1 )*20, current_page*20).map(trna => <ListItem><RNACard displayPill={true} e={trna}/></ListItem>)}
+      </List>
+
+    </TabPanel>
+
+    <TabPanel value={value} index={1}>
+      
+      <List>
+        {mrna.slice(( current_page-1 )*20, current_page*20).map(mrna => <ListItem><RNACard displayPill={true} e={mrna}/></ListItem>)}
+      </List>
       </TabPanel>
 
-      <TabPanel value={value} index={1}>
-        
-        <List>
-          {mrna.slice(( current_page-1 )*20, current_page*20).map(mrna => <ListItem><RNACard e={mrna}/></ListItem>)}
-        </List>
-        </TabPanel>
-
-    </div>
-  );
+  </div>
+);
 }
 
 const  RRNATabs= ({tagname}:{tagname:string})=> {
 
 interface TabPanelProps {
-  children?: React.ReactNode;
-  index: any;
-  value: any;
+children?: React.ReactNode;
+index: any;
+value: any;
 }
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div
-      role            = "tabpanel"
-      hidden          = {value !== index}
-      id              = {`simple-tabpanel-${tagname}-${index}`}
-      aria-labelledby = {`simple-tab-${tagname}-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
+const { children, value, index, ...other } = props;
+return (
+  <div
+    role            = "tabpanel"
+    hidden          = {value !== index}
+    id              = {`simple-tabpanel-${tagname}-${index}`}
+    aria-labelledby = {`simple-tab-${tagname}-${index}`}
+    {...other}
+  >
+    {value === index && (
+      <Box p={3}>
+        <Typography>{children}</Typography>
+      </Box>
+    )}
+  </div>
+);
 }
-  function a11yProps(index: any) {
-    return {
-      id             : `simple-tab-${tagname}-${index}`,
-      'aria-controls': `simple-tabpanel-${tagname}-${index}`,
-    };
-  }
-
-  const dispatch          = useDispatch();
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    if (newValue === 0){
-        dispatch(select_rna_class("5"))
-    }
-    if (newValue === 1){
-        dispatch(select_rna_class("5.8"))
-    }
-    if (newValue === 2){
-        dispatch(select_rna_class("12"))
-    }
-    if (newValue === 3){
-        dispatch(select_rna_class("16"))
-    }
-    if (newValue === 4){
-        dispatch(select_rna_class("21"))
-    }
-    if (newValue === 5){
-        dispatch(select_rna_class("23"))
-    }
-    if (newValue === 6){
-        dispatch(select_rna_class("25"))
-    }
-    if (newValue === 7){
-       dispatch(select_rna_class("28"))
-    }
-    if (newValue === 8){
-        dispatch(select_rna_class("35"))
-    }
-    setValue(newValue);
+function a11yProps(index: any) {
+  return {
+    id             : `simple-tab-${tagname}-${index}`,
+    'aria-controls': `simple-tabpanel-${tagname}-${index}`,
   };
+}
 
-  const r5   = useSelector(( state:AppState ) => state.rna.rna_classes_derived["5"   ])
-  const r5_8 = useSelector(( state:AppState ) => state.rna.rna_classes_derived["5.8" ])
-  const r12  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["12"  ])
-  const r16  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["16"  ])
+const dispatch          = useDispatch();
+const [value, setValue] = React.useState(0);
 
-  const r21  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["21"  ])
-  const r23  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["23"  ])
-  const r25  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["25"  ])
-  const r28  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["28"  ])
+const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  if (newValue === 0){
+      dispatch(select_rna_class("5"))
+  }
+  if (newValue === 1){
+      dispatch(select_rna_class("5.8"))
+  }
+  if (newValue === 2){
+      dispatch(select_rna_class("12"))
+  }
+  if (newValue === 3){
+      dispatch(select_rna_class("16"))
+  }
+  if (newValue === 4){
+      dispatch(select_rna_class("21"))
+  }
+  if (newValue === 5){
+      dispatch(select_rna_class("23"))
+  }
+  if (newValue === 6){
+      dispatch(select_rna_class("25"))
+  }
+  if (newValue === 7){
+      dispatch(select_rna_class("28"))
+  }
+  if (newValue === 8){
+      dispatch(select_rna_class("35"))
+  }
+  setValue(newValue);
+};
 
-  const r35  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["35"  ])
+const whole   = useSelector(( state:AppState ) => state.rna.rna_classes_derived)
 
-  const current_page = useSelector(( state:AppState ) => state.rna.current_page)
+const [classr5, setr5] = useState<RNAProfile[]>([])
+const [classr5_8, setr5_8] = useState<RNAProfile[]>([])
+const [classr12 , setr12 ] = useState<RNAProfile[]>([])
+const [classr16 , setr16 ] = useState<RNAProfile[]>([])
+const [classr21 , setr21 ] = useState<RNAProfile[]>([])
+const [classr23 , setr23 ] = useState<RNAProfile[]>([])
+const [classr25 , setr25 ] = useState<RNAProfile[]>([])
+const [classr28 , setr28 ] = useState<RNAProfile[]>([])
+const [classr35 , setr35 ] = useState<RNAProfile[]>([])
+
+useEffect(() => {
+setr5(whole[5])
+setr5_8(whole["5.8"])
+setr12(whole[12])
+setr16(whole[16])
+setr21(whole[21])
+setr23(whole[23])
+setr25(whole[25])
+setr28(whole[28])
+setr35(whole[35])
+
+}, [whole])
+
+const current_page = useSelector(( state:AppState ) => state.rna.current_page)
 
 const indexlabels = [ 
-    [5, '5S RNA'     ]
-  , [58, '5.8S RNA']
-  , [12, '12S RNA' ]
-  , [16, '16S RNA' ]
-  , [21, '21S RNA' ]
-  , [23, '23S RNA' ]
-  , [25, '25S RNA' ]
-  , [28, '28S RNA' ]
-  , [35, '35S RNA' ]
-                   ];
-  return (
+  [5, '5S RNA'     ]
+, [58, '5.8S RNA']
+, [12, '12S RNA' ]
+, [16, '16S RNA' ]
+, [21, '21S RNA' ]
+, [23, '23S RNA' ]
+, [25, '25S RNA' ]
+, [28, '28S RNA' ]
+, [35, '35S RNA' ]
+                  ];
+return (
 <>
-        <Tabs 
-                value          = {value}
-                onChange       = {handleChange}
-                indicatorColor = "primary"
-                aria-label     = "simple tabs example"
-                variant        = "scrollable"
-                scrollButtons  = "auto"
-        >
-          {indexlabels.map(i =><Tab label = {<Typography style={{ textTransform:"none"}}>{i[1]} </Typography>}   {...a11yProps(i[0])} />)}
-        </Tabs>
+      <Tabs 
+              value          = {value}
+              onChange       = {handleChange}
+              indicatorColor = "primary"
+              aria-label     = "simple tabs example"
+              variant        = "scrollable"
+              scrollButtons  = "auto"
+      >
+        {indexlabels.map(i =><Tab label = {<Typography style={{ textTransform:"none"}}>{i[1]} </Typography>}   {...a11yProps(i[0])} />)}
+      </Tabs>
 
-      <TabPanel value={value} index={0}>
-        <List>
-          {r5.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard e={rna}/></ListItem>)}
-        </List>
-      </TabPanel>
+    <TabPanel value={value} index={0}>
+      <List>
+        {/* {r5.map(r=><div>{r.seq.length}</div>)} */}
+        {classr5.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+      </List>
+    </TabPanel>
 
-      <TabPanel value={value} index={1}>
-        <List>
-          {r5_8.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard e={rna}/></ListItem>)}
-        </List>
-      </TabPanel>
+    <TabPanel value={value} index={1}>
+      <List>
+        {classr5_8.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+      </List>
+    </TabPanel>
 
-      <TabPanel value={value} index={2}>
-        <List>
-          {r12.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard e={rna}/></ListItem>)}
-        </List>
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        <List>
-          {r16.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard e={rna}/></ListItem>)}
-        </List>
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        <List>
-          {r21.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard e={rna}/></ListItem>)}
-        </List>
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        <List>
-          {r23.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard e={rna}/></ListItem>)}
-        </List>
-      </TabPanel>
-      <TabPanel value={value} index={6}>
-        <List>
-          {r25.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard e={rna}/></ListItem>)}
-        </List>
-      </TabPanel>
-      <TabPanel value={value} index={7}>
-        <List>
-          {r28.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard e={rna}/></ListItem>)}
-        </List>
-      </TabPanel>
+    <TabPanel value={value} index={2}>
+      <List>
+        {classr12.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+      </List>
+    </TabPanel>
+    <TabPanel value={value} index={3}>
+      <List>
+        {classr16.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+      </List>
+    </TabPanel>
+    <TabPanel value={value} index={4}>
+      <List>
+        {classr21.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+      </List>
+    </TabPanel>
+    <TabPanel value={value} index={5}>
+      <List>
+        {classr23.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+      </List>
+    </TabPanel>
+    <TabPanel value={value} index={6}>
+      <List>
+        {classr25.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)} 
+      </List>
+    </TabPanel>
+    <TabPanel value={value} index={7}>
+      <List>
+        {classr28.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+      </List>
+    </TabPanel>
 
-      <TabPanel value={value} index={8}>
-        <List>
-          {r35.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard e={rna}/></ListItem>)}
-        </List>
-      </TabPanel>
+    <TabPanel value={value} index={8}>
+      <List>
+        {classr35.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+      </List>
+    </TabPanel>
 </>
-  );
+);
 }
 
 const mapdispatch = ( dispatch:Dispatch<AppActions>, ownprops:any):DispatchProps =>({
-  gotopage:(pid) => dispatch(gotopage_rna(pid))
+gotopage:(pid) => dispatch(gotopage_rna(pid))
 })
 
 export default connect(null, mapdispatch)( RNACatalogue );// 

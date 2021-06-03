@@ -14,7 +14,14 @@ type StaticFilesEndpoints =
   | get_static_catalogue
   | downloadArchive
   | cif_chain_by_class
+  | download_structure
 
+  interface download_structure{
+    endpoint: "download_structure",
+            params:{
+struct_id:string
+          }
+  }
 
   interface cif_chain_by_class{
     endpoint: "cif_chain_by_class",

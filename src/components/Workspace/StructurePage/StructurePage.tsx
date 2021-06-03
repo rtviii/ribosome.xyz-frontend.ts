@@ -41,9 +41,10 @@ import Collapse from "@material-ui/core/Collapse";
 import CardHeader from "@material-ui/core/CardHeader";
 import SimpleBackdrop from "../Backdrop";
 import { struct_page_choice } from "../../../redux/reducers/Interface/ActionTypes";
-import VisualizationPage from "../../VisualizationPage/VisualizationPage";
-import Icon from "@material-ui/core/Icon/Icon";
-
+import BookmarkIcon from '@material-ui/icons/Bookmark';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import { RNACard } from "../RNA/RNACard";
+import { cart_add_item } from "../../../redux/reducers/Cart/ActionTypes";
 
  export const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:any, value:string| string[]|number})=>{
 
@@ -67,156 +68,6 @@ import Icon from "@material-ui/core/Icon/Icon";
       </Typography>
     </Grid></ListItem>
   }
-
-const RNACard = (prop: rRNA) => {
-  const useRNAStyles = makeStyles({
-    tooltiproot: {
-      width: 500,
-    },
-    root: {},
-    bullet: {
-      display: "inline-block",
-      margin: "0 2px",
-      transform: "scale(0.8)",
-    },
-    title: {
-      fontSize: 10,
-    },
-    pos: {
-      marginBottom: 12,
-    },
-    popover: {
-      padding: "20px",
-    },
-    hover: {
-      "&:hover": {
-        transition: "0.05s all",
-        transform: "scale(1.01)",
-        cursor: "pointer",
-      },
-    },
-  });
-  const [isFetching, setisFetching] = useState<boolean>(false);
-
-  const downloadChain = (pdbid: string, cid: string) => {
-    getNeo4jData("static_files", {
-      endpoint: "cif_chain",
-      params: { structid: pdbid, chainid: cid },
-    }).then(
-      resp => {
-        setisFetching(false);
-        fileDownload(resp.data, `${pdbid}_${cid}.cif`);
-      },
-      error => {
-        alert(
-          "This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" +
-            error
-        );
-        setisFetching(false);
-      }
-    );
-  };
-  const classes = useRNAStyles();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null
-  );
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
-
-  return (
-    <Card className={classes.root} variant="outlined">
-      <CardContent>
-        <Grid xs={12} container spacing={1}>
-          <Grid
-            item
-            style={{ borderBottom: "1px solid gray" }}
-            justify="space-between"
-            container
-            xs={12}
-          >
-            <Grid item xs={4}>
-              <Typography variant="body1">
-                {prop.parent_rcsb_id}.{prop.entity_poly_strand_id}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="caption">
-                {prop.rcsb_source_organism_description[0]}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item justify="space-between" container xs={12}>
-            <Typography variant="body1" component="p">
-              {prop.rcsb_pdbx_description}
-            </Typography>
-          </Grid>
-        </Grid>
-      </CardContent>
-
-      <CardActions>
-        <Grid container xs={12}>
-          <Grid container item xs={8}>
-            <Button size="small" aria-describedby={id} onClick={handleClick}>
-              Seq ({prop.entity_poly_seq_length}AAs)
-            </Button>
-            <Button
-              size="small"
-              onClick={() =>
-                downloadChain(prop.parent_rcsb_id, prop.entity_poly_strand_id)
-              }
-            >
-              Download Chain
-              <img
-                id="download-protein"
-                src={process.env.PUBLIC_URL + `/public/icons/download.png`}
-                alt=""
-              />
-            </Button>
-          </Grid>
-          <Grid container item xs={4}>
-            <Button onClick={() => {}} size="small" disabled={true}>
-              Add to Workspace
-            </Button>
-          </Grid>
-        </Grid>
-      </CardActions>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        className={classes.popover}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
-        <Grid container xs={12}>
-          <Typography
-            style={{ width: "400px", wordBreak: "break-word" }}
-            variant="body2"
-            className={classes.popover}
-          >
-            {prop.entity_poly_seq_one_letter_code}
-          </Typography>
-        </Grid>
-      </Popover>
-    </Card>
-  );
-};
 
 interface OwnProps {}
 interface ReduxProps {
@@ -351,7 +202,7 @@ const history = useHistory();
       case "protein":
         return (
           lsu.length < 1 ? <SimpleBackdrop/> :
-          <Grid  container  spacing={1}>
+          <Grid  item container  spacing={1}>
 
             <Grid item justify="flex-start" alignItems='flex-start' alignContent='flex-start' container xs={4} spacing={1}>
               <Grid item xs={12} style={{ paddingTop: "10px" }} >
@@ -403,10 +254,19 @@ const history = useHistory();
 
       return (
 
-        <Grid container    >{
+        <Grid item container    spacing={1}>
+          {
           rrnas.map(obj => (
           <Grid item xs={12}>
-            <RNACard {...obj} />
+            <RNACard e={{
+description: obj.rcsb_pdbx_description as string,
+orgid      : obj.rcsb_source_organism_id,
+seq        : obj.entity_poly_seq_one_letter_code,
+strand     : obj.entity_poly_strand_id,
+struct     : obj.parent_rcsb_id
+            }} 
+            
+            displayPill={false}/>
             </Grid>
           ))}
         </Grid>
@@ -415,7 +275,26 @@ const history = useHistory();
       case "ligand":
 
         return (
-          <Grid  container  spacing={1}>
+        <Grid item container    spacing={1}>
+
+<Grid container item xs={12}>
+
+
+<Grid item>
+
+<Typography>Hide Ions:</Typography>
+</Grid>
+<Grid item>
+
+</Grid>
+              <input type="checkbox" 
+                onChange={() => {
+                  setions(!ions);
+                }}
+              />
+</Grid>
+
+
             {
               ligands.filter(lig => {
                 return ions ? true : !lig.chemicalName.includes("ION");
@@ -444,11 +323,6 @@ const history = useHistory();
 
           
 
-              <input type="checkbox" 
-                onChange={() => {
-                  setions(!ions);
-                }}
-              />
             
 
           </Grid>
@@ -497,31 +371,31 @@ const history = useHistory();
 
 
   return structdata ? (
-    <Grid xs={12} container item spacing={1} style={{ padding: "5px" }}>
+    <Grid xs={12} container item spacing={2} style={{ padding: "5px" }}>
       <Grid xs={3} container item alignContent="flex-start">
         <Card className={classes.card}>
           <CardHeader
-            title={`${structdata.rcsb_id}`}
-            subheader={structdata._organismName}
+            title     = {`${structdata.rcsb_id}`}
+            subheader = {structdata._organismName}
           />
           <CardActionArea>
             <CardMedia
-              image={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`}
-              title={ `${structdata.rcsb_id}\n${structdata.citation_title}` }
-              className={classes.title}
+              image     = {process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`}
+              // title     = { `${structdata.rcsb_id}\n${structdata.citation_title}` }
+              className = {classes.title}
             />
           </CardActionArea>
           <List>
             <CardBodyAnnotation keyname="Species" value={structdata._organismName} />
-            <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
+            <CardBodyAnnotation keyname="Resolution" value={`${ structdata.resolution } Å`} />
             <OverlayTrigger
               key="bottom-overlaytrigger"
               placement="bottom"
               overlay={
                 <Tooltip
-                  style={{ backgroundColor: "black" }}
-                  className="tooltip-bottom"
-                  id="tooltip-bottom"
+                  style     = {{ backgroundColor: "black" }}
+                  className = "tooltip-bottom"
+                  id        = "tooltip-bottom"
                 >
                   <MethodSwitch {...structdata} />
                 </Tooltip>
@@ -596,42 +470,88 @@ const history = useHistory();
 
               <Grid item>
 
-                <Button onClick={() => { history.push({ pathname: `/vis`, state: { struct: structdata.rcsb_id } }) }}>
+                <Button 
+                size="small"
+                style={{textTransform:"none"}}
+                
+                onClick={() => { history.push({ pathname: `/vis`, state: { struct: structdata.rcsb_id } }) }}>
                   <VisibilityIcon />
           Visualize
           </Button>
               </Grid>
               <Grid item>
-                <Button onClick={()=>{}}>
+                <Button
+                size="small"
+                style={{textTransform:"none"}}
+                
+                onClick={()=>{
+                  dispatch(cart_add_item(structdata))
+                }}>
+<BookmarkIcon/>
 Add To Workspace
           </Button>
               </Grid>
+
+              <Grid item>
+                <Button
+                size="small"
+                style={{textTransform:"none"}}
+                
+                onClick={()=>{
+
+                  getNeo4jData("static_files",{endpoint:"download_structure",params:{struct_id:structdata.rcsb_id}})
+                  .then(r=>{
+
+                    fileDownload(
+                      r.data,
+                      `${structdata.rcsb_id}.cif`,
+                      "chemical/x-mmcif"
+                    )
+                  })
+
+                }}>
+Download 
+<GetAppIcon/>
+          </Button>
+              </Grid>
+
  </Grid>           </Grid>
           </CardActions>
         </Card>
         <DashboardButton />
       </Grid>
 
-
-
-
       <Grid  container item xs={9}  spacing={1} alignContent="flex-start" alignItems="flex-start">
 
 
+<Grid item >
+        <Button 
+        color={ activecat === "protein" ? 'primary' : 'default' }
+        variant="outlined"
+        onClick = {()=>dispatch(struct_page_choice("component","protein"))}>Proteins</Button>
+   </Grid>
 <Grid item > 
-        <Button onClick = {()=>dispatch(struct_page_choice("component","rna"))}>RNAs</Button>
+        <Button 
+        color={ activecat === "rna" ? 'primary' : 'default' }
+        variant="outlined"
+        
+        onClick = {()=>dispatch(struct_page_choice("component","rna"))}>RNA</Button>
 </Grid>
 
 <Grid item >
-        <Button onClick = {()=>dispatch(struct_page_choice("component","ligand"))}>Ligands</Button>
+        <Button 
+        
+        color={ activecat === "ligand" ? 'primary' : 'default' }
+        variant="outlined"
+        onClick = {()=>dispatch(struct_page_choice("component","ligand"))}>Ligands</Button>
    </Grid>
-<Grid item >
-        <Button onClick = {()=>dispatch(struct_page_choice("component","protein"))}>Proteins</Button>
-  
-   </Grid>
+
+
+<Grid container xs={12} >
 
 
       {renderSwitch(activecat)}
+</Grid>
 
       </Grid>
     </Grid>

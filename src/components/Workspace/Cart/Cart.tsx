@@ -1,7 +1,7 @@
 import Paper from '@material-ui/core/Paper/Paper'
 import React from 'react'
-import { connect } from 'react-redux'
-import { NeoHomolog } from '../../../redux/DataInterfaces'
+import { connect, useDispatch, useSelector } from 'react-redux'
+import { NeoHomolog, RNAProfile } from '../../../redux/DataInterfaces'
 import { AppState } from '../../../redux/store'
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -25,13 +25,20 @@ import ContentSelectAll from 'material-ui/svg-icons/content/select-all'
 import axios from 'axios'
 import fileDownload from 'js-file-download'
 import { ListSubheader } from '@material-ui/core'
-import { RibosomalProtein } from '../../../redux/RibosomeTypes'
+import { RibosomalProtein, RibosomeStructure } from '../../../redux/RibosomeTypes'
+import DeleteIcon from '@material-ui/icons/Delete';
+import { cart_remove_item, toggle_cart } from '../../../redux/reducers/Cart/ActionTypes'
+import {CartItem} from './../../../redux/reducers/Cart/ActionTypes'
+import enzymes from './../../../static/enzymes-icon.png'
+import rnas from './../../../static/rna_icon.svg'
+import proteins from './../../../static/protein_icon.svg'
 
-interface StateProps{
-    cartitems:RibosomalProtein[]
-}
+import {ChainParentPill} from './../RibosomalProteins/RibosomalProteinCard'
+import Grid from '@material-ui/core/Grid/Grid'
+import { isProt, isStruct, isRNA } from '../../../redux/reducers/Cart/CartReducer'
 
-const Cart:React.FC<StateProps> = (prop) => {
+export const Cart= () => {
+    const cartitems = useSelector(( state:AppState ) => state.cart.items)
     const useCartStyles = makeStyles((theme) => ({
         root: {
             zIndex:-200,
@@ -48,18 +55,18 @@ const Cart:React.FC<StateProps> = (prop) => {
         flex: 1,
     },
     }));
-    const classes = useCartStyles()
-  const [checked, setChecked] = React.useState([0]);
-  const [open, setOpen] = React.useState(false);
+    const classes  = useCartStyles()
+    const open     = useSelector(( state:AppState ) => state.cart.open)
+    const dispatch = useDispatch();
 
+
+  const [checked, setChecked] = React.useState([0]);
   const handleClickOpen = () => {
-    setOpen(true);
+      dispatch(toggle_cart())
   };
 
   const handleClose = () => {
-    setOpen(false);
-    console.log("closing?");
-    
+      dispatch(toggle_cart())
   };
 
     return (
@@ -70,96 +77,159 @@ const Cart:React.FC<StateProps> = (prop) => {
             
         onClick={handleClickOpen} 
         style={{
-            // zIndex:-100,
-                         cursor:"pointer", width:"100%", fontWeight:500, color:"black" }}
+ textTransform:"none",                        cursor:"pointer", width:"100%", fontWeight:500, color:"black" }}
             >
 
              Workspace
 
-            {prop.cartitems.map(i => 
-                <ListItem>
-                {i.entity_poly_strand_id + " [" +i.nomenclature[0]+"]" }
-                </ListItem>
-            )}
+            (<i>{cartitems.length}</i>)
 
             </Button>
 
             <Dialog fullScreen open={open} onClose={handleClose}>
 
-                <AppBar className={classes.appBar}>
+                <AppBar className={classes.appBar} color="default">
                     <Toolbar>
                         <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
                             <CloseIcon />
                         </IconButton>
-                        <Typography variant="h6" className={classes.title}>
+                        <Typography  style={{textTransform:"none"}} variant="h6" className={classes.title}>
                             Workspace
                         </Typography>
                         <Button autoFocus color="inherit" onClick={() => {
-
-
-
-                            getNeo4jData("static_files", {
-                                endpoint: "downloadArchive", params:
-                                    prop.cartitems.reduce((acc: { [k: string]: string }, val: RibosomalProtein) => {
-
-                                        if (Object.keys(acc).includes(val.parent_rcsb_id)) {
-                                            acc[val.parent_rcsb_id] = acc[val.parent_rcsb_id] + '.' + val.entity_poly_strand_id
-                                        }
-                                        else {
-                                            acc[val.parent_rcsb_id] = val.entity_poly_strand_id
-                                        } return acc
-                                    }, {})
-
-                            }).then(r => { fileDownload(r.data, 'chains.zip'); },
-                                e => { console.log(e); })
                         }}>
                             Download
                     </Button>
                     </Toolbar>
                 </AppBar>
 
-                <List>
-                    {prop.cartitems.map((prot, i) => {
-                        const labelId = `checkbox-list-label-${prot}`;
+                <List dense={false}  >
+
+                    {cartitems.map((item, index) => {
+                        const labelId = `checkbox-list-label-${index}`;
                         return (
-                            <ListItem key={prot.parent_rcsb_id + i} role={undefined} dense button >
-                                <ListItemIcon>
-                                    <Checkbox
-                                        edge="start"
-                                        checked={true}
-                                        tabIndex={-1}
-                                        disableRipple
-                                        inputProps={{ 'aria-labelledby': labelId }}
-                                    />
-                                </ListItemIcon>
-                                <ListItemText id={labelId} primary={`Protein ${prot.nomenclature[0]} (${prot.parent_rcsb_id})`} />
-                                <ListItemSecondaryAction>
-                                    <IconButton edge="end" aria-label="comments">
-                                        <CommentIcon />
-                                    </IconButton>
-                                </ListItemSecondaryAction>
-                            </ListItem>)
+                            
+                            <Item {...item} />
+                            )
                     })}
+
 
                 </List>
 
             </Dialog>
 
 </>
-
             
     )
-
 }
 
 
 
-const mapstate = (as: AppState, ownProps: any): StateProps => ({
-    cartitems: as.cart.proteins
-})
 
-export default connect(mapstate, null)(Cart)
-function useStyles() {
-    throw new Error('Function not implemented.')
+
+const Item = (i:CartItem)=>{
+    if (isProt(i)){
+        return <ProtItem {...i} />
+
+    }
+    if (isStruct(i)){
+
+        return <StructItem {...i} />
+    }
+    if (isRNA(i)){
+
+        return <RNAItem {...i} />
+    }
+
+    else {
+        return <></>
+    }
+
 }
 
+const ProtItem = (i:RibosomalProtein)=>{
+
+    const dispatch = useDispatch();
+    return     <ListItem key={i.parent_rcsb_id + i} role={undefined}  button dense style={{backgroundColor:"rgba(225,231,254,0.6)", marginBottom:"5px"}}>
+                                <ListItemIcon>
+                                        <img src={proteins}  style={{width:'30px', height:'30px'}}/>
+                                </ListItemIcon>
+                                <ListItemText id={""} primary={`Protein Strand ${i.nomenclature[0]}`}
+                                
+                                secondary={i.rcsb_pdbx_description}/>
+
+
+                            <Grid container xs={12}>
+
+<Grid item>
+
+                           <ChainParentPill parent_id={i.parent_rcsb_id} strand_id={i.entity_poly_strand_id}/> 
+</Grid>
+                            </Grid>
+
+
+                                <ListItemSecondaryAction>
+                                    <IconButton edge="end" aria-label="comments" onClick={
+                                        () =>{dispatch(cart_remove_item(i))}
+                                    }>
+                                        <DeleteIcon />
+                                        
+                                    </IconButton>
+                                </ListItemSecondaryAction>
+                            </ListItem>
+                            
+    
+}
+
+const StructItem = (i:RibosomeStructure)=>{
+
+    const dispatch = useDispatch();
+    return     <ListItem key={i.rcsb_id + i} role={undefined} dense button style={{backgroundColor:"rgba(254,246,225,0.6)", marginBottom:"5px"}}>
+                                <ListItemIcon>
+                                        <img src={enzymes}  style={{width:'30px', height:'30px'}}/>
+                                </ListItemIcon>
+                                <ListItemText id={""} primary={`Structure ${i.rcsb_id}`}
+                                
+                                secondary={i.citation_title}/>
+                                <ListItemSecondaryAction>
+                                    <IconButton edge="end" aria-label="comments" onClick={
+                                        () =>{dispatch(cart_remove_item(i))}
+                                    }>
+                                        <DeleteIcon />
+                                        
+                                    </IconButton>
+                                </ListItemSecondaryAction>
+                            </ListItem>
+}
+const RNAItem = (i:RNAProfile)=>{
+
+const dispatch = useDispatch();
+return     <ListItem key={i.description + i} role={undefined}  dense button style={{backgroundColor:"rgba(172,191,169,0.6)", marginBottom:"5px"}}>
+
+
+                            <ListItemIcon>
+                                        <img src={rnas}  style={{width:'30px', height:'30px'}}/>
+                            </ListItemIcon>
+                            <ListItemText 
+                            
+                            id={""} primary={<Typography>RNA Strand  </Typography>}
+                            
+                            secondary={i.description}/>
+                            <Grid container xs={12}>
+
+<Grid item>
+
+                           <ChainParentPill parent_id={i.struct} strand_id={i.strand}/> 
+</Grid>
+                            </Grid>
+                           
+                            <ListItemSecondaryAction>
+                                <IconButton edge="end" aria-label="comments" onClick={
+                                    () =>{dispatch(cart_remove_item(i))}
+                                }>
+                                    <DeleteIcon />
+                                    
+                                </IconButton>
+                            </ListItemSecondaryAction>
+                        </ListItem>
+}

@@ -22,15 +22,17 @@ import eye from './../../static/eye_icon.svg'
 import workspace from './../../static/bookmark_icon.svg'
 
 import Typography from '@material-ui/core/Typography';
-import {toggle_dashboard} from './../../redux/reducers/Interface/ActionTypes'
+import {toggle_dashboard, toggle_dashboard_open_cart} from './../../redux/reducers/Interface/ActionTypes'
 import { AppState } from '../../redux/store';
 import { ThunkDispatch } from 'redux-thunk';
 import { AppActions } from '../../redux/AppActions';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VerticalAlignCenterIcon from '@material-ui/icons/VerticalAlignCenter';
 import Paper from '@material-ui/core/Paper';
+import bookmark from './../../static/bookmark_icon.svg'
+import { toggle_cart } from '../../redux/reducers/Cart/ActionTypes';
 
 const useStyles = makeStyles({
   root:{
@@ -88,7 +90,9 @@ const _MenuItem:React.FC<{
 
         <ListItemText primary={props.menutext} />
 
-    </ListItem>)}
+    </ListItem>
+    
+    )}
 
 const _DashboardButton: React.FC<DashProps> = (props) => {
   return <Grid 
@@ -106,6 +110,7 @@ const _DashboardButton: React.FC<DashProps> = (props) => {
 
 const _TemporaryDrawer: React.FC<DashProps> = (props) => {
 
+  const dispatch = useDispatch();
   const classes = useStyles();
   const list = (anchor: Anchor) => (
     <div
@@ -126,12 +131,30 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
       <List>
 
         <ListSubheader>Tools</ListSubheader>
-        <MenuItem key='new1' icon={eye}  menutext="Visualization Page" linkto='/vis'          />
-        <MenuItem key='new1' icon={align}  menutext="Alignment"          linkto='/rpalign'      />
-        <MenuItem key='new1' icon={ligands}  menutext="Binding Sites"      linkto='/bindingsites' />
-        <MenuItem key='new1' icon={workspace}  menutext="Workspace"          linkto='/rpalign'      />
-        {/* <MenuItem key='new1' menutext="Protein Classification" linkto='/rpclassification'/> */}
-        {/* <MenuItem key='new1' menutext="Exit Tunnel"            linkto='/tunnel'          /> */}
+        <MenuItem key = 'new1' icon = {eye}  menutext       = "Visualization Page" linkto = '/vis'          />
+        <MenuItem key = 'new1' icon = {align}  menutext     = "Alignment"          linkto = '/rpalign'      />
+        <MenuItem key = 'new1' icon = {ligands}  menutext   = "Binding Sites"      linkto = '/bindingsites' />
+
+    <ListItem button onClick={async ()=>{
+
+        // patch(toggle_dashboard())
+            // dispatch(toggle_dashboard())
+            // dispatch(toggle_cart())
+            // dispatch(toggle_dashboard_open_cart())
+
+    }}>
+
+      <ListItemIcon>
+        {<img src={bookmark} style={{ height: "30px", width: "30px" }} />}
+
+      </ListItemIcon>
+
+
+
+        <ListItemText primary={
+"Workspace"
+} />
+    </ListItem>
       </List>
     </div>
   );
@@ -148,6 +171,6 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
 )
 }
 
-const MenuItem = connect(null, md)(_MenuItem)
+const  MenuItem              = connect(null, md)(_MenuItem)
 export const DashboardButton = connect(ms,md)(_DashboardButton)
-export const TemporaryDrawer  = connect(ms,md)(_TemporaryDrawer)
+export const TemporaryDrawer = connect(ms,md)(_TemporaryDrawer)

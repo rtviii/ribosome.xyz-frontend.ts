@@ -1,16 +1,31 @@
-import { RibosomalProtein } from '../../RibosomeTypes';
-import {CartActions} from './ActionTypes'
+import _ from 'lodash';
+import { RNAProfile } from '../../DataInterfaces';
+import { RibosomalProtein, RibosomeStructure } from '../../RibosomeTypes';
+import {CartActions, CartItem} from './ActionTypes'
+
+export function isProt(i:CartItem): i is RibosomalProtein{
+    return (i as RibosomalProtein).nomenclature !==undefined;
+}
+export function isStruct(i:CartItem): i is RibosomeStructure{
+    return (i as RibosomeStructure).rcsb_id !==undefined;
+}
+export function isRNA(i:CartItem): i is RNAProfile{
+    return (i as RNAProfile).strand !==undefined;
+}
 
 interface CartReducerState {
 
-    hidden    :  boolean,
-    proteins  :  RibosomalProtein[],
+    open    : boolean,
+    // proteins: RibosomalProtein[],
+    items: CartItem[],
 
 }
 
 const initialCartReducerState:CartReducerState = {
-    hidden    :  true,
-    proteins  :  []
+
+    open    : false,
+    items: []
+    // proteins: []
 }
 
 export const CartReducer = (
@@ -20,16 +35,23 @@ export const CartReducer = (
   switch (action.type) {
 
     case "TOGGLE_CART":
-      return { ...state, hidden: !state.hidden };
+      return { ...state, open: !state.open };
 
     case "CART_CLEAR_ITEMS":
-      return {...state, proteins:[]}
+      return {...state, items:[]}
 
     case "CART_ADD_ITEM":
-      return {...state, proteins: [...state.proteins, action.item]}
+      if  ( state.items.includes(action.item) ){
+        alert(" This is already in the workspace.")
+        return state
+      }
+      return {...state, items: [...state.items, action.item]}
 
-    case "CART_ADD_ITEM":
-      return {...state, proteins: state.proteins.filter(i => i !== action.item)}
+    case "CART_REMOVE_ITEM":
+      return {...state, items: state.items.filter(i => {
+        return !_.isEqual(i, action.item)
+      })
+    }
 
     default:
       return state;

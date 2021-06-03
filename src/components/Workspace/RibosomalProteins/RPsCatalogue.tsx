@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../redux/store';
 import BanClassHero from './BanClassHero';
 import { BanClass } from '../../../redux/RibosomeTypes';
-import Cart from '../Cart/Cart';
+import { Cart } from '../Cart/Cart';
 import List from '@material-ui/core/List/List';
 import ListItem from '@material-ui/core/ListItem/ListItem';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup/ToggleButtonGroup';
