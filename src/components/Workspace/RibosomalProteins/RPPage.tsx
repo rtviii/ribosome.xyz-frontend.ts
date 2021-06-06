@@ -99,42 +99,24 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
     ['parent_struct_rcsb_id'],
     ...proteins.map(r =>[ r.parent_rcsb_id ])
   ]
-  if ( summaryOpts.pfam_accessions){
     bulkDownload[0].push("pfam_accessions")
     proteins.map((v,i) => bulkDownload[i+1].push(v.pfam_accessions))
-  }
-  if ( summaryOpts.rcsb_source_organism_id){
     bulkDownload[0].push("source_organisms_id")
     proteins.map((v,i) => bulkDownload[i+1].push(v.rcsb_source_organism_id))
-  }
-  if ( summaryOpts.rcsb_source_organism_description){
     bulkDownload[0].push("source_organisms_description")
     proteins.map((v,i) => bulkDownload[i+1].push(v.rcsb_source_organism_description))
-  }
-  if ( summaryOpts.uniprot_accession){
     bulkDownload[0].push("uniprot_accession")
     proteins.map((v,i) => bulkDownload[i+1].push(v.uniprot_accession))
-  }
-  if ( summaryOpts.rcsb_pdbx_description){
     bulkDownload[0].push("rcsb_description")
     proteins.map((v,i) => bulkDownload[i+1].push(v.rcsb_pdbx_description))
-  }
-  if ( summaryOpts.entity_poly_strand_id){
     bulkDownload[0].push("strand_id(in-structure_identifier)")
     proteins.map((v,i) => bulkDownload[i+1].push(v.entity_poly_strand_id))
-  }
-  if ( summaryOpts.entity_poly_seq_one_letter_code){
     bulkDownload[0].push("sequence_one_letter_code")
     proteins.map((v,i) => bulkDownload[i+1].push(v.entity_poly_seq_one_letter_code))
-  }
-  if ( summaryOpts.entity_poly_seq_length){
     bulkDownload[0].push("seq_length")
     proteins.map((v,i) => bulkDownload[i+1].push(v.entity_poly_seq_length))
-  }
-  if ( summaryOpts.nomenclature){
     bulkDownload[0].push("universal_rp_nomeclature")
     proteins.map((v,i) => bulkDownload[i+1].push(v.nomenclature))
-  }
 
     return bulkDownload
   }
@@ -149,78 +131,32 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
 
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
 
-        <DialogTitle id="form-dialog-title">Bulk Download Options</DialogTitle>
+        <DialogTitle id="form-dialog-title">  Export Options: you have {proteins.length} strands in scope.</DialogTitle>
         <DialogContent>
-      <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">
-            Please select the fields that you would like the summary to contain.
-          </FormLabel>
-        <FormGroup>
 
-          <FormControlLabel
-            control={
-            
-            <Checkbox
-              checked={all} 
-            onChange={()=>{setSummaryOpts(Object.fromEntries(Object.entries(summaryOpts).map((v,i)=>[v[0],(!v[1])])) as any)}}
-            />
-          }
-
-            label="All Options"
-          />
-          <FormControlLabel
-            control = {<Checkbox checked={pfam_accessions} onChange={handleChange} name="pfam_accessions" />}
-            label = "PFAM Accession Codes"
-            />
-            <FormControlLabel
-            control = {<Checkbox checked={rcsb_pdbx_description} onChange={handleChange} name="rcsb_pdbx_description" />}
-            label = "Description"
-            />
-            <FormControlLabel
-            control = {<Checkbox checked={rcsb_source_organism_id} onChange={handleChange} name="rcsb_source_organism_id" />}
-            label = "Source Organisms' Taxonomic Ids"
-            />
-            <FormControlLabel
-            control = {<Checkbox checked={rcsb_source_organism_description} onChange={handleChange} name="rcsb_source_organism_description" />}
-            label = "Source Organisms' Descriptions "
-            />
-            <FormControlLabel
-            control = {<Checkbox checked={uniprot_accession} onChange={handleChange} name="uniprot_accession" />}
-            label = "Uniprot Accession Codes"
-            />
-            <FormControlLabel
-            control = {<Checkbox checked={entity_poly_seq_length} onChange={handleChange} name="entity_poly_seq_length" />}
-            label = "Sequence Length"
-            />
-            <FormControlLabel
-            control = {<Checkbox checked={entity_poly_seq_one_letter_code} onChange={handleChange} name="entity_poly_seq_one_letter_code" />}
-            label = "Amino Acid Sequence"
-            />
-            <FormControlLabel
-            control = {<Checkbox checked={entity_poly_strand_id} onChange={handleChange} name="entity_poly_strand_id" />}
-            label = "Strand Id (Parent-structure specific identifier)"
-            />
-            <FormControlLabel
-            control = {<Checkbox checked={nomenclature} onChange={handleChange} name="nomenclature" />}
-            label = "Universal Nomenclature"
-            />
-
-        </FormGroup>
-        <FormHelperText>You have {proteins.length} protein strands in scope.</FormHelperText>
-      </FormControl>																									
-    <CSVLink data={createSummary()}>
-                <Button onClick={handleClose} color="primary">
-
-            Download Summary (.csv)
-          </Button>
-</CSVLink>
-          <Divider/>
-            <DialogContentText style={{marginTop:"10px"}}>
-            Protein strands that you have filtered will be packed into a .zip archive and downloaded.
+          <DialogContentText style={{ marginTop: "10px" }}>
+          <Typography variant="h5">Download Summary Spreadsheet </Typography>
+          A <i>.csv</i> summary of the strands that you have filtered will be downloaded.
           </DialogContentText>
-          <Button onClick={handleClose} color="primary">
-            Download Models (.zip)
+
+          <CSVLink data={createSummary()}>
+            <Button onClick={handleClose} color="primary">
+              Download Summary (.csv)
           </Button>
+          </CSVLink>
+
+<List>
+<Divider/>
+</List>
+          <DialogContentText style={{ marginTop: "10px"}} >
+          <Typography variant="h5">Download Whole Models</Typography>
+            Filtered models of the whole ribosome structures that you have filtered will be packed into a <i>.zip</i> archive and downloaded.
+          </DialogContentText>
+
+          <Button onClick={handleClose} color="primary">
+            Download Model Strands (.zip)
+          </Button>
+
         </DialogContent>
       </Dialog>
     </div>

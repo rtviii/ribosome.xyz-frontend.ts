@@ -8,20 +8,19 @@ import { Filter, filterChange, FilterPredicates, FilterRegistry } from "../Filte
 import { StructFilterType, StructSortType } from "./ActionTypes";
 
 export interface StructReducerState {
-  neo_response    : NeoStruct[]
-  derived_filtered: NeoStruct[],
-  Loading         : boolean;
-  Error           : null | Error;
-  current_page    : number;
-  pages_total     : number
-  filter_registry : FilterRegistry<StructFilterType, NeoStruct>
-  last_sort_set   : StructSortType,
-  sorts_registry  : Record<StructSortType, {
-  reverse  : boolean,
-  compareFn: (a:NeoStruct, b:NeoStruct) => 1 | 0 | -1
+  neo_response     : NeoStruct[]
+  derived_filtered : NeoStruct[],
+  Loading          : boolean;
+  Error            : null | Error;
+  current_page     : number;
+  pages_total      : number
+  filter_registry  : FilterRegistry<StructFilterType, NeoStruct>
+  last_sort_set    : StructSortType,
+  sorts_registry   : Record<StructSortType, {
+  reverse          : boolean,
+  compareFn        : (a:NeoStruct, b:NeoStruct) => 1 | 0 | -1
 }>
 }
-
 
 const StructsSortsState:Record<StructSortType,{
   reverse  : boolean,
@@ -99,7 +98,6 @@ const StructsSortsState:Record<StructSortType,{
   }
 }
 
-
 const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
   filtstate:{
    "YEAR": {
@@ -174,15 +172,15 @@ const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
 }
 
 const structReducerDefaultState: StructReducerState = {
-  Loading         : false,
-  Error           : null,
-  neo_response    : [],
-  derived_filtered: [],
-  current_page    : 1,
-  pages_total     : 1,
-  filter_registry : StructsFilterRegistry,
-  sorts_registry  : StructsSortsState,
-  last_sort_set   : "YEAR"
+  Loading          : false,
+  Error            : null,
+  neo_response     : [],
+  derived_filtered : [],
+  current_page     : 1,
+  pages_total      : 1,
+  filter_registry  : StructsFilterRegistry,
+  sorts_registry   : StructsSortsState,
+  last_sort_set    : "YEAR"
 };
 
 export const _StructuresReducer = (
@@ -196,10 +194,10 @@ export const _StructuresReducer = (
       return { ...state, Loading: false, Error: action.error };
     case "REQUEST_STRUCTS_SUCCESS":
         return { ...state,
-                  neo_response    : [...action.payload],
-                  derived_filtered: [...action.payload],
-                  pages_total     : Math.ceil(action.payload.length/20),
-                  Loading         : false };
+        neo_response : [...action.payload],
+        derived_filtered: [...action.payload],
+        pages_total : Math.ceil(action.payload.length/20),
+        Loading : false };
     case "NEXT_PAGE_STRUCTS":
       if (state.current_page+1 === state.pages_total){
         return state
@@ -221,20 +219,20 @@ export const _StructuresReducer = (
 
       const updateAppliedFilters = (filter_type: StructFilterType, set: boolean, applied: StructFilterType[]): StructFilterType[] => {
         if ((set) && !(applied.includes(filter_type))) {
-          return [...applied, filter_type]
+        return [...applied, filter_type]
         }
         else if (!(set) && (applied.includes(filter_type))) {
-          return applied.filter(t => t !== filter_type)
+        return applied.filter(t => t !== filter_type)
         }
         else if (set && applied.includes(filter_type)) {
-          return applied
+        return applied
         }
         else {
-         return applied
+        return applied
        }
      }
 
-     var filtered   = state.neo_response
+     var filtered   =                                                     state.neo_response
      var newApplied = updateAppliedFilters(action.filter_type,action.set, state.filter_registry.applied)
 
      var newFilterState:Filter<NeoStruct> =  {
@@ -244,10 +242,10 @@ export const _StructuresReducer = (
      }
      var nextFilters = Object.assign({},state.filter_registry,{filtstate:{...state.filter_registry.filtstate, ...{[action.filter_type]:newFilterState}}}, { applied:newApplied })
      for (var filter of newApplied){
-      var filtered = filtered.filter(
-        nextFilters.filtstate[filter as StructFilterType]
-        .predicate(nextFilters.filtstate[filter].value)
-        )
+     var filtered = filtered.filter(
+     nextFilters.filtstate[filter as StructFilterType]
+     .predicate(nextFilters.filtstate[filter].value)
+     )
      }
      return {...state, filter_registry:nextFilters, derived_filtered:filtered, pages_total: Math.ceil(filtered.length/20), current_page:1}
     case "STRUCTS_SORT_CHANGE":
@@ -260,7 +258,7 @@ export const _StructuresReducer = (
     var newSortRegistry = {...state.sorts_registry}
     newSortRegistry[action.sortType].reverse =!newSortRegistry[action.sortType].reverse
     if(newSortRegistry[action.sortType].reverse){
-      sorted= sorted.reverse()
+    sorted= sorted.reverse()
     }
 
     

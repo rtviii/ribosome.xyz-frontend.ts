@@ -4,6 +4,7 @@ import PageAnnotation from                                             "./../Dis
 import Grid from                                                       "@material-ui/core/Grid"                                ;
 import { RNAProfile } from                                             "./../../../redux/DataInterfaces"                       ;
 import Tabs from                                                       "@material-ui/core/Tabs"                                ;
+import { CSVLink } from "react-csv";
 import Tab from                                                        "@material-ui/core/Tab"                                 ;
 import Box from                                                        "@material-ui/core/Box"                                 ;
 import Paper from                                                      "@material-ui/core/Paper"                               ;
@@ -29,16 +30,10 @@ import createStyles from                                               "@materia
 import Dialog from                                                     "@material-ui/core/Dialog/Dialog"                       ;
 import DialogTitle from                                                "@material-ui/core/DialogTitle/DialogTitle"             ;
 import DialogContent from                                              "@material-ui/core/DialogContent/DialogContent"         ;
-import FormControlLabel from                                           "@material-ui/core/FormControlLabel/FormControlLabel"   ;
-import Checkbox from                                                   "@material-ui/core/Checkbox/Checkbox"                   ;
-import FormLabel from                                                  "@material-ui/core/FormLabel/FormLabel"                 ;
-import FormControl from                                                "@material-ui/core/FormControl/FormControl"             ;
-import FormGroup from                                                  "@material-ui/core/FormGroup/FormGroup"                 ;
-import Divider from                                                    "@material-ui/core/Divider/Divider"                     ;
 import DialogContentText from                                          "@material-ui/core/DialogContentText/DialogContentText" ;
 import { RnaClass } from                                               "../../../redux/reducers/RNA/RNAReducer"                ;
-import FormHelperText from                                             "@material-ui/core/FormHelperText/FormHelperText"       ;
 import { Cart } from "../Cart/Cart";
+import { Divider } from "material-ui";
 
 const pageData = {
   title: "Ribosomal, messenger, transfer RNA",
@@ -50,7 +45,7 @@ const pageData = {
 const BulkDownloadMenu=()=> {
 
   const [open              , setOpen] = React       . useState(false);
-  const current_class:RnaClass                 = useSelector(( state    : AppState) => state.rna.current_rna_class)
+  const current_class:RnaClass        = useSelector(( state    : AppState) => state.rna.current_rna_class)
   const current_class_derived         = useSelector(( state    : AppState) => state.rna.rna_classes_derived[current_class])
   const useCheckboxStyles             = makeStyles  ((theme    : Theme) =>
     createStyles({
@@ -59,20 +54,6 @@ const BulkDownloadMenu=()=> {
     },
   }),
 );
-
-  const  classes                      = useCheckboxStyles         ();
-  const [summaryOpts, setSummaryOpts] = React            .useState({
-    all                 : false,
-    source_organisms    : false,
-    rcsb_pdb_description: false,
-    nucleotide_sequence : false,
-    strand_id           : false,
-  });
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSummaryOpts({ ...summaryOpts, [event.target.name]: event.target.checked });
-  };
-  const {all,source_organisms, rcsb_pdb_description, nucleotide_sequence, strand_id} = summaryOpts;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -86,30 +67,18 @@ const BulkDownloadMenu=()=> {
   const createSummary = ():any[][] =>{
 
   var bulkDownload:Array<Array<any>> = [
-    ['parent_structure_rcsb_id'],...current_class_derived.map(r =>[ r.struct ])
-  ]
-          if ( summaryOpts.source_organisms ){
+    ['parent_structure_rcsb_id'],...current_class_derived.map(r =>[ r.struct ])]
+
             bulkDownload[0].push("source_organisms")
             current_class_derived.map((v,i)=>bulkDownload[i+1].push(v.orgid))
-          }
-
-          if ( summaryOpts.rcsb_pdb_description ){
             bulkDownload[0].push("rcsb_descriptions")
             current_class_derived.map((v,i)=>bulkDownload[i+1].push(v.description))
-          }
-
-          if ( summaryOpts.nucleotide_sequence ){
             bulkDownload[0].push("nucleotide_sequence")
             current_class_derived.map((v,i)=>bulkDownload[i+1].push(v.seq))
-          }
-
-          if ( summaryOpts.strand_id ){
             bulkDownload[0].push("in-structure_strand_id")
             current_class_derived.map((v,i)=>bulkDownload[i+1].push(v.strand))
-          }
     return bulkDownload
   }
-
   return (
     <div style={{width:"100%"}}>
       <Button 
@@ -117,56 +86,38 @@ const BulkDownloadMenu=()=> {
       style   = {{width:"100%", color:"black", textTransform:"none"}}
       color   = "primary"
       onClick = {handleClickOpen}>
+
         Download (<i>{current_class_derived.length} strands  </i>)
+
       </Button>
 
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-
-        <DialogTitle id="form-dialog-title">Bulk Download Options</DialogTitle>
+        <DialogTitle id="form-dialog-title">  Export Options: you have {current_class_derived.length} strands in scope.</DialogTitle>
         <DialogContent>
-      <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">
-            Please select the fields that you would like the summary to contain.
-          </FormLabel>
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox checked={all} onChange={()=>setSummaryOpts({
-              all                 : !all,
-              nucleotide_sequence : !all,
-              source_organisms    : !all,
-              rcsb_pdb_description: !all,
-              strand_id           : !all
-              })} name="all" />}
-            label="All Options"
-          />
-          <FormControlLabel
-            control={<Checkbox checked={nucleotide_sequence} onChange={handleChange} name="nucleotide_sequence" />}
-            label="Nucleotide Sequence"
-          />
-          <FormControlLabel
-            control={
-            <Checkbox checked={source_organisms} onChange={handleChange} name="organisms" />}
-            label="Source Organisms"
-          />
-          <FormControlLabel
-            control={<Checkbox checked={rcsb_pdb_description} onChange={handleChange} name="rcsb_pdb_description" />}
-            label="Description"
-          />
-          <FormControlLabel
-            control = {<Checkbox checked={strand_id} onChange={handleChange} name="strand_id" />}
-            label   = "Strand ID (Structure-specific identifier)"
-          />
 
-        </FormGroup>
-        <FormHelperText>You have {current_class_derived.length} strands in scope.</FormHelperText>
-      </FormControl>																									
-          <Divider/>
-            <DialogContentText style={{marginTop:"10px"}}>
-            Filtered models of the whole ribosome structures that you have filtered will be packed into a .zip archive and downloaded.
+          <DialogContentText style={{ marginTop: "10px" }}>
+          <Typography variant="h5">Download Summary Spreadsheet </Typography>
+          A <i>.csv</i> summary of the strands that you have filtered will be downloaded.
           </DialogContentText>
-          <Button onClick={handleClose} color="primary">
-            Download Models (.zip)
+
+          <CSVLink data={createSummary()}>
+            <Button onClick={handleClose} color="primary">
+              Download Summary (.csv)
           </Button>
+          </CSVLink>
+
+<List>
+<Divider/>
+</List>
+          <DialogContentText style={{ marginTop: "10px"}} >
+          <Typography variant="h5">Download Whole Models</Typography>
+            Filtered models of the whole ribosome structures that you have filtered will be packed into a <i>.zip</i> archive and downloaded.
+          </DialogContentText>
+
+          <Button onClick={handleClose} color="primary">
+            Download Model Strands (.zip)
+          </Button>
+
         </DialogContent>
       </Dialog>
     </div>
@@ -313,13 +264,6 @@ Sort By Sequence Length
 
                 color={rnaSubgroup == 'exogenous' ? 'primary' : 'default'}> Non-ribosomal RNA</Button>
             </Grid>
-
-            {/* <Grid item>
-<Button style={{marginRight:"5px"}}variant = {'outlined'}  onClick={()=>{setRnaSubgrop('other')
-              dispatch(select_rna_class("other"))
-}}
-color={ rnaSubgroup == 'other' ? 'primary' : 'default' }> Uncategorized Strands</Button>
-  </Grid>  */}
 
             <Grid item xs={12}>
 

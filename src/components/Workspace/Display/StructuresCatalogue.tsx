@@ -427,22 +427,14 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
     ['rcsb_id'],
     ...structs.map(r =>[ r.struct.rcsb_id ])
   ]
-          if ( summaryOpts.experimental_method ){
           bulkDownload[0].push("experimental_method")
           structs.map((v,i)=>bulkDownload[i+1].push(v.struct.expMethod))
-          }
-          if ( summaryOpts.resolution ){
           bulkDownload[0].push("resolution")
           structs.map((v,i)=>bulkDownload[i+1].push(v.struct.resolution))
-          }
-          if ( summaryOpts.organisms ){
           bulkDownload[0].push("organisms")
-          structs.map((v,i)=>bulkDownload[i+1].push(v.struct._organismName
-            ))}
-          if ( summaryOpts.present_ligands ){
+          structs.map((v,i)=>bulkDownload[i+1].push(v.struct._organismName))
           bulkDownload[0].push("ligands")
           structs.map((v,i)=>bulkDownload[i+1].push(v.ligands))
-          }
       
 
     return bulkDownload
@@ -456,54 +448,32 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
 
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
 
-        <DialogTitle id="form-dialog-title">Bulk Download Options</DialogTitle>
+        <DialogTitle id="form-dialog-title">  Export Options: you have {structs.length} models in scope.</DialogTitle>
         <DialogContent>
-      <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">
-          
-            Please select the fields that you would like the summary to contain.
-          </FormLabel>
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox checked={all} onChange={()=>setSummaryOpts({all:!all, experimental_method:!all,organisms:!all,resolution:!all,present_ligands:!all,universal_protein_nomenclature:!all})} name="all" />}
-            label="All Options"
-          />
-          <FormControlLabel
-            control={<Checkbox checked={resolution} onChange={handleChange} name="resolution" />}
-            label="Resolution"
-          />
-          <FormControlLabel
-            control={<Checkbox checked={experimental_method} onChange={handleChange} name="experimental_method" />}
-            label="Experimental Method"
-          />
-          <FormControlLabel
-            control={<Checkbox checked={organisms} onChange={handleChange} name="organisms" />}
-            label="Organisms"
-          />
-          {/* <FormControlLabel
-            control={<Checkbox checked={universal_protein_nomenclature} onChange={handleChange} name="universal_protein_nomenclature" />}
-            label="Universal r-Protein Nomenclature"
-          /> */}
-          <FormControlLabel
-            control={<Checkbox checked={present_ligands} onChange={handleChange} name="present_ligands" />}
-            label="Present Ligands"
-          />
-        </FormGroup>
-        <FormHelperText>You have {structs.length} structures in scope.</FormHelperText>
-      </FormControl>																									
-    <CSVLink data={createSummary()}>
-                <Button onClick={handleClose} color="primary">
 
-            Download Summary (.csv)
-          </Button>
-</CSVLink>
-          <Divider/>
-            <DialogContentText style={{marginTop:"10px"}}>
-            Filtered models of the whole ribosome structures that you have filtered will be packed into a .zip archive and downloaded.
+          <DialogContentText style={{ marginTop: "10px" }}>
+          <Typography variant="h5">Download Summary Spreadsheet </Typography>
+          A <i>.csv</i> summary of the strands that you have filtered will be downloaded.
           </DialogContentText>
-          <Button onClick={handleClose} color="primary">
-            Download Models (.zip)
+
+          <CSVLink data={createSummary()}>
+            <Button onClick={handleClose} color="primary">
+              Download Summary (.csv)
           </Button>
+          </CSVLink>
+
+<List>
+<Divider/>
+</List>
+          <DialogContentText style={{ marginTop: "10px"}} >
+          <Typography variant="h5">Download Whole Models</Typography>
+            Filtered models of the whole ribosome structures that you have filtered will be packed into a <i>.zip</i> archive and downloaded.
+          </DialogContentText>
+
+          <Button onClick={handleClose} color="primary">
+            Download Model Strands (.zip)
+          </Button>
+
         </DialogContent>
       </Dialog>
     </div>

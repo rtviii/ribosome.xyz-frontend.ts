@@ -1,38 +1,29 @@
-import React, { useEffect } from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import { ListSubheader, Tooltip } from '@material-ui/core';
-import { Link, useHistory } from 'react-router-dom';
-
-import gear from './../../static/gear.png'
-import enzymes from './../../static/enzymes-icon.png'
-import ligands from './../../static/ligand_icon.svg'
-import home from './../../static/mainpage_icon.svg'
-import proteins from './../../static/protein_icon.svg'
-import rnas from './../../static/rna_icon.svg'
-import align from './../../static/align_icon.svg'
-import eye from './../../static/eye_icon.svg'
-import workspace from './../../static/bookmark_icon.svg'
-
-import Typography from '@material-ui/core/Typography';
-import {toggle_dashboard, toggle_dashboard_open_cart} from './../../redux/reducers/Interface/ActionTypes'
-import { AppState } from '../../redux/store';
-import { ThunkDispatch } from 'redux-thunk';
-import { AppActions } from '../../redux/AppActions';
-import { connect, useDispatch } from 'react-redux';
-import Grid from '@material-ui/core/Grid';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VerticalAlignCenterIcon from '@material-ui/icons/VerticalAlignCenter';
-import Paper from '@material-ui/core/Paper';
-import bookmark from './../../static/bookmark_icon.svg'
-import { toggle_cart } from '../../redux/reducers/Cart/ActionTypes';
+import   React           , { useEffect } from 'react'                                       ;
+import   clsx                            from 'clsx'                                        ;
+import { makeStyles       }              from '@material-ui/core/styles'                    ;
+import   Drawer                          from '@material-ui/core/Drawer'                    ;
+import   List                            from '@material-ui/core/List'                      ;
+import   Divider                         from '@material-ui/core/Divider'                   ;
+import   ListItem                        from '@material-ui/core/ListItem'                  ;
+import   ListItemIcon                    from '@material-ui/core/ListItemIcon'              ;
+import   ListItemText                    from '@material-ui/core/ListItemText'              ;
+import { ListSubheader   , Tooltip }     from '@material-ui/core'                           ;
+import { useHistory       }              from 'react-router-dom'                            ;
+import   gear                            from './../../static/gear.png'
+import   enzymes                         from './../../static/enzymes-icon.png'
+import   rnas                            from './../../static/rna_icon.svg'
+import   proteins                        from './../../static/protein_icon.svg'
+import   ligands                         from './../../static/ligand_icon.svg'
+import   home                            from './../../static/mainpage_icon.svg'
+import   align                           from './../../static/align_icon.svg'
+import   eye                             from './../../static/eye_icon.svg'
+import { toggle_dashboard }              from './../../redux/reducers/Interface/ActionTypes'
+import { AppState         }              from '../../redux/store'                           ;
+import { ThunkDispatch    }              from 'redux-thunk'                                 ;
+import { AppActions       }              from '../../redux/AppActions'                      ;
+import { connect         , useDispatch } from 'react-redux'                                 ;
+import   Grid                            from '@material-ui/core/Grid'                      ;
+import   bookmark                        from './../../static/bookmark_icon.svg'
 
 const useStyles = makeStyles({
   root:{
@@ -54,7 +45,6 @@ type MenuItemData = {
   linkto  : string
   menutext: string
 }
-
 
 interface DashState{dashboard_hidden:boolean};
 interface ToggleDash{toggle_dash:()=>void};

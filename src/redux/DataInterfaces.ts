@@ -20,6 +20,7 @@ export interface NeoHomolog {
 
 
 export interface RNAProfile {
+
         struct     : string,
         orgid      : number[]
         description: string
