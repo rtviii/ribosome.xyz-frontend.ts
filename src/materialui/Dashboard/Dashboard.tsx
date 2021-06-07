@@ -107,23 +107,7 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
       className={clsx(classes.list, {[classes.fullList]: anchor === 'left' || anchor === 'top',})}
       role="presentation">
       <MenuItem key='new'  icon={home} menutext="Home" linkto='/home'/>
-      <List>
 
-        <ListSubheader>Available Data</ListSubheader>
-
-        <MenuItem key='new'  icon={enzymes}   menutext="Structures" linkto='/structs' />
-        <MenuItem key='new'  icon={proteins} menutext="Proteins"   linkto='/rps'     />
-        <MenuItem key='new'  icon={rnas} menutext="RNA"        linkto='/rnas'    />
-        {/* <MenuItem key='new'  icon={enzymes} menutext="Ligands"    linkto='/ligands' /> */}
-
-      </List>
-      <Divider />
-      <List>
-
-        <ListSubheader>Tools</ListSubheader>
-        <MenuItem key = 'new1' icon = {eye}  menutext       = "Visualization Page" linkto = '/vis'          />
-        <MenuItem key = 'new1' icon = {align}  menutext     = "Alignment"          linkto = '/rpalign'      />
-        <MenuItem key = 'new1' icon = {ligands}  menutext   = "Binding Sites"      linkto = '/bindingsites' />
 
     <ListItem button onClick={async ()=>{
 
@@ -145,6 +129,26 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
 "Workspace"
 } />
     </ListItem>
+
+      <Divider />
+
+      <List>
+
+        <ListSubheader>Available Data</ListSubheader>
+
+        <MenuItem key='new' icon={enzymes } menutext="Structures" linkto='/structs' />
+        <MenuItem key='new' icon={proteins} menutext="Proteins"   linkto='/rps'     />
+        <MenuItem key='new' icon={rnas    } menutext="RNA"        linkto='/rnas'    />
+        {/* <MenuItem key='new'  icon={enzymes} menutext="Ligands"    linkto='/ligands' /> */}
+
+      </List>
+      <Divider />
+      <List>
+
+        <ListSubheader>Tools</ListSubheader>
+        <MenuItem key = 'new1' icon = {eye    } menutext = "Visualization" linkto = '/vis'          />
+        <MenuItem key = 'new1' icon = {align  } menutext = "Alignment"     linkto = '/rpalign'      />
+        <MenuItem key = 'new1' icon = {ligands} menutext = "Binding Sites" linkto = '/bindingsites' />
       </List>
     </div>
   );
