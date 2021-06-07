@@ -44,6 +44,7 @@ return rna.parent_resolution >= (value as number[])[0] && rna.parent_resolution 
       value    : [],
       set      : false,
       predicate: (value) => (rna) => {
+        if (value.length ===0 ){return true}
         return _.intersection(value, rna.orgid).length > 0 
       }
     },

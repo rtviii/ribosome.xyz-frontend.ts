@@ -1,7 +1,7 @@
 import { RibosomalProtein } from './../../RibosomeTypes'
 import { BanClassMetadataFiltType, ProteinActions, ProteinClassFilterTypes } from './ActionTypes'
-import { Filter, filterChange, FilterPredicates, FilterRegistry } from '../Filters/ActionTypes';
-import { BanClassMetadata } from '../../DataInterfaces';
+import { Filter, FilterRegistry } from '../Filters/ActionTypes';
+import { BanClassMetadata, ProteinProfile } from '../../DataInterfaces';
 import { toInteger } from 'lodash';
 import _ from 'lodash';
 
@@ -17,49 +17,59 @@ type subunit_families =
 
 
 const BanClassesFilterRegistry: FilterRegistry<BanClassMetadataFiltType, BanClassMetadata> = {
+
   filtstate: {
     "SEARCH": {
-      value: "",
-      set: false,
 
+      value    : "",
+      set      : false,
       predicate: (value) => (banclass) => {
-        
-        if (value.length <1){return true}
+        if (value.length <1){ return true }
         return banclass.banClass.toLowerCase().includes(value.toLowerCase())
       }
+
     },
+
     "SPECIES": {
-      value: [],
-      set: false,
+      value    : [],
+      set      : false,
       predicate: (value) => (banclass) => {
         return _.difference(banclass.organisms, value).length > 0 
       }
     },
   },
+
   applied: []
 }
 
-const ProteinClassFilterRegistry: FilterRegistry<ProteinClassFilterTypes, RibosomalProtein> = {
+const ProteinClassFilterRegistry: FilterRegistry<ProteinClassFilterTypes, ProteinProfile> = {
   filtstate: {
 
-    // "EXPERIMENTAL_METHOD":{
-    //   predicate: (value)=>(rp)=>{},
-    //   value    : [],
-    //   set      : false
-    // },
+    "EXPERIMENTAL_METHOD":{
+      value    : [],
+      set      : false,
+      predicate: (value) => (rp)=>{
+        if ( value.length === 0){
+          return true
+        }
+        return  value.includes(rp.parent_method)
+      }
+    },
+    "RESOLUTION":{
+      value    : [0,5],
+      set      : false,
+      predicate: (value) => (rp)=>{
+return rp.parent_resolution >= (value as number[])[0] && rp.parent_resolution <= (value as number[])[1]
+      }
+    },
 
-    // "RESOLUTION":{
-    //   predicate:()=>()=>true,
-    //   value:[],
-    //   set:false
-    // },
-
-    // "YEAR":{
-    //   predicate:()=>()=>true,
-    //   value:[],
-    //   set:false
-    // },
-    // !!+++++++++++++++++++++
+    "YEAR": {
+      value    : [2012, 2021],
+      set      : false,
+      predicate: (value) => (rp)=>{
+     return rp.parent_year >= (value as number[])[0] && rp.parent_year <= (value as number[])[1]
+      }
+    },
 
     "SEARCH": {
       value: "",
@@ -72,6 +82,7 @@ const ProteinClassFilterRegistry: FilterRegistry<ProteinClassFilterTypes, Riboso
       value    : [],
       set      : false,
       predicate: (value) => (rp) => {
+        if (value.length ===0){return true}
         return _.intersection(value, rp.rcsb_source_organism_id).length > 0 
       }
     },
@@ -82,16 +93,16 @@ const ProteinClassFilterRegistry: FilterRegistry<ProteinClassFilterTypes, Riboso
 
 interface ProteinsReducerState {
 
-  error: any,
-  is_loading: boolean;
+  error      : any,
+  is_loading : boolean;
   errored_out: boolean;
 
-  ban_class                   : RibosomalProtein[];
-  ban_class_derived           : RibosomalProtein[],
-  protein_clas_filter_registry: FilterRegistry<ProteinClassFilterTypes, RibosomalProtein>,
+  ban_class                   : ProteinProfile[];
+  ban_class_derived           : ProteinProfile[],
+  protein_class_filter_registry: FilterRegistry<ProteinClassFilterTypes, ProteinProfile>,
 
-  all_proteins                : RibosomalProtein[];
-  all_proteins_derived        : RibosomalProtein[],
+  all_proteins                : ProteinProfile[];
+  all_proteins_derived        : ProteinProfile[],
   ban_classes                 : {
     e_LSU: BanClassMetadata[],
     b_LSU: BanClassMetadata[],
@@ -110,17 +121,14 @@ interface ProteinsReducerState {
   }
   ,
   ban_classes_filter_registry: FilterRegistry<BanClassMetadataFiltType, BanClassMetadata>
-
-
-
-  current_page: number,
-  pages_total: number,
+  current_page               : number,
+  pages_total                : number,
 }
 
 const initialStateProteinsReducer: ProteinsReducerState = {
   ban_class: [],
   ban_class_derived: [],
-  protein_clas_filter_registry:ProteinClassFilterRegistry,
+  protein_class_filter_registry:ProteinClassFilterRegistry,
   all_proteins: [],
   all_proteins_derived: [],
   ban_classes: {
@@ -184,7 +192,10 @@ export const ProteinsReducer = (
 
     case "FILTER_PROTEIN_CLASS":
 
-      const updateProteinFilters = (filter_type: ProteinClassFilterTypes, set: boolean, applied: ProteinClassFilterTypes[]): ProteinClassFilterTypes[] => {
+      const updateProteinFilters = (
+        filter_type: ProteinClassFilterTypes, 
+        set: boolean, 
+        applied: ProteinClassFilterTypes[]): ProteinClassFilterTypes[] => {
 
         if ((set) && !(applied.includes(filter_type))) {
           return [...applied, filter_type]
@@ -192,6 +203,7 @@ export const ProteinsReducer = (
         else if (!(set) && (applied.includes(filter_type))) {
           return applied.filter(t => t !== filter_type)
         }
+
         else if (set && applied.includes(filter_type)) {
           return applied
         }
@@ -206,21 +218,21 @@ export const ProteinsReducer = (
       updateProteinFilters(
          action.filter_type,
          action.set,
-         state.protein_clas_filter_registry.applied)
+         state.protein_class_filter_registry.applied)
 
-      var newProteinFilterState: Filter<RibosomalProtein> = {
+      var newProteinFilterState: Filter<ProteinProfile> = {
         set      : action.set,
         value    : action.newvalue,
-        predicate: state.protein_clas_filter_registry.filtstate[action.filter_type].predicate
+        predicate: state.protein_class_filter_registry.filtstate[action.filter_type].predicate
       }
 
       
       var nextProteinFilters = Object.assign(
           {},
-          state.protein_clas_filter_registry,
+          state.protein_class_filter_registry,
           {
             filtstate: {
-              ...state.protein_clas_filter_registry.filtstate,
+              ...state.protein_class_filter_registry.filtstate,
               ...{ [action.filter_type]: newProteinFilterState }
             }
           },
@@ -228,10 +240,12 @@ export const ProteinsReducer = (
         )
 
         for (var filter of nextProteinFilters.applied){
-          filtered_class = filtered_class.filter(state.protein_clas_filter_registry.filtstate[action.filter_type].predicate(action.newvalue))
+          filtered_class = filtered_class.filter(state.protein_class_filter_registry.filtstate[action.filter_type].predicate(action.newvalue))
         }
       
-     return {...state, protein_clas_filter_registry:nextProteinFilters, ban_class_derived:filtered_class, pages_total: Math.ceil(filtered_class.length/20), current_page:1}
+    // console.log("filtered:", filtered_class);
+    
+     return {...state, protein_class_filter_registry:nextProteinFilters, ban_class_derived:filtered_class, pages_total: Math.ceil(filtered_class.length/20), current_page:1}
 
 
     case "GOTO_PAGE_PROTEINS":
@@ -311,9 +325,8 @@ export const ProteinsReducer = (
         )
 
 
-      for (var filter of newApplied) {
+      for (var ban_class_filter of newApplied) {
         for (var key of Object.keys(state.ban_classes)) {
-
         var filtx = [...state.ban_classes[key as subunit_families]].filter(state.ban_classes_filter_registry.filtstate[action.filter_type].predicate(action.newvalue))
         Object.assign(filtered_classes, {[key] : filtx  })
         }

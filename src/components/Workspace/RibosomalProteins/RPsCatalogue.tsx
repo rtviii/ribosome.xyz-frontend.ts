@@ -18,9 +18,7 @@ import TextField from '@material-ui/core/TextField/TextField';
 import PageAnnotation from '../Display/PageAnnotation';
 import { ListSubheader } from '@material-ui/core';
 import _ from 'lodash';
-import useDebounce from 'use-debounce/lib/useDebounce';
-import Typography from '@material-ui/core/Typography/Typography';
-import Slider from '@material-ui/core/Slider/Slider';
+
 
 export interface BanPaperEntry {
     pfamDomainAccession  :  Array<string>;
@@ -30,7 +28,6 @@ export interface BanPaperEntry {
     h                    :  string | null;
 }
 
-
 interface SliderFilterProps {
   filter_type: BanClassMetadataFiltType;
   name               :  string;
@@ -38,45 +35,7 @@ interface SliderFilterProps {
   min                :  number;
   step               :  number;
 }
-const ValueSlider= (prop:SliderFilterProps ) => {
 
-  const useSliderStyles = makeStyles({
-    root: {
-      width: 300,
-    },
-  });
-
-  const dispatch = useDispatch();
-  const classes           = useSliderStyles();
-  const [value, setValue] = React.useState<number[]>([prop.min, prop.max]);
-  const [debounced_val]   = useDebounce(value,500)
-
-  const handleChange = (event: any, newValue: number | number[]) => {
-    setValue(newValue as number[]);
-  };
-  useEffect(() => {
-    dispatch(BanMetadataFilterChangeAC(value,prop.filter_type))
-  }, [debounced_val])
-
-  return (
-    <div className={classes.root}>
-      <Typography id="range-slider" gutterBottom>
-        {prop.name}
-      </Typography>
-
-      <Slider
-        marks
-        min               = {prop.min}
-        max               = {prop.max}
-        step              = {prop.step}
-        value             = {value as any}
-        onChange          = {handleChange}
-        valueLabelDisplay = "auto"
-        aria-labelledby   = "range-slider"
-      />
-    </div>
-  );
-};
 
 const RPsCatalogue = () => {
 
