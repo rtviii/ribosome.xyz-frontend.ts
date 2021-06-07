@@ -86,6 +86,11 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   }, [last_sort_set])
 
 
+  const cartItems = useSelector(( state:AppState ) => state.cart.items)
+  const cartStructs = useSelector(( state:AppState ) => state.cart.structs)
+  useEffect(() => {
+  }, [cartItems])
+
   return ! prop.loading ? (
     <Grid container xs={12} spacing={1}>
       <Grid item xs={12}>
@@ -144,7 +149,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
             .slice(( prop.current_page-1 ) * 20, prop.current_page * 20 )
             .map((x, i) => (
               <Grid item>
-                <StructHero {...x} key={i} />
+                <StructHero d={x} inCart={ cartStructs.includes(x.struct.rcsb_id) } key={i} />
               </Grid>
             ))}
         </Grid>

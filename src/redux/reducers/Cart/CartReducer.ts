@@ -17,12 +17,16 @@ interface CartReducerState {
 
     open    : boolean,
     // proteins: RibosomalProtein[],
+    structs: string[],
     items: CartItem[],
 
 }
 
 const initialCartReducerState:CartReducerState = {
 
+
+
+  structs:[],
     open    : false,
     items: []
     // proteins: []
@@ -45,12 +49,21 @@ export const CartReducer = (
         alert(" This is already in the workspace.")
         return state
       }
+      if (isStruct(action.item)){
+
+        console.log("Added item", action.item);
+        
+      return {...state, items: [...state.items, action.item], structs:[...state.structs, action.item.rcsb_id]}
+      }
       return {...state, items: [...state.items, action.item]}
 
     case "CART_REMOVE_ITEM":
-      return {...state, items: state.items.filter(i => {
-        return !_.isEqual(i, action.item)
-      })
+      if (isStruct(action.item)){
+        console.log("removed item", action.item);
+       var newstructs = state.structs.filter(r=>r !==(action.item as RibosomeStructure).rcsb_id)
+      return {...state, items: state.items.filter(i => {return !_.isEqual(i, action.item)}),structs:newstructs}
+      }
+      return {...state, items: state.items.filter(i => {return !_.isEqual(i, action.item)})
     }
 
     default:
