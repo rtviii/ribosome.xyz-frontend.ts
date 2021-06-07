@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Link, Route, useParams } from "react-router-dom";
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import   React         , { useEffect, useState } from "react"                        ;
+import { Link          , Route, useParams }      from "react-router-dom"             ;
+import   VisibilityIcon                          from '@material-ui/icons/Visibility';
 
 import {
   Ligand,
@@ -9,42 +9,43 @@ import {
   rRNA,
 } from "../../../redux/RibosomeTypes";
 
-import "./StructurePage.css";
-import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
-import { flattenDeep } from "lodash";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { AppState } from "../../../redux/store";
-import { useHistory } from 'react-router-dom';
-import { ThunkDispatch } from "redux-thunk";
-import { AppActions } from "../../../redux/AppActions";
-import LoadingSpinner from './../../Other/LoadingSpinner'
-import { Tooltip } from "react-bootstrap";
-import { OverlayTrigger } from "react-bootstrap";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
-import Popover from "@material-ui/core/Popover";
-import { makeStyles } from "@material-ui/core/styles";
-import { DashboardButton } from "../../../materialui/Dashboard/Dashboard";
-import RibosomalProteinCard from "../RibosomalProteins/RibosomalProteinCard";
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import fileDownload from "js-file-download";
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import Collapse from "@material-ui/core/Collapse";
-import CardHeader from "@material-ui/core/CardHeader";
-import SimpleBackdrop from "../Backdrop";
-import { struct_page_choice } from "../../../redux/reducers/Interface/ActionTypes";
-import BookmarkIcon from '@material-ui/icons/Bookmark';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import { RNACard } from "../RNA/RNACard";
-import { cart_add_item } from "../../../redux/reducers/Cart/ActionTypes";
+import                                            "./StructurePage.css"                          ;
+import { getNeo4jData } from                      "../../../redux/AsyncActions/getNeo4jData"     ;
+import { flattenDeep } from                       "lodash"                                       ;
+import { connect, useDispatch, useSelector } from "react-redux"                                  ;
+import { AppState } from                          "../../../redux/store"                         ;
+import { useHistory } from                        'react-router-dom'                             ;
+import { ThunkDispatch } from                     "redux-thunk"                                  ;
+import { AppActions } from                        "../../../redux/AppActions"                    ;
+import LoadingSpinner from                        './../../Other/LoadingSpinner'
+import { Tooltip } from                           "react-bootstrap"                              ;
+import { OverlayTrigger } from                    "react-bootstrap"                              ;
+import Card from                                  "@material-ui/core/Card"                       ;
+import CardContent from                           "@material-ui/core/CardContent"                ;
+import Grid from                                  "@material-ui/core/Grid"                       ;
+import Typography from                            "@material-ui/core/Typography"                 ;
+import CardActions from                           "@material-ui/core/CardActions"                ;
+import Button from                                "@material-ui/core/Button"                     ;
+import Popover from                               "@material-ui/core/Popover"                    ;
+import { makeStyles } from                        "@material-ui/core/styles"                     ;
+import { DashboardButton } from                   "../../../materialui/Dashboard/Dashboard"      ;
+import RibosomalProteinCard from                  "../RibosomalProteins/RibosomalProteinCard"    ;
+import CardMedia from                             '@material-ui/core/CardMedia'                  ;
+import CardActionArea from                        '@material-ui/core/CardActionArea'             ;
+import List from                                  "@material-ui/core/List"                       ;
+import ListItem from                              "@material-ui/core/ListItem"                   ;
+import fileDownload from                          "js-file-download"                             ;
+import ExpandLess from                            '@material-ui/icons/ExpandLess'                ;
+import ExpandMore from                            '@material-ui/icons/ExpandMore'                ;
+import Collapse from                              "@material-ui/core/Collapse"                   ;
+import CardHeader from                            "@material-ui/core/CardHeader"                 ;
+import SimpleBackdrop from                        "../Backdrop"                                  ;
+import { struct_page_choice } from                "../../../redux/reducers/Interface/ActionTypes";
+import BookmarkIcon from                          '@material-ui/icons/Bookmark'                  ;
+import GetAppIcon from                            '@material-ui/icons/GetApp'                    ;
+import { RNACard } from                           "../RNA/RNACard"                               ;
+import { cart_add_item } from                     "../../../redux/reducers/Cart/ActionTypes"     ;
+import { RNAProfile } from "../../../redux/DataInterfaces";
 
  export const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:any, value:string| string[]|number})=>{
 
@@ -256,14 +257,18 @@ const history = useHistory();
 
         <Grid item container    spacing={1}>
           {
-          rrnas.map(obj => (
+          rrnas.map( obj => (
           <Grid item xs={12}>
             <RNACard e={{
-description: obj.rcsb_pdbx_description as string,
-orgid      : obj.rcsb_source_organism_id,
-seq        : obj.entity_poly_seq_one_letter_code,
-strand     : obj.entity_poly_strand_id,
-struct     : obj.parent_rcsb_id
+description      : obj.rcsb_pdbx_description as string,
+orgid            : obj.rcsb_source_organism_id,
+seq              : obj.entity_poly_seq_one_letter_code,
+strand           : obj.entity_poly_strand_id,
+struct           : obj.parent_rcsb_id,
+parent_method    : structdata!.expMethod,
+parent_resolution: structdata!.resolution,
+parent_title     : structdata!.citation_title,
+parent_year      : structdata!.citation_year
             }} 
             
             displayPill={false}/>

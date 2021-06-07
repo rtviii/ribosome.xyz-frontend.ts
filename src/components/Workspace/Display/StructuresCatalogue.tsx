@@ -214,17 +214,18 @@ export const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
 }
 
 interface SliderFilterProps {
-  filter_type: StructFilterType;
-  name               :  string;
-  max                :  number;
-  min                :  number;
-  step               :  number;
+  action_to_dispatch   : (value:any, filterType:any)=>void;
+  filter_type: any;
+  name       : string;
+  max        : number;
+  min        : number;
+  step       : number;
 }
-const ValueSlider= (prop:SliderFilterProps ) => {
+export const ValueSlider= (prop:SliderFilterProps ) => {
 
   const useSliderStyles = makeStyles({
     root: {
-      width: 300,
+      width: "100%",
     },
   });
 
@@ -237,7 +238,7 @@ const ValueSlider= (prop:SliderFilterProps ) => {
     setValue(newValue as number[]);
   };
   useEffect(() => {
-    dispatch(structsFilterChangeAC(value,prop.filter_type))
+    dispatch(prop.action_to_dispatch(value,prop.filter_type))
   }, [debounced_val])
 
   return (
@@ -563,32 +564,29 @@ useEffect(() => {
           <StructuresSearchField/>
         </ListItem>
         <ListItem key={"year"}>
-          <ValueSlider {...{filter_type: "YEAR",max:2021,min:2012,name:"Deposition Date", step:1}}/>
+          <ValueSlider {...{filter_type: "YEAR",max:2021,min:2012,name:"Deposition Date", step:1, action_to_dispatch:structsFilterChangeAC}}/>
         </ListItem>
         <ListItem key={"resolution"}>
-          <ValueSlider {...{filter_type: "RESOLUTION",max:6,min:1,name:"Resolution", step:0.1}}/>
+          <ValueSlider {...{filter_type: "RESOLUTION",max:6,min:1,name:"Resolution", step:0.1, action_to_dispatch: structsFilterChangeAC}}/>
         </ListItem>
         <ListItem key={"select-proteins"} >
           <ProteinsPresentFilter/>
         </ListItem>
         <ListItem key={"method-toggle"} >
     <ToggleButtonGroup
-      value = {method}
-      // exclusive
-      onChange={handleAlignment}
-      aria-label="text alignment"
-      className={MethodClasses.root}
+      value      = {method}
+      onChange   = {handleAlignment}
+      aria-label = "text alignment"
+      className  = {MethodClasses.root}
     >
       <ToggleButton 
       className={MethodClasses.root}
       value="X-RAY DIFFRACTION" aria-label="left aligned">
         XRAY
       </ToggleButton>
-
       <ToggleButton 
-      
-      className={MethodClasses.root}
-      value="ELECTRON MICROSCOPY" aria-label="right aligned" >
+      className = {MethodClasses.root}
+      value     = "ELECTRON MICROSCOPY" aria-label = "right aligned" >
         EM
       </ToggleButton>
 

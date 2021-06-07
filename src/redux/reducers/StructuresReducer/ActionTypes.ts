@@ -59,12 +59,12 @@ export const structsFilterChangeAC = (
       //   return !(newval[0] === 25 && newval[1] === 150);
       case "RESOLUTION":
         return !(newval[0] === 1 && newval[1] === 6);
+      case "YEAR":
+        return !(newval[0] === 2012 && newval[1] === 2021);
       case "SEARCH":
         return !(newval.length === 0);
       case "SPECIES":
         return !(newval.length === 0);
-      case "YEAR":
-        return !(newval[0] === 2012 && newval[1] === 2021);
       default:
         return false;
     }

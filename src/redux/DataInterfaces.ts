@@ -26,19 +26,15 @@ export interface RNAProfile {
         description: string
         seq        : string
         strand     : string
+        parent_year      : number
+        parent_resolution: number
+        parent_method    : string
+        parent_title     : string
+        
+
+
 }
 
-
-// export interface RNAProfile {
-
-
-
-//   rna    : rRNA
-//   parent : string
-//   orgname: string[]
-//   orgid  : number[]
-//   title  : string
-// }
 
 export interface StructureWithLigand{
   _organismId          : number[];

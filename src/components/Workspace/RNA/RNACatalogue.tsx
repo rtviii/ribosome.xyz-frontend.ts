@@ -34,6 +34,10 @@ import DialogContentText from                                          "@materia
 import { RnaClass } from                                               "../../../redux/reducers/RNA/RNAReducer"                ;
 import { Cart } from "../Cart/Cart";
 import { Divider } from "material-ui";
+import { ValueSlider } from "../Display/StructuresCatalogue";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup/ToggleButtonGroup";
+import ToggleButton from "@material-ui/lab/ToggleButton/ToggleButton";
+import { structsFilterChangeAC } from "../../../redux/reducers/StructuresReducer/ActionTypes";
 
 const pageData = {
   title: "Ribosomal, messenger, transfer RNA",
@@ -47,22 +51,12 @@ const BulkDownloadMenu=()=> {
   const [open              , setOpen] = React       . useState(false);
   const current_class:RnaClass        = useSelector(( state    : AppState) => state.rna.current_rna_class)
   const current_class_derived         = useSelector(( state    : AppState) => state.rna.rna_classes_derived[current_class])
-  const useCheckboxStyles             = makeStyles  ((theme    : Theme) =>
-    createStyles({
-    formControl: {
-      margin: theme.spacing(3),
-    },
-  }),
-);
-
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
-
 
   const createSummary = ():any[][] =>{
 
@@ -80,6 +74,7 @@ const BulkDownloadMenu=()=> {
     return bulkDownload
   }
   return (
+
     <div style={{width:"100%"}}>
       <Button 
       variant = "outlined"
@@ -105,12 +100,11 @@ const BulkDownloadMenu=()=> {
               Download Summary (.csv)
           </Button>
           </CSVLink>
-
-<List>
-<Divider/>
-</List>
-          <DialogContentText style={{ marginTop: "10px"}} >
-          <Typography variant="h5">Download Whole Models</Typography>
+          <List>
+            <Divider />
+          </List>
+          <DialogContentText style={{ marginTop: "10px" }} >
+            <Typography variant="h5">Download Whole Models</Typography>
             Filtered models of the whole ribosome structures that you have filtered will be packed into a <i>.zip</i> archive and downloaded.
           </DialogContentText>
 
@@ -121,6 +115,7 @@ const BulkDownloadMenu=()=> {
         </DialogContent>
       </Dialog>
     </div>
+
   );
 }
 
@@ -196,6 +191,19 @@ useEffect(() => {
   dispatch(RnaClassFilterChangeAC(selectedSpecies,"SPECIES"))
 }, [selectedSpecies])
 
+  const [method, setMethod] = React.useState<string | null>('');
+  const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: string | null) => {
+    setMethod(newAlignment);
+  };
+  const MethodClasses =  makeStyles({
+    root:{
+        width:"100%",
+    }
+  })();
+
+  useEffect(() => {
+    dispatch(RnaClassFilterChangeAC(method,"EXPERIMENTAL_METHOD"))
+  }, [method])
 
   return (
     <Grid container xs={12} spacing={1}>
@@ -208,6 +216,38 @@ useEffect(() => {
           <ListItem key={"rps-searchfield"} >
             <TextField id="standard-basic" label="Search" value={search} onChange={handleSearchChange} />
           </ListItem>
+
+        <ListItem key={"resolution"}>
+          <ValueSlider {...{filter_type: "RESOLUTION",max:6,min:1,name:"Resolution", step:0.1, action_to_dispatch:RnaClassFilterChangeAC}}/>
+        </ListItem>
+
+        <ListItem key={"year"}>
+          <ValueSlider {...{filter_type: "YEAR",max:2021,min:2012,name:"Deposition Date", step:1, action_to_dispatch:RnaClassFilterChangeAC}}/>
+        </ListItem>
+
+
+        <ListItem key={"method-toggle"} >
+    <ToggleButtonGroup
+      value      = {method}
+      onChange   = {handleAlignment}
+      aria-label = "text alignment"
+      className  = {MethodClasses.root}
+    >
+      <ToggleButton 
+      className={MethodClasses.root}
+      value="X-RAY DIFFRACTION" aria-label="left aligned">
+        XRAY
+      </ToggleButton>
+
+      <ToggleButton 
+      className={MethodClasses.root}
+      value="ELECTRON MICROSCOPY" aria-label="right aligned" >
+        EM
+      </ToggleButton>
+
+    </ToggleButtonGroup>
+        </ListItem>
+
           <ListItem>
             <DropdownTreeSelect data={data} onChange={onChange} keepOpenOnSelect={true} keepTreeOnSearch={true} keepChildrenOnSearch={true} />
           </ListItem>

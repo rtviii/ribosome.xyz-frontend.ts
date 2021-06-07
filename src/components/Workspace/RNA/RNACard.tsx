@@ -52,8 +52,9 @@ const useStyles = makeStyles({
   }
 });
 
-interface OwnProps{e:RNAProfile,
-displayPill:boolean}
+interface OwnProps{
+  e:RNAProfile,
+  displayPill:boolean}
 type RNACardProps =  OwnProps
 
 export const RNACard:React.FC<RNACardProps> = (prop) => {
@@ -127,7 +128,7 @@ export const RNACard:React.FC<RNACardProps> = (prop) => {
               prop.displayPill?
 
             <Grid item >
-              <ChainParentPill parent_id={prop.e.struct}strand_id={prop.e.strand}/>
+              <ChainParentPill parent_id={prop.e.struct as string} strand_id={prop.e.strand as string}/>
 
             </Grid>:""
             }
@@ -143,15 +144,15 @@ export const RNACard:React.FC<RNACardProps> = (prop) => {
         <Grid container xs={12}>
 <Grid container item xs={8}>
             <Button size="small" style={{textTransform:"none"}}aria-describedby={id} onClick={handleClick}>
-              Sequence (<i>{prop.e.seq.length} NTs</i>)
+              Sequence (<i>{( prop.e.seq as string ).length} NTs</i>)
             </Button>
             <Button
               size="small"
               style={{textTransform:"none"}}
               onClick={() =>
                 downloadChain(
-                  prop.e.struct,
-                  prop.e.strand
+                   prop.e.struct as string ,
+                  prop.e.strand as string
                 )
               }
             >
@@ -165,8 +166,6 @@ export const RNACard:React.FC<RNACardProps> = (prop) => {
             <Button  
             
             onClick={()=>{
-
-
               dispatch(cart_add_item(prop.e))
             }}
             
