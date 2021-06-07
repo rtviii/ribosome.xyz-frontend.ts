@@ -12,6 +12,9 @@ import Grid from '@material-ui/core/Grid';
 import PageAnnotation from '../Display/PageAnnotation';
 import { WarningPopover } from './../WorkInProgressChip'
 import { DashboardButton } from '../../../materialui/Dashboard/Dashboard';
+import { Cart } from '../Cart/Cart';
+import List from '@material-ui/core/List/List';
+import { ListItem } from 'material-ui';
 
 
 
@@ -136,7 +139,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
         <Grid item xs={2} className='alignment-dash'>
-
+          <Cart/>
           <div>
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="grouped-native-select">
@@ -181,7 +184,6 @@ const useStyles = makeStyles((theme: Theme) =>
               </Select>
             </FormControl>
           </div>
-
           <Grid container direction="column" xs={4} item>
             <Grid direction="column" xs={4} item></Grid>
             <Grid direction="column" xs={4} item></Grid>

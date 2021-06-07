@@ -1,7 +1,7 @@
 import Paper from '@material-ui/core/Paper/Paper'
 import React from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
-import { NeoHomolog, RNAProfile } from '../../../redux/DataInterfaces'
+import {  useDispatch, useSelector } from 'react-redux'
+import {  RNAProfile } from '../../../redux/DataInterfaces'
 import { AppState } from '../../../redux/store'
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -9,22 +9,13 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
-import CommentIcon from '@material-ui/icons/Comment';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import Divider from '@material-ui/core/Divider';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
-import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData'
-import ContentSelectAll from 'material-ui/svg-icons/content/select-all'
-import axios from 'axios'
-import fileDownload from 'js-file-download'
-import { ListSubheader } from '@material-ui/core'
 import { RibosomalProtein, RibosomeStructure } from '../../../redux/RibosomeTypes'
 import DeleteIcon from '@material-ui/icons/Delete';
 import { cart_remove_item, toggle_cart } from '../../../redux/reducers/Cart/ActionTypes'
@@ -82,7 +73,7 @@ export const Cart= () => {
 
              Workspace
 
-            (<i>{cartitems.length}</i>)
+            ({cartitems.length} items)
 
             </Button>
 

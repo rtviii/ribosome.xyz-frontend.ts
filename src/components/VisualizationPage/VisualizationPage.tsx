@@ -34,6 +34,7 @@ import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { Widgets } from '@material-ui/icons';
 import { useHistory, useParams } from 'react-router';
 import _ from 'lodash'
+import { Cart } from '../Workspace/Cart/Cart';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -438,6 +439,9 @@ uniq(flattenDeep(protClassInfo.comments)).filter(r=>r!=="NULL").map(r =>
           <ListItem>
 
 <RenderInViewInfo type={inViewData.type} structdata={structdata as RibosomeStructure} protClassInfo={protClassInfo}/>
+          </ListItem>
+          <ListItem>
+          <Cart/>
           </ListItem>
 
           <ListItem>

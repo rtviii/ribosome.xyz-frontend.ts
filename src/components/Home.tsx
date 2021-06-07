@@ -35,6 +35,7 @@ import List from "@material-ui/core/List";
 import ListItem, { ListItemProps } from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { DashboardButton } from "../materialui/Dashboard/Dashboard";
+import { Cart } from "./Workspace/Cart/Cart";
 
 interface ReduxProps {
   __rx_structures: NeoStruct[];
@@ -524,6 +525,9 @@ const Home: React.FC<ReduxProps> = prop => {
       <List>
         <ListItem >
           <DashboardButton/>
+        </ListItem>
+        <ListItem >
+         <Cart/>
         </ListItem>
 
       </List>

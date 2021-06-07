@@ -4,6 +4,7 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import fileDownload from                          "js-file-download"                             ;
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -18,6 +19,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { CartItem, cart_add_item, cart_remove_item } from '../redux/reducers/Cart/ActionTypes';
 import _ from 'lodash';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import GetApp from '@material-ui/icons/GetApp';
+import { getNeo4jData } from '../redux/AsyncActions/getNeo4jData';
 
 const useStyles = makeStyles({  card: {
     width:300
@@ -146,6 +150,25 @@ export const StructHero=({d,inCart}:{ d:NeoStruct, inCart:boolean })=> {
         <Button href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
           EMDB
         </Button>
+        <GetApp 
+        
+        
+        
+        onClick={()=>{
+
+                  getNeo4jData("static_files",{endpoint:"download_structure",params:{struct_id:d.struct.rcsb_id}})
+                  .then(r=>{
+
+                    fileDownload(
+                      r.data,
+                      `${d.struct.rcsb_id}.cif`,
+                      "chemical/x-mmcif"
+                    )
+                  })
+
+                }}
+        
+        />
 
 {inCart ? 
 

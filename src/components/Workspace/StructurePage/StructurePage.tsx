@@ -46,6 +46,7 @@ import GetAppIcon from                            '@material-ui/icons/GetApp'   
 import { RNACard } from                           "../RNA/RNACard"                               ;
 import { cart_add_item } from                     "../../../redux/reducers/Cart/ActionTypes"     ;
 import { RNAProfile } from "../../../redux/DataInterfaces";
+import { Cart } from "../Cart/Cart";
 
  export const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:any, value:string| string[]|number})=>{
 
@@ -377,7 +378,7 @@ parent_year      : structdata!.citation_year
 
   return structdata ? (
     <Grid xs={12} container item spacing={2} style={{ padding: "5px" }}>
-      <Grid xs={3} container item alignContent="flex-start">
+      <Grid xs={3} container item alignContent="flex-start" spacing={2}>
         <Card className={classes.card}>
           <CardHeader
             title     = {`${structdata.rcsb_id}`}
@@ -523,7 +524,13 @@ Download
  </Grid>           </Grid>
           </CardActions>
         </Card>
+        <Grid item>
+
+        <Cart/>
+        </Grid>
+        <Grid item>
         <DashboardButton />
+        </Grid>
       </Grid>
 
       <Grid  container item xs={9}  spacing={1} alignContent="flex-start" alignItems="flex-start">
