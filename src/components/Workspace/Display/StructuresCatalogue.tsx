@@ -30,29 +30,17 @@ import DropdownTreeSelect from 'react-dropdown-tree-select'
 import Pagination from './Pagination'
 import Backdrop from './../Backdrop'
 import { CSVLink } from "react-csv";
-import { StructFilterType, structsFilterChangeAC, structsSortChangeAC } from "../../../redux/reducers/StructuresReducer/ActionTypes";
+import {  structsFilterChangeAC, structsSortChangeAC } from "../../../redux/reducers/StructuresReducer/ActionTypes";
 import Paper from "@material-ui/core/Paper";
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Checkbox from '@material-ui/core/Checkbox';
 import Divider from "@material-ui/core/Divider";
 import 'react-dropdown-tree-select/dist/styles.css'
 import './StructuresCatalogue.css'
-import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
-import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter';
-import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
-import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import { cart_add_item } from "../../../redux/reducers/Cart/ActionTypes";
 
 const pageData ={
   title: "Ribosome Structures",
@@ -314,13 +302,13 @@ const ProteinsPresentFilter =()=> {
 
       <Autocomplete
         multiple
-        id="size-small-outlined-multi"
-        size="small"
-        options={BanClassNames}
-        getOptionLabel={(option) => option}
-        defaultValue={[]}
-        value={proteinsPresent as string[]}
-        onChange={
+        id             = "size-small-outlined-multi"
+        size           = "small"
+        options        = {BanClassNames}
+        getOptionLabel = {(option) => option}
+        defaultValue   = {[]}
+        value          = {proteinsPresent as string[]}
+        onChange       = {
           
           (e:any, value:string[])=>{
             dispatch(structsFilterChangeAC( value, "PROTEINS_PRESENT"))

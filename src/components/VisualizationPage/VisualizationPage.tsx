@@ -42,6 +42,7 @@ import _ from 'lodash'
 import { Cart } from '../Workspace/Cart/Cart';
 import { ListItemText } from '@material-ui/core';
 import NativeSelect from '@material-ui/core/NativeSelect/NativeSelect';
+import Divider from '@material-ui/core/Divider/Divider';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -80,20 +81,30 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     setVal(item);
     selectStruct(item)
   };
+
+
+ const structs = useSelector(( state:AppState ) => state.structures.derived_filtered.map(str=>( { 
+   
+  title: str.struct.citation_title, rcsb_id:str.struct.rcsb_id } )))
   return (
-    <FormControl className={styles.formControl}>
-      <InputLabel id="demo-simple-select-label">Structures</InputLabel>
-      <Select
-        className={styles.select}
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={curVal}
-        onChange={handleChange}>
-        {items.map((i) =>
-          <MenuItem value={i.rcsb_id}>{i.rcsb_id}</MenuItem>
-        )}
-      </Select>
-    </FormControl>
+
+
+          <Autocomplete
+          style          = {{fontSize:"12px"}}
+          size           = "small"
+          options        = {structs}
+          getOptionLabel = {(parent) =>   parent.rcsb_id + " : "+ parent.title}
+          // @ts-ignore
+          onChange     = {(event: any, newValue: any) => {
+            if (newValue === null){
+              return 
+            }
+            selectStruct(newValue!.rcsb_id )
+          }}
+          renderOption = {(option) => (<div style={{fontSize:"10px", width:"400px"}}><b>{option.rcsb_id}</b> ({option.title} ) </div>)}
+          renderInput  = {(params) => <TextField {...params} style={{width:"400px", fontSize:"8px"}} label="Structure" variant="outlined" />}
+          />
+
   )
 }
 
@@ -121,7 +132,27 @@ const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMet
 
   };
   return (
-    <div>
+
+
+
+          // <Autocomplete
+          // style          = {{fontSize:"12px"}}
+          // size           = "small"
+          // options        = {structs}
+          // getOptionLabel = {(parent) =>   parent.rcsb_id + " : "+ parent.title}
+          // // @ts-ignore
+          // onChange     = {(event: any, newValue: any) => {
+          //   if (newValue === null){
+          //     return 
+          //   }
+          //   selectStruct(newValue!.rcsb_id )
+          // }}
+          // renderOption = {(option) => (<div style={{fontSize:"10px", width:"400px"}}><b>{option.rcsb_id}</b> ({option.title} ) </div>)}
+          // renderInput  = {(params) => <TextField {...params} style={{width:"400px", fontSize:"8px"}} label="Structure" variant="outlined" />}
+          // />
+
+
+    <Grid xs={12} style={{outline:"1px solid gray", borderRadius:"5px"}}>
       <FormControl className={styles.sub}>
         <InputLabel id="demo-simple-select-label">Protein Chain</InputLabel>
         <Select
@@ -147,7 +178,7 @@ const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMet
           )}
         </Select>
       </FormControl>
-    </div>
+</Grid>
   )
 }
 
@@ -200,7 +231,7 @@ const parents = useSelector(( state:AppState ) => Object.values(state.rna.rna_cl
 
 
 
-const [selectrnaClass, setSelectRnaClass] = useState<string>('5s')
+const [selectrnaClass, setSelectRnaClass] = useState<string>('5')
 
 const autocomopleteStyles = ( makeStyles((theme: Theme) =>
   createStyles({
@@ -218,8 +249,9 @@ const autocomopleteStyles = ( makeStyles((theme: Theme) =>
     <Grid item xs={12}>
       <List style={{outline:"1px solid gray", borderRadius:"5px"}}>
 
-<ListItem>
+{/* <ListItem>
         <FormControl >
+
           <InputLabel style={{width:"300px"}} >Select RNA Strand By..</InputLabel>
           <Select
             placeholder = "Class/Parent Structure..."
@@ -231,11 +263,14 @@ const autocomopleteStyles = ( makeStyles((theme: Theme) =>
             {[{ t: 'Parent Structure', v: 'Parent Structure' }, { t: 'RNA Class', v: "RNA Class" }].map((i) => <MenuItem value={i.v}>{i.t}</MenuItem>)}
           </Select>
         </FormControl>
-</ListItem>
-{
-  selectBy === 'Parent Structure'  ? 
+</ListItem> */}
 
+<ListItem>
+
+<ListItemText> Search by Structure or RNA Class</ListItemText>
+</ListItem>
           <ListItem>
+
           <Autocomplete
           className      = {autocomopleteStyles.root}
           style          = {{fontSize:"12px"}}
@@ -243,41 +278,18 @@ const autocomopleteStyles = ( makeStyles((theme: Theme) =>
           options        = {parents}
           getOptionLabel = {(parent) =>   parent.rcsb_id+ ":"+parent.des }
           // @ts-ignore
-          onChange     = {(event: any, newValue: string | null) => {console.log(newValue);}}
+          onChange     = {(event: any, newValue: string | null) => {
+            
+            if (newValue === null){
+              return
+            }
+            console.log(newValue)
+
+          }}
           renderOption = {(option) => (<div style={{fontSize:"10px", width:"400px"}}><b>{option.rcsb_id}</b> ({option.title} ) ::: <i>{option.des}</i></div>)}
           renderInput  = {(params) => <TextField {...params} style={{width:"400px", fontSize:"8px"}} label="Parent Structure" variant="outlined" />}
           />
 </ListItem>
-          :
-
-          <ListItem>
-
-            <FormControl>
-          <InputLabel style={{width:"300px"}} >RNA Class</InputLabel>
-
-          <Select
-            placeholder = ""
-            value       = {selectrnaClass}
-            onChange    = {(event: any) => {
-              setSelectRnaClass(event.target.value);
-            }}>
-
-            {[
-              {t:'mRNA'    ,v:'mrna'},
-              {t:'tRNA'    ,v:'trna'},
-              {t:'5S RNA'  ,v:'5'   },
-              {t:'5.8S RNA',v:'5.8' },
-              {t:'12S RNA' ,v:'12'  },
-              {t:'16S RNA' ,v:'16'  },
-              {t:'21S RNA' ,v:'21'  },
-              {t:'23S RNA' ,v:'23'  },
-              {t:'28S RNA' ,v:'28'  },
-              {t:'35S RNA' ,v:'35'  },
-            ].map((i) => <MenuItem value={i.v}>{i.t}</MenuItem>)}
-          </Select>
-</FormControl>
-</ListItem>
-}
 
 </List>
 </Grid>
@@ -550,8 +562,6 @@ return (
           <Button size = "small" color = {current_tab == 'rp'     ? "primary" : "default"} onClick = {() => { handleTabClick("rp"    ) }} variant = "outlined" style = {{ marginRight: "5px" }} >Proteins  </Button>
           <Button size = "small" color = {current_tab == 'rna'    ? "primary" : "default"} onClick = {() => { handleTabClick('rna'   ) }} variant = "outlined" style = {{ marginRight: "5px" }} >RNA       </Button>
         </ListItem>
-
-
         <ListItem>
           {(() => {
             switch (current_tab) {

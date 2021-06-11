@@ -93,7 +93,6 @@ export const Cart= () => {
   const generate_wspace_summary = () =>{
      
    
-
   var summary:Array<Array<any>> = [
   ]
 
@@ -165,10 +164,16 @@ export const Cart= () => {
 
                     </Button>
 
+
                             <Button autoFocus variant="outlined" color="primary">
+
+{selectedItems.length > 0 ?
+
                         <CSVLink data={generate_wspace_summary()} style={{textTransform:"none", textDecoration:"none", color:"blac"}}>
                                 Download Summary
-                        </CSVLink>
+                        </CSVLink>:
+                        "Download Summary"
+}
                             </Button>
                     </Toolbar>
                 </AppBar>
