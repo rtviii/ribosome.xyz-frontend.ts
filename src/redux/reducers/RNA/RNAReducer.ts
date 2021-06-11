@@ -37,7 +37,7 @@ return rna.parent_resolution >= (value as number[])[0] && rna.parent_resolution 
       value: "",
       set: false,
       predicate: (value) => (rna) => {
-        return ( rna.parent_title + rna.description + rna.orgid.reduce((a,b)=>a+b, '') ).toLowerCase().includes(value.toLowerCase())
+        return ( rna.parent_citation + rna.description + rna.orgid.reduce((a,b)=>a+b, '') ).toLowerCase().includes(value.toLowerCase())
       }
     },
     "SPECIES": {

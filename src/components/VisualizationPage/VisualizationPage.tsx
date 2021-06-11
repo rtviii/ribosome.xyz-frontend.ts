@@ -9,6 +9,8 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import fileDownload from "js-file-download";
+
+import Switch from '@material-ui/core/Switch';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Collapse from "@material-ui/core/Collapse";
@@ -18,6 +20,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+
 import { AppState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { BanClassMetadata, RNAProfile } from '../../redux/DataInterfaces';
@@ -35,6 +40,9 @@ import { Widgets } from '@material-ui/icons';
 import { useHistory, useParams } from 'react-router';
 import _ from 'lodash'
 import { Cart } from '../Workspace/Cart/Cart';
+import { ListItemText } from '@material-ui/core';
+import NativeSelect from '@material-ui/core/NativeSelect/NativeSelect';
+import Divider from '@material-ui/core/Divider/Divider';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -73,22 +81,35 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     setVal(item);
     selectStruct(item)
   };
+
+
+ const structs = useSelector(( state:AppState ) => state.structures.derived_filtered.map(str=>( { 
+   
+  title: str.struct.citation_title, rcsb_id:str.struct.rcsb_id } )))
   return (
-    <FormControl className={styles.formControl}>
-      <InputLabel id="demo-simple-select-label">Structures</InputLabel>
-      <Select
-        className={styles.select}
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={curVal}
-        onChange={handleChange}>
-        {items.map((i) =>
-          <MenuItem value={i.rcsb_id}>{i.rcsb_id}</MenuItem>
-        )}
-      </Select>
-    </FormControl>
+
+
+          <Autocomplete
+          style          = {{fontSize:"12px"}}
+          size           = "small"
+          options        = {structs}
+          getOptionLabel = {(parent) =>   parent.rcsb_id + " : "+ parent.title}
+          // @ts-ignore
+          onChange     = {(event: any, newValue: any) => {
+            if (newValue === null){
+              return 
+            }
+            selectStruct(newValue!.rcsb_id )
+          }}
+          renderOption = {(option) => (<div style={{fontSize:"10px", width:"400px"}}><b>{option.rcsb_id}</b> ({option.title} ) </div>)}
+          renderInput  = {(params) => <TextField {...params} style={{width:"400px", fontSize:"8px"}} label="Structure" variant="outlined" />}
+          />
+
   )
 }
+
+
+
 
 const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMetadata[], getCifChainByClass: (strand: string, parent: string) => void }) => {
 
@@ -111,7 +132,27 @@ const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMet
 
   };
   return (
-    <div>
+
+
+
+          // <Autocomplete
+          // style          = {{fontSize:"12px"}}
+          // size           = "small"
+          // options        = {structs}
+          // getOptionLabel = {(parent) =>   parent.rcsb_id + " : "+ parent.title}
+          // // @ts-ignore
+          // onChange     = {(event: any, newValue: any) => {
+          //   if (newValue === null){
+          //     return 
+          //   }
+          //   selectStruct(newValue!.rcsb_id )
+          // }}
+          // renderOption = {(option) => (<div style={{fontSize:"10px", width:"400px"}}><b>{option.rcsb_id}</b> ({option.title} ) </div>)}
+          // renderInput  = {(params) => <TextField {...params} style={{width:"400px", fontSize:"8px"}} label="Structure" variant="outlined" />}
+          // />
+
+
+    <Grid xs={12} style={{outline:"1px solid gray", borderRadius:"5px"}}>
       <FormControl className={styles.sub}>
         <InputLabel id="demo-simple-select-label">Protein Chain</InputLabel>
         <Select
@@ -137,18 +178,19 @@ const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMet
           )}
         </Select>
       </FormControl>
-    </div>
+</Grid>
   )
 }
 
-const SelectRna = ({ rnas, selectItem }: { rnas: RNAProfile[], selectItem: (strand: string, parent: string) => void }) => {
+const SelectRna = ({ items } : { items: RNAProfile[]}) => {
 
-  const styles = useSelectStyles();
-  const dispatch = useDispatch();
+  const styles                       = useSelectStyles();
+  const dispatch                     = useDispatch();
 
-  const [curRna, setCurRna] = React.useState('');
+  const [curRna, setCurRna]          = React.useState('');
   const [curRnaParent, setRnaParent] = React.useState('');
-  const availablestructs = useSelector((state: AppState) => state.proteins.ban_class.map(i => i.parent_rcsb_id))
+
+  const availablestructs             = useSelector((state: AppState) => state.proteins.ban_class.map(i => i.parent_rcsb_id))
 
   const chooseRna = (event: React.ChangeEvent<{ value: unknown }>) => {
     let item = event.target.value as string
@@ -159,24 +201,98 @@ const SelectRna = ({ rnas, selectItem }: { rnas: RNAProfile[], selectItem: (stra
     let item = event.target.value as string
     setRnaParent(item);
   };
+
+
+
+  const [state, setState] = React.useState<{ age: string | number; name: string }>({
+    age: '',
+    name: 'hai',
+  });
+
+  const handleChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+    const name = event.target.name as keyof typeof state;
+    setState({
+      ...state,
+      [name]: event.target.value,
+    });
+  };
+
+
+  const [selectBy, setSelectBy] = useState<string>('Parent Structure');
+
+
+const parents = useSelector(( state:AppState ) => Object.values(state.rna.rna_classes_derived)
+.reduce(( agg, rnaclass )=>{return [...agg,...rnaclass]},[]))
+.map((_:RNAProfile)=>( { 
+  des    : _.description,
+  rcsb_id: _.struct,
+  title  : _.parent_citation
+}))
+
+
+
+const [selectrnaClass, setSelectRnaClass] = useState<string>('5')
+
+const autocomopleteStyles = ( makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      marginTop:"20px",
+      width: 500,
+      '& > * + *': {
+        marginTop: theme.spacing(2),
+      },
+    },
+  }),
+) )()
+
   return (
-    <div>
-      <FormControl className={styles.sub}>
-        <InputLabel id="demo-simple-select-label">rRNA Chain</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={curRna}
-          onChange={chooseRna}>
+    <Grid item xs={12}>
+      <List style={{outline:"1px solid gray", borderRadius:"5px"}}>
 
-          {/* {rnas.map((i) => <MenuItem value={i.rna.entity_poly_strand_id}>
-            {i.rna.entity_poly_strand_id}
+{/* <ListItem>
+        <FormControl >
 
-          </MenuItem>)} */}
-        </Select>
-      </FormControl>
+          <InputLabel style={{width:"300px"}} >Select RNA Strand By..</InputLabel>
+          <Select
+            placeholder = "Class/Parent Structure..."
+            value       = {selectBy}
+            onChange    = {(event: any) => {
+              setSelectBy(event.target.value);
+            }}>
 
-    </div>
+            {[{ t: 'Parent Structure', v: 'Parent Structure' }, { t: 'RNA Class', v: "RNA Class" }].map((i) => <MenuItem value={i.v}>{i.t}</MenuItem>)}
+          </Select>
+        </FormControl>
+</ListItem> */}
+
+<ListItem>
+
+<ListItemText> Search by Structure or RNA Class</ListItemText>
+</ListItem>
+          <ListItem>
+
+          <Autocomplete
+          className      = {autocomopleteStyles.root}
+          style          = {{fontSize:"12px"}}
+          size           = "small"
+          options        = {parents}
+          getOptionLabel = {(parent) =>   parent.rcsb_id+ ":"+parent.des }
+          // @ts-ignore
+          onChange     = {(event: any, newValue: string | null) => {
+            
+            if (newValue === null){
+              return
+            }
+            console.log(newValue)
+
+          }}
+          renderOption = {(option) => (<div style={{fontSize:"10px", width:"400px"}}><b>{option.rcsb_id}</b> ({option.title} ) ::: <i>{option.des}</i></div>)}
+          renderInput  = {(params) => <TextField {...params} style={{width:"400px", fontSize:"8px"}} label="Parent Structure" variant="outlined" />}
+          />
+</ListItem>
+
+</List>
+</Grid>
   )
 }
 
@@ -189,15 +305,10 @@ const VisualizationPage = (props:any) => {
   const params =  history.location.state;
 
   useEffect(() => {
-
     if ( params == undefined || Object.keys(params).length < 1 ){return}
-
     if (( params as {banClass:string, parent:string}  ).parent){
-      
       getCifChainByClass(params.banClass,params.parent)
-      
     }
-    
     else 
     if (( params as {struct:string}  ).struct){
       selectStruct(params.struct)
@@ -213,7 +324,7 @@ const VisualizationPage = (props:any) => {
 
   useEffect(() => {
     var options = {
-      moleculeId: 'Element to visualize can be selected above.',
+      moleculeId  : 'Element to visualize can be selected above.',
       hideControls: true
     }
     var viewerContainer = document.getElementById('molstar-viewer');
@@ -237,12 +348,14 @@ const VisualizationPage = (props:any) => {
   const structures = useSelector((state: AppState) => state.structures.neo_response.map(
     r => { return { rcsb_id: r.struct.rcsb_id, title: r.struct.citation_title } }))
 
+
+
   // const rnas         = useSelector(( state:AppState ) => state.rna.all_rna)
   const selectStruct = (rcsb_id: string) => {
     setInView({
       type: "struct",
       id  : rcsb_id,
-      data:{}
+      data: {}
     })
 
     viewerInstance.visual.update({
@@ -375,14 +488,15 @@ uniq(flattenDeep(protClassInfo.comments)).filter(r=>r!=="NULL").map(r =>
         </Card>
                   :<div>"Loading"</div>
   default:
-    return <Typography variant="caption"> Select a structure or a protein.</Typography>
+    return <div></div>
   }}
 
 
   const classes=makeStyles({  
             pageDescription:{
               padding:"20px",
-              width:"100%"
+              width:"100%",
+              height:"min-content"
             },
             card: {
               width:"100%"
@@ -409,59 +523,86 @@ uniq(flattenDeep(protClassInfo.comments)).filter(r=>r!=="NULL").map(r =>
             }
           })();
 
+// ? rna/struct/prot tab
+const [current_tab, set_current_tab] = useState<string>('rna')
+const handleTabClick =(tab:string) =>{
 
-  return (
-    <Grid container xs={12} spacing={1}>
+  set_current_tab(tab)
 
-      <Grid item container xs={12} style={{padding:"10px"}}>
+}
 
-<Paper variant="outlined" className={classes.pageDescription}>
+return (
+    <Grid container xs={12} spacing={1} style={{outline:"1px solid gray", height:"100vh"}} alignContent="flex-start">
 
+      <Grid item  xs={12} style={{ padding: "10px"}}>
+        <Paper variant="outlined" className={classes.pageDescription}>
           <Typography paragraph >
-          <Typography variant="h4">
-            Visualization
+            <Typography variant="h4">
+              Visualization
           </Typography>
           Please select an element to inspect. Entire structures and protein classes are avaialable.
           </Typography>
-</Paper>
+        </Paper>
 
 
       </Grid>
 
 
-      <Grid item container direction="column" xs={3} spacing={1}style={{padding:"10px"}}>
+      <Grid item  direction="column" xs={3} style={{ padding: "5px" }}>
         <List>
 
-          <ListItem>
-          <Cart/>
-          </ListItem>
+        <ListItem>
+          <Cart />
+        </ListItem>
 
-          <ListItem>
-<Typography variant="overline">Currently Selected:</Typography>
-          </ListItem>
-          <ListItem>
+        <ListSubheader>Select Item Category</ListSubheader>
+        <ListItem style={{ display: "flex", flexDirection: "row" }}>
 
-<RenderInViewInfo type={inViewData.type} structdata={structdata as RibosomeStructure} protClassInfo={protClassInfo}/>
-          </ListItem>
+          <Button size = "small" color = {current_tab == 'struct' ? "primary" : "default"} onClick = {() => { handleTabClick('struct') }} variant = "outlined" style = {{ marginRight: "5px" }} >Structures</Button>
+          <Button size = "small" color = {current_tab == 'rp'     ? "primary" : "default"} onClick = {() => { handleTabClick("rp"    ) }} variant = "outlined" style = {{ marginRight: "5px" }} >Proteins  </Button>
+          <Button size = "small" color = {current_tab == 'rna'    ? "primary" : "default"} onClick = {() => { handleTabClick('rna'   ) }} variant = "outlined" style = {{ marginRight: "5px" }} >RNA       </Button>
+        </ListItem>
+        <ListItem>
+          {(() => {
+            switch (current_tab) {
+              case 'rp':
+                return <SelectProtein proteins={prot_classes} getCifChainByClass={getCifChainByClass} />
+              case 'struct':
 
-          <ListItem>
-            <DashboardButton />
-          </ListItem>
+                return <SelectStruct items={structures} selectStruct={selectStruct} />
+              case 'rna':
+
+                return <SelectRna items={[]}/>
+              default:
+                return "Null"
+            }
+
+          })()}
+
+        </ListItem>
+        <ListItem>
+
+          <RenderInViewInfo type={inViewData.type} structdata={structdata as RibosomeStructure} protClassInfo={protClassInfo} />
+        </ListItem>
+
+        <ListItem>
+          <DashboardButton />
+        </ListItem>
+
+
+
         </List>
-
-
       </Grid>
-      <Grid item container direction="column" xs={9} >
 
-
-        <SelectStruct items={structures} selectStruct={selectStruct} />
-        <SelectProtein proteins={prot_classes} getCifChainByClass={getCifChainByClass} />
+      <Grid item  direction="row" xs={9}  style={{height:"100%"}}>
         <div style={{
           width: "100%",
-          height:"50vh"
+          height: "100%"
 
-        }} id="molstar-viewer">Molstar     Viewer     </div             >
+        }} 
+        id="molstar-viewer">Molstar     Viewer     </div             >
       </Grid>
+
 
 
 

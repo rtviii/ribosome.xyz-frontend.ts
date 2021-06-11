@@ -42,7 +42,7 @@ export interface RNAProfile {
   parent_year      : number
   parent_resolution: number
   parent_method    : string
-  parent_title     : string
+  parent_citation  : string
 
 }
 
