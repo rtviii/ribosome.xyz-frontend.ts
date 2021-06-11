@@ -268,7 +268,7 @@ strand           : obj.entity_poly_strand_id,
 struct           : obj.parent_rcsb_id,
 parent_method    : structdata!.expMethod,
 parent_resolution: structdata!.resolution,
-parent_title     : structdata!.citation_title,
+parent_citation  : structdata!.citation_title,
 parent_year      : structdata!.citation_year
             }} 
             
