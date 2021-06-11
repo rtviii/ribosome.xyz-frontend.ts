@@ -1,6 +1,6 @@
 import {  Dispatch } from "redux";
 import { getNeo4jData } from "../../AsyncActions/getNeo4jData";
-import { BanClassMetadata, NeoHomolog} from './../../DataInterfaces'
+import { BanClassMetadata, NeoHomolog, ProteinProfile} from './../../DataInterfaces'
 import { flattenDeep } from "lodash";
 import { BanClass, RibosomalProtein } from "../../RibosomeTypes";
 import { filterChange } from "../Filters/ActionTypes";
@@ -26,10 +26,8 @@ export const NEXT_PAGE_PROTEINS        = "NEXT_PAGE_PROTEINS"
 export const PREV_PAGE_PROTEINS        = "PREV_PAGE_PROTEINS"
 
 
-
 export type BanClassMetadataFiltType = "SEARCH" | "SPECIES"  
-export type ProteinClassFilterTypes  = "SPECIES" | "SEARCH"
-// "YEAR" | "RESOLUTION" | "EXPERIMENTAL_METHOD"
+export type ProteinClassFilterTypes  = "SPECIES" | "SEARCH" | "YEAR" | "RESOLUTION" | "EXPERIMENTAL_METHOD"
 
 export interface requestBanMetadataGo      {type: typeof REQUEST_BAN_METADATA_GO }
 export interface requestBanMetadataSuccess {type: typeof REQUEST_BAN_METADATA_SUCCESS, payload:BanClassMetadata[], 
@@ -49,11 +47,11 @@ export interface filterProteinClass         {
 }
 
 export interface requestAllProteinsGo       {type: typeof REQUEST_ALL_PROTEINS_GO;}
-export interface requestAllProteinsSuccess  {type: typeof REQUEST_ALL_PROTEINS_SUCCESS;payload: RibosomalProtein[]}
+export interface requestAllProteinsSuccess  {type: typeof REQUEST_ALL_PROTEINS_SUCCESS;payload: ProteinProfile[]}
 export interface requestAllProteinsError    {type: typeof REQUEST_ALL_PROTEINS_ERR;    error: Error;}
 
 export interface requestBanClassGo          {type: typeof REQUEST_BAN_CLASS_GO;}
-export interface requestBanClassSuccess     {type: typeof REQUEST_BAN_CLASS_SUCCESS;payload: RibosomalProtein[]}
+export interface requestBanClassSuccess     {type: typeof REQUEST_BAN_CLASS_SUCCESS;payload: ProteinProfile[]}
 export interface requestBanClassErr         {type: typeof REQUEST_BAN_CLASS_ERR;    error: Error;}
 
 export interface nextPageProts              {type: typeof NEXT_PAGE_PROTEINS;}
@@ -109,6 +107,13 @@ export const ProteinClassFilterChangeAC = (newvalue:any,filter_type:ProteinClass
         return !(newvalue.length === 0);
       case "SPECIES":
         return !(newvalue.length === 0);
+      case "EXPERIMENTAL_METHOD":
+        return !(newvalue.length === 0)
+
+      case "RESOLUTION":
+        return !(newvalue[0] === 0 && newvalue[1] === 5);
+      case "YEAR":
+        return !(newvalue[0] === 2012 && newvalue[1] === 2021);
       default:
         return false;
     }

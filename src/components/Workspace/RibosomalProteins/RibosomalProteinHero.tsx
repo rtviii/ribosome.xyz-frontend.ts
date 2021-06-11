@@ -7,9 +7,6 @@ import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
 import { RibosomalProtein } from "../../../redux/RibosomeTypes";
 import Accordion from "react-bootstrap/esm/Accordion";
 import { Button, Card, ListGroup } from "react-bootstrap";
-import loading from "./../../../static/loading.gif";
-import { CartItem } from "../../../redux/reducers/Cart/ActionTypes";
-import { AppActions } from "../../../redux/AppActions";
 
 
 const RibosomalProteinHero = ({

@@ -6,7 +6,6 @@ import {
   NeoHomolog,
   RNAProfile,
   LigandResponseShape,
-  BanClassMetadata,
 } from "../../DataInterfaces";
 import { RibosomalProtein } from "../../RibosomeTypes";
 import { FiltersReducerState } from "./FiltersReducer";

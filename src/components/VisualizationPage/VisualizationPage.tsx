@@ -34,6 +34,7 @@ import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { Widgets } from '@material-ui/icons';
 import { useHistory, useParams } from 'react-router';
 import _ from 'lodash'
+import { Cart } from '../Workspace/Cart/Cart';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -431,6 +432,9 @@ uniq(flattenDeep(protClassInfo.comments)).filter(r=>r!=="NULL").map(r =>
       <Grid item container direction="column" xs={3} spacing={1}style={{padding:"10px"}}>
         <List>
 
+          <ListItem>
+          <Cart/>
+          </ListItem>
 
           <ListItem>
 <Typography variant="overline">Currently Selected:</Typography>

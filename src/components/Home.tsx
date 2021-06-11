@@ -35,6 +35,7 @@ import List from "@material-ui/core/List";
 import ListItem, { ListItemProps } from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { DashboardButton } from "../materialui/Dashboard/Dashboard";
+import { Cart } from "./Workspace/Cart/Cart";
 
 interface ReduxProps {
   __rx_structures: NeoStruct[];
@@ -47,10 +48,8 @@ const _StatsList: React.FC<ReduxProps> = prop => {
   const useStatsListStyles = makeStyles((theme: Theme) =>
     createStyles({
       root: {
-        width: "100%",
+        width   : "100%",
         fontSize: "1em",
-        // maxWidth: 360,
-        // backgroundColor: theme.palette.background.paper,
       },
     })
   );
@@ -174,15 +173,15 @@ const StatsList = connect(mapstate, null)(_StatsList);
 const _MainContentCard: React.FC<ReduxProps> = prop => {
   const useMainContentCardStyles = makeStyles({
     root: {
-      boxShadow: "4px 10px 52px -20px rgba(0,0,0,0.75)",
-      marginTop: 30,
-      marginBottom: 30,
+      boxShadow     : "4px 10px 52px -20px rgba(0,0,0,0.75)",
+      marginTop     : 30,
+      marginBottom  : 30,
       textDecoration: "none",
-      color: "black",
+      color         : "black",
     },
     bullet: {
-      display: "inline-block",
-      margin: "0 2px",
+      display  : "inline-block",
+      margin   : "0 2px",
       transform: "scale(0.8)",
     },
 
@@ -525,7 +524,6 @@ const Home: React.FC<ReduxProps> = prop => {
         <ListItem >
           <DashboardButton/>
         </ListItem>
-
       </List>
       
       </Grid>

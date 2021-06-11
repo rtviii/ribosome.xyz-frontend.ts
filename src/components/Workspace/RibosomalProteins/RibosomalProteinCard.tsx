@@ -62,6 +62,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
           card: {
             width:300,
+
+            padding:10
           },
           title: {
             fontSize: 12,
@@ -225,7 +227,8 @@ const dispatch = useDispatch();
           </Button>
               </Grid>
               <Grid item>
-                <Button onClick={()=>{
+                <Button onClick={(e)=>{
+
 
 dispatch(cart_add_item(structdata))
                 }} style={{textTransform:"none"}} >

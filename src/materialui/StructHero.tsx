@@ -1,16 +1,25 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import { Grid } from '@material-ui/core';
-import { truncate } from '../components/Main';
-import { Link,useHistory} from 'react-router-dom';
-import { NeoStruct } from '../redux/DataInterfaces';
+import   React                                  from 'react'                              ;
+import { makeStyles         }                   from '@material-ui/core/styles'           ;
+import   Card                                   from '@material-ui/core/Card'             ;
+import   CardActionArea                         from '@material-ui/core/CardActionArea'   ;
+import   CardActions                            from '@material-ui/core/CardActions'      ;
+import   CardContent                            from '@material-ui/core/CardContent'      ;
+import   fileDownload                           from "js-file-download"                   ;
+import   CardMedia                              from '@material-ui/core/CardMedia'        ;
+import   Button                                 from '@material-ui/core/Button'           ;
+import   Typography                             from '@material-ui/core/Typography'       ;
+import { Grid               }                   from '@material-ui/core'                  ;
+import { truncate           }                   from '../components/Main'                 ;
+import   BookmarkIcon                           from '@material-ui/icons/Bookmark'        ;
+import   BookmarkBorderIcon                     from '@material-ui/icons/BookmarkBorder'  ;
+import { useHistory        }                    from 'react-router-dom'                   ;
+import { NeoStruct          }                   from '../redux/DataInterfaces'            ;
+import { useDispatch        }                   from 'react-redux'                        ;
+import { cart_add_item     , cart_remove_item } from '../redux/reducers/Cart/ActionTypes' ;
+import   _                                      from 'lodash'                             ;
+import   GetApp                                 from '@material-ui/icons/GetApp'          ;
+import { getNeo4jData       }                   from '../redux/AsyncActions/getNeo4jData' ;
+import   Tooltip                                from '@material-ui/core/Tooltip'          ;
 
 const useStyles = makeStyles({  card: {
     width:300
@@ -59,10 +68,19 @@ className={classes.annotation}
 
 
 
-export const StructHero=(d:NeoStruct)=> {
+export const StructHero=({d,inCart}:{ d:NeoStruct, inCart:boolean })=> {
   const classes = useStyles();
-
   const history = useHistory();
+
+
+
+
+
+  const dispatch = useDispatch()
+
+
+
+
   return (
     <Card className={classes.card} >
       
@@ -119,7 +137,6 @@ export const StructHero=(d:NeoStruct)=> {
 
         </CardContent>
       </CardActionArea>
-{/* ----------------------------- */}
       <CardActions>
         <Button href={`https://www.rcsb.org/structure/${d.struct.rcsb_id}`} size="small" color="primary">
           PDB
@@ -130,6 +147,49 @@ export const StructHero=(d:NeoStruct)=> {
         <Button href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
           EMDB
         </Button>
+    <Tooltip title={ `${inCart ? "Delete From": "Add To"} Workspace` } arrow>
+
+
+{inCart ? 
+
+<BookmarkIcon 
+
+style={{cursor:"pointer"}}
+onClick={()=>{
+    dispatch(cart_remove_item(d.struct))
+}}/> :
+
+<BookmarkBorderIcon
+style={{cursor:"pointer"}}
+onClick={
+  ()=>{
+dispatch(cart_add_item(d.struct))
+  }
+}
+/>}
+        
+    </Tooltip>
+    <Tooltip title={ `Download .cif model` } arrow placement="right">
+        <GetApp 
+       style={{cursor:"pointer"}}
+        onClick={()=>{
+
+                  getNeo4jData("static_files",{endpoint:"download_structure",params:{struct_id:d.struct.rcsb_id}})
+                  .then(r=>{
+
+                    fileDownload(
+                      r.data,
+                      `${d.struct.rcsb_id}.cif`,
+                      "chemical/x-mmcif"
+                    )
+                  })
+
+                }}
+        
+        />
+
+    </Tooltip>
+        
       </CardActions>
     </Card>
   );

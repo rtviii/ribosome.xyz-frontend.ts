@@ -14,18 +14,17 @@ export function isRNA(i:CartItem): i is RNAProfile{
 }
 
 interface CartReducerState {
-
-    open    : boolean,
-    // proteins: RibosomalProtein[],
-    items: CartItem[],
-
+    open         : boolean,
+    structs      : string[],
+    items        : CartItem[],
+    selectedItems: CartItem[]
 }
 
 const initialCartReducerState:CartReducerState = {
-
-    open    : false,
-    items: []
-    // proteins: []
+  structs      : [],
+  open         : false,
+  items        : [],
+  selectedItems: []
 }
 
 export const CartReducer = (
@@ -45,13 +44,34 @@ export const CartReducer = (
         alert(" This is already in the workspace.")
         return state
       }
+      if (isStruct(action.item)){
+
+        console.log("Added item", action.item);
+        
+      return {...state, items: [...state.items, action.item], structs:[...state.structs, action.item.rcsb_id]}
+      }
       return {...state, items: [...state.items, action.item]}
 
     case "CART_REMOVE_ITEM":
-      return {...state, items: state.items.filter(i => {
-        return !_.isEqual(i, action.item)
-      })
+      if (isStruct(action.item)){
+        console.log("removed item", action.item);
+       var newstructs = state.structs.filter(r=>r !==(action.item as RibosomeStructure).rcsb_id)
+      return {...state, items: state.items.filter(i => {return !_.isEqual(i, action.item)}),structs:newstructs}
+      }
+      return {...state, items: state.items.filter(i => {return !_.isEqual(i, action.item)})
     }
+
+    case "CART_TOGGLE_ITEM_SELECT":
+
+    if (action.selected){
+      var newSelected = [...state.selectedItems, action.item]
+      
+    }else{
+      var newSelected = [...state.selectedItems.filter(i=> i!=action.item)]
+    }
+    return {...state, selectedItems:newSelected}
+
+
 
     default:
       return state;

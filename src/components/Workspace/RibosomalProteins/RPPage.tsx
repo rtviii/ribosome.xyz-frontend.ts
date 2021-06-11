@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from                                                "react"                                                ;
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup/ToggleButtonGroup";
+import ToggleButton from "@material-ui/lab/ToggleButton/ToggleButton";
 import                                                                                    "./RPPage.css"                                         ;
 import { useParams } from                                                                 "react-router-dom"                                     ;
 import { AppState } from                                                                  "../../../redux/store"                                 ;
@@ -8,7 +10,7 @@ import { ThunkDispatch } from                                                   
 import { connect, useDispatch, useSelector } from                                         "react-redux"                                          ;
 import Pagination from                                                                    './../Display/Pagination'
 import Grid from                                                                          "@material-ui/core/Grid"                               ;
-import { _SpecList, _SearchField } from                                                   "../Display/StructuresCatalogue"                       ;
+import { _SpecList, _SearchField, ValueSlider } from                                                   "../Display/StructuresCatalogue"                       ;
 import List from                                                                          "@material-ui/core/List"                               ;
 import ListItem from                                                                      "@material-ui/core/ListItem"                           ;
 import RibosomalProteinCard from                                                          './RibosomalProteinCard'
@@ -36,6 +38,7 @@ import FormHelperText from                                                      
 import { CSVLink } from                                                                   "react-csv"                                            ;
 import Divider from                                                                       "@material-ui/core/Divider/Divider"                    ;
 import DialogContentText from                                                             "@material-ui/core/DialogContentText/DialogContentText";
+import { cart_add_item } from "../../../redux/reducers/Cart/ActionTypes";
 
 
 
@@ -53,36 +56,8 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-  const classes = useCheckboxStyles();
 
-
-  const [summaryOpts, setSummaryOpts] = React.useState({
-            all                             : false,
-            pfam_accessions                 : false,
-            rcsb_source_organism_id         : false,
-            rcsb_source_organism_description: false,
-            uniprot_accession               : false,
-            rcsb_pdbx_description           : false,
-            entity_poly_strand_id           : false,
-            entity_poly_seq_one_letter_code : false,
-            entity_poly_seq_length          : false,
-            nomenclature                    : false,
-  });
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSummaryOpts({ ...summaryOpts, [event.target.name]: event.target.checked });
-  };
-
-  const {     all                             ,
-              pfam_accessions                 ,
-              rcsb_source_organism_id         ,
-              rcsb_source_organism_description,
-              uniprot_accession               ,
-              rcsb_pdbx_description           ,
-              entity_poly_strand_id           ,
-              entity_poly_seq_one_letter_code ,
-              entity_poly_seq_length          ,
-              nomenclature
-      } =     summaryOpts                     ;
+  const dispatch = useDispatch()
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -262,6 +237,21 @@ useEffect(() => {
         var change = e.target.value
         setSearch(change)
     }
+
+  const [method, setMethod] = React.useState<string | null>('');
+  const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: string | null) => {
+    setMethod(newAlignment);
+  };
+  const MethodClasses =  makeStyles({
+    root:{
+        width:"100%",
+    }
+  })();
+
+  useEffect(() => {
+    dispatch(ProteinClassFilterChangeAC(method,"EXPERIMENTAL_METHOD"))
+  }, [method])
+
   return !isloading ? (
     <Grid xs={12} container>
       <Grid item container xs={12} >
@@ -280,6 +270,36 @@ useEffect(() => {
               <TextField id="standard-basic" label="Search" value={search} onChange={handleSearchChange} />
 
             </ListItem>
+
+        <ListItem key={"resolution"}>
+          <ValueSlider {...{filter_type: "RESOLUTION",max:5,min:0,name:"Resolution", step:0.1, action_to_dispatch:ProteinClassFilterChangeAC}}/>
+        </ListItem>
+
+        <ListItem key={"year"}>
+          <ValueSlider {...{filter_type: "YEAR",max:2021,min:2012,name:"Deposition Date", step:1, action_to_dispatch:ProteinClassFilterChangeAC}}/>
+        </ListItem>
+
+<ListItem>
+    <ToggleButtonGroup
+      value      = {method}
+      onChange   = {handleAlignment}
+      aria-label = "text alignment"
+      className  = {MethodClasses.root}
+    >
+      <ToggleButton 
+      className={MethodClasses.root}
+      value="X-RAY DIFFRACTION" aria-label="left aligned">
+        XRAY
+      </ToggleButton>
+
+      <ToggleButton 
+      className={MethodClasses.root}
+      value="ELECTRON MICROSCOPY" aria-label="right aligned" >
+        EM
+      </ToggleButton>
+
+    </ToggleButtonGroup>
+</ListItem>
             <ListItem>
 
               <DropdownTreeSelect data={data}

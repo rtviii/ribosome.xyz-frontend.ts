@@ -52,6 +52,7 @@ import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import { cart_add_item } from "../../../redux/reducers/Cart/ActionTypes";
 
 const pageData ={
   title: "Ribosome Structures",
@@ -85,6 +86,20 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
     prop.structures.sort(sortPredicates[last_sort_set].compareFn)
   }, [last_sort_set])
 
+
+  const cartItems = useSelector(( state:AppState ) => state.cart.items)
+  const cartStructs = useSelector(( state:AppState ) => state.cart.structs)
+  useEffect(() => {
+  }, [cartItems])
+
+
+  // useEffect(() => {
+  //   if (prop.structures.length>1){
+  //   dispatch(cart_add_item(prop.structures[1].struct))
+  //   dispatch(cart_add_item(prop.structures[2].struct))
+  //   }
+
+  // }, [prop.structures])
 
   return ! prop.loading ? (
     <Grid container xs={12} spacing={1}>
@@ -144,7 +159,7 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
             .slice(( prop.current_page-1 ) * 20, prop.current_page * 20 )
             .map((x, i) => (
               <Grid item>
-                <StructHero {...x} key={i} />
+                <StructHero d={x} inCart={ cartStructs.includes(x.struct.rcsb_id) } key={i} />
               </Grid>
             ))}
         </Grid>
@@ -214,17 +229,18 @@ export const _SearchField:React.FC<FilterData & handleFilterChange> = (props) =>
 }
 
 interface SliderFilterProps {
-  filter_type: StructFilterType;
-  name               :  string;
-  max                :  number;
-  min                :  number;
-  step               :  number;
+  action_to_dispatch   : (value:any, filterType:any)=>void;
+  filter_type: any;
+  name       : string;
+  max        : number;
+  min        : number;
+  step       : number;
 }
-const ValueSlider= (prop:SliderFilterProps ) => {
+export const ValueSlider= (prop:SliderFilterProps ) => {
 
   const useSliderStyles = makeStyles({
     root: {
-      width: 300,
+      width: "100%",
     },
   });
 
@@ -237,7 +253,7 @@ const ValueSlider= (prop:SliderFilterProps ) => {
     setValue(newValue as number[]);
   };
   useEffect(() => {
-    dispatch(structsFilterChangeAC(value,prop.filter_type))
+    dispatch(prop.action_to_dispatch(value,prop.filter_type))
   }, [debounced_val])
 
   return (
@@ -563,32 +579,29 @@ useEffect(() => {
           <StructuresSearchField/>
         </ListItem>
         <ListItem key={"year"}>
-          <ValueSlider {...{filter_type: "YEAR",max:2021,min:2012,name:"Deposition Date", step:1}}/>
+          <ValueSlider {...{filter_type: "YEAR",max:2021,min:2012,name:"Deposition Date", step:1, action_to_dispatch:structsFilterChangeAC}}/>
         </ListItem>
         <ListItem key={"resolution"}>
-          <ValueSlider {...{filter_type: "RESOLUTION",max:6,min:1,name:"Resolution", step:0.1}}/>
+          <ValueSlider {...{filter_type: "RESOLUTION",max:6,min:1,name:"Resolution", step:0.1, action_to_dispatch: structsFilterChangeAC}}/>
         </ListItem>
         <ListItem key={"select-proteins"} >
           <ProteinsPresentFilter/>
         </ListItem>
         <ListItem key={"method-toggle"} >
     <ToggleButtonGroup
-      value = {method}
-      // exclusive
-      onChange={handleAlignment}
-      aria-label="text alignment"
-      className={MethodClasses.root}
+      value      = {method}
+      onChange   = {handleAlignment}
+      aria-label = "text alignment"
+      className  = {MethodClasses.root}
     >
       <ToggleButton 
       className={MethodClasses.root}
       value="X-RAY DIFFRACTION" aria-label="left aligned">
         XRAY
       </ToggleButton>
-
       <ToggleButton 
-      
-      className={MethodClasses.root}
-      value="ELECTRON MICROSCOPY" aria-label="right aligned" >
+      className = {MethodClasses.root}
+      value     = "ELECTRON MICROSCOPY" aria-label = "right aligned" >
         EM
       </ToggleButton>
 

@@ -6,20 +6,45 @@ import _ from 'lodash';
 export type RnaClass  =  "mrna" | "trna" | "5" | "5.8" | "12" | "16"| "21" | "23" | "25" |"28" |"35" | 'other'
 
 const RnaClassFilterRegistry: FilterRegistry<RnaFilter, RNAProfile> = {
-
   filtstate: {
+    "EXPERIMENTAL_METHOD":{
+      value    : [],
+      set      : false,
+      predicate: (value) => (rna)=>{
+
+        if ( value.length === 0){
+          return true
+        }
+        return  value.includes(rna.parent_method)
+      }
+    },
+    "RESOLUTION":{
+      value    : [0,5],
+      set      : false,
+      predicate: (value) => (rna)=>{
+return rna.parent_resolution >= (value as number[])[0] && rna.parent_resolution <= (value as number[])[1]
+      }
+    },
+
+    "YEAR": {
+      value    : [2012, 2021],
+      set      : false,
+      predicate: (value) => (rna)=>{
+     return rna.parent_year >= (value as number[])[0] && rna.parent_year <= (value as number[])[1]
+      }
+    },
     "SEARCH": {
       value: "",
       set: false,
       predicate: (value) => (rna) => {
-        return ( rna.description + rna.orgid.reduce((a,b)=>a+b, '') ).toLowerCase().includes(value.toLowerCase())
+        return ( rna.parent_title + rna.description + rna.orgid.reduce((a,b)=>a+b, '') ).toLowerCase().includes(value.toLowerCase())
       }
     },
-
     "SPECIES": {
       value    : [],
       set      : false,
       predicate: (value) => (rna) => {
+        if (value.length ===0 ){return true}
         return _.intersection(value, rna.orgid).length > 0 
       }
     },
@@ -39,10 +64,14 @@ interface RNAReducerState{
     errored_out      : boolean;
     rna_filters      : FilterRegistry<RnaFilter, RNAProfile>,
     rna_classes      : {
+
       [K in RnaClass]: RNAProfile[]
+
     },
     rna_classes_derived:{
+
       [K in RnaClass]: RNAProfile[]
+
     },
     current_page: number,
     pages_total : number,
@@ -102,7 +131,6 @@ export const RNAReducer = (
 
       var   base              = Object.assign({}, state.rna_classes)
       var   deriv             = Object.assign({}, state.rna_classes_derived)
-
       base [action.rna_class] = action.payload
       deriv[action.rna_class] = action.payload
       
@@ -162,7 +190,6 @@ export const RNAReducer = (
       var sorted_classes:any ={} 
       
       for (var x of Object.entries(state.rna_classes_derived)){
-
         var sorted_class = x[1].sort((a, b) => {
         var al = a.seq.length;
         var bl = b.seq.length;

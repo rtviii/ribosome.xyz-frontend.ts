@@ -6,6 +6,7 @@ import   List                            from '@material-ui/core/List'          
 import   Divider                         from '@material-ui/core/Divider'                   ;
 import   ListItem                        from '@material-ui/core/ListItem'                  ;
 import   ListItemIcon                    from '@material-ui/core/ListItemIcon'              ;
+import './Dashboard.css'
 import   ListItemText                    from '@material-ui/core/ListItemText'              ;
 import { ListSubheader   , Tooltip }     from '@material-ui/core'                           ;
 import { useHistory       }              from 'react-router-dom'                            ;
@@ -24,6 +25,10 @@ import { AppActions       }              from '../../redux/AppActions'          
 import { connect         , useDispatch } from 'react-redux'                                 ;
 import   Grid                            from '@material-ui/core/Grid'                      ;
 import   bookmark                        from './../../static/bookmark_icon.svg'
+import SettingsIcon from '@material-ui/icons/Settings';
+import Paper from '@material-ui/core/Paper/Paper';
+import Typography from '@material-ui/core/Typography/Typography';
+import { Cart } from '../../components/Workspace/Cart/Cart';
 
 const useStyles = makeStyles({
   root:{
@@ -70,9 +75,9 @@ const _MenuItem:React.FC<{
 
   return (
     <ListItem button key={props.key}  onClick={()=>{
-
       props.toggle_dash()
-      history.push(props.linkto)}}>
+      history.push(props.linkto)}
+      }>
 
       <ListItemIcon>
         {<img src={props.icon} style={{ height: "30px", width: "30px" }} />}
@@ -85,35 +90,50 @@ const _MenuItem:React.FC<{
     )}
 
 const _DashboardButton: React.FC<DashProps> = (props) => {
-  return <Grid 
-  onClick={() => props.toggle_dash()} container item xs={12} 
-  style={{cursor:"pointer"}}
-  direction='row' >
+  return         <Paper variant="elevation" elevation={3} 
+
+onClick = {() => props.toggle_dash()}
+id      = "dashboard-icon"
+style   = {{
+    // outline     : "1px solid rgba(203,250,255,0.6)",
+    marginTop   : "35px",
+    marginBottom: "30px",
+    cursor      : "pointer",
+    padding     : "15px",
+    }} >
 
 
-    <Grid item xs={4} > 
 
-      <img style={{maxWidth:"100%",maxHeight:"100%"}} src={gear}/>
-    </Grid>
-  </Grid>
+  <SettingsIcon 
+          style   = {{
+        width : "70px",
+        height: "70px",
+      }} />
+
+{/* <Typography style={{fontSize:"40px"}}> Tools</Typography> */}
+
+
+  </Paper>
 }
 
 const _TemporaryDrawer: React.FC<DashProps> = (props) => {
 
-  const dispatch = useDispatch();
   const classes = useStyles();
   const list = (anchor: Anchor) => (
     <div
       className={clsx(classes.list, {[classes.fullList]: anchor === 'left' || anchor === 'top',})}
       role="presentation">
       <MenuItem key='new'  icon={home} menutext="Home" linkto='/home'/>
+
+      <Divider />
+
       <List>
 
         <ListSubheader>Available Data</ListSubheader>
 
-        <MenuItem key='new'  icon={enzymes}   menutext="Structures" linkto='/structs' />
-        <MenuItem key='new'  icon={proteins} menutext="Proteins"   linkto='/rps'     />
-        <MenuItem key='new'  icon={rnas} menutext="RNA"        linkto='/rnas'    />
+        <MenuItem key='new' icon={enzymes } menutext="Structures" linkto='/structs' />
+        <MenuItem key='new' icon={proteins} menutext="Proteins"   linkto='/rps'     />
+        <MenuItem key='new' icon={rnas    } menutext="RNA"        linkto='/rnas'    />
         {/* <MenuItem key='new'  icon={enzymes} menutext="Ligands"    linkto='/ligands' /> */}
 
       </List>
@@ -121,30 +141,9 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
       <List>
 
         <ListSubheader>Tools</ListSubheader>
-        <MenuItem key = 'new1' icon = {eye}  menutext       = "Visualization Page" linkto = '/vis'          />
-        <MenuItem key = 'new1' icon = {align}  menutext     = "Alignment"          linkto = '/rpalign'      />
-        <MenuItem key = 'new1' icon = {ligands}  menutext   = "Binding Sites"      linkto = '/bindingsites' />
-
-    <ListItem button onClick={async ()=>{
-
-        // patch(toggle_dashboard())
-            // dispatch(toggle_dashboard())
-            // dispatch(toggle_cart())
-            // dispatch(toggle_dashboard_open_cart())
-
-    }}>
-
-      <ListItemIcon>
-        {<img src={bookmark} style={{ height: "30px", width: "30px" }} />}
-
-      </ListItemIcon>
-
-
-
-        <ListItemText primary={
-"Workspace"
-} />
-    </ListItem>
+        <MenuItem key = 'new1' icon = {eye    } menutext = "Visualization" linkto = '/vis'          />
+        <MenuItem key = 'new1' icon = {align  } menutext = "Alignment"     linkto = '/rpalign'      />
+        <MenuItem key = 'new1' icon = {ligands} menutext = "Binding Sites" linkto = '/bindingsites' />
       </List>
     </div>
   );

@@ -2,7 +2,7 @@ import { Dispatch } from "redux";
 import { getNeo4jData } from "../../AsyncActions/getNeo4jData";
 import { NeoHomolog, RNAProfile } from './../../DataInterfaces'
 import { flattenDeep } from "lodash";
-import { RnaClass, RNAReducer } from "./RNAReducer";
+import { RnaClass  } from "./RNAReducer";
 
 export const REQUEST_RNA_CLASS_GO      = "REQUEST_RNA_CLASS_GO"     ;
 export const REQUEST_RNA_CLASS_SUCCESS = "REQUEST_RNA_CLASS_SUCCESS";
@@ -12,18 +12,16 @@ export const GOTO_PAGE_RNA             = "GOTO_PAGE_RNA"
 export const NEXT_PAGE_RNA             = "NEXT_PAGE_RNA"
 export const PREV_PAGE_RNA             = "PREV_PAGE_RNA"
 
+export const SORT_BY_SEQLEN   = "SORT_BY_SEQLEN"
+export const SELECT_RNA_CLASS = "SELECT_RNA_CLASS"
 
+export type RnaFilter         = "SPECIES" | "SEARCH" | "YEAR"  | "EXPERIMENTAL_METHOD" | "RESOLUTION"
 
-export const SORT_BY_SEQLEN             = "SORT_BY_SEQLEN"
-
-export const SELECT_RNA_CLASS          = "SELECT_RNA_CLASS"
-export type RnaFilter                  = "SPECIES" | "SEARCH"
-
-export interface requestRnaClassGo { type: typeof REQUEST_RNA_CLASS_GO; rna_class: RnaClass }
+export interface requestRnaClassGo      { type: typeof REQUEST_RNA_CLASS_GO     ; rna_class: RnaClass                        }
 export interface requestRnaClassSuccess { type: typeof REQUEST_RNA_CLASS_SUCCESS; payload: RNAProfile[], rna_class: RnaClass }
-export interface requestRnaClassError { type: typeof REQUEST_RNA_CLASS_ERR; error: Error; }
-export interface requestRnaClassError { type: typeof REQUEST_RNA_CLASS_ERR; error: Error; }
-export interface sortBySequenceLength { type: typeof SORT_BY_SEQLEN}
+export interface requestRnaClassError   { type: typeof REQUEST_RNA_CLASS_ERR    ; error: Error;                              }
+export interface requestRnaClassError   { type: typeof REQUEST_RNA_CLASS_ERR    ; error: Error;                              }
+export interface sortBySequenceLength   { type: typeof SORT_BY_SEQLEN                                                        }
 
 export interface filterRnaClass {
   type       : typeof FILTER_RNA_CLASS;
@@ -35,6 +33,7 @@ export interface nextPageRNA { type: typeof NEXT_PAGE_RNA; }
 export interface prevPageRNA { type: typeof PREV_PAGE_RNA; }
 export interface gotoPageRNA { type: typeof GOTO_PAGE_RNA; pid: number; }
 export interface selectRNAClass { type: typeof SELECT_RNA_CLASS; rna_class: RnaClass; }
+
 export type RNAActions =
   | requestRnaClassGo
   | requestRnaClassError
@@ -96,6 +95,16 @@ export const RnaClassFilterChangeAC = (newvalue: any, filter_type: RnaFilter): f
         return !(newvalue.length === 0);
       case "SPECIES":
         return !(newvalue.length === 0);
+      case "EXPERIMENTAL_METHOD":
+        return !(newvalue.length === 0)
+
+      case "RESOLUTION":
+        return !(newvalue[0] === 0 && newvalue[1] === 5);
+
+      case "YEAR":
+        return !(newvalue[0] === 2012 && newvalue[1] === 2021);
+
+
       default:
         return false;
     }

@@ -1,3 +1,4 @@
+import axios from "axios";
 import Axios from "axios";
 import qs from 'qs'
 import { RnaClass } from "../reducers/RNA/RNAReducer";
@@ -12,7 +13,7 @@ type StaticFilesEndpoints =
   | get_tunnel
   | pairwise_align
   | get_static_catalogue
-  | downloadArchive
+  // | downloadArchive
   | cif_chain_by_class
   | download_structure
 
@@ -63,12 +64,14 @@ interface get_static_catalogue{
   endpoint: 'get_static_catalogue',
   params  : null
 }
-interface downloadArchive {
-  endpoint: 'downloadArchive',
-  params: {
-    [key:string]:string
-  }
-}
+// interface downloadArchive {
+//   endpoint: 'downloadArchive',
+//   params  : { 
+//     rna:string[],
+//     structs: string[],
+//     rps    : string[],
+//    }
+// }
 type Neo4jEndpoints =
    nomclass_visualize
   | getStructure
@@ -212,3 +215,42 @@ export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {
   )}) : Axios.get(URI);
 
 };
+
+
+export const download_zip =(params:{
+  structs         : string[],
+  rna             : string[],
+  rps             : string[],
+},
+  download_filename:string
+) => {
+ 
+  
+                            axios.request({
+                                url   : `${BACKEND}/static_files/downloadArchive/`,
+                                method: 'GET',                                      responseType: 'arraybuffer',
+                                params,
+                                paramsSerializer: params => qs.stringify(params,
+                                    {
+                                        arrayFormat: "repeat"
+                                    }),
+
+                                headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                }
+                            })
+                                .then(
+
+                                    r => {
+                                        let blob = new Blob([r.data], { type: 'application/zip' })
+                                        const downloadUrl = URL.createObjectURL(blob)
+                                        let a = document.createElement("a");
+                                        a.href = downloadUrl;
+                                        a.download = download_filename;
+                                        document.body.appendChild(a);
+                                        a.click();
+
+
+                                    }
+                                )
+}
