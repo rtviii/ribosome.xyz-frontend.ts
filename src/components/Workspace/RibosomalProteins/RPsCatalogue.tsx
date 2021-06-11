@@ -18,6 +18,7 @@ import TextField from '@material-ui/core/TextField/TextField';
 import PageAnnotation from '../Display/PageAnnotation';
 import { ListSubheader } from '@material-ui/core';
 import _ from 'lodash';
+import { cart_add_item } from '../../../redux/reducers/Cart/ActionTypes';
 
 
 export interface BanPaperEntry {
@@ -48,6 +49,10 @@ const RPsCatalogue = () => {
     const e_SSU  = useSelector(( state:AppState ) => state.proteins.ban_classes_derived.e_SSU.filter(r=>!r.banClass.includes("bTHX")))
     const b_SSU  = useSelector(( state:AppState ) => state.proteins.ban_classes_derived.b_SSU.filter(r=>!r.banClass.includes("RACK1")))
     const u_SSU  = useSelector(( state:AppState ) => state.proteins.ban_classes_derived.u_SSU.filter(r=>!( r.banClass.includes("RACK1") || r.banClass.includes("bTHX") ) ))
+
+
+  
+    
 
     const [search, setSearch] = useState<string>("")
     useEffect(() => {

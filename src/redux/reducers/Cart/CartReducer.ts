@@ -14,22 +14,17 @@ export function isRNA(i:CartItem): i is RNAProfile{
 }
 
 interface CartReducerState {
-
-    open    : boolean,
-    // proteins: RibosomalProtein[],
-    structs: string[],
-    items: CartItem[],
-
+    open         : boolean,
+    structs      : string[],
+    items        : CartItem[],
+    selectedItems: CartItem[]
 }
 
 const initialCartReducerState:CartReducerState = {
-
-
-
-  structs:[],
-    open    : false,
-    items: []
-    // proteins: []
+  structs      : [],
+  open         : false,
+  items        : [],
+  selectedItems: []
 }
 
 export const CartReducer = (
@@ -65,6 +60,18 @@ export const CartReducer = (
       }
       return {...state, items: state.items.filter(i => {return !_.isEqual(i, action.item)})
     }
+
+    case "CART_TOGGLE_ITEM_SELECT":
+
+    if (action.selected){
+      var newSelected = [...state.selectedItems, action.item]
+      
+    }else{
+      var newSelected = [...state.selectedItems.filter(i=> i!=action.item)]
+    }
+    return {...state, selectedItems:newSelected}
+
+
 
     default:
       return state;

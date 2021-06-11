@@ -52,6 +52,7 @@ import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import { cart_add_item } from "../../../redux/reducers/Cart/ActionTypes";
 
 const pageData ={
   title: "Ribosome Structures",
@@ -90,6 +91,15 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   const cartStructs = useSelector(( state:AppState ) => state.cart.structs)
   useEffect(() => {
   }, [cartItems])
+
+
+  // useEffect(() => {
+  //   if (prop.structures.length>1){
+  //   dispatch(cart_add_item(prop.structures[1].struct))
+  //   dispatch(cart_add_item(prop.structures[2].struct))
+  //   }
+
+  // }, [prop.structures])
 
   return ! prop.loading ? (
     <Grid container xs={12} spacing={1}>

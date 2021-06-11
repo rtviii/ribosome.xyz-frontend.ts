@@ -26,24 +26,19 @@ import Pagination from                                                 "@materia
 import LinearProgress from                                             "@material-ui/core/LinearProgress"                      ;
 import _ from                                                          "lodash"                                                ;
 import DropdownTreeSelect from                                         "react-dropdown-tree-select"                            ;
-import createStyles from                                               "@material-ui/core/styles/createStyles"                 ;
 import Dialog from                                                     "@material-ui/core/Dialog/Dialog"                       ;
 import DialogTitle from                                                "@material-ui/core/DialogTitle/DialogTitle"             ;
 import DialogContent from                                              "@material-ui/core/DialogContent/DialogContent"         ;
 import DialogContentText from                                          "@material-ui/core/DialogContentText/DialogContentText" ;
 import { RnaClass } from                                               "../../../redux/reducers/RNA/RNAReducer"                ;
 import { Cart } from "../Cart/Cart";
-import { Divider } from "material-ui";
 import { ValueSlider } from "../Display/StructuresCatalogue";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup/ToggleButtonGroup";
 import ToggleButton from "@material-ui/lab/ToggleButton/ToggleButton";
-import { structsFilterChangeAC } from "../../../redux/reducers/StructuresReducer/ActionTypes";
 
 const pageData = {
-  title: "Ribosomal, messenger, transfer RNA",
-  text:
-    "RNA components, including ribosomal RNA's, but also tRNA's and mRNA's solved\
- with the ribosomes are caccessible and can be searched through all structures.",
+  title: "RNA Strands",
+  text : "",
 };
 
 const BulkDownloadMenu=()=> {
@@ -51,6 +46,16 @@ const BulkDownloadMenu=()=> {
   const [open              , setOpen] = React       . useState(false);
   const current_class:RnaClass        = useSelector(( state    : AppState) => state.rna.current_rna_class)
   const current_class_derived         = useSelector(( state    : AppState) => state.rna.rna_classes_derived[current_class])
+
+  console.log(current_class_derived);
+  
+
+
+
+
+
+
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -100,9 +105,6 @@ const BulkDownloadMenu=()=> {
               Download Summary (.csv)
           </Button>
           </CSVLink>
-          <List>
-            <Divider />
-          </List>
           <DialogContentText style={{ marginTop: "10px" }} >
             <Typography variant="h5">Download Whole Models</Typography>
             Filtered models of the whole ribosome structures that you have filtered will be packed into a <i>.zip</i> archive and downloaded.
@@ -142,6 +144,7 @@ const RNACatalogue: React.FC<ReduxProps & DispatchProps> = (prop) => {
   const  current_page                  = useSelector                                     ((state: AppState) => state.rna.current_page                       )
   const  currclass                     = useSelector                                     (( state:AppState ) => state.rna.rna_classes_derived[current_class])
   const  other                         = useSelector                                     ((state: AppState) => state.rna.rna_classes_derived.other          )
+
 
 const filters = useSelector((state: AppState) => state.rna.rna_filters.applied)
 
@@ -274,7 +277,9 @@ Sort By Sequence Length
         </ListItem>
 
 
+        <ListItem>
         <DashboardButton />
+        </ListItem>
 
       </List>
     </Grid>

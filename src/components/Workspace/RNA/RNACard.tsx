@@ -156,7 +156,7 @@ export const RNACard:React.FC<RNACardProps> = (prop) => {
                 )
               }
             >
-              Download Chain | .cif
+              Download Strand 
 
               <GetAppIcon/>
             </Button>

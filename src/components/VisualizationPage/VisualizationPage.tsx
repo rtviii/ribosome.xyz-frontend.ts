@@ -432,6 +432,9 @@ uniq(flattenDeep(protClassInfo.comments)).filter(r=>r!=="NULL").map(r =>
       <Grid item container direction="column" xs={3} spacing={1}style={{padding:"10px"}}>
         <List>
 
+          <ListItem>
+          <Cart/>
+          </ListItem>
 
           <ListItem>
 <Typography variant="overline">Currently Selected:</Typography>
@@ -439,9 +442,6 @@ uniq(flattenDeep(protClassInfo.comments)).filter(r=>r!=="NULL").map(r =>
           <ListItem>
 
 <RenderInViewInfo type={inViewData.type} structdata={structdata as RibosomeStructure} protClassInfo={protClassInfo}/>
-          </ListItem>
-          <ListItem>
-          <Cart/>
           </ListItem>
 
           <ListItem>

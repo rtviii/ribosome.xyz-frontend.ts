@@ -38,6 +38,7 @@ import FormHelperText from                                                      
 import { CSVLink } from                                                                   "react-csv"                                            ;
 import Divider from                                                                       "@material-ui/core/Divider/Divider"                    ;
 import DialogContentText from                                                             "@material-ui/core/DialogContentText/DialogContentText";
+import { cart_add_item } from "../../../redux/reducers/Cart/ActionTypes";
 
 
 
@@ -55,36 +56,8 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-  const classes = useCheckboxStyles();
 
-
-  const [summaryOpts, setSummaryOpts] = React.useState({
-            all                             : false,
-            pfam_accessions                 : false,
-            rcsb_source_organism_id         : false,
-            rcsb_source_organism_description: false,
-            uniprot_accession               : false,
-            rcsb_pdbx_description           : false,
-            entity_poly_strand_id           : false,
-            entity_poly_seq_one_letter_code : false,
-            entity_poly_seq_length          : false,
-            nomenclature                    : false,
-  });
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSummaryOpts({ ...summaryOpts, [event.target.name]: event.target.checked });
-  };
-
-  const {     all                             ,
-              pfam_accessions                 ,
-              rcsb_source_organism_id         ,
-              rcsb_source_organism_description,
-              uniprot_accession               ,
-              rcsb_pdbx_description           ,
-              entity_poly_strand_id           ,
-              entity_poly_seq_one_letter_code ,
-              entity_poly_seq_length          ,
-              nomenclature
-      } =     summaryOpts                     ;
+  const dispatch = useDispatch()
 
   const handleClickOpen = () => {
     setOpen(true);
