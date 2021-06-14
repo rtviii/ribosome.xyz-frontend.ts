@@ -37,7 +37,7 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup/ToggleButtonGr
 import ToggleButton from "@material-ui/lab/ToggleButton/ToggleButton";
 
 const pageData = {
-  title: "RNA Strands",
+  title: "RNA",
   text : "",
 };
 
@@ -46,14 +46,6 @@ const BulkDownloadMenu=()=> {
   const [open              , setOpen] = React       . useState(false);
   const current_class:RnaClass        = useSelector(( state    : AppState) => state.rna.current_rna_class)
   const current_class_derived         = useSelector(( state    : AppState) => state.rna.rna_classes_derived[current_class])
-
-  console.log(current_class_derived);
-  
-
-
-
-
-
 
 
   const handleClickOpen = () => {

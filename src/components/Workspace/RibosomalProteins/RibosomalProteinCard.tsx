@@ -6,9 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import { NeoHomolog } from "../../../redux/DataInterfaces";
 import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
 import downicon from "./../../../static/download.png"
 import fileDownload from "js-file-download";
 import loading from "./../../../static/loading.gif";
@@ -28,16 +26,13 @@ import { Dispatch } from 'redux'
 import { AppActions } from '../../../redux/AppActions';
 import { RibosomalProtein, RibosomeStructure } from '../../../redux/RibosomeTypes';
 import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar/Avatar';
 import CardHeader from '@material-ui/core/CardHeader/CardHeader';
 import CardActionArea from '@material-ui/core/CardActionArea/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia/CardMedia';
 import List from '@material-ui/core/List/List';
 import { CardBodyAnnotation } from '../StructurePage/StructurePage';
-import ListItem from '@material-ui/core/ListItem/ListItem';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { flattenDeep } from 'lodash';
-import { useEffect } from 'react';
 
 
 const RPLoader = () => (
@@ -48,74 +43,74 @@ const RPLoader = () => (
 );
 
 
-export const ChainParentPill = ({ strand_id, parent_id }:{strand_id:string, parent_id:string}) =>{
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    popover: {
-      pointerEvents: 'none',
-    },
-    popoverContent:{
-      pointerEvents:"auto"
-    },
-    paper: {
-      padding: theme.spacing(1),
-    },
-          card: {
-            width:300,
+export const ChainParentPill = ({ strand_id, parent_id }: { strand_id: string, parent_id: string }) => {
+  const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      popover: {
+        pointerEvents: 'none',
+      },
+      popoverContent: {
+        pointerEvents: "auto"
+      },
+      paper: {
+        padding: theme.spacing(1),
+      },
+      card: {
+        width: 300,
 
-            padding:10
-          },
-          title: {
-            fontSize: 12,
-            height  : 200
-          },
-          heading: {
-            fontSize  : 12,
-            paddingTop: 5,
-          },
-          annotation: { fontSize: 12, },
-          authors   : {
+        padding: 10
+      },
+      title: {
+        fontSize: 12,
+        height: 200
+      },
+      heading: {
+        fontSize: 12,
+        paddingTop: 5,
+      },
+      annotation: { fontSize: 12, },
+      authors: {
 
-              transition: "0.1s all",
-              "&:hover" : {
-                background: "rgba(149,149,149,1)",
-                cursor    : "pointer",
-            },
+        transition: "0.1s all",
+        "&:hover": {
+          background: "rgba(149,149,149,1)",
+          cursor: "pointer",
+        },
 
-          },
+      },
 
-          nested:{
-            paddingLeft: 20,
-            color      : "black"
-          }
-  }),
-);
+      nested: {
+        paddingLeft: 20,
+        color: "black"
+      }
+    }),
+  );
 
 
- const classes                 = useStyles();
- const history                 = useHistory();
- const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
- const [structdata, setstruct] = useState<RibosomeStructure>();
+  const classes = useStyles();
+  const history = useHistory();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [structdata, setstruct] = useState<RibosomeStructure>();
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
 
 
-    if (! structdata ){
-    getNeo4jData("neo4j", {
-      endpoint: "get_struct",
-      params: { pdbid: parent_id },
-    }).then(
-      resp => {
-        const respdat:any = flattenDeep(
-          resp.data
-        )[0];
-        setstruct(respdat.structure);
+    if (!structdata) {
+      getNeo4jData("neo4j", {
+        endpoint: "get_struct",
+        params: { pdbid: parent_id },
+      }).then(
+        resp => {
+          const respdat: any = flattenDeep(
+            resp.data
+          )[0];
+          setstruct(respdat.structure);
 
-      },
-      err => {
-        console.log("Got error on /neo request", err);
-      }
-    );
+        },
+        err => {
+          console.log("Got error on /neo request", err);
+        }
+      );
     }
     setAnchorEl(event.currentTarget);
   };
@@ -124,21 +119,21 @@ const useStyles = makeStyles((theme: Theme) =>
     setAnchorEl(null);
   };
 
-const open     = Boolean(anchorEl);
-const id       = open ? 'simple-popover' : undefined;
-const dispatch = useDispatch();
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+  const dispatch = useDispatch();
   return (
     <>
- <Typography
+      <Typography
         onMouseEnter={handlePopoverOpen}
       >
 
-  <Chip  color="primary" variant="outlined" label={<Typography style={{fontSize:"12px"}}>chain <b>{strand_id}</b> of <b>{parent_id}</b></Typography>  }/>
+        <Chip color="primary" variant="outlined" label={<Typography style={{ fontSize: "12px" }}>chain <b>{strand_id}</b> of <b>{parent_id}</b></Typography>} />
 
       </Typography>
       <Popover
 
-          id={id}
+        id={id}
         open={open}
         anchorEl={anchorEl}
         onClose={handlePopoverClose}
@@ -158,98 +153,96 @@ const dispatch = useDispatch();
         }}
       >
 
-{
-              structdata ? 
-        <Card className={classes.card}
-        onMouseLeave={handlePopoverClose}
-        
-        >
-          <CardHeader
-          style={{cursor:"pointer"}}
-        onClick={() => { history.push({ pathname: `/structs/${parent_id}`}) }}
-            title={`${structdata.rcsb_id}`}
-            subheader={structdata._organismName}
-          />
-          <CardActionArea>
-            <CardMedia
-              image={process.env.PUBLIC_URL + `/ray_templates/_ray_${parent_id.toUpperCase()}.png`}
-              title={ `${structdata.rcsb_id}\n${structdata.citation_title}` }
-              className={classes.title}
-            />
-          </CardActionArea>
-          <List>
-            <CardBodyAnnotation keyname="Species" value={structdata._organismName} />
-            <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
-            < CardBodyAnnotation keyname="Title" value={structdata.citation_title} />
+        {
+          structdata ?
+            <Card className={classes.card}
+              onMouseLeave={handlePopoverClose}
+
+            >
+              <CardHeader
+                style={{ cursor: "pointer" }}
+                onClick={() => { history.push({ pathname: `/structs/${parent_id}` }) }}
+                title={`${structdata.rcsb_id}`}
+                subheader={structdata._organismName}
+              />
+              <CardActionArea>
+                <CardMedia
+                  image={process.env.PUBLIC_URL + `/ray_templates/_ray_${parent_id.toUpperCase()}.png`}
+                  title={`${structdata.rcsb_id}\n${structdata.citation_title}`}
+                  className={classes.title}
+                />
+              </CardActionArea>
+              <List>
+                <CardBodyAnnotation keyname="Species" value={structdata._organismName} />
+                <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
+                < CardBodyAnnotation keyname="Title" value={structdata.citation_title} />
 
 
-            < CardBodyAnnotation keyname="Year" value={structdata.citation_year} />
-          </List>
-          <CardActions>
-            <Grid container> 
-            <Grid item container justify="space-evenly" direction="row" xs={12}>
+                < CardBodyAnnotation keyname="Year" value={structdata.citation_year} />
+              </List>
+              <CardActions>
+                <Grid container>
+                  <Grid item container justify="space-evenly" direction="row" xs={12}>
 
-              <Grid item>
+                    <Grid item>
 
-                <Button size="small" color="primary">
-                  <a href={ `https://www.rcsb.org/structure/${structdata.rcsb_id}` }>
-                  PDB
+                      <Button size="small" color="primary">
+                        <a href={`https://www.rcsb.org/structure/${structdata.rcsb_id}`}>
+                          PDB
                   </a>
-            </Button>
-              </Grid>
-              <Grid item>
-                <Button size="small" color="primary">
-                  <a href={
-                    
-                    structdata.rcsb_external_ref_link[0]
-                     }>
-                  EMD
-                  </a>
-            </Button>
-              </Grid>
-              <Grid item>
-                <Button size="small" color="primary">
-                  <a href={
-                     `https://doi.org/${structdata.citation_pdbx_doi}`
-                     }>
-                  DOI
-                  </a>
-            </Button>
-              </Grid>
-            </Grid>
-            <Grid item container justify="space-evenly" direction="row" xs={12}>
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button size="small" color="primary">
+                        <a href={
 
-              <Grid item>
+                          structdata.rcsb_external_ref_link[0]
+                        }>
+                          EMD
+                  </a>
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button size="small" color="primary">
+                        <a href={
+                          `https://doi.org/${structdata.citation_pdbx_doi}`
+                        }>
+                          DOI
+                  </a>
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Grid item container justify="space-evenly" direction="row" xs={12}>
 
-                <Button onClick={() => { history.push({ pathname: `/vis`, state: { struct: structdata.rcsb_id } }) }} style={{textTransform:"none"}}>
-                  <VisibilityIcon />
+                    <Grid item>
+
+                      <Button onClick={() => { history.push({ pathname: `/vis`, state: { struct: structdata.rcsb_id } }) }} style={{ textTransform: "none" }}>
+                        <VisibilityIcon />
           Visualize
           </Button>
-              </Grid>
-              <Grid item>
-                <Button onClick={(e)=>{
-
-
-dispatch(cart_add_item(structdata))
-                }} style={{textTransform:"none"}} >
-                  <BookmarkIcon/>
+                    </Grid>
+                    <Grid item>
+                      <Button onClick={(e) => {
+                        dispatch(cart_add_item(structdata))
+                      }} style={{ textTransform: "none" }} >
+                        <BookmarkIcon />
 Add To Workspace
           </Button>
-              </Grid>
- </Grid>           </Grid>
-          </CardActions>
-          </Card>
+                    </Grid>
+                  </Grid>           </Grid>
+              </CardActions>
+            </Card>
 
- :
-        <Card className={classes.card}>
-
-
- <LinearProgress/>
- </Card>
- 
+            :
+            <Card className={classes.card}>
 
 
-}
+              <LinearProgress />
+            </Card>
+
+
+
+        }
 
 
       </Popover>
@@ -399,11 +392,10 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
 
             </Grid>
           </Grid>
-          <Grid item justify="space-between" container xs={12}></Grid>
           <Grid item justify="space-between" container xs={12}>
             <Typography className={classes.fieldTypography} variant="body2" component="p">
               {prop.protein.pfam_descriptions}
-              <br /> {prop.protein.rcsb_pdbx_description}
+              {/* <br /> {prop.protein.rcsb_pdbx_description} */}
             </Typography>
           </Grid>
         </Grid>
