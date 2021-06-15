@@ -1,43 +1,44 @@
-import React from                     'react'                                        ;
-import {  useDispatch, useSelector } from 'react-redux'
-import clsx from                      'clsx'                                         ;
-import { makeStyles } from            '@material-ui/core/styles'                     ;
-import Drawer from                    '@material-ui/core/Drawer'                     ;
-import List from                      '@material-ui/core/List'                       ;
-import Divider from                   '@material-ui/core/Divider'                    ;
-import ListItem from                  '@material-ui/core/ListItem'                   ;
-import ListItemIcon from              '@material-ui/core/ListItemIcon'               ;
-import                                './Dashboard.css'
-import ListItemText from              '@material-ui/core/ListItemText'               ;
-import { ListSubheader } from         '@material-ui/core'                            ;
-import { useHistory } from            'react-router-dom'                             ;
-import enzymes from                   './../../static/enzymes-icon.png'
-import rnas from                      './../../static/rna_icon.svg'
-import CloseIcon from '@material-ui/icons/Close';
-import bookmark from './../../static/bookmark_icon.svg'
-import proteins from                  './../../static/protein_icon.svg'
-import ligands from                   './../../static/ligand_icon.svg'
-import home from                      './../../static/mainpage_icon.svg'
-import align from                     './../../static/align_icon.svg'
-import eye from                       './../../static/eye_icon.svg'
-import { toggle_dashboard } from      './../../redux/reducers/Interface/ActionTypes'
-import { AppState } from              '../../redux/store'                            ;
-import { ThunkDispatch } from         'redux-thunk'                                  ;
-import { AppActions } from            '../../redux/AppActions'                       ;
-import { connect  } from 'react-redux'                                  ;
-import SettingsIcon from              '@material-ui/icons/Settings'                 ;
-import Paper from                     '@material-ui/core/Paper/Paper'               ;
-import { Cart, Item } from '../../components/Workspace/Cart/Cart';
-import Button from '@material-ui/core/Button/Button';
-import { toggle_cart } from '../../redux/reducers/Cart/ActionTypes';
-import Dialog from '@material-ui/core/Dialog/Dialog';
-import IconButton from '@material-ui/core/IconButton/IconButton';
-import Toolbar from '@material-ui/core/Toolbar/Toolbar';
-import AppBar from '@material-ui/core/AppBar/AppBar';
-import { isProt, isRNA, isStruct } from '../../redux/reducers/Cart/CartReducer';
-import { CSVLink } from 'react-csv';
-import _ from 'lodash';
-import { download_zip } from '../../redux/AsyncActions/getNeo4jData';
+import React from                        'react'                                        ;
+import { useDispatch, useSelector } from 'react-redux'
+import clsx from                         'clsx'                                         ;
+import { makeStyles } from               '@material-ui/core/styles'                     ;
+import Drawer from                       '@material-ui/core/Drawer'                     ;
+import List from                         '@material-ui/core/List'                       ;
+import Divider from                      '@material-ui/core/Divider'                    ;
+import ListItem from                     '@material-ui/core/ListItem'                   ;
+import ListItemIcon from                 '@material-ui/core/ListItemIcon'               ;
+import                                   './Dashboard.css'
+import ListItemText from                 '@material-ui/core/ListItemText'               ;
+import { ListSubheader } from            '@material-ui/core'                            ;
+import { useHistory } from               'react-router-dom'                             ;
+import enzymes from                      './../../static/enzymes-icon.png'
+import rnas from                         './../../static/rna_icon.svg'
+import CloseIcon from                    '@material-ui/icons/Close'                    ;
+import bookmark from                     './../../static/bookmark_icon.svg'
+import proteins from                     './../../static/protein_icon.svg'
+import ligands from                      './../../static/ligand_icon.svg'
+import table from                      './../../static/table.png'
+import home from                         './../../static/mainpage_icon.svg'
+import align from                        './../../static/align_icon.svg'
+import eye from                          './../../static/eye_icon.svg'
+import { toggle_dashboard } from         './../../redux/reducers/Interface/ActionTypes'
+import { AppState } from                 '../../redux/store'                            ;
+import { ThunkDispatch } from            'redux-thunk'                                  ;
+import { AppActions } from               '../../redux/AppActions'                       ;
+import { connect } from                  'react-redux'                                  ;
+import SettingsIcon from                 '@material-ui/icons/Settings'                  ;
+import Paper from                        '@material-ui/core/Paper/Paper'                ;
+import { Cart, Item } from               '../../components/Workspace/Cart/Cart'        ;
+import Button from                       '@material-ui/core/Button/Button'             ;
+import { toggle_cart } from              '../../redux/reducers/Cart/ActionTypes'       ;
+import Dialog from                       '@material-ui/core/Dialog/Dialog'             ;
+import IconButton from                   '@material-ui/core/IconButton/IconButton'     ;
+import Toolbar from                      '@material-ui/core/Toolbar/Toolbar'           ;
+import AppBar from                       '@material-ui/core/AppBar/AppBar'             ;
+import { isProt, isRNA, isStruct } from  '../../redux/reducers/Cart/CartReducer'       ;
+import { CSVLink } from                  'react-csv'                                   ;
+import _ from                            'lodash'                                      ;
+import { download_zip } from             '../../redux/AsyncActions/getNeo4jData'       ;
 
 const useStyles = makeStyles({
   root:{
@@ -291,6 +292,7 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
         <MenuItem key='new' icon={enzymes } menutext="Structures" linkto='/structs' />
         <MenuItem key='new' icon={proteins} menutext="Proteins"   linkto='/rps'     />
         <MenuItem key='new' icon={rnas    } menutext="RNA"        linkto='/rnas'    />
+        <MenuItem key='new' icon={table    } menutext="Nomenclature"        linkto='/nomenclature'    />
         {/* <MenuItem key='new'  icon={enzymes} menutext="Ligands"    linkto='/ligands' /> */}
 
       </List>
