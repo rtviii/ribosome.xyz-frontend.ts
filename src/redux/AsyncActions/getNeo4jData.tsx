@@ -2,6 +2,7 @@ import axios from "axios";
 import Axios from "axios";
 import qs from 'qs'
 import { RnaClass } from "../reducers/RNA/RNAReducer";
+import { BanClass } from "../RibosomeTypes";
 
 const BACKEND: any  =  process.env.REACT_APP_DJANGO_URL;
 type  DjangoAPIs    =  "neo4j" | "static_files"
@@ -93,9 +94,17 @@ type Neo4jEndpoints =
   | match_structs_by_proteins
   | get_surface_ratios
   | TEMP_classification_sample
+  |banclass_annotation
 
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
+
+interface banclass_annotation {
+  endpoint:"banclass_annotation",
+  params:{
+    banclass:BanClass
+  }
+}
 
 interface nomclass_visualize{
   endpoint: "nomclass_visualize",

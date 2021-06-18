@@ -25,7 +25,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { AppState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { BanClassMetadata, RNAProfile } from '../../redux/DataInterfaces';
+import { BanClassMetadata, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces';
 import ListSubheader from '@material-ui/core/ListSubheader/ListSubheader';
 import { CardBodyAnnotation } from './../Workspace/StructurePage/StructurePage'
 import { requestBanClass } from '../../redux/reducers/Proteins/ActionTypes';
@@ -36,12 +36,10 @@ import Card from '@material-ui/core/Card/Card';
 import { RibosomeStructure } from '../../redux/RibosomeTypes';
 import { flattenDeep, uniq } from 'lodash';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
-import { Widgets } from '@material-ui/icons';
 import { useHistory, useParams } from 'react-router';
 import _ from 'lodash'
 import { Cart } from '../Workspace/Cart/Cart';
 import { ListItemText } from '@material-ui/core';
-import NativeSelect from '@material-ui/core/NativeSelect/NativeSelect';
 import Divider from '@material-ui/core/Divider/Divider';
 
 
@@ -54,10 +52,13 @@ const useSelectStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(1),
       minWidth: 400,
     },
-    sub: {
+    sub1: {
       margin: theme.spacing(1),
-
-      minWidth: 200,
+      minWidth: "30%",
+    },
+    sub2: {
+      margin: theme.spacing(1),
+      minWidth: "60%",
     },
     selectEmpty: {
       marginTop: theme.spacing(2),
@@ -108,9 +109,6 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   )
 }
 
-
-
-
 const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMetadata[], getCifChainByClass: (strand: string, parent: string) => void }) => {
 
   const styles = useSelectStyles();
@@ -118,67 +116,54 @@ const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMet
 
   const [curProtClass, setProtClass] = React.useState('');
   const [curProtParent, setProtParent] = React.useState('');
-  const availablestructs = useSelector((state: AppState) => state.proteins.ban_class.map(i => i.parent_rcsb_id))
+  const availablestructs = useSelector((state: AppState) => state.proteins.ban_class)
 
   const chooseProtein = (event: React.ChangeEvent<{ value: unknown }>) => {
     let item = event.target.value as string
     dispatch(requestBanClass(item, false))
     setProtClass(item);
   };
-  const chooseProtParent = (event: React.ChangeEvent<{ value: unknown }>) => {
-    let item = event.target.value as string
-    setProtParent(item);
-    getCifChainByClass(curProtClass, item)
+  const chooseProtParent = (event: React.ChangeEvent<{ value: unknown }>, newvalue:any) => {
+    console.log(newvalue)
+    if (newvalue === null || newvalue.parent_rcsb_id === "Choose a protein class."){
+      return 
+    }
+    setProtParent(newvalue.parent_rcsb_id);
+    getCifChainByClass(curProtClass, newvalue.parent_rcsb_id)
 
   };
   return (
+    <Grid item xs={12}>
+      <List style={{ outline: "1px solid gray", borderRadius: "5px" }}>
+        <ListItem>
+          <FormControl className={styles.sub1}>
+            <InputLabel>Protein Class</InputLabel>
+            <Select
+              labelId ="demo-simple-select-label"
+              id      ="demo-simple-select"
+              value   ={curProtClass}
+              onChange={chooseProtein}>
+              {proteins.map((i) => <MenuItem value={i.banClass}>{i.banClass}
+              </MenuItem>)}
+            </Select>
+          </FormControl>
 
+          <FormControl className={styles.sub2}>
+            <Autocomplete
+              styles={{ marginRight: "9px", outline: "none" }}
+              options={availablestructs.length > -1 ? availablestructs : [{ parent_rcsb_id: "Choose a protein class." } as ProteinProfile]}
+              getOptionLabel={(parent) => parent.parent_rcsb_id}
+              // @ts-ignore
+              onChange={chooseProtParent}
+              renderOption={(option) => (<div style={{ fontSize: "9px", width: "400px" }}><b>{option.parent_rcsb_id}</b> ({option.pfam_descriptions} ) </div>)}
+              renderInput={(params) => <TextField {...params} style={{ fontSize: "7px" }} label="Parent Structure" variant="outlined" />}
 
+            />
+          </FormControl>
 
-          // <Autocomplete
-          // style          = {{fontSize:"12px"}}
-          // size           = "small"
-          // options        = {structs}
-          // getOptionLabel = {(parent) =>   parent.rcsb_id + " : "+ parent.title}
-          // // @ts-ignore
-          // onChange     = {(event: any, newValue: any) => {
-          //   if (newValue === null){
-          //     return 
-          //   }
-          //   selectStruct(newValue!.rcsb_id )
-          // }}
-          // renderOption = {(option) => (<div style={{fontSize:"10px", width:"400px"}}><b>{option.rcsb_id}</b> ({option.title} ) </div>)}
-          // renderInput  = {(params) => <TextField {...params} style={{width:"400px", fontSize:"8px"}} label="Structure" variant="outlined" />}
-          // />
-
-
-    <Grid xs={12} style={{outline:"1px solid gray", borderRadius:"5px"}}>
-      <FormControl className={styles.sub}>
-        <InputLabel id="demo-simple-select-label">Protein Chain</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={curProtClass}
-          onChange={chooseProtein}>
-
-          {proteins.map((i) => <MenuItem value={i.banClass}>
-            {i.banClass}
-          </MenuItem>)}
-        </Select>
-      </FormControl>
-
-      <FormControl className={styles.sub}>
-        <InputLabel htmlFor="grouped-select">From Structure</InputLabel>
-        <Select onChange={chooseProtParent} defaultValue="" id="grouped-select">
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          {availablestructs.map((i) =>
-            <MenuItem value={i}>{i}</MenuItem>
-          )}
-        </Select>
-      </FormControl>
-</Grid>
+        </ListItem>
+      </List>
+    </Grid>
   )
 }
 
@@ -190,7 +175,6 @@ const SelectRna = ({ items } : { items: RNAProfile[]}) => {
   const [curRna, setCurRna]          = React.useState('');
   const [curRnaParent, setRnaParent] = React.useState('');
 
-  const availablestructs             = useSelector((state: AppState) => state.proteins.ban_class.map(i => i.parent_rcsb_id))
 
   const chooseRna = (event: React.ChangeEvent<{ value: unknown }>) => {
     let item = event.target.value as string
@@ -233,53 +217,43 @@ const parents = useSelector(( state:AppState ) => Object.values(state.rna.rna_cl
 
 const [selectrnaClass, setSelectRnaClass] = useState<string>('5')
 
-const autocomopleteStyles = ( makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      marginTop:"20px",
-      width: 500,
-      '& > * + *': {
-        marginTop: theme.spacing(2),
-      },
-    },
-  }),
-) )()
-
   return (
     <Grid item xs={12}>
       <List style={{outline:"1px solid gray", borderRadius:"5px"}}>
 
-{/* <ListItem>
-        <FormControl >
+<ListItem>
+        <FormControl className={styles.sub1}>
 
-          <InputLabel style={{width:"300px"}} >Select RNA Strand By..</InputLabel>
+          <InputLabel >RNA Class</InputLabel>
           <Select
-            placeholder = "Class/Parent Structure..."
-            value       = {selectBy}
-            onChange    = {(event: any) => {
-              setSelectBy(event.target.value);
-            }}>
 
-            {[{ t: 'Parent Structure', v: 'Parent Structure' }, { t: 'RNA Class', v: "RNA Class" }].map((i) => <MenuItem value={i.v}>{i.t}</MenuItem>)}
+          labelId  ="demo-simple-select-label"
+          id       ="demo-simple-select"
+          value    = {selectBy}
+          onChange = {(event: any) => {setSelectBy(event.target.value)}}>
+            {[
+             { v: 'mrna', t: 'mRNA' },
+             { v: 'trna', t: 'tRNA' },
+             { v: '5'   , t: '5S'    },
+             { v: '5.8' , t: '5.8S' },
+             { v: '12'  , t: '12S'  },
+             { v: '16S' , t: '16S'  },
+             { v: '21'  , t: '21S'  },
+             { v: '23'  , t: '23S'  },
+             { v: '25'  , t: '25S'  },
+             { v: '28'  , t: '28S'  },
+             { v: '35'  , t: '35S'  },
+             ].map((i) => <MenuItem value={i.v}>{i.t}</MenuItem>)}
           </Select>
         </FormControl>
-</ListItem> */}
 
-<ListItem>
-
-<ListItemText> Search by Structure or RNA Class</ListItemText>
-</ListItem>
-          <ListItem>
-
+        <FormControl  className={styles.sub2}>
           <Autocomplete
-          className      = {autocomopleteStyles.root}
-          style          = {{fontSize:"12px"}}
-          size           = "small"
+          styles={{marginRight:"10px", outline:"none"}}
           options        = {parents}
-          getOptionLabel = {(parent) =>   parent.rcsb_id+ ":"+parent.des }
+          getOptionLabel = {(parent) =>   parent.rcsb_id }
           // @ts-ignore
           onChange     = {(event: any, newValue: string | null) => {
-            
             if (newValue === null){
               return
             }
@@ -287,9 +261,16 @@ const autocomopleteStyles = ( makeStyles((theme: Theme) =>
 
           }}
           renderOption = {(option) => (<div style={{fontSize:"10px", width:"400px"}}><b>{option.rcsb_id}</b> ({option.title} ) ::: <i>{option.des}</i></div>)}
-          renderInput  = {(params) => <TextField {...params} style={{width:"400px", fontSize:"8px"}} label="Parent Structure" variant="outlined" />}
+          renderInput  = {(params) => <TextField {...params} style={{ fontSize:"8px"}} label="Parent Structure" variant="outlined" />}
           />
+
+
+        </FormControl>
+
+
+
 </ListItem>
+
 
 </List>
 </Grid>
@@ -298,6 +279,8 @@ const autocomopleteStyles = ( makeStyles((theme: Theme) =>
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
+// @ts-ignore
+// const viewerInstance2 = new PDBeMolstarPlugin() as any;
 const VisualizationPage = (props:any) => {
 
   const history:any= useHistory();
@@ -322,27 +305,32 @@ const VisualizationPage = (props:any) => {
   const [structdata, setstruct]           = useState<RibosomeStructure>({} as RibosomeStructure);
   const [protClassInfo, setProtClassInfo] = useState<any>({});
 
+
+const [mode, setMode] = useState<'single'|'split'>('single')
+
   useEffect(() => {
     var options = {
       moleculeId  : 'Element to visualize can be selected above.',
-      hideControls: true
+      hideControls: true,
+       layoutIsExpanded: false,
     }
+
     var viewerContainer = document.getElementById('molstar-viewer');
     viewerInstance.render(viewerContainer, options);
+
+
+
 
     if ( params == undefined || Object.keys(params).length < 1 ){return}
 
     if (( params as {banClass:string, parent:string}  ).parent){
-      
       getCifChainByClass(params.banClass,params.parent)
-      
     }
-    
     else 
     if (( params as {struct:string}  ).struct){
       selectStruct(params.struct)
     }
-  }, [])
+  }, [mode])
 
   const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => _.flattenDeep ( Object.values(state.proteins.ban_classes )))
   const structures = useSelector((state: AppState) => state.structures.neo_response.map(
@@ -524,7 +512,7 @@ uniq(flattenDeep(protClassInfo.comments)).filter(r=>r!=="NULL").map(r =>
           })();
 
 // ? rna/struct/prot tab
-const [current_tab, set_current_tab] = useState<string>('rna')
+const [current_tab, set_current_tab] = useState<string>('struct')
 const handleTabClick =(tab:string) =>{
 
   set_current_tab(tab)
@@ -555,6 +543,15 @@ return (
           <Cart />
         </ListItem>
 
+        {/* <ListItem>
+          <Button variant="outlined" color={mode === "single" ? "primary": "default"} onClick={()=>{
+            setMode('single')
+          }}  style={{marginRight:"10px"}}>Single Molecule</Button>
+          <Button variant="outlined" color={mode === "split" ? "primary": "default"}  onClick={()=>{
+            setMode('split')
+          }}  style={{marginRight:"10px"}}>Pairwise Molecules</Button>
+        </ListItem> */}
+
         <ListSubheader>Select Item Category</ListSubheader>
         <ListItem style={{ display: "flex", flexDirection: "row" }}>
 
@@ -576,14 +573,41 @@ return (
               default:
                 return "Null"
             }
-
           })()}
 
         </ListItem>
-        <ListItem>
 
-          <RenderInViewInfo type={inViewData.type} structdata={structdata as RibosomeStructure} protClassInfo={protClassInfo} />
-        </ListItem>
+<ListItem >
+  <Button variant="contained"
+  
+  color="primary"
+  onClick={
+    ()=>{
+
+
+      var selectSections = [
+            {
+              struct_asym_id      : 'B',
+              start_residue_number: 8,
+              end_residue_number  : 100,
+              color               :{r:255,g:0,b:255},
+              sideChain           : true
+            }
+          ]
+          viewerInstance.visual.select({ data: selectSections, 
+            nonSelectedColor: {r:255,g:255,b:255}})
+    }
+
+  }
+  >
+    Try this.
+  </Button>
+
+</ListItem>
+
+
+
+
 
         <ListItem>
           <DashboardButton />
@@ -594,13 +618,28 @@ return (
         </List>
       </Grid>
 
-      <Grid item  direction="row" xs={9}  style={{height:"100%"}}>
-        <div style={{
-          width: "100%",
-          height: "100%"
+{/* ------------------------------------------------------------------------------------------------ */}
+      <Grid item  container direction="row" xs={9}  style={{height:"100%"}}>
 
+
+
+
+
+
+
+<Grid item style={{width:"100%",height:"100%"}}>
+
+        <div style={{
+          width : "100%",
+          height: "100%"
         }} 
         id="molstar-viewer">Molstar     Viewer     </div             >
+</Grid>:
+
+
+
+
+
       </Grid>
 
 

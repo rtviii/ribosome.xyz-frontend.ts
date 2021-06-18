@@ -67,7 +67,7 @@ export const Cart= () => {
   };
 
 
-  const generate_selected_archive =()=>{
+   const generate_selected_archive =()=>{
       var selected_items:{[K in 'structs' | 'rna' | 'rps']:string[]} = {
           "rps"    : [],
           "rna"    : [],
@@ -92,7 +92,6 @@ export const Cart= () => {
 
   const generate_wspace_summary = () =>{
      
-   
   var summary:Array<Array<any>> = [
   ]
 
@@ -109,11 +108,7 @@ export const Cart= () => {
         }
       }
 
-
-    
       return  summary
-
-
   }
     return (
         <div style={{
@@ -199,7 +194,7 @@ export const Cart= () => {
 
 
 
-const Item = ({i,selected}:{ i:CartItem, selected:boolean })=>{
+export const Item = ({i,selected}:{ i:CartItem, selected:boolean })=>{
     if (isProt(i)){
         return <ProtItem i={i} selected={selected}/>
 
@@ -218,7 +213,6 @@ const Item = ({i,selected}:{ i:CartItem, selected:boolean })=>{
     }
 
 }
-
 const ProtItem = ({selected,i}:{ selected:boolean,i:RibosomalProtein })=>{
 
     const history = useHistory();
@@ -272,7 +266,6 @@ history.push({pathname:`/vis`, state:{banClass:i.nomenclature[0], parent:i.paren
                             
     
 }
-
 const StructItem = ({selected,i}:{ selected:boolean,i:RibosomeStructure })=>{
 
     const history = useHistory();

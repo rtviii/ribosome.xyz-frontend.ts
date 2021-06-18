@@ -14,6 +14,7 @@ import WorkInProgress from './../WorkInProgress'
 import ProteinAlignment from './../ProteinAlign/ProteinAlignment'
 import RPClassification from './../RPClassification/RPClassification'
 import VisualizationPage from './../../VisualizationPage/VisualizationPage'
+import Nomenclature from "../Nomenclature";
 
 const Display = () => {
   return (
@@ -40,7 +41,7 @@ const Display = () => {
         <Route exact path = "/bindingsites" component                   = {Interfaces} />
         <Route exact path = "/bindingsites/:struct/:type/:id" component = {Interfaces} />
 
-        <Route exact path = "/tunnel"                      component  = {ExitTunnel} />
+        <Route exact path = "/nomenclature"                      component  = {Nomenclature} />
 
         <Route exact path = "/rpclassification"                     component= {RPClassification} />
         <Route exact path = "/rpnomenclature"               component= {WorkInProgress} />
