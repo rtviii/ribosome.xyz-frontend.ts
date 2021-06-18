@@ -32,6 +32,7 @@ import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { useHistory, useParams } from 'react-router';
 import _ from 'lodash'
 import { Cart } from '../Workspace/Cart/Cart';
+import axios from 'axios';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -67,26 +68,16 @@ interface StructSnip {
 
 
 const getGqlQuery = (pdbid:string) =>{
-  console.log("Got pdbid", pdbid);
-  
-  console.log("returning,", 
 
-  );
-
-  
-  return `https://data.rcsb.org/graphql?query={
-{entry(entry_id: "${pdbid}") {
-  
+  return  encodeURI(`https://data.rcsb.org/graphql?query={
+    entry(entry_id: "${pdbid.toLowerCase()}") {
     rcsb_id
-
     polymer_entities {
-    
-
         rcsb_polymer_entity_container_identifiers{
     asym_ids
   }
       entity_poly {
-                pdbx_strand_id
+        pdbx_strand_id
         type
       }
     }
@@ -106,37 +97,89 @@ const getGqlQuery = (pdbid:string) =>{
         pdbx_description
       }
     }
-}}
-}`
+}}` )
 
 
 }
 
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
-  const selectRnaStyles           = ( makeStyles({
+  const selectStructStyles           = ( makeStyles({
     autocomoplete:{
       width:"100%"
     }}) )()
-  const [curVal, setVal] = React.useState('');
-  const [csetChainAsyms] = useState([])
+  const [currentStructure, setCurrentStructure] = useState<string>('');
+
+
+  const strand_asymid_map = (gqlresp:any) =>{
+
+    var _ = gqlresp.data.data.entry.polymer_entities
+
+    const map:Record<any,any> = {}
+      for (var poly of _){
+            var strand  = poly.entity_poly.pdbx_strand_id
+            var asym    = poly.rcsb_polymer_entity_container_identifiers.asym_ids[0]
+            map[strand] = {"asymid":asym}
+    }
+    getNeo4jData('neo4j', {
+      endpoint: "get_struct",
+      params: { pdbid: currentStructure }
+    })
+
+    .then(r=>{
+      // iter over rps
+     for (var rp of r.data[0].rps){
+       if (Object.keys(map).includes(rp.entity_poly_strand_id )){
+        map[rp.entity_poly_strand_id] = Object.assign({}, map[rp.entity_poly_strand_id],{
+          nomenclature : rp.nomenclature
+        })
+       }
+     }
+      
+      // iter over rnas
+     for (var rna of r.data[0].rnas){
+       if (Object.keys(map).includes(rna.entity_poly_strand_id )){
+        map[rna.entity_poly_strand_id] = Object.assign({}, map[rna.entity_poly_strand_id],{
+          nomenclature : rna.rcsb_pdbx_description
+        })
+       }
+
+     }
+    })
+    
+    return map
+
+  }
+
+
+  useEffect(() => {
+
+    if (currentStructure.length > 0){
+    axios.get(getGqlQuery(currentStructure)).then(
+      r=>{
+        console.log(strand_asymid_map(r));
+      }
+      ,e=>{console.log("Error", e);
+      }
+    )
+	}
+    
+  }, [currentStructure])
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue:any) => {
             if (newvalue === null){
               return 
             }
     selectStruct(newvalue!.rcsb_id)
-    setVal(newvalue!.rcsb_id);
+    setCurrentStructure(newvalue!.rcsb_id);
 
   };
-
-
 
 
  const structs = useSelector(( state:AppState ) => state.structures.derived_filtered.map(str=>( { 
   title: str.struct.citation_title, rcsb_id:str.struct.rcsb_id } )))
   return (
           <Autocomplete
-          className={selectRnaStyles.autocomoplete}
+          className={selectStructStyles.autocomoplete}
           // size           = "small"
           options        = {structs}
           getOptionLabel = {(parent) =>   parent.rcsb_id + " : "+ parent.title}
@@ -323,13 +366,10 @@ const [selectrnaClass, setSelectRnaClass] = useState<string>('5')
 
 
 
-const selectAndFocusOnChain = (viewerInstance:any, asymId:string)=>{
-        viewerInstance.visual.select({ data: [{struct_asym_id: 'B', color:{r:255,g:255,b:0}, focus:true}], nonSelectedColor: {r:255,g:255,b:255} })
-}
 
 
 // @ts-ignore
-// const viewerInstance = new PDBeMolstarPlugin() as any;
+const viewerInstance = new PDBeMolstarPlugin() as any;
 // @ts-ignore
 // const viewerInstance2 = new PDBeMolstarPlugin() as any;
 const VisualizationPage = (props:any) => {
@@ -364,8 +404,8 @@ const [mode, setMode] = useState<'single'|'split'>('single')
        layoutIsExpanded: false,
     }
 
-    // var viewerContainer = document.getElementById('molstar-viewer');
-    // viewerInstance.render(viewerContainer, options);
+    var viewerContainer = document.getElementById('molstar-viewer');
+    viewerInstance.render(viewerContainer, options);
 
 
 
@@ -387,7 +427,6 @@ const [mode, setMode] = useState<'single'|'split'>('single')
 
 
 
-  // const rnas         = useSelector(( state:AppState ) => state.rna.all_rna)
   const selectStruct = (rcsb_id: string) => {
     setInView({
       type: "struct",
@@ -395,9 +434,9 @@ const [mode, setMode] = useState<'single'|'split'>('single')
       data: {}
     })
 
-    // viewerInstance.visual.update({
-    //   moleculeId: rcsb_id.toLowerCase()
-    // });
+    viewerInstance.visual.update({
+      moleculeId: rcsb_id.toLowerCase()
+    });
 
     setLastViewed([null, rcsb_id])
 
@@ -405,13 +444,13 @@ const [mode, setMode] = useState<'single'|'split'>('single')
   }
   const getCifChainByClass = (banclass: string, parent_struct: string) => {
     
-    // viewerInstance.visual.update({
-    //   customData: {
-    //     url: `${process.env.REACT_APP_DJANGO_URL}/static_files/cif_chain_by_class/?classid=${banclass}&struct=${parent_struct}`,
-    //     format: "cif",
-    //     binary: false,
-    //   },
-    // });
+    viewerInstance.visual.update({
+      customData: {
+        url: `${process.env.REACT_APP_DJANGO_URL}/static_files/cif_chain_by_class/?classid=${banclass}&struct=${parent_struct}`,
+        format: "cif",
+        binary: false,
+      },
+    });
     setInView({
       type  : "chain",
       id    : banclass,
@@ -570,7 +609,6 @@ uniq(flattenDeep(protClassInfo.comments)).filter(r=>r!=="NULL").map(r =>
             }
           })();
 
-// ? rna/struct/prot tab
 const [current_tab, set_current_tab] = useState<string>('struct')
 const handleTabClick =(tab:string) =>{
 
@@ -578,10 +616,12 @@ const handleTabClick =(tab:string) =>{
 
 }
 
+
+
 return (
     <Grid container xs={12} spacing={1} style={{outline:"1px solid gray", height:"100vh"}} alignContent="flex-start">
 
-      {/* <Grid item  xs={12} style={{ padding: "10px"}}>
+      <Grid item  xs={12} style={{ padding: "10px"}}>
         <Paper variant="outlined" className={classes.pageDescription}>
           <Typography paragraph >
             <Typography variant="h4">
@@ -596,29 +636,26 @@ return (
       <Grid item  direction="column" xs={3} style={{ padding: "5px" }}>
         <List>
 
+        {(() => {
+          if (lastViewed[0] == null && lastViewed[1] != null) {
+            return <ListItem>
+              Last Item Viewed:   Structure {lastViewed[1]}
+            </ListItem>
+          }
+          else if (lastViewed[0] == null && lastViewed[1] == null) {
+            return null
+          }
+          else {
+            return <ListItem>
+              Last Item Viewed: {lastViewed[0]?.split('.')[0] == 'protein' ? 'Protein' : 'RNA'} {lastViewed[0]?.split('.')[1]} in Structure {lastViewed[1]}
+            </ListItem>
+          }
+        }
+        )()}
+
         <ListItem>
           <Cart />
         </ListItem>
-{
-( ()=>{
-  if (lastViewed[0] == null && lastViewed[1] != null){
-      return         <ListItem>
-            Last Item Viewed:   Structure {lastViewed[1]} 
-          </ListItem>}
-    else if(lastViewed[0] == null && lastViewed[1] == null){
-      return null
-    }
-else{
-
-      return         <ListItem>
-            Last Item Viewed: { lastViewed[0]?.split('.')[0] =='protein' ? 'Protein' : 'RNA' } {lastViewed[0]?.split('.')[1]} in Structure {lastViewed[1]} 
-          </ListItem>
-}
-  }
-
- )()
-
-}
 
         <ListSubheader>Select Item Category</ListSubheader>
         <ListItem style={{ display: "flex", flexDirection: "row" }}>
@@ -636,7 +673,7 @@ else{
                 return <SelectStruct items={structures} selectStruct={selectStruct} />
 
               case 'rna':
-                return <SelectRna items={[]} selectRna={selectRna}/>
+                return <SelectRna items={[]} selectRna={selectRna} />
               default:
                 return "Null"
             }
@@ -644,50 +681,48 @@ else{
 
         </ListItem>
 
-{
+        {
 
-current_tab ==='struct' ?  
-<ListItem >
-  <Button variant="outlined"
-  
-  fullWidth
-  color="primary"
-  onClick={
-    ()=>{
+          current_tab === 'struct' ?
+            <ListItem >
+              <Button variant="outlined"
 
+                fullWidth
+                color="primary"
+                onClick={
+                  () => {
+                    viewerInstance.visual.select({ data: [{ struct_asym_id: 'B', color: { r: 255, g: 255, b: 0 }, focus: true }]
+                    , nonSelectedColor: { r: 255, g: 255, b: 255 } })
+                  }
 
-
-viewerInstance.visual.select({ data: [{struct_asym_id: 'B', color:{r:255,g:255,b:0}, focus:true}], nonSelectedColor: {r:255,g:255,b:255} })
-    }
-
-  }
-  >
-    Highlight chain [B]
+                }
+              >
+                Highlight chain [B]
   </Button>
 
-</ListItem> : null
-}
+            </ListItem> : null
+        }
 
 
-{
+        {
 
-current_tab ==='struct' ?  
-<ListItem >
-  <Button variant="outlined"
-  
-  color="primary"
-  onClick={
-    ()=>{
-viewerInstance.visual.select({ data: [{ struct_asym_id: 'B', start_residue_number: 1, end_residue_number: 6, color:{r:255,g:255,b:0}, focus: true }], nonSelectedColor: {r:255,g:255,b:255}})
-    }
+          current_tab === 'struct' ?
+            <ListItem >
+              <Button variant="outlined"
 
-  }
-  >
-    Binding Site
+                color="primary"
+                onClick={
+                  () => {
+                    viewerInstance.visual.select({ data: [{ struct_asym_id: 'B', start_residue_number: 1, end_residue_number: 6, color: { r: 255, g: 255, b: 0 }, focus: true }], nonSelectedColor: { r: 255, g: 255, b: 255 } })
+                  }
+
+                }
+              >
+                Binding Site
   </Button>
 
-</ListItem> : null
-}
+            </ListItem> : null
+        }
 
 
 
@@ -698,10 +733,9 @@ viewerInstance.visual.select({ data: [{ struct_asym_id: 'B', start_residue_numbe
 
 
         </List>
-      </Grid> */}
+      </Grid>
 
-{/* ------------------------------------------------------------------------------------------------ */}
-    {/* <Grid item container direction="row" xs={9} style={{ height: "100%" }}>
+    <Grid item container direction="row" xs={9} style={{ height: "100%" }}>
 
       <Grid item style={{ width: "100%", height: "100%" }}>
         <div style={{
@@ -710,11 +744,10 @@ viewerInstance.visual.select({ data: [{ struct_asym_id: 'B', start_residue_numbe
         }}
           id="molstar-viewer">Molstar     Viewer     </div             >
       </Grid>:
-      </Grid> */}
+      </Grid>
 
 
 
-hey
 
     </Grid>
   )
