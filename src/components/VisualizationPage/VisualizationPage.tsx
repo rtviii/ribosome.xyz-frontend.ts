@@ -8,16 +8,9 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import fileDownload from "js-file-download";
-
-import Switch from '@material-ui/core/Switch';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import Collapse from "@material-ui/core/Collapse";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
@@ -39,8 +32,6 @@ import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { useHistory, useParams } from 'react-router';
 import _ from 'lodash'
 import { Cart } from '../Workspace/Cart/Cart';
-import { ListItemText } from '@material-ui/core';
-import Divider from '@material-ui/core/Divider/Divider';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -74,36 +65,86 @@ interface StructSnip {
 }
 
 
+
+const getGqlQuery = (pdbid:string) =>{
+  console.log("Got pdbid", pdbid);
+  
+  console.log("returning,", 
+
+  );
+
+  
+  return `https://data.rcsb.org/graphql?query={
+{entry(entry_id: "${pdbid}") {
+  
+    rcsb_id
+
+    polymer_entities {
+    
+
+        rcsb_polymer_entity_container_identifiers{
+    asym_ids
+  }
+      entity_poly {
+                pdbx_strand_id
+        type
+      }
+    }
+    nonpolymer_entities {
+      rcsb_nonpolymer_entity_container_identifiers{
+        asym_ids
+      }
+      
+      pdbx_entity_nonpoly {
+        
+        comp_id
+        name
+        entity_id
+      }
+      rcsb_nonpolymer_entity {
+        formula_weight
+        pdbx_description
+      }
+    }
+}}
+}`
+
+
+}
+
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
-  const styles = useSelectStyles();
+  const selectRnaStyles           = ( makeStyles({
+    autocomoplete:{
+      width:"100%"
+    }}) )()
   const [curVal, setVal] = React.useState('');
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    let item = event.target.value as string
-    setVal(item);
-    selectStruct(item)
+  const [csetChainAsyms] = useState([])
+
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue:any) => {
+            if (newvalue === null){
+              return 
+            }
+    selectStruct(newvalue!.rcsb_id)
+    setVal(newvalue!.rcsb_id);
+
   };
 
 
+
+
  const structs = useSelector(( state:AppState ) => state.structures.derived_filtered.map(str=>( { 
-   
   title: str.struct.citation_title, rcsb_id:str.struct.rcsb_id } )))
   return (
-
-
           <Autocomplete
-          style          = {{fontSize:"12px"}}
-          size           = "small"
+          className={selectRnaStyles.autocomoplete}
+          // size           = "small"
           options        = {structs}
           getOptionLabel = {(parent) =>   parent.rcsb_id + " : "+ parent.title}
+
           // @ts-ignore
-          onChange     = {(event: any, newValue: any) => {
-            if (newValue === null){
-              return 
-            }
-            selectStruct(newValue!.rcsb_id )
-          }}
+          onChange     = {handleChange}
           renderOption = {(option) => (<div style={{fontSize:"10px", width:"400px"}}><b>{option.rcsb_id}</b> ({option.title} ) </div>)}
-          renderInput  = {(params) => <TextField {...params} style={{width:"400px", fontSize:"8px"}} label="Structure" variant="outlined" />}
+          renderInput  = {(params) => <TextField {...params}  label="Structure" variant="outlined" />}
           />
 
   )
@@ -167,7 +208,7 @@ const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMet
   )
 }
 
-const SelectRna = ({ items } : { items: RNAProfile[]}) => {
+const SelectRna = ({ items, selectRna }: { items: RNAProfile[], selectRna: (strand: string, parent: string) => void }) => {
 
   const styles                       = useSelectStyles();
   const dispatch                     = useDispatch();
@@ -184,6 +225,9 @@ const SelectRna = ({ items } : { items: RNAProfile[]}) => {
   const chooseRnaParent = (event: React.ChangeEvent<{ value: unknown }>) => {
     let item = event.target.value as string
     setRnaParent(item);
+    console.log(item);
+    
+    // selectRna(item)
   };
 
 
@@ -277,16 +321,21 @@ const [selectrnaClass, setSelectRnaClass] = useState<string>('5')
   )
 }
 
+
+
+const selectAndFocusOnChain = (viewerInstance:any, asymId:string)=>{
+        viewerInstance.visual.select({ data: [{struct_asym_id: 'B', color:{r:255,g:255,b:0}, focus:true}], nonSelectedColor: {r:255,g:255,b:255} })
+}
+
+
 // @ts-ignore
-const viewerInstance = new PDBeMolstarPlugin() as any;
+// const viewerInstance = new PDBeMolstarPlugin() as any;
 // @ts-ignore
 // const viewerInstance2 = new PDBeMolstarPlugin() as any;
 const VisualizationPage = (props:any) => {
-
-  const history:any= useHistory();
-
+  const [lastViewed, setLastViewed] = useState<Array<string | null>>([ null,null ])
+  const history:any                 = useHistory();
   const params =  history.location.state;
-
   useEffect(() => {
     if ( params == undefined || Object.keys(params).length < 1 ){return}
     if (( params as {banClass:string, parent:string}  ).parent){
@@ -315,8 +364,8 @@ const [mode, setMode] = useState<'single'|'split'>('single')
        layoutIsExpanded: false,
     }
 
-    var viewerContainer = document.getElementById('molstar-viewer');
-    viewerInstance.render(viewerContainer, options);
+    // var viewerContainer = document.getElementById('molstar-viewer');
+    // viewerInstance.render(viewerContainer, options);
 
 
 
@@ -346,27 +395,37 @@ const [mode, setMode] = useState<'single'|'split'>('single')
       data: {}
     })
 
-    viewerInstance.visual.update({
-      moleculeId: rcsb_id.toLowerCase()
-    });
+    // viewerInstance.visual.update({
+    //   moleculeId: rcsb_id.toLowerCase()
+    // });
+
+    setLastViewed([null, rcsb_id])
+
+
   }
   const getCifChainByClass = (banclass: string, parent_struct: string) => {
-
-    console.log("triggered cifchain");
     
-    viewerInstance.visual.update({
-      customData: {
-        url: `${process.env.REACT_APP_DJANGO_URL}/static_files/cif_chain_by_class/?classid=${banclass}&struct=${parent_struct}`,
-        format: "cif",
-        binary: false,
-      },
-    });
+    // viewerInstance.visual.update({
+    //   customData: {
+    //     url: `${process.env.REACT_APP_DJANGO_URL}/static_files/cif_chain_by_class/?classid=${banclass}&struct=${parent_struct}`,
+    //     format: "cif",
+    //     binary: false,
+    //   },
+    // });
     setInView({
       type  : "chain",
       id    : banclass,
       parent: parent_struct,
     })
+
+    setLastViewed([`protein.${banclass}`,parent_struct])
+
   }
+  const selectRna  =(strand:string, parent_struct:string)=>{
+    setLastViewed([`rna.${strand}`,parent_struct])
+
+  }
+
 
   useEffect(() => {
 
@@ -522,7 +581,7 @@ const handleTabClick =(tab:string) =>{
 return (
     <Grid container xs={12} spacing={1} style={{outline:"1px solid gray", height:"100vh"}} alignContent="flex-start">
 
-      <Grid item  xs={12} style={{ padding: "10px"}}>
+      {/* <Grid item  xs={12} style={{ padding: "10px"}}>
         <Paper variant="outlined" className={classes.pageDescription}>
           <Typography paragraph >
             <Typography variant="h4">
@@ -531,8 +590,6 @@ return (
           Please select an element to inspect. Entire structures and protein classes are avaialable.
           </Typography>
         </Paper>
-
-
       </Grid>
 
 
@@ -542,15 +599,26 @@ return (
         <ListItem>
           <Cart />
         </ListItem>
+{
+( ()=>{
+  if (lastViewed[0] == null && lastViewed[1] != null){
+      return         <ListItem>
+            Last Item Viewed:   Structure {lastViewed[1]} 
+          </ListItem>}
+    else if(lastViewed[0] == null && lastViewed[1] == null){
+      return null
+    }
+else{
 
-        {/* <ListItem>
-          <Button variant="outlined" color={mode === "single" ? "primary": "default"} onClick={()=>{
-            setMode('single')
-          }}  style={{marginRight:"10px"}}>Single Molecule</Button>
-          <Button variant="outlined" color={mode === "split" ? "primary": "default"}  onClick={()=>{
-            setMode('split')
-          }}  style={{marginRight:"10px"}}>Pairwise Molecules</Button>
-        </ListItem> */}
+      return         <ListItem>
+            Last Item Viewed: { lastViewed[0]?.split('.')[0] =='protein' ? 'Protein' : 'RNA' } {lastViewed[0]?.split('.')[1]} in Structure {lastViewed[1]} 
+          </ListItem>
+}
+  }
+
+ )()
+
+}
 
         <ListSubheader>Select Item Category</ListSubheader>
         <ListItem style={{ display: "flex", flexDirection: "row" }}>
@@ -565,11 +633,10 @@ return (
               case 'rp':
                 return <SelectProtein proteins={prot_classes} getCifChainByClass={getCifChainByClass} />
               case 'struct':
-
                 return <SelectStruct items={structures} selectStruct={selectStruct} />
-              case 'rna':
 
-                return <SelectRna items={[]}/>
+              case 'rna':
+                return <SelectRna items={[]} selectRna={selectRna}/>
               default:
                 return "Null"
             }
@@ -577,35 +644,50 @@ return (
 
         </ListItem>
 
+{
+
+current_tab ==='struct' ?  
 <ListItem >
-  <Button variant="contained"
+  <Button variant="outlined"
   
+  fullWidth
   color="primary"
   onClick={
     ()=>{
 
 
-      var selectSections = [
-            {
-              struct_asym_id      : 'B',
-              start_residue_number: 8,
-              end_residue_number  : 100,
-              color               :{r:255,g:0,b:255},
-              sideChain           : true
-            }
-          ]
-          viewerInstance.visual.select({ data: selectSections, 
-            nonSelectedColor: {r:255,g:255,b:255}})
+
+viewerInstance.visual.select({ data: [{struct_asym_id: 'B', color:{r:255,g:255,b:0}, focus:true}], nonSelectedColor: {r:255,g:255,b:255} })
     }
 
   }
   >
-    Try this.
+    Highlight chain [B]
   </Button>
 
-</ListItem>
+</ListItem> : null
+}
 
 
+{
+
+current_tab ==='struct' ?  
+<ListItem >
+  <Button variant="outlined"
+  
+  color="primary"
+  onClick={
+    ()=>{
+viewerInstance.visual.select({ data: [{ struct_asym_id: 'B', start_residue_number: 1, end_residue_number: 6, color:{r:255,g:255,b:0}, focus: true }], nonSelectedColor: {r:255,g:255,b:255}})
+    }
+
+  }
+  >
+    Binding Site
+  </Button>
+
+</ListItem> : null
+}
 
 
 
@@ -616,34 +698,23 @@ return (
 
 
         </List>
-      </Grid>
+      </Grid> */}
 
 {/* ------------------------------------------------------------------------------------------------ */}
-      <Grid item  container direction="row" xs={9}  style={{height:"100%"}}>
+    {/* <Grid item container direction="row" xs={9} style={{ height: "100%" }}>
 
-
-
-
-
-
-
-<Grid item style={{width:"100%",height:"100%"}}>
-
+      <Grid item style={{ width: "100%", height: "100%" }}>
         <div style={{
-          width : "100%",
+          width: "100%",
           height: "100%"
-        }} 
-        id="molstar-viewer">Molstar     Viewer     </div             >
-</Grid>:
+        }}
+          id="molstar-viewer">Molstar     Viewer     </div             >
+      </Grid>:
+      </Grid> */}
 
 
 
-
-
-      </Grid>
-
-
-
+hey
 
     </Grid>
   )

@@ -1,46 +1,46 @@
-import React, { Component, useEffect, useState } from "react";import "./StructuresCatalogue.css";
-import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
-import {large_subunit_map} from './../../../static/large-subunit-map'
-import {small_subunit_map} from './../../../static/small-subunit-map'
-import Grid from '@material-ui/core/Grid';
-import { Button, ListItemText, ListSubheader, TextField, Tooltip } from "@material-ui/core";
-import Slider from '@material-ui/core/Slider';
-import { connect, useDispatch, useSelector, useStore  } from "react-redux";
-import { AppState } from "../../../redux/store";
-import { AppActions } from "../../../redux/AppActions";import LoadingSpinner  from '../../Other/LoadingSpinner'
-import StructHero from './../../../materialui/StructHero'
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import ListItem from '@material-ui/core/ListItem';
-import * as redux from '../../../redux/reducers/StructuresReducer/StructuresReducer'
-import { Dispatch } from 'redux';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import {useDebounce} from 'use-debounce'
-import {  FilterData, FilterType,filterChange, filterChangeActionCreator, resetAllFilters} from "../../../redux/reducers/Filters/ActionTypes"
-import {SpeciesGroupings} from './taxid_map'
-import _, { isEqual }  from "lodash";
-import { Cart } from './../Cart/Cart'
-import {Link, useHistory, useParams} from "react-router-dom";
-import {DashboardButton} from './../../../materialui/Dashboard/Dashboard'
-import PageAnnotation from './PageAnnotation'
-import { NeoStruct } from "../../../redux/DataInterfaces";
-import { FiltersReducerState, mapDispatchFilter, mapStateFilter, handleFilterChange } from "../../../redux/reducers/Filters/FiltersReducer";
-import DropdownTreeSelect from 'react-dropdown-tree-select'
-import Pagination from './Pagination'
-import Backdrop from './../Backdrop'
-import { CSVLink } from "react-csv";
-import {  structsFilterChangeAC, structsSortChangeAC } from "../../../redux/reducers/StructuresReducer/ActionTypes";
-import Paper from "@material-ui/core/Paper";
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from "@material-ui/core/Divider";
-import 'react-dropdown-tree-select/dist/styles.css'
-import './StructuresCatalogue.css'
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import React, { Component, useEffect, useState } from                                          "react"                                                      ;import "./StructuresCatalogue.css";
+import { createStyles, makeStyles, useTheme, Theme } from                                      '@material-ui/core/styles'                                   ;
+import {large_subunit_map} from                                                                './../../../static/large-subunit-map'
+import {small_subunit_map} from                                                                './../../../static/small-subunit-map'
+import Grid from                                                                               '@material-ui/core/Grid'                                     ;
+import { Button, ListItemText, ListSubheader, TextField, Tooltip } from                        "@material-ui/core"                                          ;
+import Slider from                                                                             '@material-ui/core/Slider'                                   ;
+import { connect, useDispatch, useSelector, useStore } from                                    "react-redux"                                                ;
+import { AppState } from                                                                       "../../../redux/store"                                       ;
+import { AppActions } from                                                                     "../../../redux/AppActions"                                  ;import LoadingSpinner from '../../Other/LoadingSpinner'
+import StructHero from                                                                         './../../../materialui/StructHero'
+import Drawer from                                                                             '@material-ui/core/Drawer'                                   ;
+import List from                                                                               '@material-ui/core/List'                                     ;
+import Typography from                                                                         '@material-ui/core/Typography'                               ;
+import ListItem from                                                                           '@material-ui/core/ListItem'                                 ;
+import * as redux from                                                                         '../../../redux/reducers/StructuresReducer/StructuresReducer'
+import { Dispatch } from                                                                       'redux'                                                      ;
+import Autocomplete from                                                                       '@material-ui/lab/Autocomplete'                              ;
+import {useDebounce} from                                                                      'use-debounce'
+import { FilterData, FilterType,filterChange, filterChangeActionCreator, resetAllFilters} from "../../../redux/reducers/Filters/ActionTypes"
+import {SpeciesGroupings} from                                                                 './taxid_map'
+import _, { isEqual } from                                                                     "lodash"                                                     ;
+import { Cart } from                                                                           './../Cart/Cart'
+import {Link, useHistory, useParams} from                                                      "react-router-dom"                                           ;
+import {DashboardButton} from                                                                  './../../../materialui/Dashboard/Dashboard'
+import PageAnnotation from                                                                     './PageAnnotation'
+import { NeoStruct } from                                                                      "../../../redux/DataInterfaces"                              ;
+import { FiltersReducerState, mapDispatchFilter, mapStateFilter, handleFilterChange } from     "../../../redux/reducers/Filters/FiltersReducer"             ;
+import DropdownTreeSelect from                                                                 'react-dropdown-tree-select'
+import Pagination from                                                                         './Pagination'
+import Backdrop from                                                                           './../Backdrop'
+import { CSVLink } from                                                                        "react-csv"                                                  ;
+import { structsFilterChangeAC, structsSortChangeAC } from                                     "../../../redux/reducers/StructuresReducer/ActionTypes"      ;
+import Paper from                                                                              "@material-ui/core/Paper"                                    ;
+import Dialog from                                                                             '@material-ui/core/Dialog'                                   ;
+import DialogContent from                                                                      '@material-ui/core/DialogContent'                            ;
+import DialogContentText from                                                                  '@material-ui/core/DialogContentText'                        ;
+import DialogTitle from                                                                        '@material-ui/core/DialogTitle'                              ;
+import Divider from                                                                            "@material-ui/core/Divider"                                  ;
+import                                                                                         'react-dropdown-tree-select/dist/styles.css'
+import                                                                                         './StructuresCatalogue.css'
+import ToggleButton from                                                                       '@material-ui/lab/ToggleButton'                              ;
+import ToggleButtonGroup from                                                                  '@material-ui/lab/ToggleButtonGroup'                         ;
 
 const pageData ={
   title: "Ribosome Structures",
@@ -588,8 +588,9 @@ useEffect(() => {
         XRAY
       </ToggleButton>
       <ToggleButton 
-      className = {MethodClasses.root}
-      value     = "ELECTRON MICROSCOPY" aria-label = "right aligned" >
+      className  = {MethodClasses.root}
+      value      = "ELECTRON MICROSCOPY"
+      aria-label = "right aligned" >
         EM
       </ToggleButton>
 
