@@ -33,8 +33,8 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { truncate } from "../../Main";
 import Popover from "@material-ui/core/Popover";
-import Tooltip from "@material-ui/core/Tooltip";
 import { DashboardButton } from "../../../materialui/Dashboard/Dashboard";
+import Paper from "@material-ui/core/Paper/Paper";
 
 
 const pageData= {
@@ -49,7 +49,6 @@ const LigandCard =(l:LigandResponseShape)=> {
 
  const history = useHistory()
   const classes = makeStyles({
-  
   root: {
     minWidth: 275,
       "&:hover": {
@@ -158,13 +157,43 @@ const LigandCard =(l:LigandResponseShape)=> {
 interface ReduxProps{all_ligands: LigandResponseShape[], current_page: number, page_total:number}
 interface DispatchProps{gotopage: (pid:number)=>void}
 
-type      LigandsCatalogueProps                           = ReduxProps & DispatchProps
-const     LigandCatalogue:React.FC<LigandsCatalogueProps> = (prop) => {
+
+const     LigandCatalogue = () => {
   const [ligs, setligs]      =  useState<LigandResponseShape[]>([]);
   const [ionsOn, setionsOn]  =  useState(true);
 
   var params: any = useParams();
 
+  const classes=makeStyles({  
+            pageDescription:{
+              padding:"20px",
+              width:"100%",
+              height:"min-content"
+            },
+            // card: {
+            //   width:"100%"
+            // },
+            // title: {
+            //   fontSize: 14,
+            //   height  : 300
+            // },
+            // heading: {
+            //   fontSize  : 12,
+            //   paddingTop: 5,
+            // },
+            // annotation: { fontSize: 12, },
+            // authors   : {
+            //     transition: "0.1s all",
+            //     "&:hover" : {
+            //       background: "rgba(149,149,149,1)",
+            //       cursor    : "pointer",
+            //   },
+            // },
+            // nested:{
+            //   paddingLeft: 20,
+            //   color      : "black"
+            // }
+          })();
 
   var params:any = useParams()
   const lig = params.lig
@@ -172,8 +201,15 @@ const     LigandCatalogue:React.FC<LigandsCatalogueProps> = (prop) => {
 
   return (
     <Grid container xs={12} spacing={3}>
-      <Grid item xs={12}>
-        <PageAnnotation {...pageData} />
+      <Grid item xs={12} style={{padding:"10px"}}>
+        <Paper variant="outlined" className={classes.pageDescription}>
+          <Typography paragraph >
+            <Typography variant="h4">
+              Visualization
+          </Typography>
+          Please select an element to inspect. Entire structures and protein classes are avaialable.
+          </Typography>
+        </Paper>
       </Grid>
 
       <Grid item xs={2}>
@@ -189,9 +225,9 @@ const     LigandCatalogue:React.FC<LigandsCatalogueProps> = (prop) => {
               <SearchField />
             </ListItem>
             <ListItem>
-              <Pagination
+              {/* <Pagination
                 {...{ gotopage: prop.gotopage, pagecount: prop.page_total }}
-              />
+              /> */}
             </ListItem>
             
             <DashboardButton/>
@@ -200,12 +236,12 @@ const     LigandCatalogue:React.FC<LigandsCatalogueProps> = (prop) => {
 
       <Grid item xs={10} container spacing={1}>
 
-        {prop.all_ligands.slice(( prop.current_page-1 )*20, prop.current_page*20).map((l: LigandResponseShape) => (
+        {/* {prop.all_ligands.slice(( prop.current_page-1 )*20, prop.current_page*20).map((l: LigandResponseShape) => (
             <Grid item>
               <LigandCard {...l}  />
             </Grid>
           ))
-          }
+          } */}
 
       </Grid>
     </Grid>

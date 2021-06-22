@@ -1,47 +1,44 @@
-import React from "react";
-import "./Display.css";
-import { withRouter, Switch, Route, Redirect } from "react-router";
-import WorkspaceCatalogue from "./StructuresCatalogue";
-import StructurePage from "./../StructurePage/StructurePage";
-import RPPage from "./../RibosomalProteins/RPPage";
-import RPsCatalogue from "./../RibosomalProteins/RPsCatalogue";
-import LigandCatalogue from "./../Ligand/LigandCatalogue";
-import RNACatalogue from './../RNA/RNACatalogue'
-import Interfaces from '../Analytics/Interfaces'
-import Home from './../../Home'
-import ExitTunnel from './../ExitTunnel/ExitTunnel'
-import WorkInProgress from './../WorkInProgress'
-import ProteinAlignment from './../ProteinAlign/ProteinAlignment'
-import RPClassification from './../RPClassification/RPClassification'
-import VisualizationPage from './../../VisualizationPage/VisualizationPage'
-import Nomenclature from "../Nomenclature";
+import React from                                   "react"                                      ;
+import                                              "./Display.css"                              ;
+import { withRouter, Switch, Route, Redirect } from "react-router"                               ;
+import WorkspaceCatalogue from                      "./StructuresCatalogue"                      ;
+import StructurePage from                           "./../StructurePage/StructurePage"           ;
+import RPPage from                                  "./../RibosomalProteins/RPPage"              ;
+import RPsCatalogue from                            "./../RibosomalProteins/RPsCatalogue"        ;
+import LigandCatalogue from                         "./../Ligand/LigandCatalogue"                ;
+import RNACatalogue from                            './../RNA/RNACatalogue'
+import Home from                                    './../../Home'
+import WorkInProgress from                          './../WorkInProgress'
+import ProteinAlignment from                        './../ProteinAlign/ProteinAlignment'
+import RPClassification from                        './../RPClassification/RPClassification'
+import VisualizationPage from                       './../../VisualizationPage/VisualizationPage'
+import BindingSites from '../BindingSites/BindingSites'
 
 const Display = () => {
   return (
+
     <div>
       <Route exact path="/">
         <Redirect to="/home" />
       </Route>
-
       <Switch>
-        {/* <Route exact path = "/rpalign" component                      = {ProteinAlignment} /> */}
-        <Route exact path = "/home"                           component           = {Home              } />
-        <Route exact path = "/structs"                        component           = {WorkspaceCatalogue} />
-        <Route exact path = "/structs/:pdbid"                 component           = {StructurePage     } />
-        <Route exact path = "/rps"                            component           = {RPsCatalogue      } />
-        <Route exact path = "/rps/:nom"                       component           = {RPPage            } />
-        <Route exact path = "/ligands"                        component           = {LigandCatalogue   } />
-        <Route exact path = "/ligands/:lig"                   component           = {LigandCatalogue   } />
-        <Route exact path = "/rnas/:rnaclass"                           component = {RNACatalogue      } />
-        <Route exact path = "/rnas"                           component = {RNACatalogue      } />
-        <Route exact path = "/bindingsites"                   component           = {Interfaces        } />
-        <Route exact path = "/bindingsites/:struct/:type/:id" component           = {Interfaces        } />
-        <Route exact path = "/nomenclature"                   component           = {Nomenclature      } />
-        <Route exact path = "/rpclassification"               component           = {RPClassification  } />
-        <Route exact path = "/rpnomenclature"                 component           = {WorkInProgress    } />
-        <Route exact path = "/vis"                            component           = {VisualizationPage } />
+        <Route exact path = "/rpalign" component                        = {ProteinAlignment} />
+        <Route exact path = "/home"                           component = {Home               } />
+        <Route exact path = "/structs"                        component = {WorkspaceCatalogue } />
+        <Route exact path = "/structs/:pdbid"                 component = {StructurePage      } />
+        <Route exact path = "/rps"                            component = {RPsCatalogue       } />
+        <Route exact path = "/rps/:nom"                       component = {RPPage             } />
+        <Route exact path = "/ligands"                        component = {LigandCatalogue    } />
+        <Route exact path = "/ligands/:lig"                   component = {LigandCatalogue    } />
+        <Route exact path = "/rnas/:rnaclass"                 component = {RNACatalogue       } />
+        <Route exact path = "/rnas"                           component = {RNACatalogue       } />
+        <Route exact path = "/bindingsites"                   component = {BindingSites         } />
+        <Route exact path = "/rpclassification"               component = {RPClassification   } />
+        <Route exact path = "/rpnomenclature"                 component = {WorkInProgress     } />
+        <Route exact path = "/vis"                            component = {VisualizationPage  } />
       </Switch>
     </div>
+
   );
 };
 

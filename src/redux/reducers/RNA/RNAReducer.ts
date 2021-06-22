@@ -49,7 +49,6 @@ return rna.parent_resolution >= (value as number[])[0] && rna.parent_resolution 
       }
     },
   },
-
   applied: []
 
 }

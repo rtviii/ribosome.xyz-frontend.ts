@@ -41,6 +41,7 @@ interface StructDBProfile{
 }
 
 const LigandCard= (props:Ligand, )=> {
+
   const useLigandCardStyles = makeStyles({
     root: {
       minWidth: "100%",
@@ -140,7 +141,6 @@ const history = useHistory();
   );
 }
 
-
 const downloadStrand = (pdbid:string, cid:string)=>{
 
   getNeo4jData("static_files", {
@@ -176,8 +176,6 @@ const donwloadBindingSiteReport = (struct:string, chemid:string) =>{
     );
 }
 
-
-
 interface ReduxProps {
     static_catalogue: StaticFilesCatalogue
     ligmap          : {[struct:string]:string[]}
@@ -185,7 +183,6 @@ interface ReduxProps {
 }
 
 const Interfaces:React.FC<ReduxProps> = (prop) => {
-
   const history = useHistory();
   const useSelectStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -203,7 +200,6 @@ const Interfaces:React.FC<ReduxProps> = (prop) => {
   const [chosenLigandData, setChosenLigandData] = React.useState<Ligand>({
     chemicalId      : "",
     chemicalName    : "",
-    cif_residueId   : "none",
     formula_weight  : 0,
     pdbx_description: ""
   });

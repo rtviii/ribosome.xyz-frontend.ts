@@ -15,7 +15,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-
 import { AppState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { BanClassMetadata, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces';
@@ -109,8 +108,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     }}) )()
   const [currentStructure, setCurrentStructure] = useState<string>('');
 
-
-  const strand_asymid_map = (gqlresp:any) =>{
+  const get_strand_asymid_map = (gqlresp:any) =>{
 
     var _ = gqlresp.data.data.entry.polymer_entities
 
@@ -129,9 +127,10 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
       // iter over rps
      for (var rp of r.data[0].rps){
        if (Object.keys(map).includes(rp.entity_poly_strand_id )){
-        map[rp.entity_poly_strand_id] = Object.assign({}, map[rp.entity_poly_strand_id],{
-          nomenclature : rp.nomenclature
-        })
+        map[rp.entity_poly_strand_id] = {
+          nomenclature : rp.nomenclature,
+          asymid : map[rp.entity_poly_strand_id].asymid
+        }
        }
      }
       
@@ -139,7 +138,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
      for (var rna of r.data[0].rnas){
        if (Object.keys(map).includes(rna.entity_poly_strand_id )){
         map[rna.entity_poly_strand_id] = Object.assign({}, map[rna.entity_poly_strand_id],{
-          nomenclature : rna.rcsb_pdbx_description
+          nomenclature : [ rna.rcsb_pdbx_description ]
         })
        }
 
@@ -150,13 +149,18 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   }
 
+  const [asymidChainMap, setAsymidChainMap] = useState({})
 
   useEffect(() => {
 
     if (currentStructure.length > 0){
     axios.get(getGqlQuery(currentStructure)).then(
       r=>{
-        console.log(strand_asymid_map(r));
+        var map = get_strand_asymid_map(r)
+        console.log("got map",map);
+        
+
+        setAsymidChainMap(map)
       }
       ,e=>{console.log("Error", e);
       }
@@ -177,7 +181,28 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
  const structs = useSelector(( state:AppState ) => state.structures.derived_filtered.map(str=>( { 
   title: str.struct.citation_title, rcsb_id:str.struct.rcsb_id } )))
+
+  const handleSelectHighlightChain =  (event: React.ChangeEvent<{ value: unknown }>, newvalue:any) =>{
+
+    
+viewerInstance.visual.select(
+  {
+    data: [
+      { struct_asym_id: newvalue.props.value,
+         color: { 
+           
+          
+          r: 50, g: 50, b: 255 }, focus: true }
+    ]
+    , nonSelectedColor: { r: 180, g: 180, b: 180 }
+  }
+)
+
+  }
+
+
   return (
+    <>
           <Autocomplete
           className={selectStructStyles.autocomoplete}
           // size           = "small"
@@ -190,6 +215,19 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
           renderInput  = {(params) => <TextField {...params}  label="Structure" variant="outlined" />}
           />
 
+<ListItem>
+          <FormControl style={{width:"100%"}}>
+            <InputLabel> Highlight Chain</InputLabel>
+            <Select
+              labelId ="demo-simple-select-label"
+              id      ="demo-simple-select"
+              value   ={"chain"}
+              onChange={handleSelectHighlightChain}>
+              {Object.entries( asymidChainMap ).map((i:any) => <MenuItem value={i[1].asymid}>{i[0]}</MenuItem>)}
+            </Select>
+          </FormControl>
+</ListItem>
+</>
   )
 }
 
@@ -619,7 +657,7 @@ const handleTabClick =(tab:string) =>{
 
 
 return (
-    <Grid container xs={12} spacing={1} style={{outline:"1px solid gray", height:"100vh"}} alignContent="flex-start">
+    <Grid container xs={12} spacing={1}  alignContent="flex-start">
 
       <Grid item  xs={12} style={{ padding: "10px"}}>
         <Paper variant="outlined" className={classes.pageDescription}>
@@ -681,50 +719,19 @@ return (
 
         </ListItem>
 
-        {
-
-          current_tab === 'struct' ?
-            <ListItem >
-              <Button variant="outlined"
-
-                fullWidth
-                color="primary"
-                onClick={
-                  () => {
-                    viewerInstance.visual.select({ data: [{ struct_asym_id: 'B', color: { r: 255, g: 255, b: 0 }, focus: true }]
-                    , nonSelectedColor: { r: 255, g: 255, b: 255 } })
-                  }
-
-                }
-              >
-                Highlight chain [B]
-  </Button>
-
-            </ListItem> : null
+  {current_tab === 'struct' ?  
+  <ListItem>
+      <Button fullWidth variant="outlined" color="primary"  onClick={
+        ()=>{
+          viewerInstance.visual.reset({ camera: true, theme: true })
         }
-
-
-        {
-
-          current_tab === 'struct' ?
-            <ListItem >
-              <Button variant="outlined"
-
-                color="primary"
-                onClick={
-                  () => {
-                    viewerInstance.visual.select({ data: [{ struct_asym_id: 'B', start_residue_number: 1, end_residue_number: 6, color: { r: 255, g: 255, b: 0 }, focus: true }], nonSelectedColor: { r: 255, g: 255, b: 255 } })
-                  }
-
-                }
-              >
-                Binding Site
-  </Button>
-
-            </ListItem> : null
-        }
-
-
+      }>
+        Reset
+      </Button>
+      </ListItem>
+      :null
+      
+    }
 
         <ListItem>
           <DashboardButton />
@@ -745,6 +752,11 @@ return (
           id="molstar-viewer">Molstar     Viewer     </div             >
       </Grid>:
       </Grid>
+
+
+
+
+    
 
 
 

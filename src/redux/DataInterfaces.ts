@@ -68,15 +68,20 @@ export interface BanClassMetadata{
       organisms: number[],
       comments : string[][],
       structs  : RibosomeStructure[]
-
     }
 
-// export interface BanClassMetadata{
+export type BindingSite  =  {
 
-//       nom_class       : BanClass,
-//       unique_organisms: number[],
-//       inStructs       : string[],
-//     }
+    chemicalId      : string;
+    chemicalName    : string;
+    formula_weight  : number;
+    pdbx_description: string;
+		  _organismId   : number[],
+		  citation_title: string  ,
+		  expMethod     : string  ,
+		  rcsb_id       : string,
+		  resolution    : number
+		}
 
 
 export type RXZDataTypes= NeoStruct | RibosomalProtein | RNAProfile | LigandResponseShape | BanClassMetadata;

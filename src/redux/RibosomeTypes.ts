@@ -79,7 +79,6 @@ export interface RibosomalProtein {
 export interface Ligand {
   chemicalId      : string;
   chemicalName    : string;
-  cif_residueId   : number | "none";
   formula_weight  : number;
   pdbx_description: string;
 }
