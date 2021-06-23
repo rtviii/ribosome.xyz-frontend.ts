@@ -127,8 +127,8 @@ export const LigandHeroCard = ({lig}:{ lig:Ligand }) =>{
     minWidth: 275,
   },
   bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
+    display  : 'inline-block',
+    margin   : '0 2px',
     transform: 'scale(0.8)',
   },
   title: {
@@ -139,7 +139,7 @@ export const LigandHeroCard = ({lig}:{ lig:Ligand }) =>{
   },
 })();
 
-  return ( <Card className = {ligcardstyles.root}>
+  return ( <Card className = {ligcardstyles.root} elevation={2}>
                       <CardContent>
                         <Typography className = {ligcardstyles.pos} color = "textSecondary">{lig.chemicalId}</Typography>
                         <Typography variant = "body2" component = "p">
@@ -160,8 +160,6 @@ export const LigandHeroCard = ({lig}:{ lig:Ligand }) =>{
 
 
 export const StructHeroCard =({rcsb_id}:{ rcsb_id:string })=>{
-  console.log("Got arg, ", rcsb_id);
-  console.log("Rendering");
   
   const classes = ( makeStyles((theme:Theme)=>({
     card: {
@@ -418,7 +416,6 @@ const StructurePage: React.FC<StructurePageProps> = (
   const [ssu, setssu]     = useState<RibosomalProtein[]>([])
   const [other, setother] = useState<RibosomalProtein[]>([])
 
-const history = useHistory();
 
 
   useEffect(() => {

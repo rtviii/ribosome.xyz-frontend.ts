@@ -13,6 +13,18 @@ export interface NeoStruct{
 
 }
 
+
+export interface LigandClass
+{
+  ligand: Ligand, presentIn: {
+    _organismId: number[],
+    citation_title: string,
+    expMethod: string,
+    rcsb_id: string,
+    resolution: number,
+  }[]
+}
+
 export interface NeoHomolog {
 
   parent : string;

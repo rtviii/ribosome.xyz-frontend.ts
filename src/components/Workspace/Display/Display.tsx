@@ -13,6 +13,7 @@ import ProteinAlignment from                        './../ProteinAlign/ProteinAl
 import RPClassification from                        './../RPClassification/RPClassification'
 import VisualizationPage from                       './../../VisualizationPage/VisualizationPage'
 import BindingSites from '../BindingSites/BindingSites'
+import Nomenclature from "../Nomenclature";
 
 const Display = () => {
   return (
@@ -34,8 +35,8 @@ const Display = () => {
         <Route exact path = "/rnas"                           component = {RNACatalogue       } />
         <Route exact path = "/bindingsites"                   component = {BindingSites         } />
         <Route exact path = "/rpclassification"               component = {RPClassification   } />
-        <Route exact path = "/rpnomenclature"                 component = {WorkInProgress     } />
         <Route exact path = "/vis"                            component = {VisualizationPage  } />
+        <Route exact path = "/nomenclature"                            component = {Nomenclature  } />
       </Switch>
     </div>
 

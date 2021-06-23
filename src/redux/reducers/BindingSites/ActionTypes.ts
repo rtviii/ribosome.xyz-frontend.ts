@@ -1,7 +1,7 @@
 import { flattenDeep } from "lodash";
 import { Dispatch } from "redux";
 import { getNeo4jData } from "../../AsyncActions/getNeo4jData";
-import { BindingSite } from "../../DataInterfaces";
+import { BindingSite, LigandClass } from "../../DataInterfaces";
 import { Ligand } from "../../RibosomeTypes";
 
 export type BSitesFilter = "SPECIES" | "SEARCH" | "YEAR"  | "EXPERIMENTAL_METHOD" | "RESOLUTION"
@@ -12,7 +12,7 @@ export const REQUEST_ALL_BSITES_SUCCESS = "REQUEST_ALL_BSITES_SUCCESS"     ;
 
 export interface requestAllBsitesGo      { type: typeof REQUEST_ALL_BSITES_GO                            }
 export interface requestAllBsitesErr     { type: typeof REQUEST_ALL_BSITES_ERR    ; error: Error         }
-export interface requestAllBsitesSuccess { type: typeof REQUEST_ALL_BSITES_SUCCESS; bsites: BindingSite[], ligand_classes: {chemicalId:string, chemicalName:string}[]}
+export interface requestAllBsitesSuccess { type: typeof REQUEST_ALL_BSITES_SUCCESS; bsites: BindingSite[], ligand_classes: LigandClass[]}
           
 
 
@@ -29,7 +29,6 @@ export type AllLigandsResponseType = {
 		}[]
 }
 export const request_all_bsites = () => {
-console.log("DASd");
 
   return async (dispatch: Dispatch<BSitesActions>) => {
     dispatch({
@@ -40,10 +39,8 @@ console.log("DASd");
       .then(
         response => {
 
-	     var ligand_classes = response.data.map(( bs:AllLigandsResponseType ) =>( {
-			 chemicalId: bs.ligand.chemicalId,
-			 chemicalName: bs.ligand.chemicalName
-		 } ))
+	     var ligand_classes = response.data
+
 	     var disaggregated = response.data.map(( bs:AllLigandsResponseType ) =>{return bs.presentIn.map(struct=> Object.assign({},{...bs.ligand},struct))	 })
 	         disaggregated = flattenDeep(disaggregated)
           dispatch({
