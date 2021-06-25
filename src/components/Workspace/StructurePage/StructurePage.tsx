@@ -119,9 +119,9 @@ const MethodSwitch = (r: RibosomeStructure) => {
 
 
 
-export const LigandHeroCard = ({lig}:{ lig:Ligand }) =>{
+export const LigandHeroCard = ({lig, outline}:{ lig:Ligand, outline:boolean }) =>{
 
-  const history = useHistory()
+  const history       = useHistory()
   const ligcardstyles = makeStyles({
   root: {
     minWidth: 275,
@@ -139,7 +139,7 @@ export const LigandHeroCard = ({lig}:{ lig:Ligand }) =>{
   },
 })();
 
-  return ( <Card className = {ligcardstyles.root} elevation={2}>
+  return !outline ? ( <Card className = {ligcardstyles.root} elevation={2}>
                       <CardContent>
                         <Typography className = {ligcardstyles.pos} color = "textSecondary">{lig.chemicalId}</Typography>
                         <Typography variant = "body2" component = "p">
@@ -155,11 +155,11 @@ export const LigandHeroCard = ({lig}:{ lig:Ligand }) =>{
                       <CardActions>
                         <Button onClick={()=>{history.push(`/bindingsites`)}} size = "small">Binding Sites</Button>
                       </CardActions>
-                    </Card> )
+                    </Card> ):(<Card className={ligcardstyles.root} elevation={2}></Card>)
 }
 
 
-export const StructHeroCard =({rcsb_id}:{ rcsb_id:string })=>{
+export const StructHeroCard =({rcsb_id, nomedia}:{ rcsb_id:string,nomedia:boolean })=>{
   
   const classes = ( makeStyles((theme:Theme)=>({
     card: {
@@ -196,7 +196,6 @@ export const StructHeroCard =({rcsb_id}:{ rcsb_id:string })=>{
   getNeo4jData("neo4j",{endpoint:"get_struct",params:{
     pdbid:rcsb_id
   }}).then(r=>{
-    console.log("got response", r.data[0]);
     setstructdata(r.data[0])
   }, e=>{
     console.log("errored out requesting struct", e);
@@ -220,13 +219,16 @@ export const StructHeroCard =({rcsb_id}:{ rcsb_id:string })=>{
             title     = {`${structdata.structure.rcsb_id}`}
             subheader = {structdata.structure._organismName}
           />
-          <CardActionArea>
+          {nomedia ? 
+          null: 
+                    <CardActionArea>
             <CardMedia
               image     = {process.env.PUBLIC_URL + `/ray_templates/_ray_${structdata.structure.rcsb_id.toUpperCase()}.png`}
               // title     = { `${structdata.rcsb_id}\n${structdata.citation_title}` }
               className = {classes.title}
             />
           </CardActionArea>
+          }
           <List>
             <CardBodyAnnotation keyname="Species" value={structdata.structure._organismName} />
             <CardBodyAnnotation keyname="Resolution" value={`${ structdata.structure.resolution } Å`} />
@@ -540,7 +542,7 @@ parent_year      : structdata!.citation_year
               })
                 .map(lig => (
                   <Grid item>
-                    <LigandHeroCard lig={lig}/>
+                    <LigandHeroCard lig={lig} outline={false}/>
         </Grid>
               ))}
 
@@ -595,7 +597,7 @@ parent_year      : structdata!.citation_year
   return structdata ? (
     <Grid xs={12} container item spacing={2} style={{ padding: "5px" }}>
       <Grid xs={3} container item alignContent="flex-start" spacing={2}>
-        <StructHeroCard rcsb_id={structdata.rcsb_id}/>
+        <StructHeroCard rcsb_id={structdata.rcsb_id} nomedia={false}/>
         <Grid item>
 
         <Cart/>

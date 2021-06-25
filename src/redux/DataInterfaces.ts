@@ -14,8 +14,26 @@ export interface NeoStruct{
 }
 
 
-export interface LigandClass
-{
+export interface BindingInterface {
+  constituents: Array<{
+    banClass : null | string,
+    resid    : number
+    resn     : string
+    strand_id: string
+    struct   : string
+    }>,
+    nbrs: Array<{
+    banClass : null | string,
+    resid    : number
+    resn     : string
+    strand_id: string
+    struct   : string
+    }>
+
+}
+
+
+export interface LigandClass {
   ligand: Ligand, presentIn: {
     _organismId: number[],
     citation_title: string,

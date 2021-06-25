@@ -66,47 +66,15 @@ interface StructSnip {
 
 
 
-const getGqlQuery = (pdbid:string) =>{
-
-  return  encodeURI(`https://data.rcsb.org/graphql?query={
-    entry(entry_id: "${pdbid.toLowerCase()}") {
-    rcsb_id
-    polymer_entities {
-        rcsb_polymer_entity_container_identifiers{
-    asym_ids
-  }
-      entity_poly {
-        pdbx_strand_id
-        type
-      }
-    }
-    nonpolymer_entities {
-      rcsb_nonpolymer_entity_container_identifiers{
-        asym_ids
-      }
-      
-      pdbx_entity_nonpoly {
-        
-        comp_id
-        name
-        entity_id
-      }
-      rcsb_nonpolymer_entity {
-        formula_weight
-        pdbx_description
-      }
-    }
-}}` )
-
-
-}
 
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
   const selectStructStyles           = ( makeStyles({
-    autocomoplete:{
-      width:"100%"
+    autocomoplete:{      width:"100%"
     }}) )()
   const [currentStructure, setCurrentStructure] = useState<string>('');
+
+
+
 
   const get_strand_asymid_map = (gqlresp:any) =>{
 
@@ -122,7 +90,6 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
       endpoint: "get_struct",
       params: { pdbid: currentStructure }
     })
-
     .then(r=>{
       // iter over rps
      for (var rp of r.data[0].rps){
@@ -150,10 +117,43 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   }
 
   const [asymidChainMap, setAsymidChainMap] = useState({})
+  const getGqlQuery = (pdbid:string) =>{
+
+    return  encodeURI(`https://data.rcsb.org/graphql?query={
+      entry(entry_id: "${pdbid.toLowerCase()}") {
+      rcsb_id
+      polymer_entities {
+          rcsb_polymer_entity_container_identifiers{
+      asym_ids
+    }
+        entity_poly {
+          pdbx_strand_id
+          type
+        }
+      }
+      nonpolymer_entities {
+        rcsb_nonpolymer_entity_container_identifiers{
+          asym_ids
+        }
+        
+        pdbx_entity_nonpoly {
+          
+          comp_id
+          name
+          entity_id
+        }
+        rcsb_nonpolymer_entity {
+          formula_weight
+          pdbx_description
+        }
+      }
+  }}` )
+  }
 
   useEffect(() => {
 
     if (currentStructure.length > 0){
+
     axios.get(getGqlQuery(currentStructure)).then(
       r=>{
         var map = get_strand_asymid_map(r)
