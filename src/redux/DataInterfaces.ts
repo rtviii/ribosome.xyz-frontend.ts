@@ -13,6 +13,36 @@ export interface NeoStruct{
 
 }
 
+
+export interface BindingInterface {
+  constituents: Array<{
+    banClass : null | string,
+    resid    : number
+    resn     : string
+    strand_id: string
+    struct   : string
+    }>,
+    nbrs: Array<{
+    banClass : null | string,
+    resid    : number
+    resn     : string
+    strand_id: string
+    struct   : string
+    }>
+
+}
+
+
+export interface LigandClass {
+  ligand: Ligand, presentIn: {
+    _organismId: number[],
+    citation_title: string,
+    expMethod: string,
+    rcsb_id: string,
+    resolution: number,
+  }[]
+}
+
 export interface NeoHomolog {
 
   parent : string;
@@ -68,15 +98,20 @@ export interface BanClassMetadata{
       organisms: number[],
       comments : string[][],
       structs  : RibosomeStructure[]
-
     }
 
-// export interface BanClassMetadata{
+export type BindingSite  =  {
 
-//       nom_class       : BanClass,
-//       unique_organisms: number[],
-//       inStructs       : string[],
-//     }
+    chemicalId      : string;
+    chemicalName    : string;
+    formula_weight  : number;
+    pdbx_description: string;
+		  _organismId   : number[],
+		  citation_title: string  ,
+		  expMethod     : string  ,
+		  rcsb_id       : string,
+		  resolution    : number
+		}
 
 
 export type RXZDataTypes= NeoStruct | RibosomalProtein | RNAProfile | LigandResponseShape | BanClassMetadata;

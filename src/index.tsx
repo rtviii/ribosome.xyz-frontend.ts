@@ -26,8 +26,6 @@ const theme = createMuiTheme({
   transitions:{
   }
 
-
-
 });
 
 

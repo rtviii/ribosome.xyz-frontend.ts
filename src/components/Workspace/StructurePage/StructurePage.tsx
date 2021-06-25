@@ -27,7 +27,7 @@ import Typography from                            "@material-ui/core/Typography"
 import CardActions from                           "@material-ui/core/CardActions"                ;
 import Button from                                "@material-ui/core/Button"                     ;
 import Popover from                               "@material-ui/core/Popover"                    ;
-import { makeStyles } from                        "@material-ui/core/styles"                     ;
+import { makeStyles, Theme } from                        "@material-ui/core/styles"                     ;
 import { DashboardButton } from                   "../../../materialui/Dashboard/Dashboard"      ;
 import RibosomalProteinCard from                  "../RibosomalProteins/RibosomalProteinCard"    ;
 import CardMedia from                             '@material-ui/core/CardMedia'                  ;
@@ -116,6 +116,264 @@ const MethodSwitch = (r: RibosomeStructure) => {
     </table>
   );
 };
+
+
+
+export const LigandHeroCard = ({lig, outline}:{ lig:Ligand, outline:boolean }) =>{
+
+  const history       = useHistory()
+  const ligcardstyles = makeStyles({
+  root: {
+    minWidth: 275,
+  },
+  bullet: {
+    display  : 'inline-block',
+    margin   : '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+})();
+
+  return !outline ? ( <Card className = {ligcardstyles.root} elevation={2}>
+                      <CardContent>
+                        <Typography className = {ligcardstyles.pos} color = "textSecondary">{lig.chemicalId}</Typography>
+                        <Typography variant = "body2" component = "p">
+                          {lig.pdbx_description}
+                        </Typography>
+                        <Typography className = {ligcardstyles.title} color = "textSecondary" gutterBottom>
+                          Formula Weight: {lig.formula_weight}
+                        </Typography>
+                        {/* <Typography className = {ligcardstyles.title} color = "textSecondary" gutterBottom>
+                          Residues ID: {lig.cif_residueId ? lig.cif_residueId : "not available"}
+                        </Typography> */}
+                      </CardContent>
+                      <CardActions>
+                        <Button onClick={()=>{history.push(`/bindingsites`)}} size = "small">Binding Sites</Button>
+                      </CardActions>
+                    </Card> ):(<Card className={ligcardstyles.root} elevation={2}></Card>)
+}
+
+
+export const StructHeroCard =({rcsb_id, nomedia}:{ rcsb_id:string,nomedia:boolean })=>{
+  
+  const classes = ( makeStyles((theme:Theme)=>({
+    card: {
+      padding: "5px"
+    },
+    title: {
+      fontSize: 14,
+      height: 300
+    },
+    heading: {
+      fontSize: 12,
+      paddingTop: 5,
+    },
+    annotation: { fontSize: 12, },
+    authors: {
+      transition: "0.1s all",
+      "&:hover": {
+        background: "rgba(149,149,149,1)",
+        cursor: "pointer",
+      },
+    },
+    nested: {
+      paddingLeft: 20,
+      color: "black"
+    }
+  })) )()
+
+
+
+  const [structdata, setstructdata] = useState<GetStructResponseShape>({} as GetStructResponseShape) 
+
+  useEffect(() => {
+
+  getNeo4jData("neo4j",{endpoint:"get_struct",params:{
+    pdbid:rcsb_id
+  }}).then(r=>{
+    setstructdata(r.data[0])
+  }, e=>{
+    console.log("errored out requesting struct", e);
+  })
+  
+
+
+
+}, [])
+
+  const dispatch               = useDispatch()
+  const history                = useHistory()
+  const [authorsOpen, setOpen] = React.useState(false);
+  const handleAuthorsToggle    = () => {
+    setOpen(!authorsOpen);
+  };
+
+  return structdata.structure !== undefined ? (
+    <Card>
+          <CardHeader
+            title     = {`${structdata.structure.rcsb_id}`}
+            subheader = {structdata.structure._organismName}
+          />
+          {nomedia ? 
+          null: 
+                    <CardActionArea>
+            <CardMedia
+              image     = {process.env.PUBLIC_URL + `/ray_templates/_ray_${structdata.structure.rcsb_id.toUpperCase()}.png`}
+              // title     = { `${structdata.rcsb_id}\n${structdata.citation_title}` }
+              className = {classes.title}
+            />
+          </CardActionArea>
+          }
+          <List>
+            <CardBodyAnnotation keyname="Species" value={structdata.structure._organismName} />
+            <CardBodyAnnotation keyname="Resolution" value={`${ structdata.structure.resolution } Å`} />
+            <OverlayTrigger
+              key="bottom-overlaytrigger"
+              placement="bottom"
+              overlay={
+                <Tooltip
+                  style     = {{ backgroundColor: "black" }}
+                  className = "tooltip-bottom"
+                  id        = "tooltip-bottom"
+                >
+
+                  <MethodSwitch {...structdata.structure} />
+                </Tooltip>
+              }
+            >
+              < CardBodyAnnotation keyname="Experimental Method" value={structdata.structure.expMethod} />
+            </OverlayTrigger>
+            < CardBodyAnnotation keyname="Title" value={structdata.structure.citation_title} />
+
+            <ListItem onClick={handleAuthorsToggle}><Grid
+              container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+          component="div"
+          className={classes.authors}
+            >
+              <Typography variant="caption" color="textSecondary" component="p" className={classes.annotation}>
+                Authors
+            </Typography>
+              {authorsOpen ? <ExpandLess /> : <ExpandMore />}
+            </Grid></ListItem>
+            <Collapse in={authorsOpen} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {structdata.structure.citation_rcsb_authors.length > 1
+                  ? structdata.structure.citation_rcsb_authors.map(author =>
+                    <ListItem button className={classes.nested}>
+                      <Typography variant="caption" color="textSecondary" component="p" className={classes.nested}>
+                        {author}
+                      </Typography>
+                    </ListItem>
+                  )
+                  : structdata.structure.citation_rcsb_authors[0]}
+              </List>
+            </Collapse>
+
+            < CardBodyAnnotation keyname="Year" value={structdata.structure.citation_year} />
+          </List>
+          <CardActions>
+            <Grid container> 
+            <Grid item container justify="space-evenly" direction="row" xs={12}>
+
+              <Grid item>
+
+                <Button size="small" color="primary">
+                  <a href={ `https://www.rcsb.org/structure/${structdata.structure.rcsb_id}` }>
+                  PDB
+                  </a>
+            </Button>
+              </Grid>
+              <Grid item>
+                <Button size="small" color="primary">
+                  <a href={
+                    
+                    structdata.structure.rcsb_external_ref_link[0]
+                     }>
+                  EMD
+                  </a>
+            </Button>
+              </Grid>
+              <Grid item>
+                <Button size="small" color="primary">
+                  <a href={
+                     `https://doi.org/${structdata.structure.citation_pdbx_doi}`
+                     }>
+                  DOI
+                  </a>
+            </Button>
+              </Grid>
+            </Grid>
+            <Grid item container justify="space-evenly" direction="row" xs={12}>
+
+              <Grid item>
+
+                <Button 
+                size="small"
+                style={{textTransform:"none"}}
+                
+                onClick={() => { history.push({ pathname: `/vis`, state: { struct: structdata.structure.rcsb_id } }) }}>
+                  <VisibilityIcon />
+          Visualize
+          </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                size="small"
+                style={{textTransform:"none"}}
+                
+                onClick={()=>{
+                  dispatch(cart_add_item(structdata.structure))
+                }}>
+<BookmarkIcon/>
+Add To Workspace
+          </Button>
+              </Grid>
+
+              <Grid item>
+                <Button
+                size="small"
+                style={{textTransform:"none"}}
+                
+                onClick={()=>{
+
+                  getNeo4jData("static_files",{endpoint:"download_structure",params:{struct_id:structdata.structure.rcsb_id}})
+                  .then(r=>{
+
+                    fileDownload(
+                      r.data,
+                      `${structdata.structure.rcsb_id}.cif`,
+                      "chemical/x-mmcif"
+                    )
+                  })
+
+                }}>
+Download 
+<GetAppIcon/>
+          </Button>
+              </Grid>
+
+ </Grid>           </Grid>
+          </CardActions>
+        </Card>
+
+  ): null
+
+}
+
+        export type GetStructResponseShape = {
+          structure  :  RibosomeStructure;
+          ligands    :  Ligand[];
+          rnas       :  rRNA[];
+          rps        :  RibosomalProtein[];
+        };
 type StructurePageProps = OwnProps & ReduxProps & DispatchProps;
 const StructurePage: React.FC<StructurePageProps> = (
   props: StructurePageProps
@@ -137,16 +395,10 @@ const StructurePage: React.FC<StructurePageProps> = (
       params: { pdbid: pdbid },
     }).then(
       resp => {
-        const respdat: ResponseShape = flattenDeep(
+        const respdat: GetStructResponseShape = flattenDeep(
           resp.data
-        )[0] as ResponseShape;
+        )[0] as GetStructResponseShape;
 
-        type ResponseShape = {
-          structure  :  RibosomeStructure;
-          ligands    :  Ligand[];
-          rnas       :  rRNA[];
-          rps        :  RibosomalProtein[];
-        };
 
         setstruct(respdat.structure);
         setprots(respdat.rps);
@@ -166,7 +418,6 @@ const StructurePage: React.FC<StructurePageProps> = (
   const [ssu, setssu]     = useState<RibosomalProtein[]>([])
   const [other, setother] = useState<RibosomalProtein[]>([])
 
-const history = useHistory();
 
 
   useEffect(() => {
@@ -182,22 +433,6 @@ const history = useHistory();
   }, [protdata])
 
 
-  const ligcardstyles = makeStyles({
-  root: {
-    minWidth: 275,
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-})();
   const renderSwitch = (activecategory: string) => {
     
     switch (activecategory) {
@@ -307,23 +542,7 @@ parent_year      : structdata!.citation_year
               })
                 .map(lig => (
                   <Grid item>
-                      <Card className = {ligcardstyles.root}>
-                      <CardContent>
-                        <Typography className = {ligcardstyles.pos} color = "textSecondary">{lig.chemicalId}</Typography>
-                        <Typography variant = "body2" component = "p">
-                          {lig.pdbx_description}
-                        </Typography>
-                        <Typography className = {ligcardstyles.title} color = "textSecondary" gutterBottom>
-                          Formula Weight: {lig.formula_weight}
-                        </Typography>
-                        <Typography className = {ligcardstyles.title} color = "textSecondary" gutterBottom>
-                          Residues ID: {lig.cif_residueId ? lig.cif_residueId : "not available"}
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Button onClick={()=>{history.push(`/bindingsites`)}} size = "small">Binding Sites</Button>
-                      </CardActions>
-                    </Card>
+                    <LigandHeroCard lig={lig} outline={false}/>
         </Grid>
               ))}
 
@@ -370,7 +589,6 @@ parent_year      : structdata!.citation_year
 
 
   const [authorsOpen, setOpen] = React.useState(false);
-
   const handleAuthorsToggle = () => {
     setOpen(!authorsOpen);
   };
@@ -379,151 +597,7 @@ parent_year      : structdata!.citation_year
   return structdata ? (
     <Grid xs={12} container item spacing={2} style={{ padding: "5px" }}>
       <Grid xs={3} container item alignContent="flex-start" spacing={2}>
-        <Card className={classes.card}>
-          <CardHeader
-            title     = {`${structdata.rcsb_id}`}
-            subheader = {structdata._organismName}
-          />
-          <CardActionArea>
-            <CardMedia
-              image     = {process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toUpperCase()}.png`}
-              // title     = { `${structdata.rcsb_id}\n${structdata.citation_title}` }
-              className = {classes.title}
-            />
-          </CardActionArea>
-          <List>
-            <CardBodyAnnotation keyname="Species" value={structdata._organismName} />
-            <CardBodyAnnotation keyname="Resolution" value={`${ structdata.resolution } Å`} />
-            <OverlayTrigger
-              key="bottom-overlaytrigger"
-              placement="bottom"
-              overlay={
-                <Tooltip
-                  style     = {{ backgroundColor: "black" }}
-                  className = "tooltip-bottom"
-                  id        = "tooltip-bottom"
-                >
-                  <MethodSwitch {...structdata} />
-                </Tooltip>
-              }
-            >
-              < CardBodyAnnotation keyname="Experimental Method" value={structdata.expMethod} />
-            </OverlayTrigger>
-            < CardBodyAnnotation keyname="Title" value={structdata.citation_title} />
-
-            <ListItem onClick={handleAuthorsToggle}><Grid
-              container
-              direction="row"
-              justify="space-between"
-              alignItems="center"
-              component="div"
-              className={classes.authors}
-            >
-              <Typography variant="caption" color="textSecondary" component="p" className={classes.annotation}>
-                Authors
-            </Typography>
-              {authorsOpen ? <ExpandLess /> : <ExpandMore />}
-            </Grid></ListItem>
-            <Collapse in={authorsOpen} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                {structdata.citation_rcsb_authors.length > 1
-                  ? structdata.citation_rcsb_authors.map(author =>
-                    <ListItem button className={classes.nested}>
-                      <Typography variant="caption" color="textSecondary" component="p" className={classes.nested}>
-                        {author}
-                      </Typography>
-                    </ListItem>
-                  )
-                  : structdata.citation_rcsb_authors[0]}
-              </List>
-            </Collapse>
-
-            < CardBodyAnnotation keyname="Year" value={structdata.citation_year} />
-          </List>
-          <CardActions>
-            <Grid container> 
-            <Grid item container justify="space-evenly" direction="row" xs={12}>
-
-              <Grid item>
-
-                <Button size="small" color="primary">
-                  <a href={ `https://www.rcsb.org/structure/${structdata.rcsb_id}` }>
-                  PDB
-                  </a>
-            </Button>
-              </Grid>
-              <Grid item>
-                <Button size="small" color="primary">
-                  <a href={
-                    
-                    structdata.rcsb_external_ref_link[0]
-                     }>
-                  EMD
-                  </a>
-            </Button>
-              </Grid>
-              <Grid item>
-                <Button size="small" color="primary">
-                  <a href={
-                     `https://doi.org/${structdata.citation_pdbx_doi}`
-                     }>
-                  DOI
-                  </a>
-            </Button>
-              </Grid>
-            </Grid>
-            <Grid item container justify="space-evenly" direction="row" xs={12}>
-
-              <Grid item>
-
-                <Button 
-                size="small"
-                style={{textTransform:"none"}}
-                
-                onClick={() => { history.push({ pathname: `/vis`, state: { struct: structdata.rcsb_id } }) }}>
-                  <VisibilityIcon />
-          Visualize
-          </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                size="small"
-                style={{textTransform:"none"}}
-                
-                onClick={()=>{
-                  dispatch(cart_add_item(structdata))
-                }}>
-<BookmarkIcon/>
-Add To Workspace
-          </Button>
-              </Grid>
-
-              <Grid item>
-                <Button
-                size="small"
-                style={{textTransform:"none"}}
-                
-                onClick={()=>{
-
-                  getNeo4jData("static_files",{endpoint:"download_structure",params:{struct_id:structdata.rcsb_id}})
-                  .then(r=>{
-
-                    fileDownload(
-                      r.data,
-                      `${structdata.rcsb_id}.cif`,
-                      "chemical/x-mmcif"
-                    )
-                  })
-
-                }}>
-Download 
-<GetAppIcon/>
-          </Button>
-              </Grid>
-
- </Grid>           </Grid>
-          </CardActions>
-        </Card>
+        <StructHeroCard rcsb_id={structdata.rcsb_id} nomedia={false}/>
         <Grid item>
 
         <Cart/>

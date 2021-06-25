@@ -74,11 +74,12 @@ export const requestRnaClass = (rna_class: RnaClass) => {
             error: error,
           });
         }
-      ).then(
-        a => {
-          dispatch(select_rna_class("5"))
-        }
       )
+      // .then(
+      //   a => {
+      //     dispatch(select_rna_class("5"))
+      //   }
+      // )
   };
 };
 
@@ -100,11 +101,8 @@ export const RnaClassFilterChangeAC = (newvalue: any, filter_type: RnaFilter): f
 
       case "RESOLUTION":
         return !(newvalue[0] === 0 && newvalue[1] === 5);
-
       case "YEAR":
         return !(newvalue[0] === 2012 && newvalue[1] === 2021);
-
-
       default:
         return false;
     }
