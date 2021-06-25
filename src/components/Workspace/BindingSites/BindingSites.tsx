@@ -125,10 +125,6 @@ const BindingSites = () => {
 
 
   const get_strand_asymid_map = (gqlresp:any) =>{
-
-	// if (cur_struct ===null){
-	// 	return
-	// }
     var _ = gqlresp.data.data.entry.polymer_entities
 
 	
@@ -229,7 +225,7 @@ const BindingSites = () => {
 	  //? sideChain: true
 
 	  if (interface_data === null) {
-		//   alert("Select a binding site.")
+		  alert("Select a binding site.")
 		  return
 	  }
 
@@ -357,18 +353,12 @@ useEffect(() => {
             if (newvalue === null){
 
 				console.log("Current target set to");
-				
 				console.log(newvalue);
-				
 				setCurTarget(null)
 
             }
 			else{
-				console.log("Initiate prediction...");
-				console.log(newvalue);
-				
 				setCurTarget(newvalue)
-
 			}
   }
 
@@ -380,27 +370,35 @@ useEffect(() => {
       layoutIsExpanded: false,
     }
     var viewerContainer = document.getElementById('molstar-viewer');
-    viewerInstance.render(viewerContainer, options);
+	  viewerInstance.render(viewerContainer, options);
   }, [])
 
-  const [originStructTab, setOriginStructTab] = useState<'profile' | 'visual' | 'interface' >('profile')
-  const [OrigProjection, setOrigProj]         = useState<'origin'|'projection'>('origin')
-  const target_structs                        = useSelector(( state:AppState ) => state.structures.derived_filtered)
+	const [OrigProjection, setOrigProj] = useState<'origin' | 'projection'>('origin')
+	const target_structs = useSelector((state: AppState) => state.structures.derived_filtered)
 
 
-  useEffect(() => {
 
-	if (OrigProjection ==='projection'){
-		if (curTarget === null){
-			alert("Please select a target structure!")
-			return 
+	useEffect(() => {
+
+		if (curTarget != null && OrigProjection === 'projection'){
+			viewerInstance.visual.update({
+				moleculeId: curTarget?.struct.rcsb_id.toLowerCase()
+			});
 		}
-    viewerInstance.visual.update({
-      moleculeId: curTarget?.struct.rcsb_id.toLowerCase()
-    });
 
-	}
-  }, [curTarget])
+		if (cur_struct != null && OrigProjection === 'origin'){
+			viewerInstance.visual.update({
+				moleculeId: cur_struct?.rcsb_id.toLowerCase()
+			});
+		}
+
+
+
+
+
+	}, [OrigProjection])
+
+
 
 	return (
 		<Grid container xs={12} spacing={1} style={{ outline: "1px solid gray", height: "100vh" }} alignContent="flex-start">
@@ -408,7 +406,7 @@ useEffect(() => {
 				<Grid item container xs={12}>
 					<Grid item xs={3} style={{ padding: "10px" }}>
 						<Typography variant="h4">
-							Ligand Binding Sites
+							Ligand Binding Site
 				</Typography>
 					</Grid>
 					<Grid item xs={8} style={{ padding: "10px" }}>
@@ -420,60 +418,67 @@ useEffect(() => {
 				</Grid>
 			</Paper>
 			<Grid item direction="column" xs={3} spacing={2} style={{ padding: "10px" }}>
-					<Typography className={classes.bsHeader} variant="h5">Origin Binding Site</Typography>
-					<Autocomplete
-						value={cur_struct}
-						className      = {classes.autocomplete}
-						options        = {bsites_derived as any}
+				<Typography className={classes.bsHeader} variant="h5">Origin Binding Site</Typography>
+				<Autocomplete
+					value={cur_struct}
+					className={classes.autocomplete}
+					options={bsites_derived as any}
 
-						getOptionLabel = {(parent: BindingSite) => { return  parent.rcsb_id ?  parent.rcsb_id + " : " + parent.citation_title : "" }}
-						// @ts-ignore
-						onChange     = {handleStructChange}
-						renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b> {option.citation_title}  </div>)}
-						renderInput  = {(params) => <TextField {...params} label={`Binding Sites  ( ${bsites_derived != undefined ? bsites_derived.length : "0"} )`} variant="outlined" />}
-					/>
+					getOptionLabel={(parent: BindingSite) => { return parent.rcsb_id ? parent.rcsb_id + " : " + parent.citation_title : "" }}
+					// @ts-ignore
+					onChange={handleStructChange}
+					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b> {option.citation_title}  </div>)}
+					renderInput={(params) => <TextField {...params} label={`Binding Sites  ( ${bsites_derived != undefined ? bsites_derived.length : "0"} )`} variant="outlined" />}
+				/>
 
-					<Autocomplete
+				<Autocomplete
 					value={curligand}
-						className      = {classes.autocomplete}
-						options        = {lig_classes_derived as LigandClass[]}
-						getOptionLabel = {(lc: LigandClass) => { return lc.ligand ?  lc.ligand.chemicalId + " : " + lc.ligand.chemicalName :"" }}
-						// @ts-ignore
-						onChange     = {handleLigChange}
-						renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.ligand.chemicalId}</b> ({option.ligand.chemicalName}) </div>)}
-						renderInput  = {(params) => <TextField {...params} label={`Ligand (${lig_classes_derived != undefined ? lig_classes_derived.length : "0"})`} variant="outlined" />} />
+					className={classes.autocomplete}
+					options={lig_classes_derived as LigandClass[]}
+					getOptionLabel={(lc: LigandClass) => { return lc.ligand ? lc.ligand.chemicalId + " : " + lc.ligand.chemicalName : "" }}
+					// @ts-ignore
+					onChange={handleLigChange}
+					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.ligand.chemicalId}</b> ({option.ligand.chemicalName}) </div>)}
+					renderInput={(params) => <TextField {...params} label={`Ligand (${lig_classes_derived != undefined ? lig_classes_derived.length : "0"})`} variant="outlined" />} />
 
 
-					<Typography className={classes.bsHeader} variant="h5">Prediction</Typography>
-					<Autocomplete
+				<Typography className={classes.bsHeader} variant="h5">Prediction</Typography>
+				<Autocomplete
 					value={curTarget}
 					// placeholder={{struct:{
 
 					// 	rcsb
 					// }}}
-						className      = {classes.autocomplete}
-						options        = {target_structs }
-						getOptionLabel = {(parent: NeoStruct) => { return  parent.struct ?  parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
-						// @ts-ignore
-						onChange     = {handleTargetChange}
-						renderOption = { (option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
-						renderInput  = { (params) => <TextField {...params} label={`Target Structure ( ${target_structs != undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
+					className={classes.autocomplete}
+					options={target_structs}
+					getOptionLabel={(parent: NeoStruct) => { return parent.struct ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
+					// @ts-ignore
+					onChange={handleTargetChange}
+					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
+					renderInput={(params) => <TextField {...params} label={`Target Structure ( ${target_structs != undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
 
-					<Button color="primary"
-	style={{marginBottom:"10px"}}				
-					onClick={()=>{
+				<Button color="primary"
+					style={{ marginBottom: "10px" }}
+					onClick={() => {
 						setCurTarget(null)
 						set_cur_ligand(null)
 						set_cur_struct(null)
-						setLigstructPair([null,null])
+						setLigstructPair([null, null])
+						viewerInstance.visual.reset({ camera: true, theme: true })
+
+						// ? reset molstar highlight 
 
 
 					}}
-					
+
 					fullWidth variant="outlined"> Reset</Button>
 
-<Grid item style={{marginBottom:"10px"}}>
-					<Button variant="outlined" fullWidth color="primary" onClick={() => {
+				<Grid item style={{ marginBottom: "10px" }}>
+					<Button variant="outlined" fullWidth 
+					
+						style={ligstructPair.includes(null) ? { color: "gray" } : {}}
+						color={!ligstructPair.includes(null) ? 'primary' : 'default'}
+					onClick={() => {
 						if (ligstructPair.includes(null)) {
 							alert("Select a binding site.")
 							return
@@ -481,33 +486,45 @@ useEffect(() => {
 					}} >
 						Download Binding Site
 								</Button>
-</Grid>
-
-					<Grid item  >
-					<Cart />
-					</Grid>
-					<Grid item  xs={3} justify={"flex-start"} >
-						
-					<DashboardButton />
-					</Grid>
 				</Grid>
+
+
+
+
+				<Grid item style={{ marginBottom: "10px" }}>
+						<Button
+
+							variant={"outlined"}
+
+							fullWidth
+							style={ligstructPair.includes(null) ? { color: "gray" } : {}}
+							color={!ligstructPair.includes(null) ? 'primary' : 'default'}
+							onClick={() => { highlightInterface() }} >
+							Visualize Interface
+							</Button>
+				</Grid>
+
+				<Grid item  >
+					<Cart />
+				</Grid>
+				<Grid item xs={3} justify={"flex-start"} >
+
+					<DashboardButton />
+				</Grid>
+
+			</Grid>
 			<Grid item container spacing={2} direction="row" xs={9} style={{ height: "100%" }} alignContent="flex-start">
 				<Grid item container xs={12} spacing={2} alignContent="flex-start" alignItems="flex-start" justify="flex-start" >
 
 <Grid item>
-
-					<Tooltip title   = "Select a binding site and ligand to visualize." placement = "top">
-					<Button  variant = {"outlined"}
-					color={ !ligstructPair.includes(null) ? 'primary': 'default'}  onClick={() => { highlightInterface() }} >
-						Visualize Interface
-								</Button>
-					</Tooltip>
 </Grid>
 <Grid item>
-					<Button variant="outlined" color={OrigProjection == 'origin' ? 'primary' : "default"} onClick={() => { setOrigProj('origin') }} > Structure  of Origin </Button >
+					<Button variant="outlined" color={OrigProjection == 'origin' ? 'secondary' : "default"} onClick={() => { setOrigProj('origin') }} > Structure  of Origin {cur_struct === null ? "" : `( ${cur_struct.rcsb_id} )`}</Button >
 </Grid>
 <Grid item>
-					<Button variant="outlined" color={OrigProjection == 'projection' ? 'primary' : "default"} onClick={() => { setOrigProj('projection') }} > Proejected    Site   </Button >
+					<Button variant="outlined" 
+					disabled={curTarget ===null}
+					color={OrigProjection == 'projection' ? 'secondary' : "default"} onClick={() => { setOrigProj('projection') }} > Projected    Site {curTarget === null ? "" : `( ${curTarget.struct.rcsb_id} )`}   </Button >
 </Grid>
 				</Grid>
 
@@ -517,9 +534,8 @@ useEffect(() => {
 
 
 				<Grid item xs={12} >
-					<Typography> Structure of Origin</Typography>
 					<Paper variant="outlined" style={{ height:"50vw", position:"relative", padding: "10px" }} >
-						<div style={{ zIndex: 10000, position:"relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
+						<div style={{  position:"relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
 					</Paper>
 				</Grid >
 
