@@ -28,6 +28,7 @@ import { updateExternalModuleReference } from 'typescript';
 import { RibosomeStructure } from '../../../redux/RibosomeTypes';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 
+import * as loadingicon from './../../../static/loading2.gif'
 
 
 
@@ -115,9 +116,16 @@ const BindingSites = () => {
 
   useEffect(() => {
 
+	if (OrigProjection ==='origin'){
+
     viewerInstance.visual.update({
       moleculeId: cur_struct?.rcsb_id.toLowerCase()
     });
+
+	setloadingcurrent(true)
+
+
+	}
 
   }, [cur_struct])
 
@@ -384,19 +392,37 @@ useEffect(() => {
 			viewerInstance.visual.update({
 				moleculeId: curTarget?.struct.rcsb_id.toLowerCase()
 			});
+
+			setloadingtarget(true)
 		}
 
 		if (cur_struct != null && OrigProjection === 'origin'){
 			viewerInstance.visual.update({
 				moleculeId: cur_struct?.rcsb_id.toLowerCase()
 			});
+			setloadingcurrent(true)
 		}
-
-
-
-
-
 	}, [OrigProjection])
+
+
+
+	const [loading_current, setloadingcurrent] = useState<boolean>(false)
+	const [loading_target , setloadingtarget ] = useState<boolean>(false)
+
+	useEffect(() => {
+		if(loading_current) {
+			setTimeout(() => {
+				setloadingcurrent(false)
+			}, 5000);
+		}
+		if(loading_target) {
+			setTimeout(() => {
+				setloadingtarget(false)
+			}, 5000);
+		}
+	}, [loading_current,loading_target])
+
+
 
 
 
@@ -518,19 +544,28 @@ useEffect(() => {
 
 <Grid item>
 </Grid>
+
 <Grid item>
-					<Button variant="outlined" color={OrigProjection == 'origin' ? 'secondary' : "default"} onClick={() => { setOrigProj('origin') }} > Structure  of Origin {cur_struct === null ? "" : `( ${cur_struct.rcsb_id} )`}</Button >
+					<Button variant="outlined" color={OrigProjection == 'origin' ? 'primary' : "default"} onClick={() => { setOrigProj('origin') }} > Structure  of Origin 
+					
+					{cur_struct === null ? "" : `( ${cur_struct.rcsb_id} )`}
+					
+					{loading_current ? <img style={{marginLeft:"10px", width:"30px",height:"10px"}} src={loadingicon}/> : null} 
+					</Button >
 </Grid>
 <Grid item>
 					<Button variant="outlined" 
 					disabled={curTarget ===null}
-					color={OrigProjection == 'projection' ? 'secondary' : "default"} onClick={() => { setOrigProj('projection') }} > Projected    Site {curTarget === null ? "" : `( ${curTarget.struct.rcsb_id} )`}   </Button >
+					color={OrigProjection == 'projection' ? 'primary' : "default"} onClick={() => { setOrigProj('projection') }} > Projected    Site 
+					
+
+					
+					{curTarget === null ? "" : `( ${curTarget.struct.rcsb_id} )`}   
+					
+					{loading_target ? <img style={{marginLeft:"10px",width:"30px",height:"10px"}} src={loadingicon}/> : null}
+					</Button >
 </Grid>
 				</Grid>
-
-
-
-
 
 
 				<Grid item xs={12} >
