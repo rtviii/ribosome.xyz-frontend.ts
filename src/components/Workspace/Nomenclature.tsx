@@ -40,11 +40,11 @@ const useStyles = makeStyles({
 
 });
 
-function createData(
-  nom: string,
-  bacterial: string, euk: string, universal: string, pfams: string[]) {
-  return { nom, bacterial, euk, universal, pfams };
-}
+// function createData(
+//   nom: string,
+//   bacterial: string, euk: string, universal: string, pfams: string[]) {
+//   return { nom, bacterial, euk, universal, pfams };
+// }
 
 export default function Nomenclature() {
   const [search, setsearch] = useState('')
@@ -66,11 +66,6 @@ export default function Nomenclature() {
   const classes    = useStyles();
   const banclasses = { ...large_subunit_map, ...small_subunit_map }
   const history    = useHistory();
-  const TabClasses =  makeStyles({
-    root:{
-        width:"100%",
-    }
-  })();
   const rnaClasses      = useSelector(( state:AppState ) => Object.keys(state.rna.rna_classes))
   const [tab, setTab]   = React.useState<string | null>('protein');
   const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: string | null) => {
@@ -163,7 +158,7 @@ tab === "protein"  ?
 
               Object.entries(banclasses).filter(r => {
 
-                if (search === 'Search' || search == '') { return true }
+                if (search === 'Search' || search === '') { return true }
                 else {
                   return (r[0] + r[1].b + r[1].y + r[1].h).toLowerCase().includes(search.toLowerCase())
 
@@ -203,9 +198,9 @@ tab === "protein"  ?
                     .map((rncl) => {
                       if (!['mrna', 'trna'].includes(rncl)) {
                         return [`${rncl}S RNA`, rncl]
-                      } else if (rncl == 'mrna') {
+                      } else if (rncl === 'mrna') {
                         return ['mRNA', 'mrna']
-                      } else if (rncl == 'trna') {
+                      } else if (rncl === 'trna') {
                         return ['tRNA', 'trna']
                       }
               }

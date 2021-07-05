@@ -25,6 +25,7 @@ struct_id:string
           }
   }
 
+
   interface cif_chain_by_class{
     endpoint: "cif_chain_by_class",
             params:{
@@ -94,11 +95,15 @@ type Neo4jEndpoints =
   | match_structs_by_proteins
   | get_surface_ratios
   | TEMP_classification_sample
-  |banclass_annotation
-
+  | banclass_annotation
+  | proteins_number
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
 
+  interface proteins_number{
+    endpoint: "proteins_number",
+          params  :null
+  }
 interface banclass_annotation {
   endpoint:"banclass_annotation",
   params:{

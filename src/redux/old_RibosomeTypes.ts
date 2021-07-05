@@ -1,87 +1,72 @@
 export interface RibosomeStructure {
+  rcsb_id   : string;
+  expMethod : string;
+  resolution: number;
 
-  rcsb_id               : string;
-  expMethod             : string;
-  resolution            : number;
+  rcsb_external_ref_id   : string[];
+  rcsb_external_ref_type : string[];
+  rcsb_external_ref_link : string[];
 
-  pdbx_keywords     : string | null;
-  pdbx_keywords_text: string |null;
-
-  rcsb_external_ref_id  : string[];
-  rcsb_external_ref_type: string[];
-  rcsb_external_ref_link: string[];
+  diffrn_source_type     : string|null
 
   // citation
-  citation_year        : number;
-  citation_rcsb_authors: string[]
-  citation_title       : string
+  citation_year         : number;
+  citation_rcsb_authors : string[]
+  citation_title        : string
+  citation_pdbx_doi     : string
 
-  citation_pdbx_doi    : string
   // keywords
-  // custom
-  _organismId   : number[];
-  _organismName : string[];
+  pdbx_keywords_text : string| null
+  _organismId        : number[];
+  _organismName      : string[];
 
-  proteins : RibosomalProtein[]       ;
-  rnas     : rRNA            [] | null;
-  ligands  : Ligand          [] | null;
 
+  proteins : Array<RibosomalProtein>       ;
+  rnas     : Array<rRNA            > | null;
+  ligands  : Array<Ligand          > | null;
 }
-export interface rRNA { 
+export interface rRNA {
 
+  parent_rcsb_id                   : string     ;
+  rcsb_source_organism_id          : number[]   ;
+  rcsb_source_organism_description : string[]   ;
+  rcsb_pdbx_description            : string|null;
 
-  asym_ids                        : string[],
-  auth_asym_ids                   : string[],
-
-  nomenclature                    : RNAClass[]
-
-  parent_rcsb_id                  : string       ;
-  rcsb_source_organism_id         : number[]     ;
-  rcsb_source_organism_description: string[]     ;
-  rcsb_pdbx_description           : string | null;
-  // entity_polymer
   entity_poly_strand_id              : string;
   entity_poly_seq_one_letter_code    : string;
   entity_poly_seq_one_letter_code_can: string;
   entity_poly_seq_length             : number;
   entity_poly_polymer_type           : string;
   entity_poly_entity_type            : string;
- }
+
+}
+
 
 
 export interface RibosomalProtein {
-  asym_ids     : string[],
-  auth_asym_ids: string[],
-
   parent_rcsb_id                     : string;
-
-
   pfam_accessions                    : string[]
   pfam_comments                      : string[]
   pfam_descriptions                  : string[]
-
   rcsb_source_organism_id            : number[];
   rcsb_source_organism_description   : string[];
   uniprot_accession                  : string[]
-
   rcsb_pdbx_description              : string | null;
-
   entity_poly_strand_id              : string;
   entity_poly_seq_one_letter_code    : string;
   entity_poly_seq_one_letter_code_can: string;
   entity_poly_seq_length             : number;
   entity_poly_polymer_type           : string;
   entity_poly_entity_type            : string;
-
-  nomenclature                       : BanClass[];
+  surface_ratio                      : number | null;
+  nomenclature                       : Array<BanClass>;
 }
 
 export interface Ligand {
-  chemicalId         : string;
-  chemicalName       : string;
-  formula_weight     : number;
-  pdbx_description   : string;
-  number_of_instances: number;
+  chemicalId      : string;
+  chemicalName    : string;
+  formula_weight  : number;
+  pdbx_description: string;
 }
 
 // This comes from interpro mapping (in cumulative archive)
@@ -104,22 +89,10 @@ export interface PFAMFamily {
   family_type: string;
 }
 
+
 export interface NomenclatureClass {
   class_id: BanClass;
 }
-
-export type RNAClass = 
-"5SrRNA"|
-"5.8SrRNA"|
-"12SrRNA"|
-"16SrRNA"|
-"21SrRNA"|
-"23SrRNA"|
-"25SrRNA"|
-"28SrRNA"|
-"35SrRNA"|
-"mRNA"|
-"tRNA"
 
 export type BanClass =
   | "eL39"

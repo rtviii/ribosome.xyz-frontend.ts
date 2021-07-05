@@ -1,38 +1,37 @@
-import React, { useState } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import Grid from '@material-ui/core/Grid';
-import downicon from "./../../../static/download.png"
-import fileDownload from "js-file-download";
-import loading from "./../../../static/loading.gif";
-import { useHistory } from 'react-router-dom'
-import GetAppIcon from '@material-ui/icons/GetApp';
-import bookmark from './../../../static/bookmark_icon.svg'
-
-import BookmarkIcon from '@material-ui/icons/Bookmark';
-import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
-import Popover from '@material-ui/core/Popover';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { FiltersReducerState } from "../../../redux/reducers/Filters/FiltersReducer";
-import { filterChangeActionCreator, FilterData, FilterType } from '../../../redux/reducers/Filters/ActionTypes';
-import { CartItem, cart_add_item } from '../../../redux/reducers/Cart/ActionTypes';
-import { AppState } from '../../../redux/store';
-import { Dispatch } from 'redux'
-import { AppActions } from '../../../redux/AppActions';
-import { RibosomalProtein, RibosomeStructure } from '../../../redux/RibosomeTypes';
-import Chip from '@material-ui/core/Chip';
-import CardHeader from '@material-ui/core/CardHeader/CardHeader';
-import CardActionArea from '@material-ui/core/CardActionArea/CardActionArea';
-import CardMedia from '@material-ui/core/CardMedia/CardMedia';
-import List from '@material-ui/core/List/List';
-import { CardBodyAnnotation } from '../StructurePage/StructurePage';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { flattenDeep } from 'lodash';
+import   React                    , { useState }               from 'react'                                          ;
+import { makeStyles               , createStyles, Theme }      from '@material-ui/core/styles'                       ;
+import   Card                                                  from '@material-ui/core/Card'                         ;
+import   CardActions                                           from '@material-ui/core/CardActions'                  ;
+import   CardContent                                           from '@material-ui/core/CardContent'                  ;
+import   Button                                                from '@material-ui/core/Button'                       ;
+import   Typography                                            from '@material-ui/core/Typography'                   ;
+import   VisibilityIcon                                        from '@material-ui/icons/Visibility'                  ;
+import   Grid                                                  from '@material-ui/core/Grid'                         ;
+import   downicon                                              from "./../../../static/download.png"
+import   fileDownload                                          from "js-file-download"                               ;
+import   loading                                               from "./../../../static/loading.gif"                  ;
+import { useHistory                }                           from 'react-router-dom'
+import   GetAppIcon                                            from '@material-ui/icons/GetApp'                      ;
+import   bookmark                                              from './../../../static/bookmark_icon.svg'
+import   BookmarkIcon                                          from '@material-ui/icons/Bookmark'                    ;
+import { getNeo4jData              }                           from "../../../redux/AsyncActions/getNeo4jData"       ;
+import   Popover                                               from '@material-ui/core/Popover'                      ;
+import { connect                  , useDispatch, useSelector } from 'react-redux'                                    ;
+import { FiltersReducerState       }                           from "../../../redux/reducers/Filters/FiltersReducer" ;
+import { filterChangeActionCreator, FilterData, FilterType }   from '../../../redux/reducers/Filters/ActionTypes'    ;
+import { CartItem                 , cart_add_item }            from '../../../redux/reducers/Cart/ActionTypes'       ;
+import { AppState                  }                           from '../../../redux/store'                           ;
+import { Dispatch                  }                           from 'redux'
+import { AppActions                }                           from '../../../redux/AppActions'                      ;
+import { RibosomalProtein         , RibosomeStructure }        from '../../../redux/RibosomeTypes'                   ;
+import   Chip                                                  from '@material-ui/core/Chip'                         ;
+import   CardHeader                                            from '@material-ui/core/CardHeader/CardHeader'        ;
+import   CardActionArea                                        from '@material-ui/core/CardActionArea/CardActionArea';
+import   CardMedia                                             from '@material-ui/core/CardMedia/CardMedia'          ;
+import   List                                                  from '@material-ui/core/List/List'                    ;
+import { CardBodyAnnotation        }                           from '../StructurePage/StructurePage'                 ;
+import   LinearProgress                                        from '@material-ui/core/LinearProgress'               ;
+import { flattenDeep               }                           from 'lodash'                                         ;
 
 
 const RPLoader = () => (
@@ -85,12 +84,10 @@ export const ChainParentPill = ({ strand_id, parent_id }: { strand_id: string, p
       }
     }),
   );
-
-
-  const classes = useStyles();
-  const history = useHistory();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-  const [structdata, setstruct] = useState<RibosomeStructure>();
+  const  classes                  = useStyles                              (    );
+  const  history                  = useHistory                             (    );
+  const [anchorEl  , setAnchorEl] = React     .useState<HTMLElement | null>(null);
+  const [structdata, setstruct]   = useState  <RibosomeStructure>          (    );
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
 

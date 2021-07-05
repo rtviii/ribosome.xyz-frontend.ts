@@ -76,47 +76,6 @@ interface ReduxProps {
   globalFilter: string;
 }
 interface DispatchProps {}
-const MethodSwitch = (r: RibosomeStructure) => {
-  var record;
-  if (r.expMethod.toUpperCase() === "X-RAY DIFFRACTION") {
-    record = {
-      diffrn_source_details: r.diffrn_source_details,
-      diffrn_source_pdbx_synchrotron_beamline:
-        r.diffrn_source_pdbx_synchrotron_beamline,
-      diffrn_source_pdbx_synchrotron_site:
-        r.diffrn_source_pdbx_synchrotron_site,
-      diffrn_source_pdbx_wavelength: r.diffrn_source_pdbx_wavelength,
-      diffrn_source_pdbx_wavelength_list: r.diffrn_source_pdbx_wavelength_list,
-      diffrn_source_source: r.diffrn_source_source,
-      diffrn_source_type: r.diffrn_source_type,
-    };
-  } else if (r.expMethod.toUpperCase() === "ELECTRON MICROSCOPY") {
-    record = {
-      cryoem_exp_detail: r.cryoem_exp_detail,
-      cryoem_exp_algorithm: r.cryoem_exp_algorithm,
-      cryoem_exp_resolution_method: r.cryoem_exp_resolution_method,
-      cryoem_exp_resolution: r.cryoem_exp_resolution,
-      cryoem_exp_num_particles: r.cryoem_exp_num_particles,
-      cryoem_exp_magnification_calibration:
-        r.cryoem_exp_magnification_calibration,
-    };
-  } else {
-    record = {};
-  }
-
-  return (
-    <table className="methods-table">
-      Experimental Method Data
-      {Object.entries(record).map(entry => (
-        <tr>
-          <td>{entry[0]}</td>
-          <td>{entry[1]}</td>
-        </tr>
-      ))}
-    </table>
-  );
-};
-
 
 
 export const LigandHeroCard = ({lig, outline}:{ lig:Ligand, outline:boolean }) =>{
@@ -232,23 +191,8 @@ export const StructHeroCard =({rcsb_id, nomedia}:{ rcsb_id:string,nomedia:boolea
           <List>
             <CardBodyAnnotation keyname="Species" value={structdata.structure._organismName} />
             <CardBodyAnnotation keyname="Resolution" value={`${ structdata.structure.resolution } Å`} />
-            <OverlayTrigger
-              key="bottom-overlaytrigger"
-              placement="bottom"
-              overlay={
-                <Tooltip
-                  style     = {{ backgroundColor: "black" }}
-                  className = "tooltip-bottom"
-                  id        = "tooltip-bottom"
-                >
-
-                  <MethodSwitch {...structdata.structure} />
-                </Tooltip>
-              }
-            >
-              < CardBodyAnnotation keyname="Experimental Method" value={structdata.structure.expMethod} />
-            </OverlayTrigger>
-            < CardBodyAnnotation keyname="Title" value={structdata.structure.citation_title} />
+            <CardBodyAnnotation keyname="Experimental Method" value={structdata.structure.expMethod} />
+            <CardBodyAnnotation keyname="Title" value={structdata.structure.citation_title} />
 
             <ListItem onClick={handleAuthorsToggle}><Grid
               container
