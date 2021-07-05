@@ -7,7 +7,8 @@ import RPPage from                                  "./../RibosomalProteins/RPPa
 import RPsCatalogue from                            "./../RibosomalProteins/RPsCatalogue"        ;
 import LigandCatalogue from                         "./../Ligand/LigandCatalogue"                ;
 import RNACatalogue from                            './../RNA/RNACatalogue'
-import Home from                                    './../../Home'
+// import Home from                                    './../../Home'
+import { Home2 } from                                    './../../Home2'
 import WorkInProgress from                          './../WorkInProgress'
 import ProteinAlignment from                        './../ProteinAlign/ProteinAlignment'
 import RPClassification from                        './../RPClassification/RPClassification'
@@ -24,7 +25,7 @@ const Display = () => {
       </Route>
       <Switch>
         <Route exact path = "/rpalign" component                        = {ProteinAlignment} />
-        <Route exact path = "/home"                           component = {Home               } />
+        <Route exact path = "/home"                           component = {Home2               } />
         <Route exact path = "/structs"                        component = {WorkspaceCatalogue } />
         <Route exact path = "/structs/:pdbid"                 component = {StructurePage      } />
         <Route exact path = "/rps"                            component = {RPsCatalogue       } />

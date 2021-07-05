@@ -691,16 +691,16 @@ return (
         }
         )()}
 
-        <ListItem>
+        {/* <ListItem>
           <Cart />
-        </ListItem>
+        </ListItem> */}
 
         <ListSubheader>Select Item Category</ListSubheader>
         <ListItem style={{ display: "flex", flexDirection: "row" }}>
 
-          <Button size = "small" color = {current_tab == 'struct' ? "primary" : "default"} onClick = {() => { handleTabClick('struct') }} variant = "outlined" style = {{ marginRight: "5px" }} >Structures</Button>
-          <Button size = "small" color = {current_tab == 'rp'     ? "primary" : "default"} onClick = {() => { handleTabClick("rp"    ) }} variant = "outlined" style = {{ marginRight: "5px" }} >Proteins  </Button>
-          <Button size = "small" color = {current_tab == 'rna'    ? "primary" : "default"} onClick = {() => { handleTabClick('rna'   ) }} variant = "outlined" style = {{ marginRight: "5px" }} >RNA       </Button>
+          <Button size = "small" color = {current_tab === 'struct' ? "primary" : "default"} onClick = {() => { handleTabClick('struct') }} variant = "outlined" style = {{ marginRight: "5px" }} >Structures</Button>
+          <Button size = "small" color = {current_tab === 'rp'     ? "primary" : "default"} onClick = {() => { handleTabClick("rp"    ) }} variant = "outlined" style = {{ marginRight: "5px" }} >Proteins  </Button>
+          <Button size = "small" color = {current_tab === 'rna'    ? "primary" : "default"} onClick = {() => { handleTabClick('rna'   ) }} variant = "outlined" style = {{ marginRight: "5px" }} >RNA       </Button>
         </ListItem>
         <ListItem>
           {(() => {

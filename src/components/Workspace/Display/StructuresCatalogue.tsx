@@ -17,11 +17,11 @@ import * as redux from                                                          
 import { Dispatch } from                                                                       'redux'                                                      ;
 import Autocomplete from                                                                       '@material-ui/lab/Autocomplete'                              ;
 import {useDebounce} from                                                                      'use-debounce'
-import { FilterData, FilterType,filterChange, filterChangeActionCreator, resetAllFilters} from "../../../redux/reducers/Filters/ActionTypes"
+import { FilterData,  resetAllFilters} from "../../../redux/reducers/Filters/ActionTypes"
 import {SpeciesGroupings} from                                                                 './taxid_map'
-import _, { isEqual } from                                                                     "lodash"                                                     ;
+import _  from                                                                     "lodash"                                                     ;
 import { Cart } from                                                                           './../Cart/Cart'
-import {Link, useHistory, useParams} from                                                      "react-router-dom"                                           ;
+import { useHistory} from                                                      "react-router-dom"                                           ;
 import {DashboardButton} from                                                                  './../../../materialui/Dashboard/Dashboard'
 import PageAnnotation from                                                                     './PageAnnotation'
 import { NeoStruct } from                                                                      "../../../redux/DataInterfaces"                              ;
@@ -65,8 +65,15 @@ type WorkspaceCatalogueProps =  StateProps & DispatchProps;
 const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   prop: WorkspaceCatalogueProps
 ) => {
+
   
   const dispatch       = useDispatch(                                                     );
+  useEffect(() => {
+
+    
+    dispatch(structsSortChangeAC('PDB_CODENAME'))
+    dispatch(structsSortChangeAC('PDB_CODENAME'))
+  }, [])
   const last_sort_set  = useSelector(( state:AppState ) => state.structures.last_sort_set )
   const sortPredicates = useSelector(( state:AppState ) => state.structures.sorts_registry)
   

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef} from 'react';
+import Typography from '@material-ui/core/Typography/Typography';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -14,7 +15,13 @@ import { WarningPopover } from './../WorkInProgressChip'
 import { DashboardButton } from '../../../materialui/Dashboard/Dashboard';
 import { Cart } from '../Cart/Cart';
 import List from '@material-ui/core/List/List';
-import { ListItem } from 'material-ui';
+import { Divider, ListItem } from 'material-ui';
+import { AppState } from '../../../redux/store';
+import { useSelector } from 'react-redux';
+import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete';
+import TextField from '@material-ui/core/TextField/TextField';
+import Paper from '@material-ui/core/Paper/Paper';
+import { NeoStruct } from '../../../redux/DataInterfaces';
 
 
 
@@ -39,16 +46,86 @@ const useStyles = makeStyles((theme: Theme) =>
 
   })
 );
-  const classes = useStyles();
+	const classes = makeStyles((theme: Theme) => ({
+		autocomplete: {
+			width: "100%",
+			marginBottom:"10px"
+		},
+		pageDescription: {
+			padding: "20px",
+			width  : "100%",
+			height : "min-content"
+		},
+		card: {
+			width: "100%"
+		},
+		title: {
+			fontSize: 14,
+			height: 300
+		},
+		heading: {
+			fontSize: 12,
+			paddingTop: 5,
+		},
+		annotation: { fontSize: 12, },
+		authors: {
+			transition: "0.1s all",
+			"&:hover": {
+				background: "rgba(149,149,149,1)",
+				cursor: "pointer",
+			},
+		},
+		nested: {
+			paddingLeft: 20,
+			color      : "black"
+		},
+		formControl: {
+			width:"40%",
+			// marginBottom:"10px"
+			// margin  : theme.spacing(1),
+			// minWidth: 120,
+		},
+		selectEmpty: {
+			marginTop: theme.spacing(2),
+		},
+		bspaper:{
+			padding:"10px"
+		},
+		bsHeader:{
+			padding:"10px",
 
-  const [structs, setStructs] = useState<StructRespone[]>([])
-  const [prots1, setProts1]   = useState<{nomenclature:string[],strandid:string}[]>([])
-  const [prots2, setProts2]   = useState<{nomenclature:string[],strandid:string}[]>([])
+		}
+	}))();
 
-  const [struct1,setstruct1] = useState<string>('')
-  const [struct2,setstruct2] = useState<string>('')
-  const [strand1,setstrand1] = useState<string>('')
-  const [strand2,setstrand2] = useState<string>('')
+
+  const structs = useSelector(( state:AppState ) => state.structures.derived_filtered)
+
+  const [chainStructPair1, setChainStructPair1]   = useState< [ string|null , string |null ]>([null, null])
+  const [chainStructPair2, setChainStructPair2]   = useState< [ string|null , string |null ]>([null, null])
+
+  const [struct1,setstruct1] = useState<NeoStruct | null>(null)
+  const [struct2,setstruct2] = useState<NeoStruct | null>(null)
+  const [strand1,setstrand1] = useState<any>(null)
+  const [strand2,setstrand2] = useState<any>(null)
+
+
+
+  const [chains1, setChains1] = useState<{ noms: string[]; surface_ratio: number | null; strands: string; }[]>([])
+  const [chains2, setChains2] = useState<{ noms: string[]; surface_ratio: number | null; strands: string; }[]>([])
+
+  useEffect(() => {
+    if (struct1!==null){
+      setChains1(struct1.rps)
+    }
+  }, [struct1])
+
+  useEffect(() => {
+    if (struct2!==null){
+      setChains2(struct2.rps)
+    }
+  }, [struct2])
+
+
 
   const requestAlignment = (parameters: {
     struct1: string;
@@ -80,45 +157,75 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
   const getProteinsForStruct = (rcsbid:string, structs:StructRespone[]):{nomenclature:string[],strandid:string}[]=>{
-
     var sought = structs.filter(struct=>struct.struct.rcsb_id===rcsbid)[0]
     return sought.rps.map(rp=> ( { "nomenclature":rp.noms,"strandid": rp.strands } ))
   }
-  
 
-  useEffect(() => {
-      getNeo4jData('neo4j',
-     {endpoint:'get_all_structs',params:null}).then(
-         r=>{ 
-            console.log(r.data)     
-            setStructs(r.data)
-        },
-         e=>console.log("error on fetch")
-     )
-      return () => {
-      }
-  }, [])
 
+  const handleStructChange =( struct_number:number )=> (event: React.ChangeEvent<{ value: unknown }>, newvalue:NeoStruct) => {
+
+    if ( struct_number == 1 ){
+
+      if (newvalue === null){
+				setstruct1(null)
+				setChainStructPair1([chainStructPair1[0], null])
+      }else{
+        console.log("set tuple 1 value to ", newvalue.struct.rcsb_id);
+				setstruct1(newvalue)
+				setChainStructPair1([chainStructPair1[0], newvalue.struct.rcsb_id])
+			}
+        console.log("tuple 1", chainStructPair1);
+    }
+
+    if ( struct_number == 2 ){
+
+      if (newvalue === null){
+				setstruct2(null)
+				setChainStructPair2([chainStructPair2[0], null])
+      }else{
+        console.log("set tuple 2 value to ", newvalue.struct.rcsb_id);
+				setstruct2(newvalue)
+				setChainStructPair2([chainStructPair2[0], newvalue.struct.rcsb_id])
+			}
+        console.log("tuple 2", chainStructPair2);
+    }
+  }
+
+
+
+  const handleChainChange =( struct_number:number )=> (event: React.ChangeEvent<{ value: unknown }>, newvalue:{ noms: string[]; surface_ratio: number | null; strands: string; }) => {
+
+    if ( struct_number == 1 ){
+
+      if (newvalue === null){
+				setstrand1(null)
+				setChainStructPair1([null, chainStructPair1[1]])
+      }else{
+				setstrand1(newvalue)
+				setChainStructPair1([ newvalue.strands , chainStructPair1[0]])
+			}
+    }
+
+    if ( struct_number == 2 ){
+
+      if (newvalue === null){
+				setstrand2(null)
+				setChainStructPair2([null, chainStructPair2[1]])
+      }else{
+				setstrand2(newvalue)
+				setChainStructPair2([ newvalue.strands , chainStructPair2[0]])
+			}
+    }
+  }
 
   useEffect(() => {
       var options = {
-        moleculeId: 'none',
+        moleculeId  : 'none',
         hideControls: true
       }
       var viewerContainer = document.getElementById('molstar-viewer');
       viewerInstance.render(viewerContainer, options);
   }, [])
-
-  // const updateViewer = () =>{
-  //   console.log("Updating");
-    
-  //   viewerInstance.visual.update(
-  //    { url: 'https://www.ebi.ac.uk/pdbe/coordinates/1cbs/chains?entityId=1&asymId=A&encoding=bcif', format: 'cif', binary:false } )
-      
-  //     // {
-  //     // moleculeId:"1cbs"})
-  // }
-
 
   const pageData={
     title:"Subcomponents Alignment",
@@ -126,163 +233,154 @@ const useStyles = makeStyles((theme: Theme) =>
      for further processing and structural analyses."}
 
   return (
-    <div>
-      <Grid container xs={12} direction="column">
-        <Grid item xs={1} style={{ margin: 20 }}>
-          <WarningPopover content="This module is at proof-of-concept stage and is still in construction. Pairwise alignmnet and download of proteins from different structures is available." />
-        </Grid>
+		<Grid container xs={12} spacing={1} style={{ outline: "1px solid gray", height: "100vh" }} alignContent="flex-start">
 
         <Grid item xs={12}>
           <PageAnnotation {...pageData} />
         </Grid>
-        <Grid item container xs={12}>
+
+			<Grid item direction="column" xs={2} spacing={2} style={{ padding: "10px" }}>
 
 
-        <Grid item xs={2} className='alignment-dash'>
-          <Cart/>
-          <div>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="grouped-native-select">
-                Structure 1
-              </InputLabel>
-              <Select
-                native
-                defaultValue=""
-                id="struct1"
-                onChange={e => {
-                  setProts1(
-                    getProteinsForStruct(e.target.value as string, structs)
-                  );
-                  setstruct1(e.target.value as string);
-                }}
-              >
-                <option aria-label="None" value="" />
-                {structs.map(str => (
-                  <option value={str.struct.rcsb_id}>
-                    {str.struct.rcsb_id}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
+<Grid item style={{marginBottom:"40px"}}>   
 
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="grouped-select">Strand</InputLabel>
-              <Select
-                defaultValue=""
-                id="grouped-select"
-                onChange={e => setstrand1(e.target.value as string)}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
+				<Autocomplete
+					value={struct1}
+					className={classes.autocomplete}
+					options={structs }
+					getOptionLabel={(parent: NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
+					// @ts-ignore
+					onChange     = {handleStructChange(1)}
+					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
+					renderInput  = {(params) => <TextField {...params} label={`Structure 1`} variant="outlined" />}
+				/>
+				 <Autocomplete
+					value          = {strand1}
+					className      = {classes.autocomplete}
+					options        = {chains1}
+					getOptionLabel = {(chain:  {noms: string[]; surface_ratio: number | null; strands: string;} ) => { return chain.strands ? chain.strands  : "" }}
+					// @ts-ignore
+					onChange     = {handleChainChange(1)}
+					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.noms.length > 0 ? option.noms[0] :" "}</b> {option.strands}  </div>)}
+					renderInput  = {(params) => <TextField {...params} label={`Chain 1`} variant="outlined" />}
+				/> 
 
-                {prots1.map(rp => (
-                  <MenuItem value={rp.strandid}>
-                    {`${rp.strandid} (${rp.nomenclature})`}{" "}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
-          <Grid container direction="column" xs={4} item>
-            <Grid direction="column" xs={4} item></Grid>
-            <Grid direction="column" xs={4} item></Grid>
+</Grid>
+<Grid item style={{marginBottom:"40px"}}>   
 
-            <Grid direction="column" xs={4} item></Grid>
-          </Grid>
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="grouped-native-select">Structure 2</InputLabel>
+				<Autocomplete
+					value={struct2}
+					className={classes.autocomplete}
+					options={structs}
+					getOptionLabel={(parent: NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
+					// @ts-ignore
+					onChange     = {handleStructChange(2)}
+					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
+					renderInput  = {(params) => <TextField {...params} label={`Structure 2`} variant="outlined" />}
+				/>
+				 <Autocomplete
+					value          = {strand2}
+					className      = {classes.autocomplete}
+					options        = {chains2}
+					getOptionLabel = {(chain:  {noms: string[]; surface_ratio: number | null; strands: string;} ) => { return chain.strands ? chain.strands  : "" }}
+					// @ts-ignore
+					onChange     = {handleChainChange(2)}
+					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.noms.length > 0 ? option.noms[0] :" "}</b> {option.strands}  </div>)}
+					renderInput  = {(params) => <TextField {...params} label={`Chain 2`} variant="outlined" />}
+				/> 
 
-            <Select
-              native
-              defaultValue=""
-              id="struct2"
-              onChange={e => {
-                setProts2(
-                  getProteinsForStruct(e.target.value as string, structs)
-                );
-                setstruct2(e.target.value as string);
-              }}
-            >
-              <option aria-label="None" value="" />
-              {structs.map(str => (
-                <option value={str.struct.rcsb_id}>{str.struct.rcsb_id}</option>
-              ))}
-            </Select>
-          </FormControl>
+</Grid>
+{/* 
+<Grid item>  
+<Typography style={{padding:"10px"}}>
+  Select a pair to align with.
+</Typography>
+</Grid> */}
 
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="grouped-select">Strand</InputLabel>
-            <Select
-              defaultValue=""
-              id="grouped-select"
-              onChange={e => {
-                setstrand2(e.target.value as string);
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {prots2.map(rp => (
-                <MenuItem value={rp.strandid}>
-                  {`${rp.strandid} (${rp.nomenclature})`}{" "}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-                <DashboardButton/>
+<Grid item>  
 
 
-        </Grid>
+</Grid>
 
+<Grid item>  
 
-<Grid item container xs={10}>
-      {/* <button onClick={()=>{viewerInstance.visual.update({moleculeId:'1cbs'})}}> Update</button> */}
-      <button
+        <Button 
+        style={{marginBottom:"10px"}}
+        fullWidth
+        variant="outlined"
+
         onClick={() => {
+
           viewerInstance.visual.update({
             customData: {
               url:
-                `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${struct1}&struct2=${struct2}&strand1=${strand1}&strand2=${strand2}`,
+                `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
               format: "cif",
               binary: false,
             },
           });
-        }}
-      >
-        Request Aligned
-      </button>
+        }}>
+        Align
+        </Button>
+</Grid>
+<Grid item>  
 
-      <div id="molstar-viewer">Molstar Viewer</div>
-        <Button variant="outlined"
+        <Button 
+        style={{marginBottom:"10px"}}
+        fullWidth
+        variant="outlined"
           onClick={() => {
+
+
+            console.log("requesting ", chainStructPair1[1], chainStructPair2[1], chainStructPair1[0], chainStructPair2[0]);
+            if (chainStructPair1.includes(null) || chainStructPair2.includes(null)){
+              alert("Select chains to align.")
+              return
+            }
+
+
             viewerInstance.visual.update({
               customData: {
-                url: `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${struct1}&struct2=${struct2}&strand1=${strand1}&strand2=${strand2}`,
+                url   : `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
                 format: "cif",
                 binary: false,
               },
             });
-            console.log("requesting ", struct1, struct2, strand1, strand2);
+            console.log("requesting ", chainStructPair1[1], chainStructPair2[1], chainStructPair1[0], chainStructPair2[0]);
             requestAlignment({
-              struct1: struct1,
-              struct2: struct2,
-              strand1: strand1,
-              strand2: strand2,
+              struct1: chainStructPair1[1] as string,
+              struct2: chainStructPair2[1] as string,
+              strand1: chainStructPair1[0] as string,
+              strand2: chainStructPair2[0] as string,
             });
           }}>
-          Align
+          Download Aligned
         </Button>
+</Grid>
+{/* <Grid item>  
+          <Cart/>
+</Grid> */}
+<Grid item>  
+                <DashboardButton/>
+</Grid>
+
+
+
+          </Grid>
+
+<Grid item container xs={10}>
+      {/* <button onClick={()=>{viewerInstance.visual.update({moleculeId:'1cbs'})}}> Update</button> */}
+
+				<Grid item xs={12} >
+					<Paper variant="outlined" style={{ height: "50vw", position: "relative", padding: "10px" }} >
+						<div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
+					</Paper>
+				</Grid >
 
 </Grid>
 
-        </Grid>
-
-
       </Grid>
 
-    </div>
   );
 
 }

@@ -2,35 +2,20 @@ import React, { useEffect, useState } from 'react'
 import Grid from "@material-ui/core/Grid";
 import Typography from '@material-ui/core/Typography/Typography';
 import Paper from '@material-ui/core/Paper/Paper';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import List from '@material-ui/core/List/List';
-import ListItem from '@material-ui/core/ListItem/ListItem';
+import {  makeStyles, Theme } from '@material-ui/core/styles';
 import { DashboardButton } from '../../../materialui/Dashboard/Dashboard';
 import { Cart } from '../Cart/Cart';
 import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../../redux/store';
 import TextField from '@material-ui/core/TextField/TextField';
-import Select from '@material-ui/core/Select/Select';
-import FormControl from '@material-ui/core/FormControl/FormControl';
-import InputLabel from '@material-ui/core/InputLabel/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem/MenuItem';
 import { BindingInterface, BindingSite, LigandClass, NeoStruct } from '../../../redux/DataInterfaces';
-import LigandCatalogue from '../Ligand/LigandCatalogue';
-import { LigandHeroCard, StructHeroCard } from '../StructurePage/StructurePage';
 import { Button } from '@material-ui/core';
-import { CodeTwoTone, Toys } from '@material-ui/icons';
-import ReactDOM from 'react-dom';
 import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData';
 import fileDownload from 'js-file-download';
 import axios from 'axios';
-import { updateExternalModuleReference } from 'typescript';
-import { RibosomeStructure } from '../../../redux/RibosomeTypes';
-import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 
 import * as loadingicon from './../../../static/loading2.gif'
-
-
 
 
 // @ts-ignore
@@ -429,32 +414,21 @@ useEffect(() => {
 	return (
 		<Grid container xs={12} spacing={1} style={{ outline: "1px solid gray", height: "100vh" }} alignContent="flex-start">
 			<Paper variant="outlined" className={classes.pageDescription}>
-				<Grid item container xs={12}>
-					<Grid item xs={3} style={{ padding: "10px" }}>
 						<Typography variant="h4">
-							Ligand Binding Site
+							Ligands/Binding Sites
 				</Typography>
-					</Grid>
-					<Grid item xs={8} style={{ padding: "10px" }}>
-						<Typography paragraph >
-							Multiple classes of ligands, antibiotics and smaller molecules are bound to ribosomal structures represetned in RCSB.
-							Select a ligand and a structure of origin to project this binding site onto another structure in the database.
-			</Typography>
-					</Grid>
-				</Grid>
 			</Paper>
-			<Grid item direction="column" xs={3} spacing={2} style={{ padding: "10px" }}>
-				<Typography className={classes.bsHeader} variant="h5">Origin Binding Site</Typography>
+			<Grid item direction="column" xs={2} spacing={2} style={{ padding: "10px" }}>
+				<Typography className={classes.bsHeader} variant="h5">Original Structure</Typography>
 				<Autocomplete
 					value={cur_struct}
 					className={classes.autocomplete}
 					options={bsites_derived as any}
-
 					getOptionLabel={(parent: BindingSite) => { return parent.rcsb_id ? parent.rcsb_id + " : " + parent.citation_title : "" }}
 					// @ts-ignore
-					onChange={handleStructChange}
-					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b> {option.citation_title}  </div>)}
-					renderInput={(params) => <TextField {...params} label={`Binding Sites  ( ${bsites_derived != undefined ? bsites_derived.length : "0"} )`} variant="outlined" />}
+					onChange     = {handleStructChange}
+					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b> {option.citation_title}  </div>)}
+					renderInput  = {(params) => <TextField {...params} label={`Binding Sites  ( ${bsites_derived != undefined ? bsites_derived.length : "0"} )`} variant="outlined" />}
 				/>
 
 				<Autocomplete
@@ -465,7 +439,7 @@ useEffect(() => {
 					// @ts-ignore
 					onChange={handleLigChange}
 					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.ligand.chemicalId}</b> ({option.ligand.chemicalName}) </div>)}
-					renderInput={(params) => <TextField {...params} label={`Ligand (${lig_classes_derived != undefined ? lig_classes_derived.length : "0"})`} variant="outlined" />} />
+					renderInput={(params) => <TextField {...params} label={`Ligand (${lig_classes_derived !== undefined ? lig_classes_derived.length : "0"})`} variant="outlined" />} />
 
 
 				<Typography className={classes.bsHeader} variant="h5">Prediction</Typography>
@@ -501,10 +475,9 @@ useEffect(() => {
 
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button variant="outlined" fullWidth 
-					
 						style={ligstructPair.includes(null) ? { color: "gray" } : {}}
 						color={!ligstructPair.includes(null) ? 'primary' : 'default'}
-					onClick={() => {
+						onClick={() => {
 						if (ligstructPair.includes(null)) {
 							alert("Select a binding site.")
 							return
@@ -514,74 +487,52 @@ useEffect(() => {
 								</Button>
 				</Grid>
 
-
-
-
 				<Grid item style={{ marginBottom: "10px" }}>
-						<Button
-
-							variant={"outlined"}
-
-							fullWidth
-							style={ligstructPair.includes(null) ? { color: "gray" } : {}}
-							color={!ligstructPair.includes(null) ? 'primary' : 'default'}
-							onClick={() => { highlightInterface() }} >
-							Visualize Interface
-							</Button>
+					<Button
+						fullWidth
+						variant = {"outlined"}
+						style   = {ligstructPair.includes(null) ? { color: "gray" } : {}}
+						color   = {!ligstructPair.includes(null) ? 'primary' : 'default'}
+						onClick = {() => { highlightInterface() }}>
+						Visualize Interface
+					</Button>
 				</Grid>
-
-				<Grid item  >
+				{/* <Grid item  >
 					<Cart />
-				</Grid>
+				</Grid> */}
 				<Grid item xs={3} justify={"flex-start"} >
-
 					<DashboardButton />
 				</Grid>
 
 			</Grid>
-			<Grid item container spacing={2} direction="row" xs={9} style={{ height: "100%" }} alignContent="flex-start">
+			<Grid item container spacing={2} direction="row" xs={10} style={{ height: "100%" }} alignContent="flex-start">
 				<Grid item container xs={12} spacing={2} alignContent="flex-start" alignItems="flex-start" justify="flex-start" >
 
-<Grid item>
-</Grid>
+					<Grid item>
+					</Grid>
 
-<Grid item>
-					<Button variant="outlined" color={OrigProjection == 'origin' ? 'primary' : "default"} onClick={() => { setOrigProj('origin') }} > Structure  of Origin 
-					
+					<Grid item>
+						<Button variant="outlined" color={OrigProjection == 'origin' ? 'primary' : "default"} onClick={() => { setOrigProj('origin') }} > Structure  of Origin
 					{cur_struct === null ? "" : `( ${cur_struct.rcsb_id} )`}
-					
-					{loading_current ? <img style={{marginLeft:"10px", width:"30px",height:"10px"}} src={loadingicon}/> : null} 
-					</Button >
-</Grid>
-<Grid item>
-					<Button variant="outlined" 
-					disabled={curTarget ===null}
-					color={OrigProjection == 'projection' ? 'primary' : "default"} onClick={() => { setOrigProj('projection') }} > Projected    Site 
-					
+							{loading_current ? <img style={{ marginLeft: "10px", width: "30px", height: "10px" }} src={loadingicon} /> : null}
+						</Button >
+					</Grid>
 
-					
-					{curTarget === null ? "" : `( ${curTarget.struct.rcsb_id} )`}   
-					
-					{loading_target ? <img style={{marginLeft:"10px",width:"30px",height:"10px"}} src={loadingicon}/> : null}
-					</Button >
-</Grid>
+					<Grid item>
+						<Button variant="outlined"
+							disabled={curTarget === null}
+							color={OrigProjection == 'projection' ? 'primary' : "default"} onClick={() => { setOrigProj('projection') }} > Prediction
+					{curTarget === null ? "" : `( ${curTarget.struct.rcsb_id} )`}
+							{loading_target ? <img style={{ marginLeft: "10px", width: "30px", height: "10px" }} src={loadingicon} /> : null}
+						</Button >
+					</Grid>
 				</Grid>
-
-
 				<Grid item xs={12} >
-					<Paper variant="outlined" style={{ height:"50vw", position:"relative", padding: "10px" }} >
-						<div style={{  position:"relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
+					<Paper variant="outlined" style={{ height: "50vw", position: "relative", padding: "10px" }} >
+						<div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
 					</Paper>
 				</Grid >
-
-
-
 			</Grid>
-
-
-
-
-
 		</Grid>
 	)
 }

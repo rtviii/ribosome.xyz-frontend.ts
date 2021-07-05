@@ -80,6 +80,16 @@ export const StructHero=({d,inCart}:{ d:NeoStruct, inCart:boolean })=> {
 
 
 
+  const tryRequire = (path:string) => {
+  try {
+    if  ( require(`${path}`) ){
+
+      return true
+    }
+    } catch (err) {
+   return false
+  }
+};
 
   return (
     <Card className={classes.card} >
@@ -92,9 +102,16 @@ export const StructHero=({d,inCart}:{ d:NeoStruct, inCart:boolean })=> {
         >
           <CardMedia
             component="img"
-            alt="Ribosome Banner"
+            alt={""}
             height="150"
-            image={process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`}
+            image={
+
+              tryRequire(process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`) 
+              ? process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png` : 
+              process.env.PUBLIC_URL + `/ray_templates/_ray_3J9M.png`
+          }
+
+
           />
           <Grid
             container
@@ -115,7 +132,7 @@ export const StructHero=({d,inCart}:{ d:NeoStruct, inCart:boolean })=> {
             </Typography>
           </Grid>
           <Typography variant="body2" component="p" color="primary" className={classes.title}>
-            {truncate(d.struct.citation_title,100, 100)}
+            {truncate(d.struct.citation_title,70, 70)}
           </Typography>
 
 

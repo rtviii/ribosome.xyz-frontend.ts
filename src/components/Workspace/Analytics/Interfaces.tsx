@@ -198,10 +198,11 @@ const Interfaces:React.FC<ReduxProps> = (prop) => {
   const classes                                 = useSelectStyles();
   const [chosenLigand, setChosenLigand]         = React.useState<string>('');
   const [chosenLigandData, setChosenLigandData] = React.useState<Ligand>({
-    chemicalId      : "",
-    chemicalName    : "",
-    formula_weight  : 0,
-    pdbx_description: ""
+    chemicalId         : "",
+    chemicalName       : "",
+    number_of_instances: 0,
+    formula_weight     : 0,
+    pdbx_description   : ""
   });
   const [chosenStruct, setChosenStruct]         = React.useState<string>('');
 

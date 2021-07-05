@@ -22,7 +22,6 @@ import { getNeo4jData } from "../redux/AsyncActions/getNeo4jData";
 import {useHistory} from 'react-router-dom'
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-
 import {
   Card,
   Container,
@@ -399,6 +398,7 @@ const AcknPlug: React.FC = children => {
   );
 
 };
+
 const AcknowlegementsList = () => {
   const plugstyles = makeStyles({
     root: {

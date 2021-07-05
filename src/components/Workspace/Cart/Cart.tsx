@@ -1,38 +1,37 @@
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import './Cart.css'
-import React from 'react'
-import {  useDispatch, useSelector } from 'react-redux'
-import {  RNAProfile } from '../../../redux/DataInterfaces'
-import { AppState } from '../../../redux/store'
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import { RibosomalProtein, RibosomeStructure } from '../../../redux/RibosomeTypes'
-import DeleteIcon from '@material-ui/icons/Delete';
+import VisibilityIcon from                                             '@material-ui/icons/Visibility'               ;
+import                                                                 './Cart.css'
+import React from                                                      'react'
+import { useDispatch, useSelector } from                               'react-redux'
+import { RNAProfile } from                                             '../../../redux/DataInterfaces'
+import { AppState } from                                               '../../../redux/store'
+import { makeStyles } from                                             '@material-ui/core/styles'                    ;
+import List from                                                       '@material-ui/core/List'                      ;
+import ListItem from                                                   '@material-ui/core/ListItem'                  ;
+import ListItemIcon from                                               '@material-ui/core/ListItemIcon'              ;
+import ListItemSecondaryAction from                                    '@material-ui/core/ListItemSecondaryAction'   ;
+import ListItemText from                                               '@material-ui/core/ListItemText'              ;
+import IconButton from                                                 '@material-ui/core/IconButton'                ;
+import Button from                                                     '@material-ui/core/Button'                    ;
+import Dialog from                                                     '@material-ui/core/Dialog'                    ;
+import AppBar from                                                     '@material-ui/core/AppBar'                    ;
+import Toolbar from                                                    '@material-ui/core/Toolbar'                   ;
+import Typography from                                                 '@material-ui/core/Typography'                ;
+import CloseIcon from                                                  '@material-ui/icons/Close'                    ;
+import { RibosomalProtein, RibosomeStructure } from                    '../../../redux/RibosomeTypes'
+import DeleteIcon from                                                 '@material-ui/icons/Delete'                   ;
 import { cart_remove_item, toggle_cart, toggle_cart_item_select } from '../../../redux/reducers/Cart/ActionTypes'
-import {CartItem} from './../../../redux/reducers/Cart/ActionTypes'
-import enzymes from './../../../static/enzymes-icon.png'
-import rnas from './../../../static/rna_icon.svg'
-import proteins from './../../../static/protein_icon.svg'
-import Checkbox from '@material-ui/core/Checkbox';
-
-import {ChainParentPill} from './../RibosomalProteins/RibosomalProteinCard'
-import Grid from '@material-ui/core/Grid/Grid'
-import { isProt, isStruct, isRNA } from '../../../redux/reducers/Cart/CartReducer'
-import _ from 'lodash'
-import { generatePath, useHistory } from 'react-router';
-import { download_zip } from '../../../redux/AsyncActions/getNeo4jData';
-import { CSVDownload, CSVLink } from 'react-csv';
+import {CartItem} from                                                 './../../../redux/reducers/Cart/ActionTypes'
+import enzymes from                                                    './../../../static/enzymes-icon.png'
+import rnas from                                                       './../../../static/rna_icon.svg'
+import proteins from                                                   './../../../static/protein_icon.svg'
+import Checkbox from                                                   '@material-ui/core/Checkbox'                  ;
+import { ChainParentPill} from                                         './../RibosomalProteins/RibosomalProteinCard'
+import Grid from                                                       '@material-ui/core/Grid/Grid'
+import { isProt , isStruct, isRNA } from                               '../../../redux/reducers/Cart/CartReducer'
+import _ from                                                          'lodash'
+import { generatePath , useHistory } from                              'react-router'                                ;
+import { download_zip } from                                           '../../../redux/AsyncActions/getNeo4jData'    ;
+import { CSVDownload , CSVLink } from                                  'react-csv'                                   ;
 
 export const Cart= () => {
     const cartitems = useSelector(( state:AppState ) => state.cart.items)
