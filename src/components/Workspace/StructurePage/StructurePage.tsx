@@ -55,11 +55,11 @@ import { Cart } from "../Cart/Cart";
           })();
   return     <ListItem onClick={onClick}><Grid
       container
-      direction="row"
-      justify="space-between"
-      alignItems="center"
-      component="div"    >
-      <Typography variant="caption"  color="textSecondary" component="p" className={classes.annotation}>
+                  direction  = "row"
+                  justify    = "space-between"
+                  alignItems = "center"
+                  component  = "div"    >
+      <Typography variant    = "caption"  color = "textSecondary" component = "p" className = {classes.annotation}>
         {keyname}:
             </Typography>
       <Typography variant="caption" color="textPrimary" component="p" 
@@ -118,7 +118,9 @@ export const LigandHeroCard = ({lig, outline}:{ lig:Ligand, outline:boolean }) =
 }
 
 
-export const StructHeroCard =({rcsb_id, nomedia}:{ rcsb_id:string,nomedia:boolean })=>{
+export const StructHeroCard =({rcsb_id, nomedia}:{ 
+  rcsb_id:string,
+  nomedia:boolean })=>{
   
   const classes = ( makeStyles((theme:Theme)=>({
     card: {
@@ -195,7 +197,7 @@ export const StructHeroCard =({rcsb_id, nomedia}:{ rcsb_id:string,nomedia:boolea
             <CardBodyAnnotation keyname="Title" value={structdata.structure.citation_title} />
 
             <ListItem onClick={handleAuthorsToggle}><Grid
-              container
+          container
           direction="row"
           justify="space-between"
           alignItems="center"

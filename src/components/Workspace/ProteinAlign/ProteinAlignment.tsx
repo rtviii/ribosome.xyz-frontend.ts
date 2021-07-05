@@ -290,12 +290,12 @@ const useStyles = makeStyles((theme: Theme) =>
 				/> 
 
 </Grid>
-
+{/* 
 <Grid item>  
 <Typography style={{padding:"10px"}}>
   Select a pair to align with.
 </Typography>
-</Grid>
+</Grid> */}
 
 <Grid item>  
 
@@ -357,9 +357,9 @@ const useStyles = makeStyles((theme: Theme) =>
           Download Aligned
         </Button>
 </Grid>
-<Grid item>  
+{/* <Grid item>  
           <Cart/>
-</Grid>
+</Grid> */}
 <Grid item>  
                 <DashboardButton/>
 </Grid>

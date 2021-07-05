@@ -2,8 +2,6 @@ import React from "react";
 import "./StructHero.css";
 import { RibosomeStructure } from "../../../redux/RibosomeTypes";
 import { Link } from "react-router-dom";
-import { OverlayTrigger } from "react-bootstrap";
-import { Tooltip } from "react-bootstrap";
 import linkicon from './../../../static/linkicon.png'
 
 

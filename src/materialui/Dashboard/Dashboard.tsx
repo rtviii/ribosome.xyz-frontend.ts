@@ -11,11 +11,11 @@ import                                   './Dashboard.css'
 import ListItemText from                 '@material-ui/core/ListItemText'               ;
 import { ListSubheader } from            '@material-ui/core'                            ;
 import { useHistory } from               'react-router-dom'                             ;
-import enzymes from                      './../../static/enzymes-icon.png'
+import enzymes from                      './../../static/struct_icon.svg'
 import rnas from                         './../../static/rna_icon.svg'
 import CloseIcon from                    '@material-ui/icons/Close'                    ;
 import bookmark from                     './../../static/bookmark_icon.svg'
-import proteins from                     './../../static/protein_icon.svg'
+import proteins from                     './../../static/protein_icon_chain.svg'
 import ligands from                      './../../static/ligand_icon.svg'
 import table from                      './../../static/table.png'
 import home from                         './../../static/mainpage_icon.svg'
@@ -28,7 +28,7 @@ import { AppActions } from               '../../redux/AppActions'               
 import { connect } from                  'react-redux'                                  ;
 import SettingsIcon from                 '@material-ui/icons/Settings'                  ;
 import Paper from                        '@material-ui/core/Paper/Paper'                ;
-import { Cart, Item } from               '../../components/Workspace/Cart/Cart'        ;
+import {  Item } from               '../../components/Workspace/Cart/Cart'        ;
 import Button from                       '@material-ui/core/Button/Button'             ;
 import { toggle_cart } from              '../../redux/reducers/Cart/ActionTypes'       ;
 import Dialog from                       '@material-ui/core/Dialog/Dialog'             ;
@@ -189,16 +189,9 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
   ]
 
       for( var it of selectedItems) {
-        if(isStruct(it)){
-
-            summary.push([ 'riboxyz_workspace_structure',it.rcsb_id, it.citation_title, it.expMethod,`${ it.resolution }Å`,it.citation_year, it._organismId,it.pdbx_keywords_text  ])
-        }
-        if(isRNA(it)){
-            summary.push(['riboxyz_workspace_rna', it.description,it.struct + "_" + it.strand,it.parent_method, it.parent_resolution+"Å", it.parent_citation,it.parent_year,it.seq])
-        }
-        if(isProt(it)){
-            summary.push(['riboxyz_workspace_protein', it.parent_rcsb_id +"_" + it.entity_poly_strand_id, it.nomenclature,it.pfam_descriptions, it.pfam_descriptions,it.uniprot_accession, it.entity_poly_seq_one_letter_code])
-        }
+        if(isStruct(it)){summary.push([ 'riboxyz_workspace_structure', it.rcsb_id       ,       it.citation_title                         , it.expMethod    ,`${ it.resolution        }Å`, it.citation_year    , it._organismId      , it.pdbx_keywords_text              ])}
+        if(isRNA   (it)){summary.push([ 'riboxyz_workspace_rna'      , it.description   ,       it.struct                + "_" + it.strand, it.parent_method,    it.parent_resolution+"Å", it.parent_citation  , it.parent_year      , it.seq                             ])}
+        if(isProt  (it)){summary.push([ 'riboxyz_workspace_protein'  , it.parent_rcsb_id +"_" + it.entity_poly_strand_id                  , it.nomenclature ,    it.pfam_descriptions    , it.pfam_descriptions, it.uniprot_accession, it.entity_poly_seq_one_letter_code ])}
       }
 
       return  summary
@@ -254,8 +247,6 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
                             Download Archive
 
                     </Button>
-
-
                             <Button autoFocus variant="outlined" color="primary">
 
 {selectedItems.length > 0 ?
@@ -276,33 +267,24 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
                             <Item i={item} selected={_.includes(selectedItems,item)} />
                             )
                     })}
-
-
                 </List>
-
             </Dialog>
-
-
       <Divider />
 
       <List>
-
         <ListSubheader>Available Data</ListSubheader>
-
         <MenuItem key='new' icon={enzymes } menutext="Structures" linkto='/structs' />
         <MenuItem key='new' icon={proteins} menutext="Proteins"   linkto='/rps'     />
         <MenuItem key='new' icon={rnas    } menutext="RNA"        linkto='/rnas'    />
         <MenuItem key='new' icon={table    } menutext="Nomenclature"        linkto='/nomenclature'    />
         {/* <MenuItem key='new'  icon={enzymes} menutext="Ligands"    linkto='/ligands' /> */}
-
       </List>
       <Divider />
       <List>
-
         <ListSubheader>Tools</ListSubheader>
         <MenuItem key = 'new1' icon = {eye    } menutext = "Visualization" linkto = '/vis'          />
         <MenuItem key = 'new1' icon = {align  } menutext = "Alignment"     linkto = '/rpalign'      />
-        <MenuItem key = 'new1' icon = {ligands} menutext = "Binding Sites" linkto = '/bindingsites' />
+        <MenuItem key = 'new1' icon = {ligands} menutext = "Ligands/Binding Sites" linkto = '/bindingsites' />
       </List>
     </div>
   );

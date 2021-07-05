@@ -28,93 +28,100 @@ import { useHistory } from 'react-router-dom';
 const AcknowlegementsList = () => {
   const plugstyles = makeStyles({
     root: {
-      padding: 10,
       width: "100%",
+	//   outline:"1px solid gray"
     },
     ackntext: {
-      maxWidth: 100,
-      fontSize: 10,
+      fontSize: "10px",
     },
     acknlist: {
-      top: "40%",
+		width:"100%",
+		marginBottom:"10px"
+
+    //   top: "40%",
     },
     cardmedia: {
-      maxWidth: 100,
+		maxHeight: "90px",
+		maxWidth : "90px",
+		width    : "100%",
+		height   : "100%",
+
+    //   maxWidth: 100,
     },
   })();
   return (
 
-    <Grid item className={plugstyles.acknlist}>
+    <Grid item className={plugstyles.acknlist} xs={12} spacing={3}>
       <Typography variant="overline"> Acknowledgements</Typography>
       <Grid container xs={12} spacing={1}>
-        <Grid item justify="space-between">
-          <Paper elevation={1} className={plugstyles.root}>
-            <Grid container direction="row">
-              <Typography variant="caption">
-                Crystallographic strucutures and some of the annotations are
-                acquired from <a href={"https://www.rcsb.org/"}>RCSB PDB</a>.
-                <br />
-                <a href="https://data.rcsb.org/index.html#gql-api">
-                  RCSB GQL
-                </a>{" "}
-                greatly faciliatates the integration of data across structures
-              </Typography>
 
-              <img src={pdb} className={plugstyles.cardmedia} />
-            </Grid>
-          </Paper>
+		<Grid item container justify="space-between" className={plugstyles.root} xs={12} >
+
+			<Grid item xs={2} justify="center" alignItems="center" alignContent="center">
+				<img className={plugstyles.cardmedia} src={pdb} />
+			</Grid>
+
+			<Grid item xs={10}>
+				<Typography variant="caption" className={plugstyles.ackntext} >
+					Crystallographic strucutures and some of the annotations are
+					acquired from <a href={"https://www.rcsb.org/"}>RCSB PDB</a>.
+					<a href="https://data.rcsb.org/index.html#gql-api">
+						RCSB GQ9
+					</a>{" "}
+					greatly faciliatates the integration of data across structures
+				</Typography>
+
+			</Grid>
+		</Grid>
+
+
+		<Grid item container className={plugstyles.root}>
+				<Grid item xs={2} justify="center" alignItems="center" alignContent="center">
+				<img src={bioplogo} className={plugstyles.cardmedia} />
+				</Grid>
+				<Grid item xs={10}>
+
+				<Typography variant="caption"  className={plugstyles.ackntext}>
+					Parsing and search are performed via{" "} <a href="https://biopython.org/">Biopython.PDB</a>
+				</Typography>
+				</Grid>
+			</Grid>
+
+        <Grid item  container className={plugstyles.root}>
+				  <Grid item xs={2}>
+					  <img src={pfam} className={plugstyles.cardmedia} />
+				  </Grid>
+				  <Grid item xs={10}>
+					  <Typography variant="caption" className={plugstyles.ackntext}>
+						  <a href="https://pfam.xfam.org/">PFAM</a> Database provides
+						  context for grouping ribosomal proteins into families.
+					  </Typography>
+				  </Grid>
         </Grid>
-        <Grid item>
-          <Paper elevation={1} className={plugstyles.root}>
-            <Grid container direction="row">
-              <Typography variant="caption">
-                Parsing and search are performed via{" "}
-                <a href="https://biopython.org/">Biopython.PDB</a>
-              </Typography>
-              <img src={bioplogo} className={plugstyles.cardmedia} />
-            </Grid>
-          </Paper>
-        </Grid>
-        <Grid item>
-          <Paper elevation={1} className={plugstyles.root}>
-            <Grid container direction="row">
-              <Typography variant="caption">
-                <a href="https://pfam.xfam.org/">PFAM</a> Database provides
-                context for grouping ribosomal proteins into families.
-              </Typography>
-              <img src={pfam} className={plugstyles.cardmedia} />
-            </Grid>
-          </Paper>
-        </Grid>
-        <Grid item>
-          <Paper elevation={1} className={plugstyles.root}>
-            <Grid container direction="row">
-              <Typography variant="caption">
-                <p>
+
+        <Grid item  container className={plugstyles.root}>
+
+				  <Grid item xs={2}>
+                  <img src={ubc} className={plugstyles.cardmedia} />
+				  </Grid>
+
+				  <Grid item xs={10}>
+              <Typography variant="caption" className={plugstyles.ackntext}>
                   Developed by the <a href="https://kdaoduc.com/">Khanh Dao-Duc's group</a>{" "}
                   at the University of British Columbia.
-                </p>
-                <p>
                   In collaboration with{" "}
                   <a href="https://ww2.chemistry.gatech.edu/~lw26/index.html#PI">
                     Loren Williams' group
                   </a>{" "}
                   at Georgia Institute of Technology.
-                </p>
-                {/* <p className="in-dev"> */}
-                  This is still in active development phase. All usability and
+                   All usability and
                   conceptual suggestions would be very much appreciated. Thanks
                   for <a href="mailto:rtkushner@gmail.com">getting in touch</a>!
-                {/* </p> */}
 
-                <Grid justify="space-between" container direction="row">
-                  <img src={ubc} className={plugstyles.cardmedia} />
-                  <img src={gatech} className={plugstyles.cardmedia} />
-                </Grid>
               </Typography>
-            </Grid>
-          </Paper>
-        </Grid>{" "}
+				  </Grid>
+
+        </Grid>
       </Grid>
     </Grid>
   );
@@ -140,31 +147,28 @@ export const Home2 = () => {
 	return (
     <Grid
       container
-      justify="space-evenly"
-      alignContent="center"
-      xs={12}
+      justify      = "space-evenly"
+      alignContent = "center"
+      xs           = {12}
     >
-      <Grid item xs={3}className={classes.gridItem}>
-		<AcknowlegementsList />
-      </Grid>
+			<Grid item xs={3} className={classes.gridItem}>
+				<List>
+					<ListItem>
+						<DashboardButton />
+					</ListItem>
 
-      <Grid item xs={6} className={classes.gridItem} direction='column' 
-	  
-	container
-// spacing    = {0}
-// alignItems = "center"
-// justify    = "center"
-// style      = {{ minHeight: '100vh' }}
-	  >
+				</List>
+			</Grid>
+
+			<Grid item xs={6} className={classes.gridItem} container alignItems='center'  >
+
         <MainContent/>
+		<AcknowlegementsList />
+
+
       </Grid>
 
       <Grid item xs={3} > 
-      <List>
-        <ListItem >
-          <DashboardButton/>
-        </ListItem>
-      </List>
       </Grid>
 
     </Grid>
@@ -231,11 +235,9 @@ const MainContent = () =>{
 		  padding:"10px",
 		  "&:hover":{
 			// color:"red",
-			color:"blue",
             transform: 'translate(3px,3px)',
 			transition:"200ms",
 			boxShadow:"5px 5px 15px 1px rgba(0,0,0,0.51) "
-			
 		  },
 		  cursor:"pointer"
 	  }
@@ -246,70 +248,64 @@ const MainContent = () =>{
 
 return(
 
-	<Grid container item  style={{outline:"1px solid gray", padding:"10px"}} xs={12}>
+		<Grid container item style={{  padding: "10px" }} alignItems="flex-start"  alignContent='flex-start' xs={12} spacing={3}>
 
-
-<Grid item xs={4}>
-
-<img src={raylogo} className={mainstyles.logo} />
-</Grid>
-<Grid item xs={8}>
-
-<Typography variant='overline' className={mainstyles.titleline}>Welcome to RiboXYZ</Typography>
-
-<Typography variant="body1" className={mainstyles.titlelinesmall}> 
-	{`RiboXYZ is a database application that provides organized access to ribosome structures, with several tools for visualisation and study.`}
-</Typography>
-<Typography variant="body1" className={mainstyles.titlelinesmall}> 
-	{`The database is up-to-date with the worldwide Protein Data Bank (PDB), with a standardized nomenclature that allows for search and comparison of subcomponents across all the available structures.`}
-</Typography>
-<Typography variant="body1" className={mainstyles.titlelinesmall}> 
-	{`In addition to structured access to this data, the application has several tools to facilitatecomparison and further analysis, e.g. visualization, comparison and export facilities.	`}
-</Typography>
-
-
-
-</Grid>
-		<Grid item container xs={12} spacing={2} justify={"space-between"}>
 			<Grid item xs={4}>
-				<Paper className={mainstyles.tabpaper} onClick={()=>history.push('/structs')}>
-					<Grid xs={12} alignContent="center" alignItems="center" justify='center' container>
-						<Typography align="center" style={{ fontSize: "18px", width: "100%", fontFamily: "Optima" }}>  {structnumber} Ribosome Structures</Typography>
-						<Typography align="center" style={{ color: "gray", fontSize: "12px", width: "100%" }}>Sub 4 Å Resolution</Typography>
-						<Grid item>
-							<img className={mainstyles.tabicon} src={structicon} />
-						</Grid>
-					</Grid>
-				</Paper>
-			</Grid>
-			<Grid item xs={4}>
-				<Paper className={mainstyles.tabpaper} onClick={()=>history.push('/rps')}>
-					<Grid xs={12} alignContent="center" alignItems="center" justify='center' container>
-						<Typography align="center" style={{ fontSize: "18px", width: "100%", fontFamily: "Optima" }}>  {protn} Protein Chains</Typography>
-						<Typography align="center" style={{ color: "gray", fontSize: "12px", width: "100%" }}>Eukaryotic, Bacterial and Universal</Typography>
-						<Grid item>
-					<img className={mainstyles.tabicon} src={proteins} />
-						</Grid>
-					</Grid>
-				</Paper>
+				<img src={raylogo} className={mainstyles.logo} />
 			</Grid>
 
-			<Grid item xs={4} >
-				<Paper className={mainstyles.tabpaper} onClick={()=>history.push('/rnas')}>
-					<Grid xs={12} alignContent="center" alignItems="center" justify='center' container>
-						<Typography align="center" style={{ fontSize: "18px", width: "100%", fontFamily: "Optima" }}>  {rnan} RNA Chains</Typography>
-						<Typography align="center" style={{ color: "gray", fontSize: "12px", width: "100%" }}> rRNA, tRNA & mRNA</Typography>
-						<Grid item>
-					<img className={mainstyles.tabicon} src={rnas} />
-						</Grid>
-					</Grid>
-				</Paper>
+			<Grid item xs={8} alignContent='center' alignItems='center'>
+				<Typography variant='overline' className={mainstyles.titleline}>Welcome to RiboXYZ</Typography>
+
+				<Typography variant="body1" className={mainstyles.titlelinesmall}>
+					{`RiboXYZ is a database application that provides organized access to ribosome structures, with several tools for visualisation and study.`}
+				</Typography>
+				<Typography variant="body1" className={mainstyles.titlelinesmall}>
+					{`The database is up-to-date with the worldwide Protein Data Bank (PDB), with a standardized nomenclature that allows for search and comparison of subcomponents across all the available structures.`}
+				</Typography>
+				<Typography variant="body1" className={mainstyles.titlelinesmall}>
+					{`In addition to structured access to this data, the application has several tools to facilitatecomparison and further analysis, e.g. visualization, comparison and export facilities.	`}
+				</Typography>
 			</Grid>
 
+			<Grid item container  spacing={2} justify={"space-between"} >
+				<Grid item xs={4}>
+					<Paper className={mainstyles.tabpaper} onClick={() => history.push('/structs')}>
+						<Grid xs={12} alignContent="center" alignItems="center" justify='center' container>
+							<Typography align="center" style={{ fontSize: "18px", width: "100%", fontFamily: "Optima" }}>  {structnumber} Ribosome Structures</Typography>
+							<Typography align="center" style={{ color: "gray", fontSize: "12px", width: "100%" }}>Sub 4 Å Resolution</Typography>
+							<Grid item>
+								<img className={mainstyles.tabicon} src={structicon} />
+							</Grid>
+						</Grid>
+					</Paper>
+				</Grid>
+				<Grid item xs={4}>
+					<Paper className={mainstyles.tabpaper} onClick={() => history.push('/rps')}>
+						<Grid xs={12} alignContent="center" alignItems="center" justify='center' container>
+							<Typography align="center" style={{ fontSize: "18px", width: "100%", fontFamily: "Optima" }}>  {protn} Protein Chains</Typography>
+							<Typography align="center" style={{ color: "gray", fontSize: "12px", width: "100%" }}>Eukaryotic, Bacterial and Universal</Typography>
+							<Grid item>
+								<img className={mainstyles.tabicon} src={proteins} />
+							</Grid>
+						</Grid>
+					</Paper>
+				</Grid>
 
+				<Grid item xs={4} >
+					<Paper className={mainstyles.tabpaper} onClick={() => history.push('/rnas')}>
+						<Grid xs={12} alignContent="center" alignItems="center" justify='center' container>
+							<Typography align="center" style={{ fontSize: "18px", width: "100%", fontFamily: "Optima" }}>  {rnan} RNA Chains</Typography>
+							<Typography align="center" style={{ color: "gray", fontSize: "12px", width: "100%" }}> rRNA, tRNA & mRNA</Typography>
+							<Grid item>
+								<img className={mainstyles.tabicon} src={rnas} />
+							</Grid>
+						</Grid>
+					</Paper>
+				</Grid>
+			</Grid>
 		</Grid>
-	</Grid>
-)
+	)
 
 
 

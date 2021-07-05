@@ -18,8 +18,6 @@ import axios from 'axios';
 import * as loadingicon from './../../../static/loading2.gif'
 
 
-
-
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
 
@@ -417,11 +415,11 @@ useEffect(() => {
 		<Grid container xs={12} spacing={1} style={{ outline: "1px solid gray", height: "100vh" }} alignContent="flex-start">
 			<Paper variant="outlined" className={classes.pageDescription}>
 						<Typography variant="h4">
-							Ligand Binding Site
+							Ligands/Binding Sites
 				</Typography>
 			</Paper>
 			<Grid item direction="column" xs={2} spacing={2} style={{ padding: "10px" }}>
-				<Typography className={classes.bsHeader} variant="h5">Origin Binding Site</Typography>
+				<Typography className={classes.bsHeader} variant="h5">Original Structure</Typography>
 				<Autocomplete
 					value={cur_struct}
 					className={classes.autocomplete}
@@ -499,9 +497,9 @@ useEffect(() => {
 						Visualize Interface
 					</Button>
 				</Grid>
-				<Grid item  >
+				{/* <Grid item  >
 					<Cart />
-				</Grid>
+				</Grid> */}
 				<Grid item xs={3} justify={"flex-start"} >
 					<DashboardButton />
 				</Grid>
