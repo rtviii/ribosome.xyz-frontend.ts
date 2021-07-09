@@ -271,14 +271,12 @@ const useStyles = makeStyles({
   banclass:{
     fontSize:20
   },
-  // hover: {
-  //   "&:hover": {
-  //     transition: "0.05s all",
-  //     transform: "scale(1.01)",
-  //     cursor: "pointer",
-  //   }
+  actionButton:{
+    fontSize:12,
+    height:"100%",
+    padding:"5px"
 
-  // },
+  },
   fieldTypography: {
     fontSize: "12px"
   }
@@ -342,7 +340,7 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
   return (
-    <Card className={classes.root} variant="elevation" >
+    <Card className={classes.root} variant="elevation" elevation={2}>
 
       <CardContent>
         <Grid xs={12} container spacing={1}>
@@ -364,28 +362,25 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
               }}
               item
               container
-              xs           = {6}
-              alignItems   = "center"
-              alignContent = "center"
+              xs={6}
+              alignItems="center"
+              alignContent="center"
               spacing={2}
-              // justify="space-between"
             >
-
-
 
 
               <Grid item>
                 <Typography className={classes.banclass} onClick={() => { return prop.protein.nomenclature[0] ? history.push(`/rps/${prop.protein.nomenclature[0]}`) : "" }}>
-                  {prop.protein.nomenclature[0] ? prop.protein.nomenclature[0] : " "} 
+                  {prop.protein.nomenclature[0] ? prop.protein.nomenclature[0] : " "}
                 </Typography>
               </Grid>
 
-{prop.displayPill ? 
-              <Grid item >
-                <ChainParentPill strand_id={prop.protein.entity_poly_strand_id} parent_id={prop.protein.parent_rcsb_id} />
+              {prop.displayPill ?
+                <Grid item >
+                  <ChainParentPill strand_id={prop.protein.entity_poly_strand_id} parent_id={prop.protein.parent_rcsb_id} />
 
-              </Grid>:null
-}
+                </Grid> : null
+              }
 
             </Grid>
           </Grid>
@@ -399,24 +394,45 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
       </CardContent>
       <CardActions>
         <Grid container xs={12}>
-          <Grid container item xs={8}>
-            <Button 
-            
-              style={{textTransform:"none"}}
-            size="small" className={classes.fieldTypography} aria-describedby={id} onClick={handleClick}>
+          <Grid container item xs={8} spacing={1}>
+            <Grid item>
+
+            <Button
+              variant="outlined"
+            className={classes.actionButton}
+
+              style={{ textTransform: "none" }}
+              aria-describedby={id} onClick={handleClick}>
               Sequence ({prop.protein.entity_poly_seq_length}AAs)
             </Button>
+            </Grid>
+            <Grid item>
+
             <Button
-              style={{textTransform:"none"}}
-              size="small">
-              <a style={{ color: "black", textDecoration: "none" }}
-                href={`https://www.uniprot.org/uniprot/${prop.protein.uniprot_accession}`}>
-                Uniprot
-              </a>
+            className={classes.actionButton}
+
+              variant="outlined"
+              style={{ textTransform: "none" }}
+              onClick={() => {
+                // alert("hi")
+                var text = `>${prop.protein.parent_rcsb_id}_${prop.protein.entity_poly_strand_id} : ${prop.protein.nomenclature.length > 0 ? prop.protein.nomenclature[0] : ''} | ${prop.protein.pfam_descriptions} | uniprot_acc: ${prop.protein.uniprot_accession}\n${prop.protein.entity_poly_seq_one_letter_code}`
+                fileDownload(text, `${prop.protein.nomenclature.length > 0 ? prop.protein.nomenclature[0] : ''}_${prop.protein.parent_rcsb_id}_${prop.protein.entity_poly_strand_id}.fasta`)
+
+
+              }}>
+
+              Download Sequence(.fasta)
+              <GetAppIcon />
+
             </Button>
+            </Grid>
+
+            <Grid item>
             <Button
+            className={classes.actionButton}
               // className={classes.fieldTypography}
-              style={{textTransform:"none"}}
+              variant="outlined"
+              style={{ textTransform: "none" }}
               size="small"
               onClick={() =>
                 downloadChain
@@ -426,7 +442,7 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
                   )
               }
             >
-              Download Chain
+              Download Structure (.cif)
               {isFetching ? (
                 <RPLoader />
               ) : (
@@ -440,26 +456,53 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
                 />
               )}
             </Button>
-                <Button 
-                
-              style={{textTransform:"none"}}
-        size="small"
-                onClick={() => {  history.push({pathname:`/vis`, state:{banClass:prop.protein.nomenclature[0], parent:prop.protein.parent_rcsb_id} })}}>
-          Visualize
-                  <VisibilityIcon />
-          </Button>
+            </Grid>
+
+
+
+            <Grid item>
+
+            <Button
+
+            className={classes.actionButton}
+              variant="outlined"
+              style={{ textTransform: "none" }}
+              size="small"
+              onClick={() => { history.push({ pathname: `/vis`, state: { banClass: prop.protein.nomenclature[0], parent: prop.protein.parent_rcsb_id } }) }}>
+              Visualize
+              <VisibilityIcon />
+            </Button>
+            </Grid>
+
+
+
+
+            <Grid item>
+
+            <Button
+            className={classes.actionButton}
+              variant="outlined"
+              style={{ textTransform: "none" }}
+              size="small">
+              <a style={{ color: "black", textDecoration: "none" }}
+                href={`https://www.uniprot.org/uniprot/${prop.protein.uniprot_accession}`}>
+                Uniprot
+              </a>
+            </Button>
+            </Grid>
 
           </Grid>
           <Grid container item xs={4}>
             <Button
-              style={{textTransform:"none"}}
+            className={classes.actionButton}
+              style={{ textTransform: "none" }}
               onClick={() => {
 
                 prop.addCartItem(prop.protein)
 
               }} size="small" >
               Add to Workspace
-<img src={bookmark} style={{width:"30px",height:"30px"}}/>
+              <img src={bookmark} style={{ width: "30px", height: "30px" }} />
             </Button>
           </Grid>
         </Grid>
@@ -489,18 +532,6 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
           </Typography>
 
 
-<Button 
-
-style={{textTransform:"none"}}
-onClick={()=>{
-
-
-}}>
-
-  .fasta
-  <GetAppIcon/>
-
-</Button>
         </Grid>
       </Popover>
     </Card>

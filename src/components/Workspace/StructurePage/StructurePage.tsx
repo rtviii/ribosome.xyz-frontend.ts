@@ -450,7 +450,8 @@ struct           : obj.parent_rcsb_id,
 parent_method    : structdata!.expMethod,
 parent_resolution: structdata!.resolution,
 parent_citation  : structdata!.citation_title,
-parent_year      : structdata!.citation_year
+parent_year      : structdata!.citation_year,
+nomenclature     : obj.nomenclature
             }} 
             
             displayPill={false}/>

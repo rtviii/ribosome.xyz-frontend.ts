@@ -200,91 +200,87 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
 
   const list = (anchor: Anchor) => (
     <div
-      className={clsx(classes.list, {[classes.fullList]: anchor === 'left' || anchor === 'top',})}
+      className={clsx(classes.list, { [classes.fullList]: anchor === 'left' || anchor === 'top', })}
       role="presentation">
-      <MenuItem key='new'  icon={home} menutext="Home" linkto='/home'/>
-      
-    <ListItem button key={"wspace-dash"}  onClick={()=>{
-      dispatch(toggle_cart())
+      <MenuItem key='new' icon={home} menutext="Home" linkto='/home' />
 
-      // props.toggle_dash()
-    }
-      }>
-
-
-
-
-
-
-      <ListItemIcon>
-        {<img src={bookmark} style={{ height: "30px", width: "30px" }} />}
-      </ListItemIcon>
-
-        <ListItemText primary={"Workspace"} />
-
-    </ListItem>
-
-
-            <Dialog fullScreen open={open} onClose={handleClose}>
-                <AppBar className={cart_classes.appBar} color="default">
-                    <Toolbar>
-                        <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-                            <CloseIcon />
-                        </IconButton>
-                        <Button variant="text" color="default" disabled={true} style={{textTransform:"none", marginLeft:"10px"}}>
-                            {selectedItems.length} items selected
-                        </Button>
-                        <Button autoFocus  variant="outlined" color="primary" onClick={
-                            () => {
-                                if (selectedItems.length > 1) {
-                                    generate_selected_archive()
-                                } else { alert("Select items to download.") }
-                            }
-                        }
-
-                            style={{marginRight:"10px", textTransform:"none", textDecoration:"none", color:"black"}}
-                        >
-                            Download Archive
-
-                    </Button>
-                            <Button autoFocus variant="outlined" color="primary">
-
-{selectedItems.length > 0 ?
-
-                        <CSVLink data={generate_wspace_summary()} style={{textTransform:"none", textDecoration:"none", color:"blac"}}>
-                                Download Summary
-                        </CSVLink>:
-                        "Download Summary"
-}
-                            </Button>
-                    </Toolbar>
-                </AppBar>
-
-                <List dense={false}  >
-                    {cartitems.map((item, index) => {
-                        const labelId = `checkbox-list-label-${index}`;
-                        return (
-                            <Item i={item} selected={_.includes(selectedItems,item)} />
-                            )
-                    })}
-                </List>
-            </Dialog>
       <Divider />
 
       <List>
         <ListSubheader>Available Data</ListSubheader>
-        <MenuItem key='new' icon={enzymes } menutext="Structures" linkto='/structs' />
-        <MenuItem key='new' icon={proteins} menutext="Proteins"   linkto='/rps'     />
-        <MenuItem key='new' icon={rnas    } menutext="RNA"        linkto='/rnas'    />
-        <MenuItem key='new' icon={table    } menutext="Nomenclature"        linkto='/nomenclature'    />
+        <MenuItem key='new' icon={enzymes} menutext="Structures" linkto='/structs' />
+        <MenuItem key='new' icon={proteins} menutext="Proteins" linkto='/rps' />
+        <MenuItem key='new' icon={rnas} menutext="RNA" linkto='/rnas' />
+        <MenuItem key='new' icon={table} menutext="Nomenclature" linkto='/nomenclature' />
         {/* <MenuItem key='new'  icon={enzymes} menutext="Ligands"    linkto='/ligands' /> */}
       </List>
       <Divider />
       <List>
         <ListSubheader>Tools</ListSubheader>
-        <MenuItem key = 'new1' icon = {eye    } menutext = "Visualization" linkto = '/vis'          />
-        <MenuItem key = 'new1' icon = {align  } menutext = "Alignment"     linkto = '/rpalign'      />
-        <MenuItem key = 'new1' icon = {ligands} menutext = "Ligands/Binding Sites" linkto = '/bindingsites' />
+        <MenuItem key='new1' icon={eye} menutext="Visualization" linkto='/vis' />
+        <MenuItem key='new1' icon={align} menutext="Alignment" linkto='/rpalign' />
+        <MenuItem key='new1' icon={ligands} menutext="Ligands/Binding Sites" linkto='/bindingsites' />
+
+      <ListItem button key={"wspace-dash"} onClick={() => {
+        dispatch(toggle_cart())
+
+        // props.toggle_dash()
+      }
+      }>
+        <ListItemIcon>
+          {<img src={bookmark} style={{ height: "30px", width: "30px" }} />}
+        </ListItemIcon>
+
+        <ListItemText primary={"Workspace"} />
+
+      </ListItem>
+
+
+      <Dialog fullScreen open={open} onClose={handleClose}>
+        <AppBar className={cart_classes.appBar} color="default">
+          <Toolbar>
+            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+              <CloseIcon />
+            </IconButton>
+            <Button variant="text" color="default" disabled={true} style={{ textTransform: "none", marginLeft: "10px" }}>
+              {selectedItems.length} items selected
+            </Button>
+            <Button autoFocus variant="outlined" color="primary" onClick={
+              () => {
+                if (selectedItems.length > 1) {
+                  generate_selected_archive()
+                } else { alert("Select items to download.") }
+              }
+            }
+
+              style={{ marginRight: "10px", textTransform: "none", textDecoration: "none", color: "black" }}
+            >
+              Download Archive
+
+            </Button>
+            <Button autoFocus variant="outlined" color="primary">
+
+              {selectedItems.length > 0 ?
+
+                <CSVLink data={generate_wspace_summary()} style={{ textTransform: "none", textDecoration: "none", color: "blac" }}>
+                  Download Summary
+                </CSVLink> :
+                "Download Summary"
+              }
+            </Button>
+          </Toolbar>
+        </AppBar>
+
+        <List dense={false}  >
+          {cartitems.map((item, index) => {
+            const labelId = `checkbox-list-label-${index}`;
+            return (
+              <Item i={item} selected={_.includes(selectedItems, item)} />
+            )
+          })}
+        </List>
+      </Dialog>
+
       </List>
     </div>
   );

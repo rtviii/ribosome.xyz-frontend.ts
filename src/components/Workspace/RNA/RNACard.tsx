@@ -25,7 +25,7 @@ const useStyles = makeStyles({
 
   },
   root: {
-    width:"100%"
+    width: "100%"
 
   },
   bullet: {
@@ -39,51 +39,60 @@ const useStyles = makeStyles({
   pos: {
     marginBottom: 12,
   },
-  popover:{
-    padding:"20px"
+  popover: {
+    padding: "20px"
   },
-  hover:{
-      "&:hover": {
-        transition: "0.05s all",
-        transform: "scale(1.01)",
-        cursor: "pointer",
-      }
-  
+
+  actionButton:{
+    fontSize:12,
+    height:"100%",
+    padding:"5px"
+
+  },
+  hover: {
+    "&:hover": {
+      transition: "0.05s all",
+      transform: "scale(1.01)",
+      cursor: "pointer",
+    }
+
   }
 });
 
-interface OwnProps{
-  e:RNAProfile,
-  displayPill:boolean}
-type RNACardProps =  OwnProps
+interface OwnProps {
+  e: RNAProfile,
+  displayPill: boolean
+}
+type RNACardProps = OwnProps
 
-export const RNACard:React.FC<RNACardProps> = (prop) => {
+export const RNACard: React.FC<RNACardProps> = (prop) => {
 
-  const history                     = useHistory()
+  const history = useHistory()
   const [isFetching, setisFetching] = useState<boolean>(false);
 
-  const downloadChain = (pdbid:string, cid:string)=>{
+  const downloadChain = (pdbid: string, cid: string) => {
 
-    
-      var chain = cid;
-      if (cid.includes(",")){
-        chain = cid.split(',')[0]
-      }
+
+    var chain = cid;
+    if (cid.includes(",")) {
+      chain = cid.split(',')[0]
+    }
     getNeo4jData("static_files", {
-      endpoint  :  "cif_chain",
-      params    :  { structid: pdbid, chainid: chain },})
-    .then(
-      resp => {
-        setisFetching(false);
-        fileDownload(resp.data, `${pdbid}_${cid}.cif`);
-      },
-      error => {
-        alert(
-          "This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" + error
-        );
-        setisFetching(false);
-      }
-    );
+      endpoint: "cif_chain",
+      params: { structid: pdbid, chainid: chain },
+    })
+      .then(
+        resp => {
+          setisFetching(false);
+          fileDownload(resp.data, `${pdbid}_${cid}.cif`);
+        },
+        error => {
+          alert(
+            "This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" + error
+          );
+          setisFetching(false);
+        }
+      );
   }
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -101,36 +110,38 @@ export const RNACard:React.FC<RNACardProps> = (prop) => {
   const id = open ? 'simple-popover' : undefined;
 
   return (
-    <Card className={classes.root} variant="outlined">
+    <Card className={classes.root} variant="outlined" 
+    // onClick={()=>history.push(`/rnas/${prop.e.nomenclature}`)}
+    >
       <CardContent>
         <Grid xs={12} container spacing={1}>
           <Grid
             item
             style={{ borderBottom: "1px solid gray" }}
             container
-            xs           = {12}
-            alignContent = "center"
-            alignItems   = "center"
+            xs={12}
+            alignContent="center"
+            alignItems="center"
 
             spacing={2}
           >
 
             <Grid item >
-                <Typography
-                  onClick={() => {
-                  }}
-                  variant="body1"
-                >
+              <Typography
+                onClick={() => {
+                }}
+                variant="body1"
+              >
                 {prop.e.description}
-                </Typography>
-            </Grid>dd
+              </Typography>
+            </Grid>
             {
-              prop.displayPill?
+              prop.displayPill ?
 
-            <Grid item >
-              <ChainParentPill parent_id={prop.e.struct as string} strand_id={prop.e.strand as string}/>
+                <Grid item >
+                  <ChainParentPill parent_id={prop.e.struct as string} strand_id={prop.e.strand as string} />
 
-            </Grid>:""
+                </Grid> : ""
             }
           </Grid>
           <Grid item justify="space-between" container xs={12}>
@@ -142,62 +153,93 @@ export const RNACard:React.FC<RNACardProps> = (prop) => {
 
       <CardActions>
         <Grid container xs={12}>
-<Grid container item xs={8}>
-            <Button size="small" style={{textTransform:"none"}}aria-describedby={id} onClick={handleClick}>
-              Sequence (<i>{( prop.e.seq as string ).length} NTs</i>)
+          <Grid container item xs={8}spacing={1}>
+            <Grid item>
+            <Button 
+            variant="outlined"
+            className={classes.actionButton}
+            size="small" style={{ textTransform: "none" }} aria-describedby={id} onClick={handleClick}>
+              Sequence (<i>{(prop.e.seq as string).length} NTs</i>)
             </Button>
+               </Grid>
+
+
+
+
+            <Grid item>
             <Button
+            variant="outlined"
               size="small"
-              style={{textTransform:"none"}}
+            className={classes.actionButton}
+              style={{ textTransform: "none" }}
               onClick={() =>
                 downloadChain(
-                   prop.e.struct as string ,
+                  prop.e.struct as string,
                   prop.e.strand as string
                 )
               }
             >
-              Download Strand 
+              Download Structure (.cif)
 
-              <GetAppIcon/>
+              <GetAppIcon />
             </Button>
+               </Grid>
 
-</Grid>
-<Grid container item xs={4}>
-            <Button  
-            
-            onClick={()=>{
-              dispatch(cart_add_item(prop.e))
-            }}
-            
-            size="small" 
-            
-            style={{textTransform:"none"}}
+            <Grid item>
+
+      <Button
+
+        variant="outlined"
+        className={classes.actionButton}
+        style={{ textTransform: "none" }}
+        onClick={() => {
+
+
+        var text = `>${prop.e.struct}_${prop.e.strand}  | ${prop.e.description} | rna`
+        fileDownload(text, `rRNA_${prop.e.struct}_${prop.e.strand}.fasta`)
+        }}>
+        Download Sequence (.fasta)
+        <GetAppIcon />
+
+      </Button>
+
+               </Grid>
+
+          </Grid>
+          <Grid container item xs={4}>
+            <Button
+            className={classes.actionButton}
+
+              onClick={() => {
+                dispatch(cart_add_item(prop.e))
+              }}
+
+              size="small"
+
+              style={{ textTransform: "none" }}
             >
               Add to Workspace
-
-<img src={bookmark} style={{width:"30px",height:"30px"}}/>
+              <img src={bookmark} style={{ width: "30px", height: "30px" }} />
             </Button>
-            </Grid>
+          </Grid>
         </Grid>
       </CardActions>
 
-
-
       <Popover
-        id           = {id}
-        open         = {open}
-        anchorEl     = {anchorEl}
-        onClose      = {handleClose}
-        className    = {classes.popover}
-        anchorOrigin = {{
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        className={classes.popover}
+        anchorOrigin={{
           vertical: "bottom",
           horizontal: "center",
         }}
         transformOrigin={{
           vertical: "top",
           horizontal: "center",
-        }}
-      >
+        }}>
+
         <Grid container xs={12}>
           <Typography
             style={{ width: "400px", wordBreak: "break-word" }}
@@ -206,21 +248,6 @@ export const RNACard:React.FC<RNACardProps> = (prop) => {
           >
             {prop.e.seq}
           </Typography>
-
-
-<Button 
-
-style={{textTransform:"none"}}
-onClick={()=>{
-
-
-}}>
-
-  .fasta
-  <GetAppIcon/>
-
-</Button>
-
 
         </Grid>
       </Popover>
