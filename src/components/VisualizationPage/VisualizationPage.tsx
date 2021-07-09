@@ -661,11 +661,8 @@ return (
 
       <Grid item  xs={12} style={{ padding: "10px"}}>
         <Paper variant="outlined" className={classes.pageDescription}>
-          <Typography paragraph >
             <Typography variant="h4">
               Visualization
-          </Typography>
-          Please select an element to inspect. Entire structures and protein classes are avaialable.
           </Typography>
         </Paper>
       </Grid>
@@ -744,13 +741,16 @@ return (
 
     <Grid item container direction="row" xs={9} style={{ height: "100%" }}>
 
-      <Grid item style={{ width: "100%", height: "100%" }}>
+<Grid item xs={12}> 
+
+					<Paper variant="outlined" style={{ height: "50vw", position: "relative", padding: "10px" }} >
         <div style={{
           width: "100%",
           height: "100%"
         }}
           id="molstar-viewer">Molstar     Viewer     </div             >
-      </Grid>:
+</Paper>
+</Grid>
       </Grid>
 
 

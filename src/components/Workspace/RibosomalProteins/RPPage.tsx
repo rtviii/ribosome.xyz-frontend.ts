@@ -33,6 +33,7 @@ import DialogContent from                                                       
 import { CSVLink } from                                                                   "react-csv"                                            ;
 import Divider from                                                                       "@material-ui/core/Divider/Divider"                    ;
 import DialogContentText from                                                             "@material-ui/core/DialogContentText/DialogContentText";
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 
 
@@ -167,8 +168,6 @@ proteins.map(prot => bulkDownloads.push([prot.parent_rcsb_id, prot.entity_poly_s
 
 
 
-
-
   // * -------tax filter --------
 
 const [ data, setDropdownData ] = useState([
@@ -245,6 +244,12 @@ useEffect(() => {
   useEffect(() => {
     dispatch(ProteinClassFilterChangeAC(method,"EXPERIMENTAL_METHOD"))
   }, [method])
+
+
+
+  // useEffect(() => {
+    
+  // }, [])
 
   return !isloading ? (
     <Grid xs={12} container>
@@ -323,10 +328,11 @@ useEffect(() => {
 
         <Grid item container direction="row" spacing={1} xs={10} alignContent="flex-start" alignItems="flex-start">
 
+
+{
+  prop.current_rps.length === 0 ? <LinearProgress/> : null
+}
            
-          <Grid item xs={12}>  
-          </Grid>
-          
           {prop.current_rps
             .slice((prop.currentpage - 1) * 20, prop.currentpage * 20)
             .map((protein: RibosomalProtein) => {
@@ -340,8 +346,9 @@ useEffect(() => {
       </Grid>
     </Grid>
   ) : (
-    <Backdrop open={true} 
-    />
+    
+    <Backdrop open={true} />
+
   );
 };
 

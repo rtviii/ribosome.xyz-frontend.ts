@@ -23,7 +23,6 @@ import TextField from                                                  "@materia
 import { AppState } from                                               "../../../redux/store"                                  ;
 import { RNACard } from                                                    "./RNACard"                                             ;
 import Pagination from                                                 "@material-ui/lab/Pagination/Pagination"                ;
-import LinearProgress from                                             "@material-ui/core/LinearProgress"                      ;
 import _ from                                                          "lodash"                                                ;
 import DropdownTreeSelect from                                         "react-dropdown-tree-select"                            ;
 import Dialog from                                                     "@material-ui/core/Dialog/Dialog"                       ;
@@ -37,6 +36,10 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup/ToggleButtonGr
 import ToggleButton from "@material-ui/lab/ToggleButton/ToggleButton";
 import { useHistory } from "react-router";
 import { useParams } from "react-router-dom";
+import Backdrop from "../Backdrop";
+import { Spinner } from "react-bootstrap";
+import WorkInProgress from "../WorkInProgress";
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 const pageData = {
   title: "RNA",
@@ -579,15 +582,15 @@ setr35(whole[35])
 }, [whole])
 
 const indexlabels = [ 
-  [5, '5S RNA'     ]
-, [58, '5.8S RNA']
-, [12, '12S RNA' ]
-, [16, '16S RNA' ]
-, [21, '21S RNA' ]
-, [23, '23S RNA' ]
-, [25, '25S RNA' ]
-, [28, '28S RNA' ]
-, [35, '35S RNA' ]
+  [5, '5SrRNA'     ]
+, [58, '5.8SrRNA']
+, [12, '12SrRNA' ]
+, [16, '16SrRNA' ]
+, [21, '21SrRNA' ]
+, [23, '23SrRNA' ]
+, [25, '25SrRNA' ]
+, [28, '28SrRNA' ]
+, [35, '35SrRNA' ]
                   ];
 return (
 <>
@@ -605,44 +608,43 @@ return (
     <TabPanel value={value} index={0}>
       <List>
         {/* {r5.map(r=><div>{r.seq.length}</div>)} */}
-        {classr5.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+        {classr5.length>0 ? classr5.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <LinearProgress/>}
       </List>
     </TabPanel>
 
     <TabPanel value={value} index={1}>
       <List>
-        {classr5_8.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+        {classr5_8.length > 0 ? classr5_8.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>) :<LinearProgress/>}
       </List>
     </TabPanel>
-
     <TabPanel value={value} index={2}>
       <List>
-        {classr12.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+        {classr12.length>0?classr12.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
       </List>
     </TabPanel>
     <TabPanel value={value} index={3}>
       <List>
-        {classr16.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+        {classr16.length>0?classr16.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
       </List>
     </TabPanel>
     <TabPanel value={value} index={4}>
       <List>
-        {classr21.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+        {classr21.length> 0 ? classr21.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
       </List>
     </TabPanel>
     <TabPanel value={value} index={5}>
       <List>
-        {classr23.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+        {classr23.length> 0 ? classr23.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
       </List>
     </TabPanel>
     <TabPanel value={value} index={6}>
       <List>
-        {classr25.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)} 
+        {classr25.length> 0 ? classr25.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/> }
       </List>
     </TabPanel>
     <TabPanel value={value} index={7}>
       <List>
-        {classr28.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+        {classr28.length> 0 ? classr28.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
       </List>
     </TabPanel>
 

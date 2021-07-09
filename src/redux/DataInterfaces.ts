@@ -1,4 +1,4 @@
-import {  RibosomeStructure,  RibosomalProtein, rRNA, Ligand, BanClass} from "./RibosomeTypes";
+import {  RibosomeStructure,  RibosomalProtein, rRNA, Ligand, BanClass, RNAClass} from "./RibosomeTypes";
 
 // DataInterfaces contains declarations for most datatypes that the application
 // uses. Some are imported from RibosomeTypes and constitute non-composite types that also resemble neo4j-schema
@@ -73,6 +73,7 @@ export interface RNAProfile {
   parent_resolution: number
   parent_method    : string
   parent_citation  : string
+  nomenclature     : RNAClass[]
 
 }
 

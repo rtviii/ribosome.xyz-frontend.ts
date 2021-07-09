@@ -105,7 +105,6 @@ export const StructHero=({d,inCart}:{ d:NeoStruct, inCart:boolean })=> {
             alt={""}
             height="150"
             image={
-
               tryRequire(process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`) 
               ? process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png` : 
               process.env.PUBLIC_URL + `/ray_templates/_ray_3J9M.png`
