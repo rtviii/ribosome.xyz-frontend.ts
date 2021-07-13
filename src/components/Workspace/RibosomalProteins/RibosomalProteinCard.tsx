@@ -33,14 +33,12 @@ import { CardBodyAnnotation        }                           from '../Structur
 import   LinearProgress                                        from '@material-ui/core/LinearProgress'               ;
 import { flattenDeep               }                           from 'lodash'                                         ;
 
-
 const RPLoader = () => (
   <div className="prot-loading">
     <span>Parsing file..</span>
     <img src={loading} />
   </div>
 );
-
 
 export const ChainParentPill = ({ strand_id, parent_id }: { strand_id: string, parent_id: string }) => {
   const useStyles = makeStyles((theme: Theme) =>
@@ -287,18 +285,13 @@ interface OwnProps {
   protein: RibosomalProtein
   displayPill: boolean
 }
-
 interface StateProps {
   allFilters: FiltersReducerState
 }
-
 interface DispatchProps {
   handleFilterChange: (allFilters: FiltersReducerState, filtertype: FilterType, newavalue: number | string | number[] | string[]) => void
   addCartItem: (item: CartItem) => void
 }
-
-
-
 type RibosomalProtCardProps = DispatchProps & StateProps & OwnProps
 const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
   const history                     = useHistory()
@@ -537,19 +530,14 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
     </Card>
   );
 }
-
-
 const mapstate = (appstate: AppState, ownprops: OwnProps): StateProps => ({
   allFilters: appstate.filters,
 });
-
 const mapdispatch = (dispatch: Dispatch<AppActions>, ownprops: any): DispatchProps =>
 ({
   handleFilterChange: (allfilters, filttype, newval) => dispatch(filterChangeActionCreator(allfilters, filttype, newval)),
   addCartItem: (item) => dispatch(cart_add_item(item))
 })
-
 const RibosomalProteinCard = connect(mapstate, mapdispatch)(_RibosomalProteinCard)
-
 export default RibosomalProteinCard;
 

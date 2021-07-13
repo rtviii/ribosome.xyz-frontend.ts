@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from                             "react"                                                 ;
+import React, { useEffect, useReducer, useState } from                             "react"                                                 ;
 import                                                                 "./RNACatalogue.css"                                    ;
 import PageAnnotation from                                             "./../Display/PageAnnotation"                           ;
 import Grid from                                                       "@material-ui/core/Grid"                                ;
@@ -12,7 +12,7 @@ import List from                                                       "@materia
 import ListItem from                                                   "@material-ui/core/ListItem"                            ;
 import { connect, useDispatch, useSelector } from                      "react-redux"                                           ;
 import { AppActions } from                                             "../../../redux/AppActions"                             ;
-import { gotopage_rna, RnaClassFilterChangeAC, select_rna_class, sort_by_seqlen } from "../../../redux/reducers/RNA/ActionTypes"               ;
+import { gotopage_rna, RnaClassFilterChangeAC, rna_sort_change, select_rna_class, sort_by_seqlen } from "../../../redux/reducers/RNA/ActionTypes"               ;
 import { Dispatch } from                                               "redux"                                                 ;
 import { DashboardButton } from                                        "../../../materialui/Dashboard/Dashboard"               ;
 import makeStyles from                                                 "@material-ui/core/styles/makeStyles"                   ;
@@ -118,10 +118,22 @@ const BulkDownloadMenu=()=> {
   );
 }
 
+
 type  ReduxProps                        = {rna_strands: RNAProfile[], current_page: number, page_total:number}
 type  DispatchProps                     = {gotopage: (pid:number)=>void}
 const RNACatalogue: React.FC<ReduxProps & DispatchProps> = (prop) => {
 
+const rnatabsstyles = (makeStyles((theme: Theme) => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+  },
+  sortbutton:{
+    marginLeft:"10px",
+    fontSize:"12px"
+
+  }
+})))()
   const dispatch = useDispatch();
   const [search, setSearch] = useState<string>("")
   useEffect(() => { dispatch(RnaClassFilterChangeAC(search, "SEARCH")) }, [search])
@@ -217,6 +229,7 @@ useEffect(() => {
     dispatch(RnaClassFilterChangeAC(method,"EXPERIMENTAL_METHOD"))
   }, [method])
 
+const [, forceUpdate] = useReducer(x => x + 1, 0);
   return (
     <Grid container xs={12} spacing={1}>
       <Grid item xs={12}>
@@ -236,7 +249,6 @@ useEffect(() => {
         <ListItem key={"year"}>
           <ValueSlider {...{filter_type: "YEAR",max:2021,min:2012,name:"Deposition Date", step:1, action_to_dispatch:RnaClassFilterChangeAC}}/>
         </ListItem>
-
 
         <ListItem key={"method-toggle"} >
     <ToggleButtonGroup
@@ -318,18 +330,37 @@ Sort By Sequence Length
       console.log("DISPATCHED ON MOUNT:no");
               }}
 
-                color={rnaSubgroup == 'exogenous' ? 'primary' : 'default'}> Non-ribosomal RNA</Button>
+                color={rnaSubgroup === 'exogenous' ? 'primary' : 'default'}> Non-ribosomal RNA</Button>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item container xs={12} justify="space-between" alignContent="center" alignItems="center">
 
 
+<Grid item>
               <Pagination
                 count={pages_total}
                 page={current_page}
                 variant="outlined"
                 color="primary"
                 onChange={(e, page) => { dispatch(gotopage_rna(page)) }} />
+</Grid>
+<Grid item >
+
+  <Button variant={"outlined"}  color="default"  className={rnatabsstyles.sortbutton}
+  onClick={()=>{    dispatch(rna_sort_change("PDB_CODENAME")) ;forceUpdate()}}
+  > Sort by PDB Codename</Button>
+  <Button variant={"outlined"}  color="default"className={rnatabsstyles.sortbutton}
+
+  onClick={()=>{    dispatch(rna_sort_change("YEAR")) ;forceUpdate()}}
+  > Sort by Year</Button>
+  <Button variant={"outlined"}  color="default"className={rnatabsstyles.sortbutton}
+
+  onClick={()=>{    dispatch(rna_sort_change("RESOLUTION")) ;forceUpdate()}}
+  > Sort by Resolution</Button>
+  <Button variant={"outlined"}  color="default"className={rnatabsstyles.sortbutton}
+  onClick={()=>{    dispatch(rna_sort_change("SEQLEN")) ;forceUpdate()}}
+  > Sort by Sequence Length</Button>
+</Grid>
 
             </Grid>
           </Grid>
@@ -556,30 +587,43 @@ const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
   setValue(newValue);
 };
 
-const whole   = useSelector(( state:AppState ) => state.rna.rna_classes_derived)
+// const whole   = useSelector(( state:AppState ) => state.rna.rna_classes_derived)
 
-const [classr5, setr5]     = useState<RNAProfile[]>([])
-const [classr5_8, setr5_8] = useState<RNAProfile[]>([])
-const [classr12 , setr12 ] = useState<RNAProfile[]>([])
-const [classr16 , setr16 ] = useState<RNAProfile[]>([])
-const [classr21 , setr21 ] = useState<RNAProfile[]>([])
-const [classr23 , setr23 ] = useState<RNAProfile[]>([])
-const [classr25 , setr25 ] = useState<RNAProfile[]>([])
-const [classr28 , setr28 ] = useState<RNAProfile[]>([])
-const [classr35 , setr35 ] = useState<RNAProfile[]>([])
+// const [classr5, setr5]     = useState<RNAProfile[]>([])
+// const [classr5_8, setr5_8] = useState<RNAProfile[]>([])
+// const [classr12 , setr12 ] = useState<RNAProfile[]>([])
+// const [classr16 , setr16 ] = useState<RNAProfile[]>([])
+// const [classr21 , setr21 ] = useState<RNAProfile[]>([])
+// const [classr23 , setr23 ] = useState<RNAProfile[]>([])
+// const [classr25 , setr25 ] = useState<RNAProfile[]>([])
+// const [classr28 , setr28 ] = useState<RNAProfile[]>([])
+// const [classr35 , setr35 ] = useState<RNAProfile[]>([])
 
-useEffect(() => {
-setr5(whole[5])
-setr5_8(whole["5.8"])
-setr12(whole[12])
-setr16(whole[16])
-setr21(whole[21])
-setr23(whole[23])
-setr25(whole[25])
-setr28(whole[28])
-setr35(whole[35])
+// const whole   = useSelector(( state:AppState ) => state.rna.rna_classes_derived)
 
-}, [whole])
+const classr5   = useSelector(( state:AppState ) => state.rna.rna_classes_derived[5])
+const classr5_8 = useSelector(( state:AppState ) => state.rna.rna_classes_derived["5.8"])
+const classr12  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[12])
+const classr16  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[16])
+const classr21  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[21])
+const classr23  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[23])
+const classr25  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[25])
+const classr28  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[28])
+const classr35  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[35])
+// useEffect(() => {
+//   console.log("Changed derived classes");
+  
+// // setr5(whole[5])
+// // setr5_8(whole["5.8"])
+// // setr12(whole[12])
+// // setr16(whole[16])
+// // setr21(whole[21])
+// // setr23(whole[23])
+// // setr25(whole[25])
+// // setr28(whole[28])
+// // setr35(whole[35])
+
+// }, [whole])
 
 const indexlabels = [ 
   [5, '5SrRNA'     ]
@@ -608,7 +652,7 @@ return (
     <TabPanel value={value} index={0}>
       <List>
         {/* {r5.map(r=><div>{r.seq.length}</div>)} */}
-        {classr5.length>0 ? classr5.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <LinearProgress/>}
+        {classr5.length >0 ? classr5.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <LinearProgress/>}
       </List>
     </TabPanel>
 
@@ -661,5 +705,5 @@ const mapdispatch = ( dispatch:Dispatch<AppActions>, ownprops:any):DispatchProps
 gotopage:(pid) => dispatch(gotopage_rna(pid))
 })
 
-export default connect(null, mapdispatch)( RNACatalogue );// 
+export default connect(null, mapdispatch)( RNACatalogue );
 

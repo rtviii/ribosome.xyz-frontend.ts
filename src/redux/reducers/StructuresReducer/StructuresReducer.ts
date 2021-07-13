@@ -254,11 +254,11 @@ export const _StructuresReducer = (
     var sorted = state.derived_filtered.sort(
       state.sorts_registry[action.sortType].compareFn
       )
-
     var newSortRegistry = {...state.sorts_registry}
     newSortRegistry[action.sortType].reverse =!newSortRegistry[action.sortType].reverse
+
     if(newSortRegistry[action.sortType].reverse){
-    sorted= sorted.reverse()
+      sorted= sorted.reverse()
     }
 
     

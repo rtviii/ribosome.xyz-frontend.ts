@@ -88,7 +88,7 @@ return (
               Protein Nomenclature reference table
         </Typography>
             <Typography variant="body2">
-              In accordance with the <a href="https://bangroup.ethz.ch/research/nomenclature-of-ribosomal-proteins.html">Ban, Nenad, et al. "<i>A new system for naming ribosomal proteins.</i>" Current opinion in structural biology 24 (2014): 165-169.     </a>
+              Proteins of the database adopt Ban et al.'s naming system (Current opinion in structural biology, 2014). <a href="https://bangroup.ethz.ch/research/nomenclature-of-ribosomal-proteins.html">See paper</a> for more details.
             </Typography>
           </Paper>
           :

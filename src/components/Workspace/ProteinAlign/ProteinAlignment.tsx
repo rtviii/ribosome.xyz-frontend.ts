@@ -1,29 +1,19 @@
-import React, { useEffect, useState, useRef} from 'react';
+import React, { useEffect, useState} from 'react';
 import Typography from '@material-ui/core/Typography/Typography';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData';
-import { RibosomalProtein, RibosomeStructure } from '../../../redux/RibosomeTypes';
+import {  RibosomeStructure } from '../../../redux/RibosomeTypes';
 import Button from '@material-ui/core/Button';
 import fileDownload from 'js-file-download';
 import Grid from '@material-ui/core/Grid';
 import PageAnnotation from '../Display/PageAnnotation';
-import { WarningPopover } from './../WorkInProgressChip'
 import { DashboardButton } from '../../../materialui/Dashboard/Dashboard';
-import { Cart } from '../Cart/Cart';
-import List from '@material-ui/core/List/List';
-import { Divider, ListItem } from 'material-ui';
 import { AppState } from '../../../redux/store';
 import { useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete';
 import TextField from '@material-ui/core/TextField/TextField';
 import Paper from '@material-ui/core/Paper/Paper';
 import { NeoStruct } from '../../../redux/DataInterfaces';
-
-
 
 
 type StructRespone = {

@@ -2,7 +2,7 @@ import { Dispatch } from "redux";
 import { getNeo4jData } from "../../AsyncActions/getNeo4jData";
 import { NeoHomolog, RNAProfile } from './../../DataInterfaces'
 import { flattenDeep } from "lodash";
-import { RnaClass  } from "./RNAReducer";
+import { RnaClass, RnaSortType  } from "./RNAReducer";
 
 export const REQUEST_RNA_CLASS_GO      = "REQUEST_RNA_CLASS_GO"     ;
 export const REQUEST_RNA_CLASS_SUCCESS = "REQUEST_RNA_CLASS_SUCCESS";
@@ -12,7 +12,13 @@ export const GOTO_PAGE_RNA             = "GOTO_PAGE_RNA"
 export const NEXT_PAGE_RNA             = "NEXT_PAGE_RNA"
 export const PREV_PAGE_RNA             = "PREV_PAGE_RNA"
 
-export const SORT_BY_SEQLEN   = "SORT_BY_SEQLEN"
+
+export const RNA_SORT_CHANGE = "RNA_SORT_CHANGE"
+export const SORT_BY_SEQLEN = "SORT_BY_SEQLEN"
+export const SORT_BY_PDB    = "SORT_BY_PDB"
+export const SORT_BY_YEAR   = "SORT_BY_YEAR"
+export const SORT_BY_RESO   = "SORT_BY_RESO"
+
 export const SELECT_RNA_CLASS = "SELECT_RNA_CLASS"
 
 export type RnaFilter         = "SPECIES" | "SEARCH" | "YEAR"  | "EXPERIMENTAL_METHOD" | "RESOLUTION"
@@ -21,7 +27,12 @@ export interface requestRnaClassGo      { type: typeof REQUEST_RNA_CLASS_GO     
 export interface requestRnaClassSuccess { type: typeof REQUEST_RNA_CLASS_SUCCESS; payload: RNAProfile[], rna_class: RnaClass }
 export interface requestRnaClassError   { type: typeof REQUEST_RNA_CLASS_ERR    ; error: Error;                              }
 export interface requestRnaClassError   { type: typeof REQUEST_RNA_CLASS_ERR    ; error: Error;                              }
-export interface sortBySequenceLength   { type: typeof SORT_BY_SEQLEN                                                        }
+
+export interface RNASortChange { type: typeof RNA_SORT_CHANGE, sorttype:RnaSortType}
+export interface sortBySequenceLength { type: typeof SORT_BY_SEQLEN}
+export interface sortByPDBCodename    { type: typeof SORT_BY_PDB   }
+export interface sortByYear           { type: typeof SORT_BY_YEAR  }
+export interface sortByResolution     { type: typeof SORT_BY_RESO  }
 
 export interface filterRnaClass {
   type       : typeof FILTER_RNA_CLASS;
@@ -43,7 +54,7 @@ export type RNAActions =
   | nextPageRNA
   | prevPageRNA
   | gotoPageRNA
-  |sortBySequenceLength
+  | RNASortChange  |sortBySequenceLength| sortByPDBCodename | sortByYear | sortByPDBCodename
 
 export const sort_by_seqlen = ():sortBySequenceLength=>( {
 type:SORT_BY_SEQLEN
@@ -128,6 +139,10 @@ export const prevpage_rna = (): prevPageRNA => ({
   type: PREV_PAGE_RNA
 });
 
+export const rna_sort_change = (sorttype:RnaSortType):RNASortChange =>({
+  sorttype,
+  type:RNA_SORT_CHANGE
+})
 
 
 
