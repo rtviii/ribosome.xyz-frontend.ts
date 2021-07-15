@@ -95,8 +95,8 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
      for (var rp of r.data[0].rps){
        if (Object.keys(map).includes(rp.entity_poly_strand_id )){
         map[rp.entity_poly_strand_id] = {
-          nomenclature : rp.nomenclature,
-          asymid : map[rp.entity_poly_strand_id].asymid
+          nomenclature: rp.nomenclature,
+          asymid      : map[rp.entity_poly_strand_id].asymid
         }
        }
      }
@@ -105,7 +105,8 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
      for (var rna of r.data[0].rnas){
        if (Object.keys(map).includes(rna.entity_poly_strand_id )){
         map[rna.entity_poly_strand_id] = Object.assign({}, map[rna.entity_poly_strand_id],{
-          nomenclature : [ rna.rcsb_pdbx_description ]
+          nomenclature : [ rna.rcsb_pdbx_description ],
+          asymid: rna.asym_id
         })
        }
 
@@ -150,23 +151,26 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   }}` )
   }
 
-  useEffect(() => {
 
+
+  useEffect(() => {
+    console.log("map has changed:");
+    console.log(asymidChainMap);
+  }, [asymidChainMap])
+
+  useEffect(() => {
     if (currentStructure.length > 0){
 
     axios.get(getGqlQuery(currentStructure)).then(
       r=>{
         var map = get_strand_asymid_map(r)
         console.log("got map",map);
-        
-
         setAsymidChainMap(map)
       }
       ,e=>{console.log("Error", e);
       }
     )
 	}
-    
   }, [currentStructure])
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue:any) => {
@@ -223,7 +227,10 @@ viewerInstance.visual.select(
               id      ="demo-simple-select"
               value   ={"chain"}
               onChange={handleSelectHighlightChain}>
-              {Object.entries( asymidChainMap ).map((i:any) => <MenuItem value={i[1].asymid}>{i[0]}</MenuItem>)}
+              {Object.entries(asymidChainMap).map((i:any) => {  
+                console.log( "i is " ,i)
+                // return <MenuItem value={i[1].asymid}>{ i[0] +   }</MenuItem> 
+                })}
             </Select>
           </FormControl>
 </ListItem>

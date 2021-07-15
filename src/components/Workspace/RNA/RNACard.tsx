@@ -67,7 +67,7 @@ type RNACardProps = OwnProps
 
 export const RNACard: React.FC<RNACardProps> = (prop) => {
 
-  const history = useHistory()
+  const history                     = useHistory()
   const [isFetching, setisFetching] = useState<boolean>(false);
 
   const downloadChain = (pdbid: string, cid: string) => {
@@ -110,18 +110,16 @@ export const RNACard: React.FC<RNACardProps> = (prop) => {
   const id = open ? 'simple-popover' : undefined;
 
   return (
-    <Card className={classes.root} variant="outlined" 
-    // onClick={()=>history.push(`/rnas/${prop.e.nomenclature}`)}
-    >
+    <Card className={classes.root} variant="elevation" elevation={2}>
       <CardContent>
         <Grid xs={12} container spacing={1}>
           <Grid
             item
             style={{ borderBottom: "1px solid gray" }}
             container
-            xs={12}
-            alignContent="center"
-            alignItems="center"
+            xs           = {12}
+            alignContent = "center"
+            alignItems   = "center"
 
             spacing={2}
           >

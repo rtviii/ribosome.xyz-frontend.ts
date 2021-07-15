@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from                                                "react"                                                ;
+import React, { useEffect, useReducer, useState } from                                                "react"                                                ;
+import {useRxztheme} from './../../../theme'
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup/ToggleButtonGroup";
 import ToggleButton from "@material-ui/lab/ToggleButton/ToggleButton";
 import                                                                                    "./RPPage.css"                                         ;
 import { useParams } from                                                                 "react-router-dom"                                     ;
 import { AppState } from                                                                  "../../../redux/store"                                 ;
 import { AppActions } from                                                                "../../../redux/AppActions"                            ;
-import { gotopage, nextpage, prevpage, ProteinClassFilterChangeAC, requestBanClass } from "../../../redux/reducers/Proteins/ActionTypes"         ;
+import { gotopage, nextpage, prevpage, ProteinClassFilterChangeAC, protein_sort_change, requestBanClass } from "../../../redux/reducers/Proteins/ActionTypes"         ;
 import { ThunkDispatch } from                                                             "redux-thunk"                                          ;
 import { connect, useDispatch, useSelector } from                                         "react-redux"                                          ;
 import Pagination from                                                                    './../Display/Pagination'
@@ -34,6 +35,7 @@ import { CSVLink } from                                                         
 import Divider from                                                                       "@material-ui/core/Divider/Divider"                    ;
 import DialogContentText from                                                             "@material-ui/core/DialogContentText/DialogContentText";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+import Paper from "@material-ui/core/Paper/Paper";
 
 
 
@@ -43,26 +45,12 @@ import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 const BulkDownloadMenu=()=> {
   const [open, setOpen] = React.useState(false);
   const proteins        = useSelector(( state:AppState ) => state.proteins.ban_class_derived)
-
-const useCheckboxStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(3),
-    },
-  }),
-);
-
-  const dispatch = useDispatch()
-
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
-
-
   const createSummary = ():any[][] =>{
 
   var bulkDownload:Array<Array<any>> = [
@@ -90,43 +78,33 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
 
     return bulkDownload
   }
-
   return (
     <div style={{width:"100%"}}>
-      <Button variant="outlined" style={{width:"100%", textTransform:"none", color:"black"}} color="primary" onClick={handleClickOpen}>
+      <Button variant="outlined" style={{ width: "100%", textTransform: "none", color: "black" }} color="primary" onClick={handleClickOpen}>
         Download ({proteins.length} strands)
       </Button>
-
-
-
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-
         <DialogTitle id="form-dialog-title">  Export Options: you have {proteins.length} strands in scope.</DialogTitle>
         <DialogContent>
-
           <DialogContentText style={{ marginTop: "10px" }}>
-          <Typography variant="h5">Download Summary Spreadsheet </Typography>
-          A <i>.csv</i> summary of the strands that you have filtered will be downloaded.
+            <Typography variant="h5">Download Summary Spreadsheet </Typography>
+            A <i>.csv</i> summary of the strands that you have filtered will be downloaded.
           </DialogContentText>
-
           <CSVLink data={createSummary()}>
             <Button onClick={handleClose} color="primary">
               Download Summary (.csv)
-          </Button>
+            </Button>
           </CSVLink>
-
-<List>
-<Divider/>
-</List>
-          <DialogContentText style={{ marginTop: "10px"}} >
-          <Typography variant="h5">Download Whole Models</Typography>
+          <List>
+            <Divider />
+          </List>
+          <DialogContentText style={{ marginTop: "10px" }} >
+            <Typography variant="h5">Download Whole Models</Typography>
             Filtered models of the whole ribosome structures that you have filtered will be packed into a <i>.zip</i> archive and downloaded.
           </DialogContentText>
-
           <Button onClick={handleClose} color="primary">
             Download Model Strands (.zip)
           </Button>
-
         </DialogContent>
       </Dialog>
     </div>
@@ -219,8 +197,6 @@ useEffect(() => {
   dispatch(ProteinClassFilterChangeAC(selectedSpecies,"SPECIES"))
 }, [selectedSpecies])
 
-
-
     const [search, setSearch] = useState<string>("")
     useEffect(() => {
         dispatch(ProteinClassFilterChangeAC(search, "SEARCH"))
@@ -241,16 +217,12 @@ useEffect(() => {
     }
   })();
 
+const [, forceUpdate] = useReducer(x => x + 1, 0);
   useEffect(() => {
     dispatch(ProteinClassFilterChangeAC(method,"EXPERIMENTAL_METHOD"))
   }, [method])
 
-
-
-  // useEffect(() => {
-    
-  // }, [])
-
+const classes = useRxztheme();
   return !isloading ? (
     <Grid xs={12} container>
       <Grid item container xs={12} >
@@ -258,7 +230,6 @@ useEffect(() => {
           Ribosomal Protein Class {className}
         </Typography>
       </Grid>
-
       <Grid item container xs={12} spacing={2}>
 
         <Grid item container xs={2} direction="column">
@@ -310,11 +281,6 @@ useEffect(() => {
 
             </ListItem>
             <ListItem>
-              <Pagination
-                {...{ gotopage: prop.goto_page, pagecount: prop.pagestotal }}
-              />
-            </ListItem>
-            <ListItem>
               <Cart />
             </ListItem>
             <ListItem key={"rps-searchfield"} >
@@ -327,6 +293,55 @@ useEffect(() => {
         </Grid>
 
         <Grid item container direction="row" spacing={1} xs={10} alignContent="flex-start" alignItems="flex-start">
+          <Grid item container xs={12}>
+
+            <Grid item xs={12}>
+              <Paper variant="outlined" style={{ padding: "10px" }}>
+                <Grid item container xs={12} alignContent={"center"} alignItems={"center"} justify="space-between" direction='row'>
+                  <Grid item container>
+                    <Typography variant="overline" style={{ color: "gray" }}>Page: </Typography>
+                    <Pagination                {...{ gotopage: prop.goto_page, pagecount: prop.pagestotal }} />
+                  </Grid>
+                  <Grid item container alignContent={"center"} alignItems={"center"} spacing={1} >
+                    <Grid item>
+                      <Typography variant="overline" style={{ color: "gray" }}>Sort By: </Typography>
+                    </Grid>
+
+                    <Grid item>
+                      <Button   className={classes.sortButton} variant="outlined" color="primary" onClick={() => {
+                        dispatch(protein_sort_change("SEQLEN"))
+                        forceUpdate()
+                      }}>
+
+                        Sort By Sequence Length
+                      </Button>
+                    </Grid>
+
+                    <Grid item>
+                      <Button   className={classes.sortButton} variant="outlined" color="primary" onClick={() => {
+                        dispatch(protein_sort_change("PDB_CODENAME"))
+                        forceUpdate()
+                      }}  > Sort by PDB Codename</Button>
+                    </Grid>
+
+                    <Grid item>
+                      <Button   className={classes.sortButton} variant="outlined" color="primary" onClick={() => {
+                        dispatch(protein_sort_change("YEAR"))
+                        forceUpdate()
+                      }}  > Sort by Year</Button>
+                    </Grid>
+
+                    <Grid item>
+                      <Button   className={classes.sortButton} variant="outlined" color="primary" onClick={() => {
+                        dispatch(protein_sort_change("RESOLUTION"))
+                        forceUpdate()
+                      }}  > Sort by Resolution</Button>
+                    </Grid>
+
+                  </Grid>
+                </Grid></Paper>
+            </Grid>
+          </Grid>
 
 
 {
@@ -346,9 +361,7 @@ useEffect(() => {
       </Grid>
     </Grid>
   ) : (
-    
     <Backdrop open={true} />
-
   );
 };
 

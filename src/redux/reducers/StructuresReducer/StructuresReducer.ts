@@ -166,7 +166,6 @@ const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
      }
 
    }
-   
   },
   applied:[]
 }

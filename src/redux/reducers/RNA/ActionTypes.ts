@@ -111,7 +111,7 @@ export const RnaClassFilterChangeAC = (newvalue: any, filter_type: RnaFilter): f
         return !(newvalue.length === 0)
 
       case "RESOLUTION":
-        return !(newvalue[0] === 0 && newvalue[1] === 5);
+        return !(newvalue[0] === 1 && newvalue[1] === 6);
       case "YEAR":
         return !(newvalue[0] === 2012 && newvalue[1] === 2021);
       default:
