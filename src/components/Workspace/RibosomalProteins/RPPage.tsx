@@ -313,7 +313,7 @@ const classes = useRxztheme();
                         forceUpdate()
                       }}>
 
-                        Sort By Sequence Length
+                        Sequence Length
                       </Button>
                     </Grid>
 
@@ -321,21 +321,21 @@ const classes = useRxztheme();
                       <Button   className={classes.sortButton} variant="outlined" color="primary" onClick={() => {
                         dispatch(protein_sort_change("PDB_CODENAME"))
                         forceUpdate()
-                      }}  > Sort by PDB Codename</Button>
+                      }}  >  PDB Codename</Button>
                     </Grid>
 
                     <Grid item>
                       <Button   className={classes.sortButton} variant="outlined" color="primary" onClick={() => {
                         dispatch(protein_sort_change("YEAR"))
                         forceUpdate()
-                      }}  > Sort by Year</Button>
+                      }}  > Year</Button>
                     </Grid>
 
                     <Grid item>
                       <Button   className={classes.sortButton} variant="outlined" color="primary" onClick={() => {
                         dispatch(protein_sort_change("RESOLUTION"))
                         forceUpdate()
-                      }}  > Sort by Resolution</Button>
+                      }}  > Resolution</Button>
                     </Grid>
 
                   </Grid>

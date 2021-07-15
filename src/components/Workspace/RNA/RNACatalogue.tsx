@@ -336,14 +336,14 @@ const [, forceUpdate] = useReducer(x => x + 1, 0);
                       <Grid item>
                         <Button variant={"outlined"} color="default" className={classes.sortButton}
                           onClick={() => { dispatch(rna_sort_change("PDB_CODENAME")); forceUpdate() }}
-                        > Sort by PDB Codename</Button>
+                        > PDB Codename</Button>
                       </Grid>
 
                       <Grid item>
                         <Button variant={"outlined"} color="default" className={classes.sortButton}
 
                           onClick={() => { dispatch(rna_sort_change("YEAR")); forceUpdate() }}
-                        > Sort by Year</Button>
+                        > Year</Button>
 
                       </Grid>
 
@@ -353,16 +353,14 @@ const [, forceUpdate] = useReducer(x => x + 1, 0);
                         <Button variant={"outlined"} color="default" className={classes.sortButton}
 
                           onClick={() => { dispatch(rna_sort_change("RESOLUTION")); forceUpdate() }}
-                        > Sort by Resolution</Button>
+                        > Resolution</Button>
                       </Grid>
 
                       <Grid item>
                         <Button variant={"outlined"} color="default" className={classes.sortButton}
                           onClick={() => { dispatch(rna_sort_change("SEQLEN")); forceUpdate() }}
-                        > Sort by Sequence Length</Button>
+                        > Sequence Length</Button>
                       </Grid>
-
-
                     </Grid>
                   </Grid>
                 </Paper>
@@ -397,7 +395,6 @@ const [, forceUpdate] = useReducer(x => x + 1, 0);
 };
 
 const SpinnerOrNoneFound = ({spin}:{ spin:boolean }) =>{
-
   
   useEffect(() => {
     console.log("Spin is ", spin);
@@ -651,51 +648,58 @@ return (
     <TabPanel value={value} index={0}>
       <List>
         {/* {r5.map(r=><div>{r.seq.length}</div>)} */}
-        {classr5.length >0 ? classr5.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <LinearProgress/>}
+        {classr5.length >0 ? classr5.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)
+         
+: <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
+
       </List>
     </TabPanel>
-
     <TabPanel value={value} index={1}>
       <List>
-        {classr5_8.length > 0 ? classr5_8.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>) :<LinearProgress/>}
+        {classr5_8.length > 0 ? classr5_8.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>) 
+: <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
       </List>
     </TabPanel>
     <TabPanel value={value} index={2}>
       <List>
         {classr12.length > 0  ? classr12.slice((current_page - 1) * 20, current_page * 20)
         .map(rna => <ListItem><RNACard displayPill={true} e={rna} /></ListItem>) 
-        : <SpinnerOrNoneFound spin={appliedFilters.length>0}/>}
+        : <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>
+        }
       </List>
     </TabPanel>
     <TabPanel value={value} index={3}>
       <List>
-        {classr16.length>0 ?classr16.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
+        {classr16.length>0 ?classr16.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
       </List>
     </TabPanel>
     <TabPanel value={value} index={4}>
       <List>
-        {classr21.length> 0 ? classr21.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
+        {classr21.length> 0 ? classr21.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
+
       </List>
     </TabPanel>
     <TabPanel value={value} index={5}>
       <List>
-        {classr23.length> 0 ? classr23.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
+        {classr23.length> 0 ? classr23.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
+
       </List>
     </TabPanel>
     <TabPanel value={value} index={6}>
       <List>
-        {classr25.length> 0 ? classr25.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/> }
+        {classr25.length> 0 ? classr25.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
+
       </List>
     </TabPanel>
     <TabPanel value={value} index={7}>
       <List>
-        {classr28.length> 0 ? classr28.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
+        {classr28.length> 0 ? classr28.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
       </List>
     </TabPanel>
 
     <TabPanel value={value} index={8}>
       <List>
-        {classr35.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+        {classr35.length > 0 ? classr35.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>) : <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
       </List>
     </TabPanel>
 </>
