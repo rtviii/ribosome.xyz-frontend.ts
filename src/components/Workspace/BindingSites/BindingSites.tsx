@@ -14,12 +14,21 @@ import { Button } from '@material-ui/core';
 import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData';
 import fileDownload from 'js-file-download';
 import axios from 'axios';
-
-import * as loadingicon from './../../../static/loading2.gif'
+import { CSVLink } from 'react-csv';
 
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
+
+
+
+export type LigandNeighborhood =  {
+	[chainname: string]: {
+		seq: string
+		nomenclature: string[],
+		residues: { name: string, residue_id: number }[]
+	}
+}
 
 const BindingSites = () => {
 	const classes = makeStyles((theme: Theme) => ({
@@ -75,7 +84,7 @@ const BindingSites = () => {
 
 
 
-  const [interface_data, setInterface_data] = useState<BindingInterface | null>(null)
+  const [interface_data, setInterface_data] = useState<LigandNeighborhood | null>(null)
   const [cur_struct, set_cur_struct]        = useState<BindingSite| null>(null)
   const [curligand, set_cur_ligand]         = useState<LigandClass | null>(null)
   const [ligstructPair, setLigstructPair]   = useState< [ string|null , string |null ]>([null, null])
@@ -93,7 +102,12 @@ const BindingSites = () => {
 		  return
 	  }
 	  else {
-		  getLigandNbhd(ligstructPair[0], ligstructPair[1]).then(r => setInterface_data(r))
+		  getLigandNbhd(ligstructPair[0], ligstructPair[1]).then(r => { 
+			  console.log("RECEIEV LIGAND DATA",);
+			  console.log(r);
+			  
+			setInterface_data(r) })
+
 	  }
   }, [ligstructPair])
 
@@ -222,37 +236,39 @@ const BindingSites = () => {
 		  return
 	  }
 
-	  if (interface_data.nbrs === undefined) {
+	  if (interface_data === undefined) {
 		  alert("Neighbors of this ligand are ambiguous.")
 		  return
 	  }
 
-	  var vis_data = interface_data?.nbrs.map(l => {
+	  console.log(interface_data);
+	  
+	//   var vis_data = interface_data?.map(c => {
 
-		  return asymidChainMap[l.strand_id] == undefined ?
-			  null
-			  :
-			  {
-				  start_residue_number: l.resid,
-				  end_residue_number: l.resid,
-				  color: { r: 255, g: 0, b: 255 },
-				  struct_sym_id: asymidChainMap[l.strand_id]['asymid']
-				  , focus: true
-			  }
-	  }).filter(val => !(val === null))
+	// 	  return asymidChainMap[c.chainname] == undefined ?
+	// 		  null
+	// 		  :
+	// 		  {
+	// 			  start_residue_number: l.resid,
+	// 			  end_residue_number: l.resid,
+	// 			  color: { r: 255, g: 0, b: 255 },
+	// 			  struct_sym_id: asymidChainMap[l.strand_id]['asymid']
+	// 			  , focus: true
+	// 		  }
+	//   }).filter(val => !(val === null))
 
-	  console.log(vis_data);
-	  if (vis_data.length > 500){
-		  alert(`The are too many neighboring residues of ${curligand?.ligand.chemicalId} (${vis_data.length}) in this structure.\n Attempting to visualize. You browser may slow down.`)
-		  return 
-	  }
+	//   console.log(vis_data);
+	//   if (vis_data.length > 500){
+	// 	  alert(`The are too many neighboring residues of ${curligand?.ligand.chemicalId} (${vis_data.length}) in this structure.\n Attempting to visualize. You browser may slow down.`)
+	// 	  return 
+	//   }
 	  
 	  
-	  viewerInstance.visual.select(
-		  {
-			  data: vis_data, nonSelectedColor: { r: 180, g: 180, b: 180 }
-		  }
-	  )
+	//   viewerInstance.visual.select(
+	// 	  {
+	// 		  data: vis_data, nonSelectedColor: { r: 180, g: 180, b: 180 }
+	// 	  }
+	//   )
   }
 
 
@@ -272,7 +288,7 @@ const donwloadBindingSiteReport = (struct:string, chemid:string) =>{
     );
 }
 
-const getLigandNbhd = async (chemid:string, struct:string):Promise<BindingInterface>=>{
+const getLigandNbhd = async (chemid:string, struct:string):Promise<LigandNeighborhood>=>{
 
 	var data = {}
 	await getNeo4jData("static_files",{endpoint:"get_ligand_nbhd",params:{
@@ -282,13 +298,14 @@ const getLigandNbhd = async (chemid:string, struct:string):Promise<BindingInterf
       r=>{
 		data = r.data
 
+		
       },
       e=>{
         console.log("error out fetching binding site file:", e)
       }
     )
 
-	return data as BindingInterface
+	return data as LigandNeighborhood
 }
 
 
@@ -408,6 +425,40 @@ useEffect(() => {
 	}, [loading_current,loading_target])
 
 
+const createBindingSiteDataSheet = ():any[][] =>{
+
+	console.log("Got interface data", interface_data);
+	
+if (interface_data === null){
+	// alert("Select a valid ligand.")
+	return []
+}
+var chains =Object.entries(interface_data)
+console.log(chains);
+
+  var sheet:Array<Array<any>> = []
+   sheet = [
+    ['PDBChainName'],
+    ...chains.map(c =>[ c[0] ])
+  ]
+          sheet[0].push("Nomenclature")
+         chains.map((v,i)=>sheet[i+1].push(v[1].nomenclature))
+
+          sheet[0].push("Residues")
+         chains.map((v,i)=>sheet[i+1].push(
+			 
+			v[1].residues.reduce((a,b)=>{ return a + ','+ b.residue_id}, ''))
+			
+			)
+
+          sheet[0].push("Sequence")
+         chains.map((v,i)=>sheet[i+1].push(v[1].seq))
+
+    return sheet
+  }
+	
+
+
 
 
 
@@ -474,17 +525,21 @@ useEffect(() => {
 					fullWidth variant="outlined"> Reset</Button>
 
 				<Grid item style={{ marginBottom: "10px" }}>
-					<Button variant="outlined" fullWidth 
+
+
+          <CSVLink data={createBindingSiteDataSheet()}>=
+            <Button  
+			
+			
+			fullWidth
+			variant="outlined"
 						style={ligstructPair.includes(null) ? { color: "gray" } : {}}
 						color={!ligstructPair.includes(null) ? 'primary' : 'default'}
-						onClick={() => {
-						if (ligstructPair.includes(null)) {
-							alert("Select a binding site.")
-							return
-						} donwloadBindingSiteReport(ligstructPair[1] as string, ligstructPair[0] as string)
-					}} >
-						Download Binding Site
-								</Button>
+			 disabled={interface_data==null}>
+              Download Binding Site (.csv)
+          </Button>
+          </CSVLink>
+
 				</Grid>
 
 				<Grid item style={{ marginBottom: "10px" }}>
@@ -497,9 +552,6 @@ useEffect(() => {
 						Visualize Interface
 					</Button>
 				</Grid>
-				{/* <Grid item  >
-					<Cart />
-				</Grid> */}
 				<Grid item xs={3} justify={"flex-start"} >
 					<DashboardButton />
 				</Grid>
@@ -514,7 +566,7 @@ useEffect(() => {
 					<Grid item>
 						<Button variant="outlined" color={OrigProjection == 'origin' ? 'primary' : "default"} onClick={() => { setOrigProj('origin') }} > Structure  of Origin
 					{cur_struct === null ? "" : `( ${cur_struct.rcsb_id} )`}
-							{loading_current ? <img style={{ marginLeft: "10px", width: "30px", height: "10px" }} src={loadingicon} /> : null}
+							{/* {loading_current ? <img style={{ marginLeft: "10px", width: "30px", height: "10px" }} src={loadingicon} /> : null} */}
 						</Button >
 					</Grid>
 
@@ -523,7 +575,7 @@ useEffect(() => {
 							disabled={curTarget === null}
 							color={OrigProjection == 'projection' ? 'primary' : "default"} onClick={() => { setOrigProj('projection') }} > Prediction
 					{curTarget === null ? "" : `( ${curTarget.struct.rcsb_id} )`}
-							{loading_target ? <img style={{ marginLeft: "10px", width: "30px", height: "10px" }} src={loadingicon} /> : null}
+							{/* {loading_target ? <img style={{ marginLeft: "10px", width: "30px", height: "10px" }} src={loadingicon} /> : null} */}
 						</Button >
 					</Grid>
 				</Grid>

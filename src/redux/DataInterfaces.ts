@@ -35,11 +35,11 @@ export interface BindingInterface {
 
 export interface LigandClass {
   ligand: Ligand, presentIn: {
-    _organismId: number[],
+    _organismId   : number[],
     citation_title: string,
-    expMethod: string,
-    rcsb_id: string,
-    resolution: number,
+    expMethod     : string,
+    rcsb_id       : string,
+    resolution    : number,
   }[]
 }
 
