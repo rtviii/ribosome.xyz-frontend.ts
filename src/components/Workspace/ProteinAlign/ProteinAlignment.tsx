@@ -1,29 +1,19 @@
-import React, { useEffect, useState, useRef} from 'react';
+import React, { useEffect, useState} from 'react';
 import Typography from '@material-ui/core/Typography/Typography';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData';
-import { RibosomalProtein, RibosomeStructure } from '../../../redux/RibosomeTypes';
+import {  RibosomeStructure } from '../../../redux/RibosomeTypes';
 import Button from '@material-ui/core/Button';
 import fileDownload from 'js-file-download';
 import Grid from '@material-ui/core/Grid';
 import PageAnnotation from '../Display/PageAnnotation';
-import { WarningPopover } from './../WorkInProgressChip'
 import { DashboardButton } from '../../../materialui/Dashboard/Dashboard';
-import { Cart } from '../Cart/Cart';
-import List from '@material-ui/core/List/List';
-import { Divider, ListItem } from 'material-ui';
 import { AppState } from '../../../redux/store';
 import { useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete';
 import TextField from '@material-ui/core/TextField/TextField';
 import Paper from '@material-ui/core/Paper/Paper';
 import { NeoStruct } from '../../../redux/DataInterfaces';
-
-
 
 
 type StructRespone = {
@@ -110,8 +100,30 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 
-  const [chains1, setChains1] = useState<{ noms: string[]; surface_ratio: number | null; strands: string; }[]>([])
-  const [chains2, setChains2] = useState<{ noms: string[]; surface_ratio: number | null; strands: string; }[]>([])
+  const [chains1, setChains1] = useState<{ noms: string[];  strands: string; }[]>([])
+  const [chains2, setChains2] = useState<{ noms: string[];  strands: string; }[]>([])
+
+
+  var nomCompareFn = (a:{ noms: string[];  strands: string; },b:{ noms: string[];  strands: string; }) =>{
+    if (a.noms.length<1 && b.noms.length> 0){
+      return -1
+    }
+    else if (b.noms.length<1 && a.noms.length> 0){
+      return 1
+    }
+    else if (b.noms.length<1 && a.noms.length< 1){
+      return 0
+    }
+    else if (a.noms[0] >b.noms[0]){
+      return 1
+    }
+    else if (a.noms[0] <b.noms[0]){
+      return -1
+    }
+    else {
+      return 0
+    }
+  }
 
   useEffect(() => {
     if (struct1!==null){
@@ -245,20 +257,21 @@ const useStyles = makeStyles((theme: Theme) =>
 <Grid item style={{marginBottom:"40px"}}>   
 
 				<Autocomplete
-					value={struct1}
-					className={classes.autocomplete}
-					options={structs }
-					getOptionLabel={(parent: NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
+					value         ={ struct1                                                                                                                    }
+					className     ={ classes.autocomplete                                                                                                       }
+					options       ={ structs                                                                                                                    }
+					getOptionLabel={(parent : NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
 					// @ts-ignore
-					onChange     = {handleStructChange(1)}
-					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
-					renderInput  = {(params) => <TextField {...params} label={`Structure 1`} variant="outlined" />}
-				/>
+					onChange = {handleStructChange(1)}
+					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title} </div>)}
+					renderInput = {(params) => <TextField {...params} label={`Structure 1`} variant="outlined" />}
+					/>
+
 				 <Autocomplete
-					value          = {strand1}
-					className      = {classes.autocomplete}
-					options        = {chains1}
-					getOptionLabel = {(chain:  {noms: string[]; surface_ratio: number | null; strands: string;} ) => { return chain.strands ? chain.strands  : "" }}
+					value          = { strand1                                                                                                                     }
+					className      = { classes.autocomplete                                                                                                        }
+					options        = { chains1.sort(nomCompareFn)}
+					getOptionLabel = {(chain  : {noms: string[]; strands: string;} ) => { return chain.strands ? chain.strands : "" }}
 					// @ts-ignore
 					onChange     = {handleChainChange(1)}
 					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.noms.length > 0 ? option.noms[0] :" "}</b> {option.strands}  </div>)}
@@ -281,8 +294,8 @@ const useStyles = makeStyles((theme: Theme) =>
 				 <Autocomplete
 					value          = {strand2}
 					className      = {classes.autocomplete}
-					options        = {chains2}
-					getOptionLabel = {(chain:  {noms: string[]; surface_ratio: number | null; strands: string;} ) => { return chain.strands ? chain.strands  : "" }}
+					options        = {chains2.sort(nomCompareFn)}
+					getOptionLabel = {(chain:  {noms: string[]; strands: string;} ) => { return chain.strands ? chain.strands  : "" }}
 					// @ts-ignore
 					onChange     = {handleChainChange(2)}
 					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.noms.length > 0 ? option.noms[0] :" "}</b> {option.strands}  </div>)}

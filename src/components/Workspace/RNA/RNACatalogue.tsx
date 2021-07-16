@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from                             "react"                                                 ;
+import React, { useEffect, useReducer, useState } from                             "react"                                                 ;
 import                                                                 "./RNACatalogue.css"                                    ;
 import PageAnnotation from                                             "./../Display/PageAnnotation"                           ;
 import Grid from                                                       "@material-ui/core/Grid"                                ;
@@ -12,7 +12,7 @@ import List from                                                       "@materia
 import ListItem from                                                   "@material-ui/core/ListItem"                            ;
 import { connect, useDispatch, useSelector } from                      "react-redux"                                           ;
 import { AppActions } from                                             "../../../redux/AppActions"                             ;
-import { gotopage_rna, RnaClassFilterChangeAC, select_rna_class, sort_by_seqlen } from "../../../redux/reducers/RNA/ActionTypes"               ;
+import { gotopage_rna, RnaClassFilterChangeAC, rna_sort_change, select_rna_class, sort_by_seqlen } from "../../../redux/reducers/RNA/ActionTypes"               ;
 import { Dispatch } from                                               "redux"                                                 ;
 import { DashboardButton } from                                        "../../../materialui/Dashboard/Dashboard"               ;
 import makeStyles from                                                 "@material-ui/core/styles/makeStyles"                   ;
@@ -23,7 +23,6 @@ import TextField from                                                  "@materia
 import { AppState } from                                               "../../../redux/store"                                  ;
 import { RNACard } from                                                    "./RNACard"                                             ;
 import Pagination from                                                 "@material-ui/lab/Pagination/Pagination"                ;
-import _ from                                                          "lodash"                                                ;
 import DropdownTreeSelect from                                         "react-dropdown-tree-select"                            ;
 import Dialog from                                                     "@material-ui/core/Dialog/Dialog"                       ;
 import DialogTitle from                                                "@material-ui/core/DialogTitle/DialogTitle"             ;
@@ -38,8 +37,9 @@ import { useHistory } from "react-router";
 import { useParams } from "react-router-dom";
 import Backdrop from "../Backdrop";
 import { Spinner } from "react-bootstrap";
-import WorkInProgress from "../WorkInProgress";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+import { useRxztheme } from "../../../theme";
+import _ from "lodash";
 
 const pageData = {
   title: "RNA",
@@ -118,10 +118,22 @@ const BulkDownloadMenu=()=> {
   );
 }
 
+
 type  ReduxProps                        = {rna_strands: RNAProfile[], current_page: number, page_total:number}
 type  DispatchProps                     = {gotopage: (pid:number)=>void}
 const RNACatalogue: React.FC<ReduxProps & DispatchProps> = (prop) => {
 
+const rnatabsstyles = (makeStyles((theme: Theme) => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+  },
+  sortbutton:{
+    marginLeft:"10px",
+    fontSize:"12px"
+
+  }
+})))()
   const dispatch = useDispatch();
   const [search, setSearch] = useState<string>("")
   useEffect(() => { dispatch(RnaClassFilterChangeAC(search, "SEARCH")) }, [search])
@@ -217,6 +229,8 @@ useEffect(() => {
     dispatch(RnaClassFilterChangeAC(method,"EXPERIMENTAL_METHOD"))
   }, [method])
 
+  const classes = useRxztheme();
+const [, forceUpdate] = useReducer(x => x + 1, 0);
   return (
     <Grid container xs={12} spacing={1}>
       <Grid item xs={12}>
@@ -229,133 +243,166 @@ useEffect(() => {
             <TextField id="standard-basic" label="Search" value={search} onChange={handleSearchChange} />
           </ListItem>
 
-        <ListItem key={"resolution"}>
-          <ValueSlider {...{filter_type: "RESOLUTION",max:6,min:1,name:"Resolution", step:0.1, action_to_dispatch:RnaClassFilterChangeAC}}/>
-        </ListItem>
+          <ListItem key={"resolution"}>
+            <ValueSlider {...{ filter_type: "RESOLUTION", max: 6, min: 1, name: "Resolution", step: 0.1, action_to_dispatch: RnaClassFilterChangeAC }} />
+          </ListItem>
 
-        <ListItem key={"year"}>
-          <ValueSlider {...{filter_type: "YEAR",max:2021,min:2012,name:"Deposition Date", step:1, action_to_dispatch:RnaClassFilterChangeAC}}/>
-        </ListItem>
+          <ListItem key={"year"}>
+            <ValueSlider {...{ filter_type: "YEAR", max: 2021, min: 2012, name: "Deposition Date", step: 1, action_to_dispatch: RnaClassFilterChangeAC }} />
+          </ListItem>
 
+          <ListItem key={"method-toggle"} >
+            <ToggleButtonGroup
+              value={method}
+              onChange={handleAlignment}
+              aria-label="text alignment"
+              className={MethodClasses.root}
+            >
+              <ToggleButton
+                className={MethodClasses.root}
+                value="X-RAY DIFFRACTION" aria-label="left aligned">
+                XRAY
+              </ToggleButton>
 
-        <ListItem key={"method-toggle"} >
-    <ToggleButtonGroup
-      value      = {method}
-      onChange   = {handleAlignment}
-      aria-label = "text alignment"
-      className  = {MethodClasses.root}
-    >
-      <ToggleButton 
-      className={MethodClasses.root}
-      value="X-RAY DIFFRACTION" aria-label="left aligned">
-        XRAY
-      </ToggleButton>
+              <ToggleButton
+                className={MethodClasses.root}
+                value="ELECTRON MICROSCOPY" aria-label="right aligned" >
+                EM
+              </ToggleButton>
 
-      <ToggleButton 
-      className={MethodClasses.root}
-      value="ELECTRON MICROSCOPY" aria-label="right aligned" >
-        EM
-      </ToggleButton>
-
-    </ToggleButtonGroup>
-        </ListItem>
+            </ToggleButtonGroup>
+          </ListItem>
 
           <ListItem>
             <DropdownTreeSelect data={data} onChange={onChange} keepOpenOnSelect={true} keepTreeOnSearch={true} keepChildrenOnSearch={true} />
           </ListItem>
           <ListItem>
-
-<Button 
-variant="outlined"
-color="primary"
-style={{textTransform:"none", width:"100%"}}
-
-onClick={()=>{
-  dispatch(sort_by_seqlen())
-}}>
-Sort By Sequence Length
-
-</Button>
-
-        </ListItem>
-        <ListItem>
-          <BulkDownloadMenu />
-        </ListItem>
-        <ListItem>
-<Cart/>
-        </ListItem>
+            <BulkDownloadMenu />
+          </ListItem>
+          <ListItem>
+            <Cart />
+          </ListItem>
 
 
-        <ListItem>
-        <DashboardButton />
-        </ListItem>
+          <ListItem>
+            <DashboardButton />
+          </ListItem>
 
-      </List>
-    </Grid>
+        </List>
+      </Grid>
+      <Grid item xs={10} container >
+        <Grid item xs={12} spacing={1}>
+          <Paper style={{ display: "flex", justifyItems: "spaceBetween", marginBottom: "10px" }} variant="elevation" elevation={0}>
 
-    <Grid item xs={10} container spacing={1}>
-      <Grid item xs={12}>
-        <Paper style={{ padding: '5px', marginBottom: "5px", display: "flex", justifyItems: "spaceBetween" }} variant="elevation" elevation={0}>
-
-          <Grid container spacing={2}>
-            <Grid item>
-              <Button style={{
-                marginRight: "5px",
-                textTransform: "none"
-              }} variant={'outlined'}
-                onClick={() => {
-                  setRnaSubgrop('ribosomal')
-                  dispatch(select_rna_class("5"))
-      console.log("DISPATCHED ON MOUNT:no");
+            <Grid container spacing={2}>
+              <Grid item>
+                <Button style={{
+                  marginRight: "5px",
+                  textTransform: "none"
+                }} variant={'outlined'}
+                  onClick={() => {
+                    setRnaSubgrop('ribosomal')
+                    dispatch(select_rna_class("5"))
+                  }}
+                  color={rnaSubgroup == 'ribosomal' ? 'primary' : 'default'}> Ribosomal RNA</Button>
+              </Grid>
+              <Grid item>
+                <Button style={{ marginRight: "5px", textTransform: "none" }} variant={'outlined'} onClick={() => {
+                  setRnaSubgrop('exogenous')
+                  dispatch(select_rna_class("trna"))
                 }}
-                color={rnaSubgroup == 'ribosomal' ? 'primary' : 'default'}> Ribosomal RNA</Button>
+                  color={rnaSubgroup === 'exogenous' ? 'primary' : 'default'}> Non-ribosomal RNA</Button>
+              </Grid>
+
+              <Grid item container xs={12} justify="space-between" alignContent="center" alignItems="center">
+                {/*  */}
+                <Paper variant="outlined" style={{ padding: "10px" }} >
+
+                  <Grid item container xs={12} alignContent={"center"} alignItems={"center"} justify="space-between" direction='row'>
+                    <Grid item container>
+                      <Typography variant="overline" style={{ color: "gray" }}>Page: </Typography>
+                      <Grid item><Pagination
+                        count={pages_total}
+                        page={current_page}
+                        variant="outlined"
+                        color="primary"
+                        onChange={(e, page) => { dispatch(gotopage_rna(page)) }} /></Grid>
+                    </Grid>
+
+                    <Grid item container alignContent={"center"} alignItems={"center"} spacing={1} >
+                      <Grid item>
+                        <Typography variant="overline" style={{ color: "gray" }}>Sort By: </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Button variant={"outlined"} color="default" className={classes.sortButton}
+                          onClick={() => { dispatch(rna_sort_change("PDB_CODENAME")); forceUpdate() }}
+                        > PDB Codename</Button>
+                      </Grid>
+
+                      <Grid item>
+                        <Button variant={"outlined"} color="default" className={classes.sortButton}
+
+                          onClick={() => { dispatch(rna_sort_change("YEAR")); forceUpdate() }}
+                        > Year</Button>
+
+                      </Grid>
+
+                      <Grid item>
+
+
+                        <Button variant={"outlined"} color="default" className={classes.sortButton}
+
+                          onClick={() => { dispatch(rna_sort_change("RESOLUTION")); forceUpdate() }}
+                        > Resolution</Button>
+                      </Grid>
+
+                      <Grid item>
+                        <Button variant={"outlined"} color="default" className={classes.sortButton}
+                          onClick={() => { dispatch(rna_sort_change("SEQLEN")); forceUpdate() }}
+                        > Sequence Length</Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Grid>
             </Grid>
+          </Paper>
+          <Paper variant="outlined" >
 
-            <Grid item>
-              <Button style={{ marginRight: "5px", textTransform: "none" }} variant={'outlined'} onClick={() => {
-                setRnaSubgrop('exogenous')
-                dispatch(select_rna_class("trna"))
-      console.log("DISPATCHED ON MOUNT:no");
-              }}
+            {((_: 'exogenous' | 'ribosomal' | 'other') => {
+              switch (_) {
+                case 'ribosomal':
+                  return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <RRNATabs tagname={'rrna'} />
+                case 'exogenous':
+                  return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <ExogenousTabs tagname={'exo-rna'} />
+                case 'other':
+                  return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <List>
+                    {other.slice((current_page - 1) * 20, current_page * 20).map(other => <ListItem>
+                      <RNACard
 
-                color={rnaSubgroup == 'exogenous' ? 'primary' : 'default'}> Non-ribosomal RNA</Button>
-            </Grid>
+                    displayPill={true}
+                    e={other} /></ListItem>)}</List>
+                default:
+                  return <></>
+              }
+            })(rnaSubgroup)}
 
-            <Grid item xs={12}>
-
-
-              <Pagination
-                count={pages_total}
-                page={current_page}
-                variant="outlined"
-                color="primary"
-                onChange={(e, page) => { dispatch(gotopage_rna(page)) }} />
-
-            </Grid>
-          </Grid>
-        </Paper>
-        {((_: 'exogenous' | 'ribosomal' | 'other') => {
-          switch (_) {
-            case 'ribosomal':
-              return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <RRNATabs tagname={'rrna'} />
-            case 'exogenous':
-              return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <ExogenousTabs tagname={'exo-rna'} />
-            case 'other':
-              return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <List>{other.slice((current_page - 1) * 20, current_page * 20).map(other => <ListItem><RNACard 
-                
-                displayPill={true}
-                e={other} /></ListItem>)}</List>
-            default:
-              return <></>
-          }
-        })(rnaSubgroup)}
-
+          </Paper>
+        </Grid>
       </Grid>
     </Grid>
-  </Grid>
 );
 };
 
+const SpinnerOrNoneFound = ({spin}:{ spin:boolean }) =>{
+  
+  useEffect(() => {
+    console.log("Spin is ", spin);
+  }, [spin])
+
+  return   spin ?  <LinearProgress/>  : <Typography>No Items Found</Typography>
+
+}
 const  ExogenousTabs= ({tagname}:{tagname:string})=> {
 
 interface TabPanelProps {
@@ -436,6 +483,7 @@ useEffect(() => {
 settrna(whole.trna)
 setmrna(whole.mrna)
 }, [whole])
+
 
 
 
@@ -556,31 +604,15 @@ const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
   setValue(newValue);
 };
 
-const whole   = useSelector(( state:AppState ) => state.rna.rna_classes_derived)
-
-const [classr5, setr5]     = useState<RNAProfile[]>([])
-const [classr5_8, setr5_8] = useState<RNAProfile[]>([])
-const [classr12 , setr12 ] = useState<RNAProfile[]>([])
-const [classr16 , setr16 ] = useState<RNAProfile[]>([])
-const [classr21 , setr21 ] = useState<RNAProfile[]>([])
-const [classr23 , setr23 ] = useState<RNAProfile[]>([])
-const [classr25 , setr25 ] = useState<RNAProfile[]>([])
-const [classr28 , setr28 ] = useState<RNAProfile[]>([])
-const [classr35 , setr35 ] = useState<RNAProfile[]>([])
-
-useEffect(() => {
-setr5(whole[5])
-setr5_8(whole["5.8"])
-setr12(whole[12])
-setr16(whole[16])
-setr21(whole[21])
-setr23(whole[23])
-setr25(whole[25])
-setr28(whole[28])
-setr35(whole[35])
-
-}, [whole])
-
+const classr5   = useSelector(( state:AppState ) => state.rna.rna_classes_derived[5])
+const classr5_8 = useSelector(( state:AppState ) => state.rna.rna_classes_derived["5.8"])
+const classr12  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[12])
+const classr16  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[16])
+const classr21  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[21])
+const classr23  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[23])
+const classr25  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[25])
+const classr28  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[28])
+const classr35  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[35])
 const indexlabels = [ 
   [5, '5SrRNA'     ]
 , [58, '5.8SrRNA']
@@ -591,7 +623,15 @@ const indexlabels = [
 , [25, '25SrRNA' ]
 , [28, '28SrRNA' ]
 , [35, '35SrRNA' ]
+
                   ];
+
+
+                  const appliedFilters = useSelector(( state :AppState) => state.rna.rna_filters.applied)
+                  useEffect(() => {
+                    console.log("Applied filterS: appl", appliedFilters);
+                    
+                  }, [appliedFilters])
 return (
 <>
       <Tabs 
@@ -608,49 +648,58 @@ return (
     <TabPanel value={value} index={0}>
       <List>
         {/* {r5.map(r=><div>{r.seq.length}</div>)} */}
-        {classr5.length>0 ? classr5.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <LinearProgress/>}
+        {classr5.length >0 ? classr5.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)
+         
+: <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
+
       </List>
     </TabPanel>
-
     <TabPanel value={value} index={1}>
       <List>
-        {classr5_8.length > 0 ? classr5_8.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>) :<LinearProgress/>}
+        {classr5_8.length > 0 ? classr5_8.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>) 
+: <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
       </List>
     </TabPanel>
     <TabPanel value={value} index={2}>
       <List>
-        {classr12.length>0?classr12.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
+        {classr12.length > 0  ? classr12.slice((current_page - 1) * 20, current_page * 20)
+        .map(rna => <ListItem><RNACard displayPill={true} e={rna} /></ListItem>) 
+        : <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>
+        }
       </List>
     </TabPanel>
     <TabPanel value={value} index={3}>
       <List>
-        {classr16.length>0?classr16.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
+        {classr16.length>0 ?classr16.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
       </List>
     </TabPanel>
     <TabPanel value={value} index={4}>
       <List>
-        {classr21.length> 0 ? classr21.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
+        {classr21.length> 0 ? classr21.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
+
       </List>
     </TabPanel>
     <TabPanel value={value} index={5}>
       <List>
-        {classr23.length> 0 ? classr23.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
+        {classr23.length> 0 ? classr23.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
+
       </List>
     </TabPanel>
     <TabPanel value={value} index={6}>
       <List>
-        {classr25.length> 0 ? classr25.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/> }
+        {classr25.length> 0 ? classr25.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
+
       </List>
     </TabPanel>
     <TabPanel value={value} index={7}>
       <List>
-        {classr28.length> 0 ? classr28.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>):<LinearProgress/>}
+        {classr28.length> 0 ? classr28.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>): <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
       </List>
     </TabPanel>
 
     <TabPanel value={value} index={8}>
       <List>
-        {classr35.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>)}
+        {classr35.length > 0 ? classr35.slice(( current_page-1 )*20, current_page*20).map(rna => <ListItem><RNACard displayPill={true} e={rna}/></ListItem>) : <SpinnerOrNoneFound spin={appliedFilters.length  < 1}/>}
       </List>
     </TabPanel>
 </>
@@ -661,5 +710,5 @@ const mapdispatch = ( dispatch:Dispatch<AppActions>, ownprops:any):DispatchProps
 gotopage:(pid) => dispatch(gotopage_rna(pid))
 })
 
-export default connect(null, mapdispatch)( RNACatalogue );// 
+export default connect(null, mapdispatch)( RNACatalogue );
 

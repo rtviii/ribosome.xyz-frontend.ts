@@ -9,7 +9,6 @@ import { connect, useDispatch, useSelector, useStore } from                     
 import { AppState } from                                                                       "../../../redux/store"                                       ;
 import { AppActions } from                                                                     "../../../redux/AppActions"                                  ;import LoadingSpinner from '../../Other/LoadingSpinner'
 import StructHero from                                                                         './../../../materialui/StructHero'
-import Drawer from                                                                             '@material-ui/core/Drawer'                                   ;
 import List from                                                                               '@material-ui/core/List'                                     ;
 import Typography from                                                                         '@material-ui/core/Typography'                               ;
 import ListItem from                                                                           '@material-ui/core/ListItem'                                 ;
@@ -41,6 +40,7 @@ import                                                                          
 import                                                                                         './StructuresCatalogue.css'
 import ToggleButton from                                                                       '@material-ui/lab/ToggleButton'                              ;
 import ToggleButtonGroup from                                                                  '@material-ui/lab/ToggleButtonGroup'                         ;
+import { useRxztheme } from "../../../theme";
 
 const pageData ={
   title: "Ribosome Structures",
@@ -69,8 +69,6 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   
   const dispatch       = useDispatch(                                                     );
   useEffect(() => {
-
-    
     dispatch(structsSortChangeAC('PDB_CODENAME'))
     dispatch(structsSortChangeAC('PDB_CODENAME'))
   }, [])
@@ -87,14 +85,15 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   useEffect(() => {
   }, [cartItems])
 
+const sortstyles = (makeStyles((theme: Theme) => ({
+  sortbutton:{
+    marginLeft:"10px",
+    fontSize:"12px"
 
-  // useEffect(() => {
-  //   if (prop.structures.length>1){
-  //   dispatch(cart_add_item(prop.structures[1].struct))
-  //   dispatch(cart_add_item(prop.structures[2].struct))
-  //   }
+  }
+})))()
 
-  // }, [prop.structures])
+const classes = useRxztheme();
 
   return ! prop.loading ? (
     <Grid container xs={12} spacing={1}>
@@ -106,48 +105,50 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
       </Grid>
       <Grid container item xs={10} spacing={1}>
         <Grid item xs={12} alignContent={"center"} alignItems={"center"} >
-          <Paper variant="outlined" style={{padding:"10px"}}>
-        <Grid item container xs={12} alignContent={"center"} alignItems={"center"} justify="space-between" direction='row'>
+{/*  */}
+          <Paper variant="outlined" style={{ padding: "10px" }}>
+            <Grid item container xs={12} alignContent={"center"} alignItems={"center"} justify="space-between" direction='row'>
+              <Grid item container>
+                <Typography variant="overline" style={{ color: "gray" }}>Page: </Typography>
+                <Pagination {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }} />
+              </Grid>
 
-          <Grid item container>
-          <Typography variant="overline" style={{color:"gray"}}>Page: </Typography>
-          <Pagination {...{ gotopage: prop.goto_page, pagecount: prop.pages_total }}/>
-          </Grid>
+              <Grid item container alignContent={"center"} alignItems={"center"} spacing={1} >
+                <Grid item>
+                  <Typography variant="overline" style={{ color: "gray" }}>Sort By: </Typography>
+                </Grid>
+                <Grid item>
+                  <Button className={classes.sortButton} variant="outlined" color="primary" onClick={() => { dispatch(structsSortChangeAC("RESOLUTION")) }}>
+                    Resolution</Button>
+                </Grid>
 
-          <Grid item container alignContent={"center"} alignItems={"center"} spacing={1} >
-            <Grid item>
+                <Grid item>
+                  <Button className={classes.sortButton} variant="outlined" color="primary" onClick={() => { dispatch(structsSortChangeAC("YEAR")) }}>
+                    Year</Button>
 
-          <Typography variant="overline" style={{color:"gray" }}>Sort By: </Typography>
+                </Grid>
+
+                <Grid item>
+                  <Button className={classes.sortButton} variant="outlined" color="primary" onClick={() => { dispatch(structsSortChangeAC("NUMBER_OF_PROTEINS")) }}>
+                    Number of Proteins
+                  </Button>
+                </Grid>
+
+                <Grid item>
+                  <Button className={classes.sortButton}  variant="outlined" color="primary" onClick={() => { dispatch(structsSortChangeAC("PDB_CODENAME")) }}>
+                    PDB Codename
+                  </Button>
+                </Grid>
+
+
+              </Grid>
             </Grid>
-            <Grid item>
-
-            <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("RESOLUTION"))}}>
-              Resolution</Button>
-            </Grid>
-
-
-            <Grid item>
-            <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("YEAR"))}}>
-              Year</Button>
-
-            </Grid>
-
-            <Grid item>
-            <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("NUMBER_OF_PROTEINS"))}}>
-              Number of Proteins
-              </Button>
-            </Grid>
-
-            <Grid item>
-            <Button variant= "outlined"  color="primary" onClick={() =>{dispatch(structsSortChangeAC("PDB_CODENAME"))}}>
-              PDB Codename
-              </Button>
-            </Grid>
-
-          
-          </Grid>
-          </Grid>
           </Paper>
+{/*  */}
+
+
+
+
         </Grid>
         <Grid container item xs={12} spacing={3}  alignItems="flex-start">
           {prop.structures

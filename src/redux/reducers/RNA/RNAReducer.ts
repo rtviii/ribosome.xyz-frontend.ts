@@ -5,6 +5,86 @@ import _ from 'lodash';
 
 export type RnaClass  =  "mrna" | "trna" | "5" | "5.8" | "12" | "16"| "21" | "23" | "25" |"28" |"35" | 'other'
 
+
+export type RnaSortType = "PDB_CODENAME" | "RESOLUTION" | "YEAR" | "SEQLEN"
+const RnaSortsState:Record<RnaSortType,{
+  reverse  : boolean,
+  compareFn: (a:RNAProfile, b:RNAProfile) => 1 | 0 | -1
+}> = {
+  "PDB_CODENAME":{
+    reverse:false,
+    compareFn: (a,b)=>{
+      var first  = a.struct
+      var second = b.struct
+      if (first===second){
+        return 0
+      }
+      if (first>second){
+        return 1
+      }
+      if (second>first){
+        return -1
+      }
+      else return 0
+    }
+  },
+  "RESOLUTION"         : {
+    reverse:false,
+    compareFn: (a,b)=>{
+      var first  = a.parent_resolution
+      var second = b.parent_resolution
+      if (first===second){
+        return 0
+      }
+      if (first>second){
+        return 1
+      }
+      if (second>first){
+        return -1
+      }
+      else return 0
+    }
+  },
+  "YEAR"               : {
+    reverse:false,
+    compareFn: (a,b)=>{
+
+      var first  = a.parent_year
+      var second = b.parent_year
+      if (first===second){
+        return 0
+      }
+      if (first>second){
+        return 1
+      }
+      if (second>first){
+        return -1
+      }
+      else return 0
+    }
+  },
+
+  "SEQLEN": {
+    reverse:false,
+    compareFn: (a,b)=>{
+      var first  = a.seq.length
+      var second = b.seq.length
+      if (first===second){
+        return 0
+      }
+      if (first>second){
+        return 1
+      }
+      if (second>first){
+        return -1
+      }
+      else return 0
+    }
+
+  }
+}
+
+
 const RnaClassFilterRegistry: FilterRegistry<RnaFilter, RNAProfile> = {
   filtstate: {
     "EXPERIMENTAL_METHOD":{
@@ -62,15 +142,15 @@ interface RNAReducerState{
     is_loading       : boolean;
     errored_out      : boolean;
     rna_filters      : FilterRegistry<RnaFilter, RNAProfile>,
+    sorts_registry   : Record<RnaSortType, {
+    reverse          : boolean,
+    compareFn        : (a:RNAProfile, b:RNAProfile) => 1 | 0 | -1
+  }>,
     rna_classes      : {
-
       [K in RnaClass]: RNAProfile[]
-
     },
     rna_classes_derived:{
-
       [K in RnaClass]: RNAProfile[]
-
     },
     current_page: number,
     pages_total : number,
@@ -108,6 +188,7 @@ const initialStateRNAReducer:RNAReducerState = {
     "trna" : [],
   },
     rna_filters : RnaClassFilterRegistry,
+    sorts_registry: RnaSortsState,
     current_page: 1,
     pages_total : 1,
     error       : null,
@@ -170,8 +251,6 @@ export const RNAReducer = (
         },
         { applied: newApplied }
         )
-
-
       for (var filter of newApplied) {
         for (var key of Object.keys(state.rna_classes)) {
 
@@ -183,30 +262,24 @@ export const RNAReducer = (
       
      return {...state, rna_filters:nextFilters, rna_classes_derived:filtered_classes, pages_total: Math.ceil(filtered_classes[state.current_rna_class].length/20) }
 
-    // 
-     case"SORT_BY_SEQLEN":
 
+     case "RNA_SORT_CHANGE":
+       
       var sorted_classes:any ={} 
       
       for (var x of Object.entries(state.rna_classes_derived)){
-        var sorted_class = x[1].sort((a, b) => {
-        var al = a.seq.length;
-        var bl = b.seq.length;
-        if (al > bl) { 
-         return 1 }
-        if (bl > al) { 
-          return -1 }
-        return 0
-      })
-        if(state.seq_sort_applied){
+        var sorted_class = x[1].sort(state.sorts_registry[action.sorttype].compareFn)
+        if(state.sorts_registry[action.sorttype].reverse){
           sorted_class = sorted_class.reverse()
         }
-                    
         sorted_classes[x[0]] = sorted_class
       }
-      
+
+      var newRegistry = Object.assign({}, state.sorts_registry)
+      newRegistry[action.sorttype].reverse = !newRegistry[action.sorttype].reverse
       var newstate =  Object.assign({},state,
           { rna_classes_derived: sorted_classes },
+          {sorts_registry: newRegistry},
           { seq_sort_applied   : !state.seq_sort_applied }  )
       return newstate
 

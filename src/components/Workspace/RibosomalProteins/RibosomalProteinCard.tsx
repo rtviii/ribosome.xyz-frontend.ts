@@ -33,14 +33,12 @@ import { CardBodyAnnotation        }                           from '../Structur
 import   LinearProgress                                        from '@material-ui/core/LinearProgress'               ;
 import { flattenDeep               }                           from 'lodash'                                         ;
 
-
 const RPLoader = () => (
   <div className="prot-loading">
     <span>Parsing file..</span>
     <img src={loading} />
   </div>
 );
-
 
 export const ChainParentPill = ({ strand_id, parent_id }: { strand_id: string, parent_id: string }) => {
   const useStyles = makeStyles((theme: Theme) =>
@@ -86,13 +84,10 @@ export const ChainParentPill = ({ strand_id, parent_id }: { strand_id: string, p
   );
   const  classes                  = useStyles                              (    );
   const  history                  = useHistory                             (    );
-  const [anchorEl  , setAnchorEl] = React     .useState<HTMLElement | null>(null);
-  const [structdata, setstruct]   = useState  <RibosomeStructure>          (    );
+  const [anchorEl  , setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [structdata, setstruct]   = useState  <RibosomeStructure | null>          (null);
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-
-
-    if (!structdata) {
       getNeo4jData("neo4j", {
         endpoint: "get_struct",
         params: { pdbid: parent_id },
@@ -108,11 +103,13 @@ export const ChainParentPill = ({ strand_id, parent_id }: { strand_id: string, p
           console.log("Got error on /neo request", err);
         }
       );
-    }
+    
+
     setAnchorEl(event.currentTarget);
   };
 
   const handlePopoverClose = () => {
+    setstruct(null);
     setAnchorEl(null);
   };
 
@@ -287,18 +284,13 @@ interface OwnProps {
   protein: RibosomalProtein
   displayPill: boolean
 }
-
 interface StateProps {
   allFilters: FiltersReducerState
 }
-
 interface DispatchProps {
   handleFilterChange: (allFilters: FiltersReducerState, filtertype: FilterType, newavalue: number | string | number[] | string[]) => void
   addCartItem: (item: CartItem) => void
 }
-
-
-
 type RibosomalProtCardProps = DispatchProps & StateProps & OwnProps
 const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
   const history                     = useHistory()
@@ -340,7 +332,7 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
   return (
-    <Card className={classes.root} variant="elevation" elevation={2}>
+    <Card className={classes.root} variant="outlined" >
 
       <CardContent>
         <Grid xs={12} container spacing={1}>
@@ -508,24 +500,27 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
         </Grid>
       </CardActions>
       <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        className={classes.popover}
+        id       ={id                 }
+        open     ={open               }
+        anchorEl ={anchorEl           }
+        onClose  ={handleClose        }
+        className={classes    .popover}
 
         anchorOrigin={{
-          vertical: "bottom",
+          vertical  : "bottom",
           horizontal: "center",
         }}
         transformOrigin={{
-          vertical: "top",
+          vertical  : "top"   ,
           horizontal: "center",
         }}
       >
         <Grid container xs={12}>
           <Typography
-            style={{ width: "400px", fontSize: "14px", wordBreak: "break-word" }}
+            style    ={{
+              width    : "400px",
+              fontSize : "14px",
+              wordBreak: "break-word" }}
             variant="body2"
             className={classes.popover}          >
             {prop.protein.entity_poly_seq_one_letter_code}
@@ -537,19 +532,14 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
     </Card>
   );
 }
-
-
 const mapstate = (appstate: AppState, ownprops: OwnProps): StateProps => ({
   allFilters: appstate.filters,
 });
-
 const mapdispatch = (dispatch: Dispatch<AppActions>, ownprops: any): DispatchProps =>
 ({
   handleFilterChange: (allfilters, filttype, newval) => dispatch(filterChangeActionCreator(allfilters, filttype, newval)),
   addCartItem: (item) => dispatch(cart_add_item(item))
 })
-
 const RibosomalProteinCard = connect(mapstate, mapdispatch)(_RibosomalProteinCard)
-
 export default RibosomalProteinCard;
 

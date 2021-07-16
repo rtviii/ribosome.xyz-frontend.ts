@@ -1,10 +1,9 @@
 import { RibosomalProtein } from './../../RibosomeTypes'
-import { BanClassMetadataFiltType, ProteinActions, ProteinClassFilterTypes } from './ActionTypes'
+import { BanClassMetadataFiltType, ProteinActions, ProteinClassFilterTypes, ProteinSortType } from './ActionTypes'
 import { Filter, FilterRegistry } from '../Filters/ActionTypes';
 import { BanClassMetadata, ProteinProfile } from '../../DataInterfaces';
 import { toInteger } from 'lodash';
 import _ from 'lodash';
-
 
 //! hacky.
 type subunit_families =
@@ -15,6 +14,82 @@ type subunit_families =
   "e_LSU" |
   "b_LSU"
 
+
+const ProteinSortsState:Record<ProteinSortType,{
+  reverse  : boolean,
+  compareFn: (a:ProteinProfile, b:ProteinProfile) => 1 | 0 | -1
+}> = {
+  "PDB_CODENAME":{
+    reverse:false,
+    compareFn: (a,b)=>{
+      var first  = a.parent_rcsb_id
+      var second = b.parent_rcsb_id
+      if (first===second){
+        return 0
+      }
+      if (first>second){
+        return 1
+      }
+      if (second>first){
+        return -1
+      }
+      else return 0
+    }
+  },
+  "SEQLEN":{
+    reverse:false,
+    compareFn: (a,b)=>{
+      var first  = a.entity_poly_seq_length
+      var second = b.entity_poly_seq_length
+      if (first===second){
+        return 0
+      }
+      if (first>second){
+        return 1
+      }
+      if (second>first){
+        return -1
+      }
+      else return 0
+    }
+
+  },
+  "RESOLUTION"         : {
+    reverse:false,
+    compareFn: (a,b)=>{
+      var first  = a.parent_resolution
+      var second = b.parent_resolution
+      if (first===second){
+        return 0
+      }
+      if (first>second){
+        return 1
+      }
+      if (second>first){
+        return -1
+      }
+      else return 0
+    }
+  },
+  "YEAR"               : {
+    reverse:false,
+    compareFn: (a,b)=>{
+
+      var first  = a.parent_year
+      var second = b.parent_year
+      if (first===second){
+        return 0
+      }
+      if (first>second){
+        return 1
+      }
+      if (second>first){
+        return -1
+      }
+      else return 0
+    }
+  }
+}
 
 const BanClassesFilterRegistry: FilterRegistry<BanClassMetadataFiltType, BanClassMetadata> = {
 
@@ -38,7 +113,6 @@ const BanClassesFilterRegistry: FilterRegistry<BanClassMetadataFiltType, BanClas
       }
     },
   },
-
   applied: []
 }
 
@@ -118,37 +192,44 @@ interface ProteinsReducerState {
     e_SSU: BanClassMetadata[],
     b_SSU: BanClassMetadata[],
     u_SSU: BanClassMetadata[],
-  }
-  ,
+  },
+  sort_state:Record<ProteinSortType, {
+    reverse          : boolean,
+    compareFn        : (a:ProteinProfile, b:ProteinProfile) => 1 | 0 | -1
+  }>,
   ban_classes_filter_registry: FilterRegistry<BanClassMetadataFiltType, BanClassMetadata>
   current_page               : number,
   pages_total                : number,
 }
 
 const initialStateProteinsReducer: ProteinsReducerState = {
-  ban_class: [],
-  ban_class_derived: [],
-  protein_class_filter_registry:ProteinClassFilterRegistry,
-  all_proteins: [],
-  all_proteins_derived: [],
+  sort_state                    :ProteinSortsState         ,
+  ban_class                     : []                       ,
+  ban_class_derived             : []                       ,
+  protein_class_filter_registry :ProteinClassFilterRegistry,
+  all_proteins                  : []                       ,
+  all_proteins_derived          : []                       ,
+
   ban_classes: {
-    e_LSU: [],
-    b_LSU: [],
-    u_LSU: [],
-    e_SSU: [],
-    b_SSU: [],
-    u_SSU: [],
+  e_LSU: [],
+  b_LSU: [],
+  u_LSU: [],
+  e_SSU: [],
+  b_SSU: [],
+  u_SSU: [],
   },
+
   ban_classes_derived: {
-    e_LSU: [],
-    b_LSU: [],
-    u_LSU: [],
-    e_SSU: [],
-    b_SSU: [],
-    u_SSU: [],
+  e_LSU: [],
+  b_LSU: [],
+  u_LSU: [],
+  e_SSU: [],
+  b_SSU: [],
+  u_SSU: [],
   },
+
   ban_classes_filter_registry: BanClassesFilterRegistry,
-  error                      : null,
+  error : null,
 
   // pagination
   current_page: 1,
@@ -169,7 +250,6 @@ export const ProteinsReducer = (
       return { 
         ...state,
         is_loading: true };
-
     case "REQUEST_BAN_CLASS_SUCCESS":
 
       return {
@@ -179,7 +259,6 @@ export const ProteinsReducer = (
         pages_total      : Math.ceil(action.payload.length / 20),
         is_loading       : false
       };
-
     case "REQUEST_BAN_CLASS_ERR":
 
       return {
@@ -188,8 +267,6 @@ export const ProteinsReducer = (
         error      : action.error,
         errored_out: true,
       };
-
-
     case "FILTER_PROTEIN_CLASS":
 
       const updateProteinFilters = (
@@ -334,6 +411,23 @@ export const ProteinsReducer = (
       }
       
      return {...state, ban_classes_filter_registry:nextFilters, ban_classes_derived:filtered_classes}
+
+     case "PROTEIN_SORT_CHANGE":
+
+    var             sorted                   = state.ban_class_derived.sort(state.sort_state[action.sorttype].compareFn)
+    var             newSortRegistry          = {...state.sort_state}
+    newSortRegistry[action.sorttype].reverse = !newSortRegistry[action.sorttype].reverse
+    if(newSortRegistry[action.sorttype].reverse){
+      sorted= sorted.reverse()
+    }
+
+    return Object.assign({},
+        state            ,
+        {sort_state       :newSortRegistry},
+        {ban_class_derived: sorted},
+        {last_sort_set    :action.sorttype})
+       
+      //  return state
 
     default:
       return state;
