@@ -9,12 +9,13 @@ import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../../redux/store';
 import TextField from '@material-ui/core/TextField/TextField';
-import { BindingInterface, BindingSite, LigandClass, NeoStruct } from '../../../redux/DataInterfaces';
+import { BindingInterface, BindingSite, LigandBindingSite, LigandClass, NeoStruct, Residue } from '../../../redux/DataInterfaces';
 import { Button } from '@material-ui/core';
 import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData';
 import fileDownload from 'js-file-download';
 import axios from 'axios';
 import { CSVLink } from 'react-csv';
+import { chain } from 'lodash';
 
 
 // @ts-ignore
@@ -22,13 +23,6 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 
 
 
-export type LigandNeighborhood =  {
-	[chainname: string]: {
-		seq: string
-		nomenclature: string[],
-		residues: { name: string, residue_id: number }[]
-	}
-}
 
 const BindingSites = () => {
 	const classes = makeStyles((theme: Theme) => ({
@@ -84,7 +78,7 @@ const BindingSites = () => {
 
 
 
-  const [interface_data, setInterface_data] = useState<LigandNeighborhood | null>(null)
+  const [interface_data, setInterface_data] = useState<LigandBindingSite | null>(null)
   const [cur_struct, set_cur_struct]        = useState<BindingSite| null>(null)
   const [curligand, set_cur_ligand]         = useState<LigandClass | null>(null)
   const [ligstructPair, setLigstructPair]   = useState< [ string|null , string |null ]>([null, null])
@@ -103,15 +97,11 @@ const BindingSites = () => {
 	  }
 	  else {
 		  getLigandNbhd(ligstructPair[0], ligstructPair[1]).then(r => { 
-			  console.log("RECEIEV LIGAND DATA",);
-			  console.log(r);
 			  
 			setInterface_data(r) })
 
 	  }
   }, [ligstructPair])
-
-
 
   useEffect(() => {
 
@@ -224,71 +214,155 @@ const BindingSites = () => {
 
 
 
-  const highlightInterface = () =>{
-	  //? struct_sym_id: 'B', 
-	  //? start_residue_number: 8, 
-	  //? end_residue_number: 10, 
-	  //? color:{r:255,g:0,b:255},
-	  //? sideChain: true
+  const test_hl =() =>{
 
-	  if (interface_data === null) {
-		  alert("Select a binding site.")
-		  return
-	  }
+		var test_data =  [ 
+			{
+				residue_number: 2057,
+				focus: true,
+				color: { r: 1, g: 200, b: 200 },
+				auth_asym_id: "A"
+			},
+			{
+				residue_number: 2059,
+				focus: true,
+				color: { r: 1, g: 200, b: 200 },
+				auth_asym_id: "A"
+			},
+			{
+				residue_number: 2058,
+				focus: true,
+				color: { r: 1, g: 200, b: 200 },
+				auth_asym_id: "A"
+			},
+			{
+				residue_number: 66,
+				focus: true,
+				color: { r: 1, g: 200, b: 200 },
+				auth_asym_id: "E"
+			},
+			{
+				residue_number: 89,
+				focus: true,
+				color: { r: 1, g: 200, b: 200 },
+				auth_asym_id: "S"
+			},
+			{
+				residue_number: 90,
+				focus: true,
+				color: { r: 1, g: 200, b: 200 },
+				auth_asym_id: "S"
+			},
+			{
+				residue_number: 84,
+				focus: true,
+				color: { r: 1, g: 200, b: 200 },
+				auth_asym_id: "a"
+			},
+			{
+				residue_number: 83,
+				focus: true,
+				color: { r: 1, g: 200, b: 200 },
+				auth_asym_id: "a"
+			}
+		 ]
 
-	  if (interface_data === undefined) {
-		  alert("Neighbors of this ligand are ambiguous.")
-		  return
-	  }
+		console.log("Attempting to visualize ", test_data);
+		
+		viewerInstance.visual.select(
+			{
+				data            : test_data,
+				nonSelectedColor: { r: 240, g: 240, b: 240 }
+			}
+		)
 
-	  console.log(interface_data);
-	  
-	//   var vis_data = interface_data?.map(c => {
-
-	// 	  return asymidChainMap[c.chainname] == undefined ?
-	// 		  null
-	// 		  :
-	// 		  {
-	// 			  start_residue_number: l.resid,
-	// 			  end_residue_number: l.resid,
-	// 			  color: { r: 255, g: 0, b: 255 },
-	// 			  struct_sym_id: asymidChainMap[l.strand_id]['asymid']
-	// 			  , focus: true
-	// 		  }
-	//   }).filter(val => !(val === null))
-
-	//   console.log(vis_data);
-	//   if (vis_data.length > 500){
-	// 	  alert(`The are too many neighboring residues of ${curligand?.ligand.chemicalId} (${vis_data.length}) in this structure.\n Attempting to visualize. You browser may slow down.`)
-	// 	  return 
-	//   }
-	  
-	  
-	//   viewerInstance.visual.select(
-	// 	  {
-	// 		  data: vis_data, nonSelectedColor: { r: 180, g: 180, b: 180 }
-	// 	  }
-	//   )
   }
 
 
-const donwloadBindingSiteReport = (struct:string, chemid:string) =>{
-    getNeo4jData("static_files", {
-      endpoint: "download_ligand_nbhd",
-      params: {
-        chemid    :  chemid,
-        structid  :  struct,
-      },
-    }).then(r =>
-      fileDownload(
-        JSON.stringify(r.data),
-        `${struct}_${chemid}_ligandProfile.json`,
-        "application/json"
-      )
-    );
-}
+	const highlightInterface = () => {
 
-const getLigandNbhd = async (chemid:string, struct:string):Promise<LigandNeighborhood>=>{
+		if (interface_data === null || interface_data === undefined) {
+			alert("Select a binding site.")
+			return
+		}
+
+		interface MolStarResidue { entity_id?: string, auth_asym_id?: string, struct_asym_id?: string, residue_number?: number, start_residue_number?: number, end_residue_number?: number, auth_residue_number?: number, auth_ins_code_id?: string, start_auth_residue_number?: number, start_auth_ins_code_id?: string, end_auth_residue_number?: number, end_auth_ins_code_id?: string, atoms?: string[], label_comp_id?: string, color: { r: number, g: number, b: number }, focus?: boolean, sideChain?: boolean }
+		console.log(interface_data);
+
+		var vis_data: MolStarResidue[] = []
+
+
+		
+		for (var chain of Object.values(interface_data)){
+			var reduced = chain.residues.reduce((x:MolStarResidue[],y:Residue)=>{
+
+				x.push({
+				residue_number: y.residue_id,
+				focus: true,
+				color: { r: 1, g: 200, b: 200 },
+				auth_asym_id: y.parent_strand_id
+			})
+			return x
+
+			 },[])
+			 vis_data = [...vis_data, ...reduced]
+		}
+
+			
+		console.log("In the end:", vis_data);
+		
+
+		viewerInstance.visual.select(
+			{
+				data            : vis_data,
+				nonSelectedColor: { r: 240, g: 240, b: 240 }
+			}
+		)
+	}
+//   const highlightInterface_old= () =>{
+// 	  //? struct_sym_id: 'B', 
+// 	  //? start_residue_number: 8, 
+// 	  //? end_residue_number: 10, 
+// 	  //? color:{r:255,g:0,b:255},
+// 	  //? sideChain: true
+
+// 	  if (interface_data === null || interface_data === undefined) {
+// 		  alert("Select a binding site.")
+// 		  return
+// 	  }
+
+// 	  console.log(interface_data);
+
+	  
+// 	  var vis_data = interface_data?.map(c => {
+// 		  return asymidChainMap[c.chainname] == undefined ?
+// 			  null
+// 			  :
+// 			  {
+// 				  start_residue_number: l.resid,
+// 				  end_residue_number: l.resid,
+// 				  color: { r: 255, g: 0, b: 255 },
+// 				  struct_sym_id: asymidChainMap[l.strand_id]['asymid']
+// 				  , focus: true
+// 			  }
+// 	  }).filter(val => !(val === null))
+
+// 	  console.log(vis_data);
+// 	  if (vis_data.length > 500){
+// 		  alert(`The are too many neighboring residues of ${curligand?.ligand.chemicalId} (${vis_data.length}) in this structure.\n Attempting to visualize. You browser may slow down.`)
+// 		  return 
+// 	  }
+	  
+	  
+// 	  viewerInstance.visual.select(
+// 		  {
+// 			  data: vis_data, nonSelectedColor: { r: 180, g: 180, b: 180 }
+// 		  }
+// 	  )
+//   }
+
+
+const getLigandNbhd = async (chemid:string, struct:string):Promise<LigandBindingSite>=>{
 
 	var data = {}
 	await getNeo4jData("static_files",{endpoint:"get_ligand_nbhd",params:{
@@ -297,15 +371,13 @@ const getLigandNbhd = async (chemid:string, struct:string):Promise<LigandNeighbo
     }}).then(
       r=>{
 		data = r.data
-
-		
       },
       e=>{
-        console.log("error out fetching binding site file:", e)
+        console.log("Error out fetching binding site file:", e)
       }
     )
 
-	return data as LigandNeighborhood
+	return data as LigandBindingSite
 }
 
 
@@ -357,7 +429,6 @@ useEffect(() => {
 				setLigstructPair([ newvalue.ligand.chemicalId, ligstructPair[1], ])
 			}
   }
-
   const handleTargetChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue:NeoStruct) => {
 
             if (newvalue === null){
@@ -425,37 +496,33 @@ useEffect(() => {
 	}, [loading_current,loading_target])
 
 
-const createBindingSiteDataSheet = ():any[][] =>{
-
-	console.log("Got interface data", interface_data);
+// const createBindingSiteDataSheet = ():any[][] =>{
+// 	console.log("Got interface data", interface_data);
 	
-if (interface_data === null){
-	// alert("Select a valid ligand.")
-	return []
-}
-var chains =Object.entries(interface_data)
-console.log(chains);
+// if (interface_data === null){
+// 	return []
+// }
+// var chains =Object.entries(interface_data)
+//   var sheet:Array<Array<any>> = []
+//    sheet = [
+//     ['PDBChainName'],
+//     ...chains.map(c =>[ c[0] ])
+//   ]
+//           sheet[0].push("Nomenclature")
+//          chains.map((v,i)=>sheet[i+1].push(v[1].nomenclature))
 
-  var sheet:Array<Array<any>> = []
-   sheet = [
-    ['PDBChainName'],
-    ...chains.map(c =>[ c[0] ])
-  ]
-          sheet[0].push("Nomenclature")
-         chains.map((v,i)=>sheet[i+1].push(v[1].nomenclature))
-
-          sheet[0].push("Residues")
-         chains.map((v,i)=>sheet[i+1].push(
+//           sheet[0].push("Residues")
+//          chains.map((v,i)=>sheet[i+1].push(
 			 
-			v[1].residues.reduce((a,b)=>{ return a + ','+ b.residue_id}, ''))
+// 			v[1].residues.reduce((a,b)=>{ return a + ','+ b.residue_id}, ''))
 			
-			)
+// 			)
 
-          sheet[0].push("Sequence")
-         chains.map((v,i)=>sheet[i+1].push(v[1].seq))
+//           sheet[0].push("Sequence")
+//          chains.map((v,i)=>sheet[i+1].push(v[1].seq))
 
-    return sheet
-  }
+//     return sheet
+//   }
 	
 
 
@@ -506,7 +573,7 @@ console.log(chains);
 					// @ts-ignore
 					onChange={handleTargetChange}
 					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
-					renderInput={(params) => <TextField {...params} label={`Target Structure ( ${target_structs != undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
+					renderInput={(params) => <TextField {...params} label={`Target Structure ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
 
 				<Button color="primary"
 					style={{ marginBottom: "10px" }}
@@ -527,7 +594,11 @@ console.log(chains);
 				<Grid item style={{ marginBottom: "10px" }}>
 
 
-          <CSVLink data={createBindingSiteDataSheet()}>=
+          <CSVLink data={
+			[] 
+			    //  createBindingSiteDataShee
+			  } filename={`${cur_struct?.rcsb_id}_LIGAND_${curligand?.ligand.chemicalId}.csv`}>
+
             <Button  
 			
 			
@@ -548,8 +619,22 @@ console.log(chains);
 						variant = {"outlined"}
 						style   = {ligstructPair.includes(null) ? { color: "gray" } : {}}
 						color   = {!ligstructPair.includes(null) ? 'primary' : 'default'}
-						onClick = {() => { highlightInterface() }}>
+						onClick = {() => { 
+							
+							console.log("Highlight interface fired");
+							
+							highlightInterface() }}>
 						Visualize Interface
+					</Button>
+				</Grid>
+				<Grid item style={{ marginBottom: "10px" }}>
+					<Button
+						fullWidth
+						variant = {"outlined"}
+						style   = {ligstructPair.includes(null) ? { color: "gray" } : {}}
+						color   = {!ligstructPair.includes(null) ? 'primary' : 'default'}
+						onClick = {() => { test_hl() }}>
+						Test 
 					</Button>
 				</Grid>
 				<Grid item xs={3} justify={"flex-start"} >

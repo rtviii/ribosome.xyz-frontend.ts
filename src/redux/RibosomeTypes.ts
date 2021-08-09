@@ -1,3 +1,7 @@
+// Types filtered down from RCSB's API response.
+// * https://data.rcsb.org/graphql/index.html
+
+
 export interface RibosomeStructure {
 
   rcsb_id               : string;
