@@ -18,12 +18,23 @@ export interface Residue{
 				parent_strand_id: string
 }
 export type LigandBindingSite = {
-  [chainname :string ] :
-  { sequence : string
-  nomenclature : string[ ]
-  asym_ids : string[ ]
-  residues : Residue[]
+  [ chainname    :string ] :
+  { sequence     : string
+    nomenclature : string[ ]
+    asym_ids     : string[ ]
+    residues     : Residue[]
   }}
+
+
+export type LigandPrediction = {
+  [ polypeptide_class :string ] :
+  {
+  source    : {src    :string, strand :string, src_ids:number[]},
+  target    : {tgt    :string, strand :string, tgt_ids:number[]},
+  alignment : {src_aln:string, tgt_aln:string, aln_ids:number[]},
+  }
+
+}
 
 
 

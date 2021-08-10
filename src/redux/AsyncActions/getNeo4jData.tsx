@@ -4,8 +4,8 @@ import qs from 'qs'
 import { RnaClass } from "../reducers/RNA/RNAReducer";
 import { BanClass } from "../RibosomeTypes";
 
-const BACKEND: any  =  process.env.REACT_APP_DJANGO_URL;
-type  DjangoAPIs    =  "neo4j" | "static_files"
+const BACKEND: any = process.env.REACT_APP_DJANGO_URL;
+type DjangoAPIs = "neo4j" | "static_files"
 
 
 type StaticFilesEndpoints =
@@ -17,54 +17,66 @@ type StaticFilesEndpoints =
   // | downloadArchive
   | cif_chain_by_class
   | download_structure
+  | ligand_prediction
 
-  interface download_structure{
-    endpoint: "download_structure",
-            params:{
-struct_id:string
-          }
+  interface ligand_prediction{
+    endpoint:"ligand_prediction",
+    params:{
+      src_struct: string,
+      tgt_struct: string,
+      chemid    : string,
+    }
+
   }
 
 
-  interface cif_chain_by_class{
-    endpoint: "cif_chain_by_class",
-            params:{
+interface download_structure {
+  endpoint: "download_structure",
+  params: {
+    struct_id: string
+  }
+}
+
+interface cif_chain_by_class {
+  endpoint: "cif_chain_by_class",
+  params: {
     classid: string,
-    struct : string
-          }
+    struct: string
   }
-interface downloadCifChain{
+}
+interface downloadCifChain {
   endpoint: "cif_chain",
-  params:{
+  params: {
     structid: string,
-    chainid : string
+    chainid: string
   }
 }
 interface download_ligand_nbhd {
-  endpoint:"download_ligand_nbhd",
-  params:{
+  endpoint: "download_ligand_nbhd",
+  params: {
     structid: string,
-    chemid  : string;
+    chemid: string;
   }
 }
 interface get_tunnel {
   endpoint: "tunnel",
-  params:{
+  params: {
     struct: string;
     filetype: "report" | "centerline";
   }
 }
-interface pairwise_align{
-  endpoint:"pairwise_align",
-  params:{
-      struct1: string,
-      struct2: string,
-      strand1: string,
-      strand2: string
-  }}
-interface get_static_catalogue{
+interface pairwise_align {
+  endpoint: "pairwise_align",
+  params: {
+    struct1: string,
+    struct2: string,
+    strand1: string,
+    strand2: string
+  }
+}
+interface get_static_catalogue {
   endpoint: 'get_static_catalogue',
-  params  : null
+  params: null
 }
 // interface downloadArchive {
 //   endpoint: 'downloadArchive',
@@ -75,7 +87,7 @@ interface get_static_catalogue{
 //    }
 // }
 type Neo4jEndpoints =
-   nomclass_visualize
+  nomclass_visualize
   | getStructure
   | getAllStructures
   | getHomologs
@@ -100,57 +112,56 @@ type Neo4jEndpoints =
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
 
-  interface proteins_number{
-    endpoint: "proteins_number",
-          params  :null
-  }
+interface proteins_number {
+  endpoint: "proteins_number",
+  params: null
+}
 interface banclass_annotation {
-  endpoint:"banclass_annotation",
-  params:{
-    banclass:BanClass
+  endpoint: "banclass_annotation",
+  params: {
+    banclass: BanClass
   }
 }
 
-interface nomclass_visualize{
+interface nomclass_visualize {
   endpoint: "nomclass_visualize",
-  params:{
-    ban:string
+  params: {
+    ban: string
   }
 }
 
 interface get_banclasses_metadata {
   endpoint: 'get_banclasses_metadata',
   params: {
-    family:string,subunit:string
+    family: string, subunit: string
   }
 }
 
-interface get_individual_ligand{
+interface get_individual_ligand {
   endpoint: 'get_individual_ligand',
-  params  : {
-    chemId:string
+  params: {
+    chemId: string
   }
 }
 
 interface TEMP_classification_sample {
-  endpoint:"TEMP_classification_sample",
+  endpoint: "TEMP_classification_sample",
   params: null
 }
 
-interface get_surface_ratios{
-  endpoint:'get_surface_ratios',
-  params:{
+interface get_surface_ratios {
+  endpoint: 'get_surface_ratios',
+  params: {
     pdbid: string
   }
 }
 
-interface match_structs_by_proteins{
-  endpoint:"match_structs",
-  params:{
-    proteins:string
+interface match_structs_by_proteins {
+  endpoint: "match_structs",
+  params: {
+    proteins: string
   }
 }
-
 interface get_ligand_nbhd {
   endpoint: "get_ligand_nbhd";
   params: {
@@ -158,29 +169,24 @@ interface get_ligand_nbhd {
     chemid: string;
   };
 }
-
-interface getRnasByStruct{
+interface getRnasByStruct {
   endpoint: "get_rnas_by_struct",
-  params  : null
-}
-interface getLigandsByStruct{
-  endpoint: "get_ligands_by_struct",
-  params  : null
-}
-
-
-interface get_uncategorized_rna {
-  endpoint:"get_rna_class";
   params: null
 }
-
+interface getLigandsByStruct {
+  endpoint: "get_ligands_by_struct",
+  params: null
+}
+interface get_uncategorized_rna {
+  endpoint: "get_rna_class";
+  params: null
+}
 interface get_rna_class {
   endpoint: "get_rna_class";
-  params  : {
-    rna_class: RnaClass 
+  params: {
+    rna_class: RnaClass
   }
 }
-
 interface getStructure {
   endpoint: "get_struct";
   params: {
@@ -205,7 +211,7 @@ interface getAllStructures {
 }
 interface listAvailableRPs {
   endpoint: "list_nom_classes";
-  params  : null;
+  params: null;
 }
 interface gmoNomClass {
   endpoint: "gmo_nom_class"
@@ -213,7 +219,7 @@ interface gmoNomClass {
     banName: string;
   };
 }
-interface getAllLigands{
+interface getAllLigands {
   endpoint: 'get_all_ligands',
   params: null
 }
@@ -222,49 +228,51 @@ export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {
 
   const URI = encodeURI(`${BACKEND}/${api}/${ep.endpoint}/`);
 
-  return ep.params != null ? Axios.get(URI, { params: ep.params , paramsSerializer:params => qs.stringify(params, 
-    {
-    arrayFormat:"repeat"
-    }
-  )}) : Axios.get(URI);
+  return ep.params != null ? Axios.get(URI, {
+    params: ep.params, paramsSerializer: params => qs.stringify(params,
+      {
+        arrayFormat: "repeat"
+      }
+    )
+  }) : Axios.get(URI);
 
 };
 
 
-export const download_zip =(params:{
-  structs         : string[],
-  rna             : string[],
-  rps             : string[],
+export const download_zip = (params: {
+  structs: string[],
+  rna: string[],
+  rps: string[],
 },
-  download_filename:string
+  download_filename: string
 ) => {
- 
-  
-                            axios.request({
-                                url   : `${BACKEND}/static_files/downloadArchive/`,
-                                method: 'GET',                                      responseType: 'arraybuffer',
-                                params,
-                                paramsSerializer: params => qs.stringify(params,
-                                    {
-                                        arrayFormat: "repeat"
-                                    }),
-
-                                headers: {
-                                    'Content-Type': 'multipart/form-data',
-                                }
-                            })
-                                .then(
-
-                                    r => {
-                                        let blob = new Blob([r.data], { type: 'application/zip' })
-                                        const downloadUrl = URL.createObjectURL(blob)
-                                        let a = document.createElement("a");
-                                        a.href = downloadUrl;
-                                        a.download = download_filename;
-                                        document.body.appendChild(a);
-                                        a.click();
 
 
-                                    }
-                                )
+  axios.request({
+    url: `${BACKEND}/static_files/downloadArchive/`,
+    method: 'GET', responseType: 'arraybuffer',
+    params,
+    paramsSerializer: params => qs.stringify(params,
+      {
+        arrayFormat: "repeat"
+      }),
+
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  })
+    .then(
+
+      r => {
+        let blob = new Blob([r.data], { type: 'application/zip' })
+        const downloadUrl = URL.createObjectURL(blob)
+        let a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = download_filename;
+        document.body.appendChild(a);
+        a.click();
+
+
+      }
+    )
 }

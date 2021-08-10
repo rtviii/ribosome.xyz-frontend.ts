@@ -9,13 +9,16 @@ import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../../redux/store';
 import TextField from '@material-ui/core/TextField/TextField';
-import { BindingInterface, BindingSite, LigandBindingSite, LigandClass, NeoStruct, Residue } from '../../../redux/DataInterfaces';
+import { BindingInterface, BindingSite, LigandBindingSite, LigandClass, LigandPrediction, NeoStruct, Residue } from '../../../redux/DataInterfaces';
 import { Button } from '@material-ui/core';
 import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData';
 import fileDownload from 'js-file-download';
 import axios from 'axios';
 import { CSVLink } from 'react-csv';
 import { chain } from 'lodash';
+import { ChatBubbleOutlineSharp } from '@material-ui/icons';
+import assert from 'assert';
+import { log } from 'console';
 
 
 // @ts-ignore
@@ -78,18 +81,68 @@ const BindingSites = () => {
 
 
 
+
+
   const [interface_data, setInterface_data] = useState<LigandBindingSite | null>(null)
-  const [cur_struct, set_cur_struct]        = useState<BindingSite| null>(null)
-  const [curligand, set_cur_ligand]         = useState<LigandClass | null>(null)
-  const [ligstructPair, setLigstructPair]   = useState< [ string|null , string |null ]>([null, null])
+  const [predictionData, setPredictionData] = useState<LigandPrediction | null>(null)
+  
+
+  const [cur_struct   , set_cur_struct  ] = useState<BindingSite | null                 >( null       )
+  const [curligand    , set_cur_ligand  ] = useState<LigandClass | null                 >( null       )
+  const [ligstructPair, setLigstructPair] = useState< [ string   | null , string |null ]>([null, null])
+
+
+
+
 
   const bsites                                          = useSelector((state:AppState) => state.binding_sites.bsites)
-  const lig_classes                                     = useSelector((state:AppState) => state.binding_sites.ligand_classes)
+  const lig_classes                                    = useSelector((state:AppState) => state.binding_sites.ligand_classes)
   const [ bsites_derived, set_bsites_derived ]          = useState<BindingSite[]>()
   const [ lig_classes_derived, set_ligclasses_derived ] = useState<LigandClass[]>()
 
-
   const [curTarget, setCurTarget] = useState<NeoStruct | null >(null)
+
+
+  useEffect(() => {
+
+	  if (predictionData == null) {
+		  return
+	  }
+	  interface MolStarResidue { entity_id?: string, auth_asym_id?: string, struct_asym_id?: string, residue_number?: number, start_residue_number?: number, end_residue_number?: number, auth_residue_number?: number, auth_ins_code_id?: string, start_auth_residue_number?: number, start_auth_ins_code_id?: string, end_auth_residue_number?: number, end_auth_ins_code_id?: string, atoms?: string[], label_comp_id?: string, color: { r: number, g: number, b: number }, focus?: boolean, sideChain?: boolean }
+	  var prediction_vis_data: MolStarResidue[] = []
+
+
+	  for (var chain of Object.values(predictionData)) {
+		  for (var i of chain.target.tgt_ids) {
+			  prediction_vis_data.push({
+				  residue_number: i,
+				  focus: true,
+				  color: { r: 1, g: 200, b: 200 },
+				  auth_asym_id: chain.target.strand
+
+			  })
+
+		  }
+	  }
+	  
+
+		if (prediction_vis_data.length > 300){
+			// alert("This ligand binds to more than 300 residues. Your browser might take some time to load it.")
+			if (window.confirm("This ligand binds to more than 300 residues. Your browser might take some time to visualize it.")){
+			}
+			else{
+				return
+			}
+		}
+
+		viewerInstance.visual.select(
+			{
+				data            : prediction_vis_data,
+				nonSelectedColor: { r: 240, g: 240, b: 240 }
+			}
+		)
+
+  }, [predictionData])
 
   useEffect(() => {
 	  if (ligstructPair[0] == null || ligstructPair[1] == null) {
@@ -295,13 +348,14 @@ const BindingSites = () => {
 		
 		for (var chain of Object.values(interface_data)){
 			var reduced = chain.residues.reduce((x:MolStarResidue[],y:Residue)=>{
-
-				x.push({
-				residue_number: y.residue_id,
-				focus: true,
-				color: { r: 1, g: 200, b: 200 },
-				auth_asym_id: y.parent_strand_id
-			})
+				if (y.residue_id >0){
+					x.push({
+					residue_number: y.residue_id,
+					focus: true,
+					color: { r: 1, g: 200, b: 200 },
+					auth_asym_id: y.parent_strand_id
+				})
+			}
 			return x
 
 			 },[])
@@ -309,8 +363,14 @@ const BindingSites = () => {
 		}
 
 			
-		console.log("In the end:", vis_data);
-		
+		if (vis_data.length > 300){
+			// alert("This ligand binds to more than 300 residues. Your browser might take some time to load it.")
+			if (window.confirm("This ligand binds to more than 300 residues. Your browser might take some time to visualize it.")){
+			}
+			else{
+				return
+			}
+		}
 
 		viewerInstance.visual.select(
 			{
@@ -574,6 +634,30 @@ useEffect(() => {
 					onChange={handleTargetChange}
 					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
 					renderInput={(params) => <TextField {...params} label={`Target Structure ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
+
+				<Button color="primary"
+					style={{ marginBottom: "10px" }}
+					// disabled={cur_struct  cur_struct && curTarget}
+					onClick={() => {
+getNeo4jData("static_files",{
+	endpoint:"ligand_prediction",
+	params:{
+		chemid     : ( curligand?.ligand.chemicalId as string ),
+		src_struct : ( cur_struct?.rcsb_id as string)           ,
+		tgt_struct : ( curTarget?.struct.rcsb_id as string)   ,
+	}
+}).then(resp=>{
+	console.log("Got make predictions data", resp.data);
+	setPredictionData(resp.data)
+
+
+})
+						viewerInstance.visual.reset({ camera: true, theme: true })
+					}}
+
+					fullWidth variant="outlined"> Predict</Button>
+
+
 
 				<Button color="primary"
 					style={{ marginBottom: "10px" }}
