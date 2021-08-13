@@ -87,7 +87,9 @@ export const ChainParentPill = ({ strand_id, parent_id }: { strand_id: string, p
   const [anchorEl  , setAnchorEl] = React.useState<HTMLElement | null>(null);
   const [structdata, setstruct]   = useState  <RibosomeStructure | null>          (null);
 
+  // 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+
       getNeo4jData("neo4j", {
         endpoint: "get_struct",
         params: { pdbid: parent_id },
@@ -131,8 +133,6 @@ export const ChainParentPill = ({ strand_id, parent_id }: { strand_id: string, p
         open={open}
         anchorEl={anchorEl}
         onClose={handlePopoverClose}
-
-
         className={classes.popover}
         classes={{
           paper: classes.popoverContent,

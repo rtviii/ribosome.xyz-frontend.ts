@@ -1,4 +1,4 @@
-import { Theme } from "@material-ui/core/styles/createTheme";
+import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import makeStyles from                                                 "@material-ui/core/styles/makeStyles"                   ;
 export const useRxztheme = makeStyles((theme: Theme) => ({
   sortButton:{

@@ -39,7 +39,7 @@ import { Spinner } from "react-bootstrap";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import { useRxztheme } from "../../../theme";
 import _ from "lodash";
-import { Theme } from "@material-ui/core/styles/createTheme";
+import { Theme } from "@material-ui/core/styles/createMuiTheme";
 
 const pageData = {
   title: "RNA",

@@ -22,7 +22,7 @@ import { AppState } from        '../redux/store'                          ;
 import { useSelector } from     'react-redux'                             ;
 import { getNeo4jData } from    '../redux/AsyncActions/getNeo4jData'      ;
 import { useHistory } from 'react-router-dom';
-import { Theme } from '@material-ui/core/styles/createTheme';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 
 const AcknowlegementsList = () => {
