@@ -10,7 +10,6 @@ import { DashboardButton } from "../materialui/Dashboard/Dashboard"       ;
 import Grid from                "@material-ui/core/Grid"                  ;
 import                          './Home.css'
 import makeStyles from          '@material-ui/core/styles/makeStyles'     ;
-import { Theme } from           '@material-ui/core/styles/createMuiTheme';
 import createStyles from        '@material-ui/core/styles/createStyles'   ;
 import ListItem from            '@material-ui/core/ListItem/ListItem'     ;
 import List from                '@material-ui/core/List/List'             ;
@@ -23,6 +22,7 @@ import { AppState } from        '../redux/store'                          ;
 import { useSelector } from     'react-redux'                             ;
 import { getNeo4jData } from    '../redux/AsyncActions/getNeo4jData'      ;
 import { useHistory } from 'react-router-dom';
+import { Theme } from '@material-ui/core/styles/createTheme';
 
 
 const AcknowlegementsList = () => {

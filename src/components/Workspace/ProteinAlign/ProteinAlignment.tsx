@@ -332,7 +332,6 @@ const useStyles = makeStyles((theme: Theme) =>
               alert("Select chains to align.")
               return
             }
-
             viewerInstance.visual.update({
               customData: {
                 url   : `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
@@ -340,6 +339,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 binary: false,
               },
             });
+
             console.log("requesting ", chainStructPair1[1], chainStructPair2[1], chainStructPair1[0], chainStructPair2[0]);
 
             requestAlignment({
@@ -375,3 +375,5 @@ const useStyles = makeStyles((theme: Theme) =>
   );
 
 }
+
+
