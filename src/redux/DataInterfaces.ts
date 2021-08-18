@@ -1,17 +1,41 @@
 import {  RibosomeStructure,  RibosomalProtein, rRNA, Ligand, BanClass, RNAClass} from "./RibosomeTypes";
 
 // DataInterfaces contains declarations for most datatypes that the application
-// uses. Some are imported from RibosomeTypes and constitute non-composite types that also resemble neo4j-schema
+// uses. Some(non-composite) are imported from RibosomeTypes  non-composite types that also resemble neo4j-schema.
+// Preload for strucutrescatalogue.
 
-// Preload for strucutrescatalogue
 export interface NeoStruct{
-
   struct   :  RibosomeStructure;
   ligands  :  string[];
   rps      :  Array<{ noms: string[]; surface_ratio:number|null,strands: string }>;
   rnas     :  string[];
+}
+
+
+export interface Residue{
+				residue_name    : string
+				residue_id      : number
+				parent_strand_id: string
+}
+export type LigandBindingSite = {
+  [ chainname    :string ] :
+  { sequence     : string
+    nomenclature : string[ ]
+    asym_ids     : string[ ]
+    residues     : Residue[]
+  }}
+
+
+export type LigandPrediction = {
+  [ polypeptide_class :string ] :
+  {
+  source    : {src    :string, strand :string, src_ids:number[]},
+  target    : {tgt    :string, strand :string, tgt_ids:number[]},
+  alignment : {src_aln:string, tgt_aln:string, aln_ids:number[]},
+  }
 
 }
+
 
 
 export interface BindingInterface {
@@ -29,9 +53,21 @@ export interface BindingInterface {
     strand_id: string
     struct   : string
     }>
-
 }
 
+
+// Binding Site is the residue-wise account of 
+export type BindingSite  =  {
+    chemicalId       : string;
+    chemicalName     : string;
+    formula_weight   : number;
+    pdbx_description : string;
+    _organismId      : number[],
+    citation_title   : string ,
+    expMethod        : string ,
+    rcsb_id          : string,
+    resolution       : number
+		}
 
 export interface LigandClass {
   ligand: Ligand, presentIn: {
@@ -52,7 +88,6 @@ export interface NeoHomolog {
   title  : string
 
 }
-
 
 export type ProteinProfile = RibosomalProtein & {
 
@@ -77,7 +112,6 @@ export interface RNAProfile {
 
 }
 
-
 export interface StructureWithLigand{
   _organismId          : number[];
   _organismName        : string[];
@@ -99,20 +133,7 @@ export interface BanClassMetadata{
       organisms: number[],
       comments : string[][],
       structs  : RibosomeStructure[]
-    }
-
-export type BindingSite  =  {
-
-    chemicalId      : string;
-    chemicalName    : string;
-    formula_weight  : number;
-    pdbx_description: string;
-		  _organismId   : number[],
-		  citation_title: string  ,
-		  expMethod     : string  ,
-		  rcsb_id       : string,
-		  resolution    : number
-		}
+}
 
 
 export type RXZDataTypes= NeoStruct | RibosomalProtein | RNAProfile | LigandResponseShape | BanClassMetadata;

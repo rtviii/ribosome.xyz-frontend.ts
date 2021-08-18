@@ -4,7 +4,7 @@ import { RibosomalProtein, RibosomeStructure } from '../../RibosomeTypes';
 import {CartActions, CartItem} from './ActionTypes'
 
 export function isProt(i:CartItem): i is RibosomalProtein{
-    return (i as RibosomalProtein).nomenclature !==undefined;
+    return (i as RibosomalProtein).entity_poly_strand_id !==undefined;
 }
 export function isStruct(i:CartItem): i is RibosomeStructure{
     return (i as RibosomeStructure).rcsb_id !==undefined;

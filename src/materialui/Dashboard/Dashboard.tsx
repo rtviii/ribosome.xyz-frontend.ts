@@ -218,7 +218,8 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
       <List>
         <ListSubheader>Tools</ListSubheader>
         <MenuItem key='new1' icon={eye} menutext="Visualization" linkto='/vis' />
-        <MenuItem key='new1' icon={align} menutext="Alignment" linkto='/rpalign' />
+        {/*  */}
+        <MenuItem key='new1' icon={align} menutext="3D Superimposition" linkto='/rpalign' /> 
         <MenuItem key='new1' icon={ligands} menutext="Ligands/Binding Sites" linkto='/bindingsites' />
 
       <ListItem button key={"wspace-dash"} onClick={() => {
@@ -244,6 +245,7 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
             </IconButton>
             <Button variant="text" color="default" disabled={true} style={{ textTransform: "none", marginLeft: "10px" }}>
               {selectedItems.length} items selected
+              p-[=]
             </Button>
             <Button autoFocus variant="outlined" color="primary" onClick={
               () => {

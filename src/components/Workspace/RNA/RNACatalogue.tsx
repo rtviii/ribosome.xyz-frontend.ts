@@ -16,7 +16,6 @@ import { gotopage_rna, RnaClassFilterChangeAC, rna_sort_change, select_rna_class
 import { Dispatch } from                                               "redux"                                                 ;
 import { DashboardButton } from                                        "../../../materialui/Dashboard/Dashboard"               ;
 import makeStyles from                                                 "@material-ui/core/styles/makeStyles"                   ;
-import { Theme } from                                                  "@material-ui/core/styles/createMuiTheme"               ;
 import Typography from                                                 "@material-ui/core/Typography"                          ;
 import { Button } from                                                 "@material-ui/core"                                     ;
 import TextField from                                                  "@material-ui/core/TextField/TextField"                 ;
@@ -40,6 +39,7 @@ import { Spinner } from "react-bootstrap";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import { useRxztheme } from "../../../theme";
 import _ from "lodash";
+import { Theme } from "@material-ui/core/styles/createMuiTheme";
 
 const pageData = {
   title: "RNA",

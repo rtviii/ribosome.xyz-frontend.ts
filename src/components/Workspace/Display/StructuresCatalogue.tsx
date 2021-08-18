@@ -465,7 +465,7 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
 
           <DialogContentText style={{ marginTop: "10px" }}>
           <Typography variant="h5">Download Summary Spreadsheet </Typography>
-          A <i>.csv</i> summary of the strands that you have filtered will be downloaded.
+          A <i>.csv</i> summary of the structures that you have filtered will be downloaded.
           </DialogContentText>
 
           <CSVLink data={createSummary()}>

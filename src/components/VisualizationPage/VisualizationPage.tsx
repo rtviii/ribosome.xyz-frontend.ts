@@ -8,7 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -77,21 +77,33 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
 
   const get_strand_asymid_map = (gqlresp:any) =>{
-
     var _ = gqlresp.data.data.entry.polymer_entities
 
+    console.log("got gqlresp", _);
+    
     const map:Record<any,any> = {}
       for (var poly of _){
-            var strand  = poly.entity_poly.pdbx_strand_id
-            var asym    = poly.rcsb_polymer_entity_container_identifiers.asym_ids[0]
-            map[strand] = {"asymid":asym}
+        
+            var strand = poly.entity_poly.pdbx_strand_id
+            var type   = poly.entity_poly.type
+            var asym   = poly.rcsb_polymer_entity_container_identifiers.asym_ids[0]
+
+            map[strand] = {
+              "asymid":asym
+          }
     }
+
+
+
+
     getNeo4jData('neo4j', {
       endpoint: "get_struct",
       params: { pdbid: currentStructure }
     })
     .then(r=>{
-      // iter over rps
+      console.log("Got response from server", r);
+      console.log(r);
+      
      for (var rp of r.data[0].rps){
        if (Object.keys(map).includes(rp.entity_poly_strand_id )){
         map[rp.entity_poly_strand_id] = {
@@ -105,8 +117,8 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
      for (var rna of r.data[0].rnas){
        if (Object.keys(map).includes(rna.entity_poly_strand_id )){
         map[rna.entity_poly_strand_id] = Object.assign({}, map[rna.entity_poly_strand_id],{
-          nomenclature : [ rna.rcsb_pdbx_description ],
-          asymid: rna.asym_id
+          nomenclature: [ rna.rcsb_pdbx_description ],
+          asymid      : rna.asym_id
         })
        }
 
@@ -119,7 +131,6 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   const [asymidChainMap, setAsymidChainMap] = useState({})
   const getGqlQuery = (pdbid:string) =>{
-
     return  encodeURI(`https://data.rcsb.org/graphql?query={
       entry(entry_id: "${pdbid.toLowerCase()}") {
       rcsb_id
@@ -154,8 +165,10 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
 
   useEffect(() => {
-    console.log("map has changed:");
-    console.log(asymidChainMap);
+    
+        // console.log("set map to  :",asymidChainMap);
+        console.log("entries:", Object.entries(asymidChainMap));
+        
   }, [asymidChainMap])
 
   useEffect(() => {
@@ -164,7 +177,8 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     axios.get(getGqlQuery(currentStructure)).then(
       r=>{
         var map = get_strand_asymid_map(r)
-        console.log("got map",map);
+        
+        // console.log("got map",map);
         setAsymidChainMap(map)
       }
       ,e=>{console.log("Error", e);
@@ -228,8 +242,7 @@ viewerInstance.visual.select(
               value   ={"chain"}
               onChange={handleSelectHighlightChain}>
               {Object.entries(asymidChainMap).map((i:any) => {  
-                console.log( "i is " ,i)
-                // return <MenuItem value={i[1].asymid}>{ i[0] +   }</MenuItem> 
+                return <MenuItem value={i[1].asymid}>{ i[0] + i[1].nomenclature }</MenuItem> 
                 })}
             </Select>
           </FormControl>
@@ -408,8 +421,6 @@ const [selectrnaClass, setSelectRnaClass] = useState<string>('5')
 </Grid>
   )
 }
-
-
 
 
 

@@ -1,6 +1,6 @@
 import VisibilityIcon from                                             '@material-ui/icons/Visibility'               ;
 import                                                                 './Cart.css'
-import React from                                                      'react'
+import React, { useEffect } from                                                      'react'
 import { useDispatch, useSelector } from                               'react-redux'
 import { RNAProfile } from                                             '../../../redux/DataInterfaces'
 import { AppState } from                                               '../../../redux/store'
@@ -21,9 +21,9 @@ import { RibosomalProtein, RibosomeStructure } from                    '../../..
 import DeleteIcon from                                                 '@material-ui/icons/Delete'                   ;
 import { cart_remove_item, toggle_cart, toggle_cart_item_select } from '../../../redux/reducers/Cart/ActionTypes'
 import {CartItem} from                                                 './../../../redux/reducers/Cart/ActionTypes'
-import enzymes from                                                    './../../../static/enzymes-icon.png'
+import enzymes from                                                    './../../../static/struct_icon.svg'
 import rnas from                                                       './../../../static/rna_icon.svg'
-import proteins from                                                   './../../../static/protein_icon.svg'
+import proteins from                                                   './../../../static/protein_icon_chain.svg'
 import Checkbox from                                                   '@material-ui/core/Checkbox'                  ;
 import { ChainParentPill} from                                         './../RibosomalProteins/RibosomalProteinCard'
 import Grid from                                                       '@material-ui/core/Grid/Grid'
@@ -230,7 +230,7 @@ checked={selected}
                                 <ListItemIcon>
                                         <img src={proteins}  style={{width:'30px', height:'30px'}}/>
                                 </ListItemIcon>
-                                <ListItemText id={""} primary={`Protein Strand ${i.nomenclature[0]}`}
+                                <ListItemText id={""} primary={`${i.nomenclature[0]}`}
                                 
                                 secondary={i.rcsb_pdbx_description}/>
 
@@ -311,10 +311,17 @@ history.push({ pathname: `/vis`, state: { struct: i.rcsb_id } })
 }
 const RNAItem = ({selected,i}:{ selected:boolean,i:RNAProfile })=>{
 
+    useEffect(() => {
+    console.log("GOT RNA item", i);
+
+    }, [])
+    
+
 const dispatch = useDispatch();
+
 return     <ListItem key={i.description + i} role={undefined}  dense button style={{backgroundColor:"rgba(172,191,169,0.6)", marginBottom:"5px"}}>
 
-<Checkbox
+        <Checkbox
         checked={selected}
 
 onClick={()=>{

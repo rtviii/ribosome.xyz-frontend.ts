@@ -1,5 +1,4 @@
 import React, { useEffect, useState} from 'react';
-import Typography from '@material-ui/core/Typography/Typography';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData';
 import {  RibosomeStructure } from '../../../redux/RibosomeTypes';
@@ -15,14 +14,12 @@ import TextField from '@material-ui/core/TextField/TextField';
 import Paper from '@material-ui/core/Paper/Paper';
 import { NeoStruct } from '../../../redux/DataInterfaces';
 
-
 type StructRespone = {
     struct : RibosomeStructure,
     rps    : {noms:string[], strands:string}[],
     rnas   : string[],
     ligands: string[]
 }
-
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
 
@@ -95,6 +92,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
   const [struct1,setstruct1] = useState<NeoStruct | null>(null)
   const [struct2,setstruct2] = useState<NeoStruct | null>(null)
+
   const [strand1,setstrand1] = useState<any>(null)
   const [strand2,setstrand2] = useState<any>(null)
 
@@ -127,17 +125,20 @@ const useStyles = makeStyles((theme: Theme) =>
 
   useEffect(() => {
     if (struct1!==null){
-      setChains1(struct1.rps)
+      setChains1(struct1.rps.sort(nomCompareFn))
     }
   }, [struct1])
 
   useEffect(() => {
     if (struct2!==null){
-      setChains2(struct2.rps)
+      setChains2(struct2.rps.sort(nomCompareFn))
     }
   }, [struct2])
 
 
+  useEffect(() => {
+    console.log("set chains1 to", chains1);
+  }, [chains1])
 
   const requestAlignment = (parameters: {
     struct1: string;
@@ -158,74 +159,68 @@ const useStyles = makeStyles((theme: Theme) =>
     getNeo4jData("static_files", {
       endpoint: "pairwise_align",
       params: parameters,
-    }).then(
-        resp=>{
-            fileDownload(resp.data, `${parameters.struct1}-${parameters.strand1}_over_${parameters.struct2}-${parameters.strand2}.cif`)
-        },
-        e=>console.log(e)
+    })
+    .then(
+        resp=>{fileDownload(resp.data, `${parameters.struct1}-${parameters.strand1}_over_${parameters.struct2}-${parameters.strand2}.cif`)},
+           e=>console.log(e)
     )
   };
 
 
-
-  const getProteinsForStruct = (rcsbid:string, structs:StructRespone[]):{nomenclature:string[],strandid:string}[]=>{
-    var sought = structs.filter(struct=>struct.struct.rcsb_id===rcsbid)[0]
-    return sought.rps.map(rp=> ( { "nomenclature":rp.noms,"strandid": rp.strands } ))
-  }
+  useEffect(() => {
+    console.log("changed chain str pair 1:", chainStructPair1);
+    
+  }, [chainStructPair1])
 
 
   const handleStructChange =( struct_number:number )=> (event: React.ChangeEvent<{ value: unknown }>, newvalue:NeoStruct) => {
 
-    if ( struct_number == 1 ){
-
+    if ( struct_number === 1 ){
       if (newvalue === null){
 				setstruct1(null)
 				setChainStructPair1([chainStructPair1[0], null])
-      }else{
-        console.log("set tuple 1 value to ", newvalue.struct.rcsb_id);
+      }
+      else
+      {
+        console.log("setting to ", newvalue.struct.rcsb_id);
+        
 				setstruct1(newvalue)
 				setChainStructPair1([chainStructPair1[0], newvalue.struct.rcsb_id])
+        
 			}
-        console.log("tuple 1", chainStructPair1);
     }
 
-    if ( struct_number == 2 ){
-
+    if ( struct_number === 2 ){
       if (newvalue === null){
 				setstruct2(null)
 				setChainStructPair2([chainStructPair2[0], null])
       }else{
-        console.log("set tuple 2 value to ", newvalue.struct.rcsb_id);
+        console.log("setting to ", newvalue.struct.rcsb_id);
 				setstruct2(newvalue)
 				setChainStructPair2([chainStructPair2[0], newvalue.struct.rcsb_id])
 			}
-        console.log("tuple 2", chainStructPair2);
     }
   }
 
 
-
-  const handleChainChange =( struct_number:number )=> (event: React.ChangeEvent<{ value: unknown }>, newvalue:{ noms: string[]; surface_ratio: number | null; strands: string; }) => {
-
-    if ( struct_number == 1 ){
-
+  const handleChainChange =( chain_number:number )=> (event: React.ChangeEvent<{ value: unknown }>, newvalue:{ noms: string[]; surface_ratio: number | null; strands: string; }) => {
+    if ( chain_number === 1 ){
       if (newvalue === null){
 				setstrand1(null)
 				setChainStructPair1([null, chainStructPair1[1]])
       }else{
 				setstrand1(newvalue)
-				setChainStructPair1([ newvalue.strands , chainStructPair1[0]])
+				setChainStructPair1([ newvalue.strands , chainStructPair1[1]])
 			}
     }
 
-    if ( struct_number == 2 ){
-
+    if ( chain_number === 2 ){
       if (newvalue === null){
 				setstrand2(null)
 				setChainStructPair2([null, chainStructPair2[1]])
       }else{
 				setstrand2(newvalue)
-				setChainStructPair2([ newvalue.strands , chainStructPair2[0]])
+				setChainStructPair2([ newvalue.strands , chainStructPair2[1]])
 			}
     }
   }
@@ -240,7 +235,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }, [])
 
   const pageData={
-    title:"Alignment",
+    title:"3D Superimposition",
     text:"Multiple individual components (sets of protein- and RNA-strands, protein-ion clusters, etc. ) belonging to different structures can be extracted, superimposed and exported here\
      for further processing and structural analyses."}
 
@@ -255,23 +250,23 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 <Grid item style={{marginBottom:"40px"}}>   
-
 				<Autocomplete
 					value         ={ struct1                                                                                                                    }
 					className     ={ classes.autocomplete                                                                                                       }
 					options       ={ structs                                                                                                                    }
 					getOptionLabel={(parent : NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
 					// @ts-ignore
-					onChange = {handleStructChange(1)}
+					onChange     = {handleStructChange(1)}
 					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title} </div>)}
-					renderInput = {(params) => <TextField {...params} label={`Structure 1`} variant="outlined" />}
+					renderInput  = {(params) => <TextField {...params} label={`Structure 1`} variant="outlined" />}
 					/>
 
 				 <Autocomplete
 					value          = { strand1                                                                                                                     }
 					className      = { classes.autocomplete                                                                                                        }
-					options        = { chains1.sort(nomCompareFn)}
-					getOptionLabel = {(chain  : {noms: string[]; strands: string;} ) => { return chain.strands ? chain.strands : "" }}
+					options        = { chains1}
+					getOptionLabel = {(chain  : {noms: string[]; strands: string;} ) => { return chain.noms.length > 0 ? chain.noms[0] : chain.strands }}
+
 					// @ts-ignore
 					onChange     = {handleChainChange(1)}
 					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.noms.length > 0 ? option.noms[0] :" "}</b> {option.strands}  </div>)}
@@ -279,6 +274,7 @@ const useStyles = makeStyles((theme: Theme) =>
 				/> 
 
 </Grid>
+
 <Grid item style={{marginBottom:"40px"}}>   
 
 				<Autocomplete
@@ -291,27 +287,17 @@ const useStyles = makeStyles((theme: Theme) =>
 					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
 					renderInput  = {(params) => <TextField {...params} label={`Structure 2`} variant="outlined" />}
 				/>
+
 				 <Autocomplete
 					value          = {strand2}
 					className      = {classes.autocomplete}
-					options        = {chains2.sort(nomCompareFn)}
-					getOptionLabel = {(chain:  {noms: string[]; strands: string;} ) => { return chain.strands ? chain.strands  : "" }}
+					options        = {chains2}
+					getOptionLabel = {(chain  : {noms: string[]; strands: string;} ) => { return chain.noms.length > 0 ? chain.noms[0] : chain.strands }}
 					// @ts-ignore
 					onChange     = {handleChainChange(2)}
 					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.noms.length > 0 ? option.noms[0] :" "}</b> {option.strands}  </div>)}
 					renderInput  = {(params) => <TextField {...params} label={`Chain 2`} variant="outlined" />}
 				/> 
-
-</Grid>
-{/* 
-<Grid item>  
-<Typography style={{padding:"10px"}}>
-  Select a pair to align with.
-</Typography>
-</Grid> */}
-
-<Grid item>  
-
 
 </Grid>
 
@@ -321,13 +307,11 @@ const useStyles = makeStyles((theme: Theme) =>
         style={{marginBottom:"10px"}}
         fullWidth
         variant="outlined"
-
         onClick={() => {
-
           viewerInstance.visual.update({
             customData: {
               url:
-                `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
+              `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
               format: "cif",
               binary: false,
             },
@@ -343,15 +327,11 @@ const useStyles = makeStyles((theme: Theme) =>
         fullWidth
         variant="outlined"
           onClick={() => {
-
-
             console.log("requesting ", chainStructPair1[1], chainStructPair2[1], chainStructPair1[0], chainStructPair2[0]);
             if (chainStructPair1.includes(null) || chainStructPair2.includes(null)){
               alert("Select chains to align.")
               return
             }
-
-
             viewerInstance.visual.update({
               customData: {
                 url   : `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
@@ -359,7 +339,9 @@ const useStyles = makeStyles((theme: Theme) =>
                 binary: false,
               },
             });
+
             console.log("requesting ", chainStructPair1[1], chainStructPair2[1], chainStructPair1[0], chainStructPair2[0]);
+
             requestAlignment({
               struct1: chainStructPair1[1] as string,
               struct2: chainStructPair2[1] as string,
@@ -370,9 +352,6 @@ const useStyles = makeStyles((theme: Theme) =>
           Download Aligned
         </Button>
 </Grid>
-{/* <Grid item>  
-          <Cart/>
-</Grid> */}
 <Grid item>  
                 <DashboardButton/>
 </Grid>
@@ -381,8 +360,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
           </Grid>
 
-<Grid item container xs={10}>
-      {/* <button onClick={()=>{viewerInstance.visual.update({moleculeId:'1cbs'})}}> Update</button> */}
+  <Grid item container xs={10}>
 
 				<Grid item xs={12} >
 					<Paper variant="outlined" style={{ height: "50vw", position: "relative", padding: "10px" }} >
@@ -397,3 +375,5 @@ const useStyles = makeStyles((theme: Theme) =>
   );
 
 }
+
+

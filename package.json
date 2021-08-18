@@ -6,6 +6,7 @@
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
+    "@plotly/react-msa-viewer": "^0.0.12",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -20,9 +21,12 @@
     "@types/react-select": "^3.0.27",
     "@types/redux-logger": "^3.0.8",
     "@types/redux-thunk": "^2.1.0",
+    "alignment-viewer-2": "^1.0.0-beta-15",
     "axios": "^0.21.1",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.5.3",
+    "core-js": "^3.16.1",
+    "is-core-module": "^2.5.0",
     "js-file-download": "^0.4.12",
     "marked": "^1.1.1",
     "material-ui": "^0.20.2",
@@ -39,6 +43,7 @@
     "react-dom": "^16.13.1",
     "react-dropdown-select": "^4.4.2",
     "react-dropdown-tree-select": "^2.5.1",
+    "react-highlight-words": "^0.17.0",
     "react-image-lightbox": "^5.1.1",
     "react-json-view": "^1.10.2",
     "react-markdown": "^5.0.3",
@@ -77,6 +82,7 @@
   "devDependencies": {
     "@types/marked": "^1.1.0",
     "@types/react-bootstrap": "^0.32.24",
+    "@types/react-highlight-words": "^0.16.3",
     "@types/react-redux": "^7.1.9",
     "lodash": "^4.17.19"
   }
