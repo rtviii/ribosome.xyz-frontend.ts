@@ -21,7 +21,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import createStyles from '@material-ui/core/styles/createStyles';
 import Highlighter from "react-highlight-words";
-import {ChainParentPill} from '../RibosomalProteins/RibosomalProteinCard';
+import { ChainParentPill } from '../RibosomalProteins/RibosomalProteinCard';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 
@@ -29,83 +29,82 @@ import _ from 'lodash';
 const viewerInstance = new PDBeMolstarPlugin() as any;
 
 
-const ChainAlignmentBlock = ({ src_struct, tgt_struct,nomenclature,tgt_aln, src_aln, aln_ids, tgt_strand, src_strand}: {src_struct:string, tgt_struct:string,nomenclature:string,tgt_strand:string,src_strand:string, tgt_aln: string, src_aln: string, aln_ids: number[] }) => {
+const ChainAlignmentBlock = ({ src_struct, tgt_struct, nomenclature, tgt_aln, src_aln, aln_ids, tgt_strand, src_strand }: { src_struct: string, tgt_struct: string, nomenclature: string, tgt_strand: string, src_strand: string, tgt_aln: string, src_aln: string, aln_ids: number[] }) => {
 	const history = useHistory();
 
 
 
-	return <Paper 
-	            variant      = 'outlined'
-	            style        = {{padding:"10px", marginBottom:"20px"}}>
-	<Grid       container xs = {12} spacing   = {2}>
-	<Grid       item xs      = {12} direction = "row">
-		<Grid item xs={12} style={{padding:"10px"}}>
+	return <Paper
+		variant='outlined'
+		style={{ padding: "10px", marginBottom: "20px" }}>
+		<Grid container xs={12} spacing={2}>
+			<Grid item xs={12} direction="row">
+				<Grid item xs={12} style={{ padding: "10px" }}>
+					<Typography variant="h4" style={{ cursor: "pointer", color: "blue", maxWidth:"400px" }} onClick={() => {history.push(`/rps/${nomenclature}`)}}>
+						{nomenclature}
+					</Typography>
+				</Grid>
 
-	<Typography variant      = "h4" style     = {{ cursor:"pointer", color:"blue"}} onClick={()=>{
-		history.push(`/rps/${nomenclature}`)
-	}}>{nomenclature}</Typography>
-		</Grid>
+				<div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
+					<div style={{ width: "200px", outline: "1px color black" }} >
+						<ChainParentPill parent_id={src_struct} strand_id={src_strand} />
+					</div>
 
-<div             style     = {{display:"flex",flexDirection:"row", justifyContent:"flex-start"}}>
-<div             style     = {{width:"200px", outline:"1px color black"}} >
-<ChainParentPill parent_id = {src_struct} strand_id = {src_strand}/>
-</div>
+					<pre>
+						<Highlighter
 
-			<pre>
-				<Highlighter
-
-					findChunks         = {() => {
-					var c = []
-					for (var id of aln_ids) {
-					c.push({ start: id, end: id + 1 })
-					}
-					return c
-					}}
-					searchWords={[
-					]}
-					autoEscape      = {true}
-					textToHighlight = {src_aln}
-					/>
-</pre>
-			</div>
+							findChunks={() => {
+								var c = []
+								for (var id of aln_ids) {
+									c.push({ start: id, end: id + 1 })
+								}
+								return c
+							}}
+							searchWords={[
+							]}
+							autoEscape={true}
+							textToHighlight={src_aln}
+						/>
+					</pre>
+				</div>
 			</Grid>
 
 
 
-			<Grid item xs = {12}>
-			<div  style   = {{display:"flex",flexDirection:"row", justifyContent:"flex-start"}}>
+			<Grid item xs={12}>
+				<div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
 
-	<div             style     = {{width:"200px", outline:"1px color black"}} >
-	<ChainParentPill parent_id = {tgt_struct} strand_id = {tgt_struct}/>
-</div>
-			
-			<pre>
+					<div style={{ width: "200px", outline: "1px color black" }} >
+						<ChainParentPill parent_id={tgt_struct} strand_id={tgt_strand} />
+					</div>
 
-				<Highlighter
-					findChunks={() => {
-						var c = []
-						for (var id of aln_ids) {c.push({ start: id, end: id + 1 })}
-						return c
-					}}
-					searchWords={[
-					]}
-					autoEscape      = {true}
-					textToHighlight = {tgt_aln}
-				/>
-</pre>
+					<pre>
 
-</div>
+						<Highlighter
+							findChunks={() => {
+								var c = []
+								for (var id of aln_ids) { c.push({ start: id, end: id + 1 }) }
+								return c
+							}}
+							searchWords={[
+							]}
+							autoEscape={true}
+							textToHighlight={tgt_aln}
+						/>
+					</pre>
+
+				</div>
 			</Grid>
 		</Grid>
 
-</Paper>
+	</Paper>
 
 
 }
-const Dialogue = ({ open, handleclose, handleopen, aln_obj, title, src_struct, tgt_struct }: { src_struct:string , tgt_struct:string , open: boolean, handleopen: () => void, handleclose: () => void, aln_obj: LigandPrediction | null, title: string }) => {
+const Dialogue = ({ open, handleclose, handleopen, aln_obj, title, src_struct, tgt_struct }: { src_struct: string, tgt_struct: string, open: boolean, handleopen: () => void, handleclose: () => void, aln_obj: LigandPrediction | null, title: string }) => {
 
 	const [fullWidth, setFullWidth] = React.useState(true);
-	const [maxWidth, setMaxWidth]   = React.useState<DialogProps['maxWidth']>('xl');
+	const [maxWidth, setMaxWidth] = React.useState<DialogProps['maxWidth']>('xl');
 
 
 
@@ -113,28 +112,36 @@ const Dialogue = ({ open, handleclose, handleopen, aln_obj, title, src_struct, t
 	return (
 		<React.Fragment>
 			<Dialog
-				fullWidth       = {fullWidth}
-				maxWidth        = {maxWidth}
-				open            = {open}
-				onClose         = {handleclose}
-				aria-labelledby = "max-width-dialog-title"
+				fullWidth={fullWidth}
+				maxWidth={maxWidth}
+				open={open}
+				onClose={handleclose}
+				aria-labelledby="max-width-dialog-title"
 			>
-				<DialogTitle id = "max-width-dialog-title">{title}</DialogTitle>
+				<DialogTitle id="max-width-dialog-title">{title}</DialogTitle>
+				<DialogTitle id="max-width-dialog-title">
+
+				<span>
+
+					Calculated binding site residues are highlighted in orange.
+
+				</span>
+					</DialogTitle>
 				<DialogContent>
 					{aln_obj === null ? '' :
-						<div id = "root-msa" style = {{ height: "80vh", width: "max-content" }}>
+						<div id="root-msa" style={{ height: "80vh", width: "max-content" }}>
 							{
 								Object.entries(aln_obj).map(chain => {
-									return <ChainAlignmentBlock src_struct={src_struct} 
-									tgt_struct   = {tgt_struct                     }
-									nomenclature = {chain     [0]                  }
-									src_strand   = {chain     [1].source.strand    }
-									tgt_strand   = {chain     [1].target.strand    }
+									return <ChainAlignmentBlock src_struct={src_struct}
+										tgt_struct={tgt_struct}
+										nomenclature={chain[0]}
+										src_strand={chain[1].source.strand}
+										tgt_strand={chain[1].target.strand}
 
-									aln_ids      = {chain     [1].alignment.aln_ids}
+										aln_ids={chain[1].alignment.aln_ids}
 
-									src_aln = {chain [1].alignment.src_aln}
-									tgt_aln = {chain [1].alignment.tgt_aln} />
+										src_aln={chain[1].alignment.src_aln}
+										tgt_aln={chain[1].alignment.tgt_aln} />
 								})
 							}
 						</div>
@@ -222,7 +229,7 @@ const BindingSites = () => {
 		if (predictionData == null) {
 			return
 		}
-		console.log( "Got new prediction:", predictionData);
+		console.log("Got new prediction:", predictionData);
 		interface MolStarResidue { entity_id?: string, auth_asym_id?: string, struct_asym_id?: string, residue_number?: number, start_residue_number?: number, end_residue_number?: number, auth_residue_number?: number, auth_ins_code_id?: string, start_auth_residue_number?: number, start_auth_ins_code_id?: string, end_auth_residue_number?: number, end_auth_ins_code_id?: string, atoms?: string[], label_comp_id?: string, color: { r: number, g: number, b: number }, focus?: boolean, sideChain?: boolean }
 
 
@@ -570,12 +577,12 @@ const BindingSites = () => {
 
 
 
-	const generatePredictionCSV = () =>{
-		if (predictionData === null || _.isEqual(predictionData , {})){
+	const generatePredictionCSV = () => {
+		if (predictionData === null || _.isEqual(predictionData, {})) {
 			alert("Prediction is empty. Either not chosen by user or no chains with overlapping nomenclature found for target and source structures. ")
 			return
 		}
-		else{
+		else {
 
 			// predictionData
 
@@ -587,55 +594,55 @@ const BindingSites = () => {
 
 
 	return (
-		<Grid       container xs = {12} spacing         = {1} style = {{ outline: "1px solid gray", height: "100vh" }} alignContent = "flex-start">
-		<Paper      variant      = "outlined" className = {classes.pageDescription}>
-		<Typography variant      = "h4">
+		<Grid container xs={12} spacing={1} style={{ outline: "1px solid gray", height: "100vh" }} alignContent="flex-start">
+			<Paper variant="outlined" className={classes.pageDescription}>
+				<Typography variant="h4">
 					Ligands/Binding Sites
 				</Typography>
 			</Paper>
-			<Grid       item direction = "column" xs                = {2} spacing = {2} style = {{ padding: "10px" }}>
-			<Typography className      = {classes.bsHeader} variant = "h5">Original Structure</Typography>
+			<Grid item direction="column" xs={2} spacing={2} style={{ padding: "10px" }}>
+				<Typography className={classes.bsHeader} variant="h5">Original Structure</Typography>
 
 				<Autocomplete
-					value          = {cur_struct}
-					className      = {classes.autocomplete}
-					options        = {bsites_derived as any}
-					getOptionLabel = {(parent: BindingSite) => { return parent.rcsb_id ? parent.rcsb_id + " : " + parent.citation_title : "" }}
+					value={cur_struct}
+					className={classes.autocomplete}
+					options={bsites_derived as any}
+					getOptionLabel={(parent: BindingSite) => { return parent.rcsb_id ? parent.rcsb_id + " : " + parent.citation_title : "" }}
 					// @ts-ignore
-					onChange     = {handleStructChange}
-					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b> {option.citation_title}  </div>)}
-					renderInput  = {(params) => <TextField {...params} label={`Structures  ( ${bsites_derived !== undefined ? bsites_derived.length : "0"} )`} variant="outlined" />}
+					onChange={handleStructChange}
+					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b> {option.citation_title}  </div>)}
+					renderInput={(params) => <TextField {...params} label={`Structures  ( ${bsites_derived !== undefined ? bsites_derived.length : "0"} )`} variant="outlined" />}
 				/>
 				<Autocomplete
-					value          = {curligand}
-					className      = {classes.autocomplete}
-					options        = {lig_classes_derived as LigandClass[]}
-					getOptionLabel = {(lc: LigandClass) => { return lc.ligand ? lc.ligand.chemicalId + " : " + lc.ligand.chemicalName : "" }}
+					value={curligand}
+					className={classes.autocomplete}
+					options={lig_classes_derived as LigandClass[]}
+					getOptionLabel={(lc: LigandClass) => { return lc.ligand ? lc.ligand.chemicalId + " : " + lc.ligand.chemicalName : "" }}
 					// @ts-ignore
-					onChange     = {handleLigChange}
-					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.ligand.chemicalId}</b> ({option.ligand.chemicalName}) </div>)}
-					renderInput  = {(params) => <TextField {...params} label={`Ligands  (${lig_classes_derived !== undefined ? lig_classes_derived.length : "0"})`} variant="outlined" />} />
+					onChange={handleLigChange}
+					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.ligand.chemicalId}</b> ({option.ligand.chemicalName}) </div>)}
+					renderInput={(params) => <TextField {...params} label={`Ligands  (${lig_classes_derived !== undefined ? lig_classes_derived.length : "0"})`} variant="outlined" />} />
 
-				<Grid item style = {{ marginBottom: "10px" }}>
+				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
 						fullWidth
-						variant = {"outlined"}
-						style   = {ligstructPair.includes(null) ? { color: "gray" } : {}}
-						color   = {!ligstructPair.includes(null) ? 'primary' : 'default'}
-						onClick = {() => {
+						variant={"outlined"}
+						style={ligstructPair.includes(null) ? { color: "gray" } : {}}
+						color={!ligstructPair.includes(null) ? 'primary' : 'default'}
+						onClick={() => {
 							highlightInterface()
 						}}>
 						Visualize Binding Site
 					</Button>
 				</Grid>
 
-				<Grid item style = {{ marginBottom: "10px" }} id = 'csv_download_container'>
+				<Grid item style={{ marginBottom: "10px" }} id='csv_download_container'>
 
 
 
 					<CSVLink
-						data    = {[]}
-						onClick = {() => {
+						data={[]}
+						onClick={() => {
 							if (interface_data == null) {
 
 								return false;
@@ -646,10 +653,10 @@ const BindingSites = () => {
 						<Button
 
 							fullWidth
-							variant  = "outlined"
+							variant="outlined"
 							// style    = {ligstructPair.includes(null) ? { color: "gray" } : {}}
-							color    = {!ligstructPair.includes(null) ? 'primary' : 'default'}
-							disabled = {interface_data == null}>
+							color={!ligstructPair.includes(null) ? 'primary' : 'default'}
+							disabled={interface_data == null}>
 							Download Binding Site (.csv)
 						</Button>
 
@@ -657,28 +664,28 @@ const BindingSites = () => {
 
 
 				</Grid>
-				<Typography className = {classes.bsHeader} variant = "h5">Prediction</Typography>
+				<Typography className={classes.bsHeader} variant="h5">Prediction</Typography>
 				<Autocomplete
-					value = {curTarget}
+					value={curTarget}
 					// placeholder={{struct:{
 
 					// 	rcsb
 					// }}}
-					className      = {classes.autocomplete}
-					options        = {target_structs}
-					getOptionLabel = {(parent: NeoStruct) => { return parent.struct ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
+					className={classes.autocomplete}
+					options={target_structs}
+					getOptionLabel={(parent: NeoStruct) => { return parent.struct ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
 					// @ts-ignore
-					onChange     = {handleTargetChange}
-					renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
-					renderInput  = {(params) => <TextField {...params} label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
+					onChange={handleTargetChange}
+					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
+					renderInput={(params) => <TextField {...params} label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
 
-				<Grid item style = {{ marginBottom: "10px" }}>
+				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
 						// color  ="primary"
 						// style  ={{ marginBottom: "10px" }}
-						style   = {ligstructPair.includes(null) ? { color: "gray" } : {}}
-						color   = {!ligstructPair.includes(null) ? 'primary' : 'default'}
-						onClick = {() => {
+						style={ligstructPair.includes(null) ? { color: "gray" } : {}}
+						color={!ligstructPair.includes(null) ? 'primary' : 'default'}
+						onClick={() => {
 
 							if (!(curligand?.ligand && cur_struct?.rcsb_id && curTarget?.struct)) {
 
@@ -688,8 +695,8 @@ const BindingSites = () => {
 
 							getNeo4jData("static_files", {
 								endpoint: "ligand_prediction",
-								params  : {
-									chemid    : (curligand?.ligand.chemicalId as string),
+								params: {
+									chemid: (curligand?.ligand.chemicalId as string),
 									src_struct: (cur_struct?.rcsb_id as string),
 									tgt_struct: (curTarget?.struct.rcsb_id as string),
 								}
@@ -697,44 +704,43 @@ const BindingSites = () => {
 							viewerInstance.visual.reset({ camera: true, theme: true })
 						}}
 						fullWidth
-						variant = "outlined"> Predict</Button>
+						variant="outlined"> Predict</Button>
 				</Grid>
 
-				<Grid item style = {{ marginBottom: "10px" }}>
+				<Grid item style={{ marginBottom: "10px" }}>
 
 
 					<Button
-						color   = "primary"
-						onClick = {() => {
+						color="primary"
+						onClick={() => {
 							setMsaOpen(true)
 						}}
 						fullWidth
-						disabled = {predictionData === null}
-						variant  = "outlined"> Inspect Prediction </Button>
+						disabled={predictionData === null}
+						variant="outlined"> Inspect Prediction </Button>
 
 				</Grid>
 
-				<Grid item style = {{ marginBottom: "10px" }}>
+				<Grid item style={{ marginBottom: "10px" }}>
 
 
 					<CSVLink
-						data    = {[]}
-						onClick = {() => {
+						data={[]}
+						onClick={() => {
 							if (predictionData === null || _.isEqual(predictionData, {})) {
 								return false;
 							}
 						}}
 					>
 
-					<Button
-						color   = "primary"
-						// onClick = {() => {
-						// 	// alert("Yet to implement conversion to csv.")
-						// }}
-						fullWidth
-
-						disabled = {predictionData === null}
-						variant  = "outlined"> Download Prediction (.csv) </Button>
+						<Button
+							color="primary"
+							// onClick = {() => {
+							// 	// alert("Yet to implement conversion to csv.")
+							// }}
+							fullWidth
+							disabled={predictionData === null}
+							variant="outlined"> Download Prediction (.csv) </Button>
 
 					</CSVLink>
 
@@ -745,9 +751,9 @@ const BindingSites = () => {
 				<div  style      = {{ width: "100%", height: "0px", outline: "1px solid gray", color: "gray" }} />
 				</Grid> */}
 
-				<Grid   item style = {{ marginBottom: "10px" }}>
-				<Button color      = "primary"
-				        onClick    = {() => {
+				<Grid item style={{ marginBottom: "10px" }}>
+					<Button color="primary"
+						onClick={() => {
 							setCurTarget(null)
 							set_cur_ligand(null)
 							set_cur_struct(null)
@@ -755,50 +761,50 @@ const BindingSites = () => {
 							viewerInstance.visual.reset({ camera: true, theme: true })
 						}}
 						fullWidth
-						variant = "outlined"> Reset</Button>
+						variant="outlined"> Reset</Button>
 				</Grid>
 
-				<Grid item style = {{ marginBottom: "10px" }}>
+				<Grid item style={{ marginBottom: "10px" }}>
 
-					<Dialogue 
-					src_struct  = {                         cur_struct    ?.rcsb_id as string                                                                                  }
-					tgt_struct  = {                         curTarget     ?.struct.rcsb_id as string                                                                           }
-					title       = {`Predicted Residues of ${curligand     ?.ligand.chemicalId} from structure ${cur_struct?.rcsb_id} in structure ${curTarget?.struct.rcsb_id}`}
-					open        = {                         msaOpen                                                                                                            }
-					handleclose = {                         handleclose                                                                                                        }
-					handleopen  = {                         handleopen                                                                                                         }
-					aln_obj     = {                         predictionData                                                                                                     } />
+					<Dialogue
+						src_struct={cur_struct?.rcsb_id as string}
+						tgt_struct={curTarget?.struct.rcsb_id as string}
+						title={`Predicted Residues of ${curligand?.ligand.chemicalId} from structure ${cur_struct?.rcsb_id} in structure ${curTarget?.struct.rcsb_id}`}
+						open={msaOpen}
+						handleclose={handleclose}
+						handleopen={handleopen}
+						aln_obj={predictionData} />
 
 				</Grid>
 
-				<Grid item xs = {3} justify = {"flex-start"} >
+				<Grid item xs={3} justify={"flex-start"} >
 					<DashboardButton />
 				</Grid>
 
 			</Grid>
-			<Grid item container spacing = {2} direction = "row" xs         = {10} style              = {{ height: "100%" }} alignContent = "flex-start">
-			<Grid item container xs      = {12} spacing  = {2} alignContent = "flex-start" alignItems = "flex-start" justify              = "flex-start" >
+			<Grid item container spacing={2} direction="row" xs={10} style={{ height: "100%" }} alignContent="flex-start">
+				<Grid item container xs={12} spacing={2} alignContent="flex-start" alignItems="flex-start" justify="flex-start" >
 
 					<Grid item>
 					</Grid>
 
 					<Grid item>
-						<Button variant = "outlined" color = {OrigProjection == 'origin' ? 'primary' : "default"} onClick = {() => { setOrigProj('origin') }} > Structure  of Origin
+						<Button variant="outlined" color={OrigProjection == 'origin' ? 'primary' : "default"} onClick={() => { setOrigProj('origin') }} > Structure  of Origin
 							{cur_struct === null ? "" : `( ${cur_struct.rcsb_id} )`}
 						</Button >
 					</Grid>
 
 					<Grid item>
-						<Button variant  = "outlined"
-						        disabled = {curTarget === null}
-						        color    = {OrigProjection == 'projection' ? 'primary' : "default"} onClick = {() => { setOrigProj('projection') }} > Prediction
+						<Button variant="outlined"
+							disabled={curTarget === null}
+							color={OrigProjection == 'projection' ? 'primary' : "default"} onClick={() => { setOrigProj('projection') }} > Prediction
 							{curTarget === null ? "" : `( ${curTarget.struct.rcsb_id} )`}
 						</Button >
 					</Grid>
 				</Grid>
-				<Grid  item xs = {12} >
-				<Paper variant = "outlined" style                                             = {{  position: "relative", padding: "10px", height:"80vh"  }} >
-				<div   style   = {{ position: "relative", width: "100%", height: "100%" }} id = "molstar-viewer"></div>
+				<Grid item xs={12} >
+					<Paper variant="outlined" style={{ position: "relative", padding: "10px", height: "80vh" }} >
+						<div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
 					</Paper>
 				</Grid >
 			</Grid>

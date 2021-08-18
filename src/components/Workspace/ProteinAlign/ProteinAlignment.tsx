@@ -235,7 +235,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }, [])
 
   const pageData={
-    title:"Pairwise 3D Align",
+    title:"3D Superimposition",
     text:"Multiple individual components (sets of protein- and RNA-strands, protein-ion clusters, etc. ) belonging to different structures can be extracted, superimposed and exported here\
      for further processing and structural analyses."}
 
