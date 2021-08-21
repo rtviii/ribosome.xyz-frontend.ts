@@ -47,7 +47,8 @@ const Main: React.FC<MainProps> = (prop:MainProps) => {
 
 
     for (var k of ["mrna" , "trna"  , "5.8" , "12" , "16", "21", "23" , "25" ,"28" ,"35" , 'other', "5"]){
-    dispatch(requestRnaClass(k as RnaClass))
+
+      dispatch(requestRnaClass(k as RnaClass))
     }
   }, [])
 
