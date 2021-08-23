@@ -49,7 +49,11 @@ export interface changeVisTab {
 	type: typeof CHANGE_VIS_TAB;
 	tab : 'origin' | 'prediction' }
 
-export interface dataFieldChange { type: typeof DATA_FIELD_CHANGE ; datum:any, reducer_state_key: keyof BindingSitesReducerState}
+export interface dataFieldChange   {
+	type             : typeof DATA_FIELD_CHANGE
+	datum            : any
+	reducer_state_key: keyof BindingSitesReducerState
+					}
 
 export type BSitesActions            =
             requestAllBsitesGo       |
@@ -77,6 +81,11 @@ export type AllLigandsResponseType = {
 	}[]
 }
 
+
+
+// Overparametrized function data field change : 
+// either a string and a value for next datum
+// or an object of type Partial<TargetState>
 
 export const _data_field_change = (reducer_state_key: keyof BindingSitesReducerState, datum:any )=>( {
 	type: 'ARBITRARY_DATA_FIELD_CHANGE',

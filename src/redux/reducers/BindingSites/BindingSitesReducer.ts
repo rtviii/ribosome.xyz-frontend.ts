@@ -15,9 +15,9 @@ export interface BindingSitesReducerState{
     bsites_derived        : BindingSite[],
     ligand_classes_derived: LigandClass[],
 
-    current_structure : BindingSite | null,
-    current_ligand    : LigandClass | null,
-    current_target    : NeoStruct   | null,
+    current_structure: BindingSite | null,
+    current_ligand   : LigandClass | null,
+    current_target   : NeoStruct   | null,
 
 
 

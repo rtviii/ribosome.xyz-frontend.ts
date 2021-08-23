@@ -356,10 +356,7 @@ const BindingSites = () => {
 			alert("Select a binding site.")
 			return
 		}
-
 		interface MolStarResidue { entity_id?: string, auth_asym_id?: string, struct_asym_id?: string, residue_number?: number, start_residue_number?: number, end_residue_number?: number, auth_residue_number?: number, auth_ins_code_id?: string, start_auth_residue_number?: number, start_auth_ins_code_id?: string, end_auth_residue_number?: number, end_auth_ins_code_id?: string, atoms?: string[], label_comp_id?: string, color: { r: number, g: number, b: number }, focus?: boolean, sideChain?: boolean }
-		console.log(interface_data);
-
 		var vis_data: MolStarResidue[] = []
 
 		for (var chain of Object.values(interface_data)) {
@@ -422,6 +419,9 @@ const BindingSites = () => {
 		if (cur_struct === null) {
 			set_ligclasses_derived(lig_classes)
 		} else {
+			viewerInstance.visual.update({
+							moleculeId: cur_struct?.rcsb_id.toLowerCase()
+						});
 			set_ligclasses_derived(lig_classes.filter(lc => { return lc.presentIn.filter(str => str.rcsb_id === cur_struct.rcsb_id).length > 0 }))
 			// If the structure changes to non-null after being non-null, the selected ligand should be reset.
 			dispatch(action.current_ligand_change(null))
@@ -476,27 +476,46 @@ const BindingSites = () => {
 		viewerInstance.render(viewerContainer, options);
 	}, [])
 
-	const [OrigProjection, setOrigProj] = useState<'origin' | 'projection'>('origin')
+	const cur_vis_tab =  useSelector(( state:AppState ) => state.binding_sites.visualization_tab)
 	const target_structs = useSelector((state: AppState) => state.structures.derived_filtered)
+
 
 	useEffect(() => {
 
-		if (cur_tgt != null && OrigProjection === 'projection') {
+
+
+		if (cur_tgt !==null){
+			dispatch(action.request_Prediction(
+				cur_lig   ?.ligand .chemicalId as string,
+				cur_struct?.rcsb_id            as string,
+				cur_tgt!.struct.rcsb_id))
+		}else{
+			dispatch(action._data_field_change('prediction_data',null))
+		}
+	}, [cur_tgt])
+
+
+	useEffect(() => {
+
+		if (cur_tgt != null && cur_vis_tab === 'prediction') {
 			viewerInstance.visual.update({
 				moleculeId: cur_tgt?.struct.rcsb_id.toLowerCase()
 			});
 
 		}
 
-		if (cur_struct != null && OrigProjection === 'origin') {
+		if (cur_struct != null && cur_vis_tab === 'origin') {
 			viewerInstance.visual.update({
 				moleculeId: cur_struct?.rcsb_id.toLowerCase()
 			});
 		}
-	}, [OrigProjection])
+	}, [cur_vis_tab])
 
 
 
+	// *Filter Ions
+
+	// *Prediction Switches
 
 
 	const [msaOpen, setMsaOpen] = useState<boolean>(false)
@@ -608,18 +627,16 @@ const BindingSites = () => {
 					renderInput={(params) => <TextField {...params} label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
 
 				<Grid item style={{ marginBottom: "10px" }}>
-					{/* <Button
+					<Button
 						// color  ="primary"
 						// style  ={{ marginBottom: "10px" }}
-						style={ligstructPair.includes(null) ? { color: "gray" } : {}}
-						color={!ligstructPair.includes(null) ? 'primary' : 'default'}
+						style={[cur_lig,cur_struct].includes(null) ? { color: "gray" } : {}}
+						color={![cur_lig,cur_struct].includes(null) ? 'primary' : 'default'}
 						onClick={() => {
-
-							// action.request_Prediction()
 							viewerInstance.visual.reset({ camera: true, theme: true })
 						}}
 						fullWidth
-						variant="outlined"> Predict</Button> */}
+						variant="outlined"> Visualize Prediction</Button>
 				</Grid>
 
 				<Grid item style={{ marginBottom: "10px" }}>
@@ -677,13 +694,13 @@ const BindingSites = () => {
 				<Grid item style={{ marginBottom: "10px" }}>
 
 					<Dialogue
-						src_struct={cur_struct?.rcsb_id as string}
-						tgt_struct={cur_tgt?.struct.rcsb_id as string}
-						title={`Predicted Residues of ${cur_lig?.ligand.chemicalId} from structure ${cur_struct?.rcsb_id} in structure ${cur_tgt?.struct.rcsb_id}`}
-						open={msaOpen}
-						handleclose={handleclose}
-						handleopen={handleopen}
-						aln_obj={prediction_data} />
+						src_struct ={                         cur_struct     ?.rcsb_id as string                                                                                }
+						tgt_struct ={                         cur_tgt        ?.struct.rcsb_id as string                                                                         }
+						title      ={`Predicted Residues of ${cur_lig        ?.ligand.chemicalId} from structure ${cur_struct?.rcsb_id} in structure ${cur_tgt?.struct.rcsb_id}`}
+						open       ={                         msaOpen                                                                                                           }
+						handleclose={                         handleclose                                                                                                       }
+						handleopen ={                         handleopen                                                                                                        }
+						aln_obj    ={                         prediction_data                                                                                                   } />
 
 				</Grid>
 
@@ -699,17 +716,18 @@ const BindingSites = () => {
 					</Grid>
 
 					<Grid item>
-						<Button variant="outlined" color={OrigProjection == 'origin' ? 'primary' : "default"} onClick={() => { setOrigProj('origin') }} > Structure  of Origin
-							{cur_struct === null ? "" : `( ${cur_struct.rcsb_id} )`}
+						<Button variant="outlined" color={cur_vis_tab === 'origin' ? 'primary' : "default"} onClick={() => { dispatch(action._data_field_change('visualization_tab','origin'))}} > Structure  of Origin
+							{cur_struct === null ? "" : `(${cur_struct.rcsb_id})`}
 						</Button >
 					</Grid>
 
 					<Grid item>
-						<Button variant="outlined"
-							disabled={cur_tgt === null}
-							color={OrigProjection == 'projection' ? 'primary' : "default"} onClick={() => { setOrigProj('projection') }} > Prediction
-							{cur_tgt === null ? "" : `( ${cur_tgt.struct.rcsb_id} )`}
-						</Button >
+
+						 <Button variant  = "outlined"
+						        disabled = {cur_tgt === null}
+						        color    = {cur_vis_tab === 'prediction' ? 'primary' : "default"} onClick={() => { dispatch(action._data_field_change('visualization_tab','prediction'))}} > Prediction
+							{cur_tgt === null ? "" : `(${cur_tgt.struct.rcsb_id})`}
+						</Button > 
 					</Grid>
 				</Grid>
 				<Grid item xs={12} >
