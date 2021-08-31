@@ -7,8 +7,8 @@ import {  RibosomeStructure,  RibosomalProtein, rRNA, Ligand, BanClass, RNAClass
 export interface NeoStruct{
   struct   :  RibosomeStructure;
   ligands  :  string[];
-  rps      :  Array<{ noms: string[]; surface_ratio:number|null,strands: string }>;
-  rnas     :  string[];
+  rps      :  Array<{ noms: string[]; strands: string }>;
+  rnas     :  Array<{noms:string[], strands:string}>
 }
 
 

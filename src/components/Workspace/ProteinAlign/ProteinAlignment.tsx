@@ -134,7 +134,6 @@ export default function ProteinAlignment() {
 
 
   const visualizeAlignment = (
-
   )=>{
         console.log("Got:",
         struct1,struct2,strand1,strand2
@@ -200,7 +199,7 @@ export default function ProteinAlignment() {
 
         setstruct1(newvalue)
         setChainStructPair1([chainStructPair1[0], newvalue.struct.rcsb_id])
-        setChains1(newvalue.rps.sort(nomCompareFn))
+        setChains1([ ...newvalue.rps.sort(nomCompareFn), ...newvalue.rnas])
         setstrand1(null)
 
       }
@@ -214,7 +213,7 @@ export default function ProteinAlignment() {
       } else {
         setstruct2(newvalue)
         setChainStructPair2([chainStructPair2[0], newvalue.struct.rcsb_id])
-        setChains2(newvalue.rps.sort(nomCompareFn))
+        setChains2( [ ...newvalue.rps.sort(nomCompareFn), ...newvalue.rnas ])
         console.log("Got newvalue rnas: ", newvalue.rnas);
         console.log(newvalue);
         
@@ -377,6 +376,8 @@ export default function ProteinAlignment() {
             Download Aligned
           </Button>
         </Grid>
+
+      
         <Grid item>
           <DashboardButton />
         </Grid>
