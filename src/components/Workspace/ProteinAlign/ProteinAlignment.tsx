@@ -14,6 +14,14 @@ import TextField from '@material-ui/core/TextField/TextField';
 import Paper from '@material-ui/core/Paper/Paper';
 import { NeoStruct } from '../../../redux/DataInterfaces';
 
+
+// TODO:
+// Elements are actually downloadable and visualizable
+// Error handling
+// Sorted rps (numerical precedence)
+
+
+
 type StructRespone = {
     struct : RibosomeStructure,
     rps    : {noms:string[], strands:string}[],
@@ -96,8 +104,6 @@ const useStyles = makeStyles((theme: Theme) =>
   const [strand1,setstrand1] = useState<any>(null)
   const [strand2,setstrand2] = useState<any>(null)
 
-
-
   const [chains1, setChains1] = useState<{ noms: string[];  strands: string; }[]>([])
   const [chains2, setChains2] = useState<{ noms: string[];  strands: string; }[]>([])
 
@@ -136,16 +142,20 @@ const useStyles = makeStyles((theme: Theme) =>
   }, [struct2])
 
 
-  useEffect(() => {
-    console.log("set chains1 to", chains1);
-  }, [chains1])
 
-  const requestAlignment = (parameters: {
-    struct1: string;
-    struct2: string;
-    strand1: string;
-    strand2: string;
-  }) => {
+
+
+  useEffect(() => {
+    console.log("Chainstructpairs changed:",chainStructPair1);
+    console.log("Chainstructpairs changed:",chainStructPair2);
+  }, [chainStructPair1,chainStructPair2])
+
+  const requestAlignment = (
+    struct1: string,
+    struct2: string,
+    strand1: string,
+    strand2: string,
+  ) => {
 
     if (strand1.includes(',')){
       alert(`Please select two single-chain proteins for now: \n ${strand1} is a duplicated chain (as per ${struct1}-PDB deposition). Working on parsing this. `)
@@ -158,19 +168,19 @@ const useStyles = makeStyles((theme: Theme) =>
 
     getNeo4jData("static_files", {
       endpoint: "pairwise_align",
-      params: parameters,
+      params: {
+        struct1,
+        struct2,
+        strand1,
+        strand2
+      },
     })
     .then(
-        resp=>{fileDownload(resp.data, `${parameters.struct1}-${parameters.strand1}_over_${parameters.struct2}-${parameters.strand2}.cif`)},
+        resp=>{fileDownload(resp.data, `${struct1}-${strand1}_over_${struct2}-${strand2}.cif`)},
            e=>console.log(e)
     )
   };
 
-
-  useEffect(() => {
-    console.log("changed chain str pair 1:", chainStructPair1);
-    
-  }, [chainStructPair1])
 
 
   const handleStructChange =( struct_number:number )=> (event: React.ChangeEvent<{ value: unknown }>, newvalue:NeoStruct) => {
@@ -203,7 +213,15 @@ const useStyles = makeStyles((theme: Theme) =>
   }
 
 
-  const handleChainChange =( chain_number:number )=> (event: React.ChangeEvent<{ value: unknown }>, newvalue:{ noms: string[]; surface_ratio: number | null; strands: string; }) => {
+  const handleChainChange =( chain_number:number )=> (event: React.ChangeEvent<{ value: unknown }>, 
+    newvalue     :{ noms: string[];
+     surface_ratio: number | null  ;
+     strands      : string         ; }) => {
+
+      if (newvalue.strands.includes(',')){
+        newvalue.strands = newvalue.strands.split(',')[0]
+      }
+
     if ( chain_number === 1 ){
       if (newvalue === null){
 				setstrand1(null)
@@ -312,7 +330,7 @@ const useStyles = makeStyles((theme: Theme) =>
             customData: {
               url:
               `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
-              format: "cif",
+              format: "pdb",
               binary: false,
             },
           });
@@ -332,22 +350,23 @@ const useStyles = makeStyles((theme: Theme) =>
               alert("Select chains to align.")
               return
             }
+
             viewerInstance.visual.update({
               customData: {
                 url   : `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
-                format: "cif",
+                format: "pdb",
                 binary: false,
               },
             });
 
             console.log("requesting ", chainStructPair1[1], chainStructPair2[1], chainStructPair1[0], chainStructPair2[0]);
 
-            requestAlignment({
-              struct1: chainStructPair1[1] as string,
-              struct2: chainStructPair2[1] as string,
-              strand1: chainStructPair1[0] as string,
-              strand2: chainStructPair2[0] as string,
-            });
+            requestAlignment(
+               chainStructPair1[1] as string,
+               chainStructPair2[1] as string,
+               chainStructPair1[0] as string,
+               chainStructPair2[0] as string,
+            );
           }}>
           Download Aligned
         </Button>
