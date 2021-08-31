@@ -1,89 +1,51 @@
-import { BSitesActions, BSitesFilter } from './ActionTypes'
-import { BindingSite, LigandClass, RNAProfile} from '../../DataInterfaces'
-import { Filter ,FilterRegistry } from '../Filters/ActionTypes';
-import _ from 'lodash';
-import { lighten } from '@material-ui/core';
-import { Ligand } from '../../RibosomeTypes';
+import { BSitesActions } from './ActionTypes'
+import { BindingSite, LigandBindingSite, LigandClass, LigandPrediction, NeoStruct } from '../../DataInterfaces'
 
 
-// // ! DataType for a Binding Site. A union of parent struct with tht-+
-// const RnaClassFilterRegistry: FilterRegistry<BSitesFilter, BindingSite> = {
-
-//   filtstate: {
-//     "EXPERIMENTAL_METHOD":{
-//       value    : [],
-//       set      : false,
-//       predicate: (value) => (bs)=>{
-
-//         // if ( value.length === 0){
-//         //   return true
-//         // }
-//         // return  value.includes(rna.parent_method)
-// 		return true
-//       }
-//     },
-//     "RESOLUTION":{
-//       value    : [0,5],
-//       set      : false,
-//       predicate: (value) => (bs)=>{
-// // return rna.parent_resolution >= (value as number[])[0] && rna.parent_resolution <= (value as number[])[1]
-// return true
-//       }
-//     },
-
-//     "YEAR": {
-//       value    : [2012, 2021],
-//       set      : false,
-//       predicate: (value) => (bs)=>{
-//     //  return rna.parent_year >= (value as number[])[0] && rna.parent_year <= (value as number[])[1]
-//      return true
-//       }
-//     },
-//     "SEARCH": {
-//       value: "",
-//       set: false,
-//       predicate: (value) => (bs) => {
-//         // return ( rna.parent_citation + rna.description + rna.orgid.reduce((a,b)=>a+b, '') ).toLowerCase().includes(value.toLowerCase())
-//         return true
-//       }
-//     },
-//     "SPECIES": {
-//       value    : [],
-//       set      : false,
-//       predicate: (value) => (bs) => {
-//         if (value.length ===0 ){return true}
-//         // return _.intersection(value, rna.orgid).length > 0 
-//         return true
-//       }
-//     },
-//   },
-
-//   applied: []
-
-// }
-
-
-interface BindingSitesReducerState{
+export interface BindingSitesReducerState{
 
     error         : any,
     is_loading    : boolean;
     errored_out   : boolean;
-    // filters       : FilterRegistry<BSitesFilter, BindingSite>,
-    current_page  : number,
-    pages_total   : number,
-    bsites        : BindingSite[]
-    ligand_classes: LigandClass[]
+
+    visualization_tab: "origin" | 'prediction',
+
+    bsites                : BindingSite[]
+    ligand_classes        : LigandClass[],
+    bsites_derived        : BindingSite[],
+    ligand_classes_derived: LigandClass[],
+
+    current_structure: BindingSite | null,
+    current_ligand   : LigandClass | null,
+    current_target   : NeoStruct   | null,
+
+
+
+    binding_site_data : LigandBindingSite | null,
+    prediction_data   : LigandPrediction  | null
+
 }
 
 const initialstateBindinginSitesReducer:BindingSitesReducerState = {
-    current_page  : 1,
-    pages_total   : 1,
-    error         : null,
-    is_loading    : false,
-    errored_out   : false,
-    // filters       : RnaClassFilterRegistry,
-    bsites        : [],
-    ligand_classes: []
+    error      : null,
+    is_loading : false,
+    errored_out: false,
+
+    visualization_tab: 'origin',
+
+    bsites                : [],
+    ligand_classes        : [],
+    bsites_derived        : [],
+    ligand_classes_derived: [],
+
+    current_ligand   : null,
+    current_structure: null,
+    current_target   : null,
+
+
+    binding_site_data: null,
+    prediction_data  : null,
+
 }
 
 export const BindingSitesReducer = (
@@ -92,12 +54,56 @@ export const BindingSitesReducer = (
 ): BindingSitesReducerState => {
   switch (action.type) {
 
+
+    case "ARBITRARY_DATA_FIELD_CHANGE":
+      return {...state, [action.reducer_state_key]:action.datum}
+
+
 	case "REQUEST_ALL_BSITES_GO":
 		return state
 	case "REQUEST_ALL_BSITES_ERR":
 		return state
 	case "REQUEST_ALL_BSITES_SUCCESS":
 		return {...state, bsites:action.bsites, ligand_classes:action.ligand_classes}
+
+    case "FILE_REQUEST_ERROR":
+  return {...state, is_loading:false, error:action.error}
+
+
+    case "REQUEST_LIGAND_BINDING_SITE":
+      return {...state, is_loading:true}
+    case "REQUEST_LIGAND_PREDICTION":
+      return {...state, is_loading:true}
+
+
+
+
+  case "LIGAND_BINDING_SITE_SUCCESS":
+    return {...state, binding_site_data:action.binding_site_object, is_loading:false}
+  case "LIGAND_PREDICTION_SUCCESS":
+    return {...state, prediction_data:action.prediction_object, is_loading:false}
+
+
+    case "CHANGE_VIS_TAB":
+      return{...state, visualization_tab:action.tab}
+
+
+
+    case "CURRENT_LIGAND_CHANGE":
+      return {...state, current_ligand:action.next_cur_ligand}
+
+
+
+    case "CURRENT_STRUCTURE_CHANGE":
+      return {...state, current_structure:action.next_cur_struct}
+
+
+
+    case "CURRENT_PREDICTION_CHANGE":
+      return {...state, current_target:action.next_cur_prediction}
+
+
+
 	default:
 		return state
 };

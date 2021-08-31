@@ -6,7 +6,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import { DashboardButton } from '../../../materialui/Dashboard/Dashboard';
 import { Cart } from '../Cart/Cart';
 import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../redux/store';
 import TextField from '@material-ui/core/TextField/TextField';
 import { BindingInterface, BindingSite, LigandBindingSite, LigandClass, LigandPrediction, NeoStruct, Residue } from '../../../redux/DataInterfaces';
@@ -23,7 +23,9 @@ import createStyles from '@material-ui/core/styles/createStyles';
 import Highlighter from "react-highlight-words";
 import { ChainParentPill } from '../RibosomalProteins/RibosomalProteinCard';
 import { useHistory } from 'react-router-dom';
+import * as action from './../../../redux/reducers/BindingSites/ActionTypes'
 import _ from 'lodash';
+import { cursorTo } from 'readline';
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
@@ -31,9 +33,6 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 
 const ChainAlignmentBlock = ({ src_struct, tgt_struct, nomenclature, tgt_aln, src_aln, aln_ids, tgt_strand, src_strand }: { src_struct: string, tgt_struct: string, nomenclature: string, tgt_strand: string, src_strand: string, tgt_aln: string, src_aln: string, aln_ids: number[] }) => {
 	const history = useHistory();
-
-
-
 	return <Paper
 		variant='outlined'
 		style={{ padding: "10px", marginBottom: "20px" }}>
@@ -99,15 +98,12 @@ const ChainAlignmentBlock = ({ src_struct, tgt_struct, nomenclature, tgt_aln, sr
 
 	</Paper>
 
-
 }
+
 const Dialogue = ({ open, handleclose, handleopen, aln_obj, title, src_struct, tgt_struct }: { src_struct: string, tgt_struct: string, open: boolean, handleopen: () => void, handleclose: () => void, aln_obj: LigandPrediction | null, title: string }) => {
 
 	const [fullWidth, setFullWidth] = React.useState(true);
 	const [maxWidth, setMaxWidth] = React.useState<DialogProps['maxWidth']>('xl');
-
-
-
 
 	return (
 		<React.Fragment>
@@ -207,34 +203,33 @@ const BindingSites = () => {
 		}
 	}))();
 
-	const [interface_data, setInterface_data] = useState<LigandBindingSite | null>(null)
-	const [predictionData, setPredictionData] = useState<LigandPrediction | null>(null)
 
-	const [cur_struct, set_cur_struct] = useState<BindingSite | null>(null)
-	const [curligand, set_cur_ligand] = useState<LigandClass | null>(null)
-	const [ligstructPair, setLigstructPair] = useState<[string | null, string | null]>([null, null])
 
-	const bsites = useSelector((state: AppState) => state.binding_sites.bsites)
-	const lig_classes = useSelector((state: AppState) => state.binding_sites.ligand_classes)
+	const dispatch = useDispatch();
 
-	const [bsites_derived, set_bsites_derived] = useState<BindingSite[]>()
+	const cur_struct = useSelector(( state:AppState ) => state.binding_sites.current_structure)
+	const cur_lig    = useSelector(( state:AppState ) => state.binding_sites.current_ligand)
+	const cur_tgt    = useSelector(( state:AppState ) => state.binding_sites.current_target)
+
+	const bsites                            = useSelector((state: AppState) => state.binding_sites.bsites)
+	const lig_classes                       = useSelector((state: AppState) => state.binding_sites.ligand_classes)
+
+	const [bsites_derived, set_bsites_derived]          = useState<BindingSite[]>()
 	const [lig_classes_derived, set_ligclasses_derived] = useState<LigandClass[]>()
 
-	const [curTarget, setCurTarget] = useState<NeoStruct | null>(null)
+	const interface_data  = useSelector(( state:AppState ) => state.binding_sites.binding_site_data)
+	const prediction_data = useSelector(( state:AppState ) => state.binding_sites.prediction_data)
 
 
 	useEffect(() => {
-
-		// ! Change of predictionData is triggered by fetching a new prediction on "Predict"
-		if (predictionData == null) {
+		// ! Change of prediction_data is triggered by fetching a new prediction on "Predict"
+		if (prediction_data == null) {
 			return
 		}
-		console.log("Got new prediction:", predictionData);
+		console.log("Got new prediction:", prediction_data);
 		interface MolStarResidue { entity_id?: string, auth_asym_id?: string, struct_asym_id?: string, residue_number?: number, start_residue_number?: number, end_residue_number?: number, auth_residue_number?: number, auth_ins_code_id?: string, start_auth_residue_number?: number, start_auth_ins_code_id?: string, end_auth_residue_number?: number, end_auth_ins_code_id?: string, atoms?: string[], label_comp_id?: string, color: { r: number, g: number, b: number }, focus?: boolean, sideChain?: boolean }
-
-
 		var prediction_vis_data: MolStarResidue[] = []
-		for (var chain of Object.values(predictionData)) {
+		for (var chain of Object.values(prediction_data)) {
 			for (var i of chain.target.tgt_ids) {
 				if (i > 0) {
 
@@ -249,7 +244,6 @@ const BindingSites = () => {
 				}
 			}
 		}
-
 		if (prediction_vis_data.length > 300) {
 			// alert("This ligand binds to more than 300 residues. Your browser might take some time to load it.")
 			if (window.confirm("This ligand binds to more than 300 residues. Your browser might take some time to visualize it.")) {
@@ -258,69 +252,34 @@ const BindingSites = () => {
 				return
 			}
 		}
-
 		viewerInstance.visual.select(
 			{
 				data: prediction_vis_data,
 				nonSelectedColor: { r: 240, g: 240, b: 240 }
 			}
 		)
-
-	}, [predictionData])
-
-	useEffect(() => {
-		if (ligstructPair[0] == null || ligstructPair[1] == null) {
-			return
-		}
-		else {
-			getLigandNbhd(ligstructPair[0], ligstructPair[1]).then(r => {
-
-				setInterface_data(r)
-			})
-
-		}
-	}, [ligstructPair])
-
-	useEffect(() => {
-
-		if (OrigProjection === 'origin') {
-
-			viewerInstance.visual.update({
-				moleculeId: cur_struct?.rcsb_id.toLowerCase()
-			});
-
-			setloadingcurrent(true)
-
-
-		}
-
-	}, [cur_struct])
+	}, [prediction_data])
 
 
 	const get_strand_asymid_map = (gqlresp: any) => {
 		var _ = gqlresp.data.data.entry.polymer_entities
 
-
 		const map: Record<any, any> = {}
 		for (var poly of _) {
-			var strand = poly.entity_poly.pdbx_strand_id
-			var asym = poly.rcsb_polymer_entity_container_identifiers.asym_ids[0]
+			var strand  = poly.entity_poly.pdbx_strand_id
+			var asym    = poly.rcsb_polymer_entity_container_identifiers.asym_ids[0]
 			map[strand] = { "asymid": asym }
 		}
-
-
 		getNeo4jData('neo4j', {
 			endpoint: "get_struct",
 			params: { pdbid: cur_struct!.rcsb_id }
 		})
 			.then(r => {
-				// 	console.log("got asymid map getstruct", r.data);
-				//   iter over rps
 				for (var rp of r.data[0].rps) {
 					if (Object.keys(map).includes(rp.entity_poly_strand_id)) {
 						map[rp.entity_poly_strand_id] = {
 							nomenclature: rp.nomenclature,
-							asymid: map[rp.entity_poly_strand_id].asymid
+							asymid      : map[rp.entity_poly_strand_id].asymid
 						}
 					}
 				}
@@ -341,41 +300,41 @@ const BindingSites = () => {
 	}
 
 	const [asymidChainMap, setAsymidChainMap] = useState({} as any)
-	const getGqlQuery = (pdbid: string) => {
 
-		return encodeURI(`https://data.rcsb.org/graphql?query={
-      entry(entry_id: "${pdbid.toLowerCase()}") {
-      rcsb_id
-      polymer_entities {
-          rcsb_polymer_entity_container_identifiers{
-      asym_ids
-    }
-        entity_poly {
-          pdbx_strand_id
-          type
-        }
-      }
-      nonpolymer_entities {
-        rcsb_nonpolymer_entity_container_identifiers{
-          asym_ids
-        }
-        
-        pdbx_entity_nonpoly {
-          
-          comp_id
-          name
-          entity_id
-        }
-        rcsb_nonpolymer_entity {
-          formula_weight
-          pdbx_description
-        }
-      }
-  }}` )
-	}
 	useEffect(() => {
 
 		if (cur_struct != null) {
+			const getGqlQuery = (pdbid: string) => {
+				return encodeURI(`https://data.rcsb.org/graphql?query={
+			entry(entry_id: "${pdbid.toLowerCase()}") {
+			rcsb_id
+			polymer_entities {
+				rcsb_polymer_entity_container_identifiers{
+			asym_ids
+			}
+				entity_poly {
+				pdbx_strand_id
+				type
+				}
+			}
+			nonpolymer_entities {
+				rcsb_nonpolymer_entity_container_identifiers{
+				asym_ids
+				}
+				
+				pdbx_entity_nonpoly {
+				
+				comp_id
+				name
+				entity_id
+				}
+				rcsb_nonpolymer_entity {
+				formula_weight
+				pdbx_description
+				}
+			}
+		}}` )
+			}
 			axios.get(getGqlQuery(cur_struct.rcsb_id)).then(
 				r => {
 					var map = get_strand_asymid_map(r)
@@ -397,10 +356,7 @@ const BindingSites = () => {
 			alert("Select a binding site.")
 			return
 		}
-
 		interface MolStarResidue { entity_id?: string, auth_asym_id?: string, struct_asym_id?: string, residue_number?: number, start_residue_number?: number, end_residue_number?: number, auth_residue_number?: number, auth_ins_code_id?: string, start_auth_residue_number?: number, start_auth_ins_code_id?: string, end_auth_residue_number?: number, end_auth_ins_code_id?: string, atoms?: string[], label_comp_id?: string, color: { r: number, g: number, b: number }, focus?: boolean, sideChain?: boolean }
-		console.log(interface_data);
-
 		var vis_data: MolStarResidue[] = []
 
 		for (var chain of Object.values(interface_data)) {
@@ -437,44 +393,38 @@ const BindingSites = () => {
 		)
 	}
 
-	const getLigandNbhd = async (chemid: string, struct: string): Promise<LigandBindingSite> => {
+	const updateBindingSiteData = (curstruct:BindingSite ,curligand:LigandClass, flag:any)=>{
 
-		var data = {}
-		await getNeo4jData("static_files", {
-			endpoint: "get_ligand_nbhd", params: {
-				chemid,
-				struct
-			}
-		}).then(
-			r => {
-				data = r.data
-			},
-			e => {
-				console.log("Error out fetching binding site file:", e)
-			}
-		)
+		// alert("Fetched a new file.")
+		dispatch(action.request_LigandBindingSite(curligand?.ligand.chemicalId, curstruct.rcsb_id))
 
-		return data as LigandBindingSite
+
 	}
 
 
-	useEffect(() => {
-	}, [ligstructPair])
+
+
 
 	useEffect(() => {
-		if (curligand === null) {
+		if (cur_lig === null) {
 			set_bsites_derived(bsites)
+			dispatch(action._data_field_change('binding_site_data',null))
 		} else {
-			set_bsites_derived(bsites.filter(bs => bs.chemicalId === curligand.ligand.chemicalId))
-
+			set_bsites_derived(bsites.filter(bs => bs.chemicalId === cur_lig.ligand.chemicalId))
+			updateBindingSiteData(cur_struct as BindingSite,cur_lig,'')
 		}
-	}, [curligand])
+	}, [cur_lig])
 
 	useEffect(() => {
 		if (cur_struct === null) {
 			set_ligclasses_derived(lig_classes)
 		} else {
+			viewerInstance.visual.update({
+							moleculeId: cur_struct?.rcsb_id.toLowerCase()
+						});
 			set_ligclasses_derived(lig_classes.filter(lc => { return lc.presentIn.filter(str => str.rcsb_id === cur_struct.rcsb_id).length > 0 }))
+			// If the structure changes to non-null after being non-null, the selected ligand should be reset.
+			dispatch(action.current_ligand_change(null))
 		}
 	}, [cur_struct])
 
@@ -487,36 +437,31 @@ const BindingSites = () => {
 
 	const handleStructChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
 		if (newvalue === null) {
-			set_cur_struct(null)
-			setLigstructPair([ligstructPair[0], null])
-		} else {
 
-			set_cur_struct(newvalue)
-			setLigstructPair([ligstructPair[0], newvalue.rcsb_id])
+			dispatch(action.current_struct_change(null))
+			// set_cur_struct(null)
+		} else {
+			dispatch(action.current_struct_change(newvalue))
+			// set_cur_struct(newvalue)
 
 		}
 	}
 	const handleLigChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: LigandClass) => {
 		if (newvalue === null) {
-			set_cur_ligand(null)
-			setLigstructPair([null, ligstructPair[1]])
+			dispatch(action.current_ligand_change(null))
 		}
 		else {
-			set_cur_ligand(newvalue)
-			setLigstructPair([newvalue.ligand.chemicalId, ligstructPair[1],])
+			dispatch(action.current_ligand_change(newvalue))
 		}
 	}
 	const handleTargetChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: NeoStruct) => {
 
 		if (newvalue === null) {
-
-			console.log("Current target set to");
-			console.log(newvalue);
-			setCurTarget(null)
+			dispatch(action.current_target_change(null))
 
 		}
 		else {
-			setCurTarget(newvalue)
+			dispatch(action.current_target_change(newvalue))
 		}
 	}
 
@@ -531,60 +476,62 @@ const BindingSites = () => {
 		viewerInstance.render(viewerContainer, options);
 	}, [])
 
-	const [OrigProjection, setOrigProj] = useState<'origin' | 'projection'>('origin')
+	const cur_vis_tab =  useSelector(( state:AppState ) => state.binding_sites.visualization_tab)
 	const target_structs = useSelector((state: AppState) => state.structures.derived_filtered)
+
 
 	useEffect(() => {
 
-		if (curTarget != null && OrigProjection === 'projection') {
+
+
+		if (cur_tgt !==null){
+			dispatch(action.request_Prediction(
+				cur_lig   ?.ligand .chemicalId as string,
+				cur_struct?.rcsb_id            as string,
+				cur_tgt!.struct.rcsb_id))
+		}else{
+			dispatch(action._data_field_change('prediction_data',null))
+		}
+	}, [cur_tgt])
+
+
+	useEffect(() => {
+
+		if (cur_tgt != null && cur_vis_tab === 'prediction') {
 			viewerInstance.visual.update({
-				moleculeId: curTarget?.struct.rcsb_id.toLowerCase()
+				moleculeId: cur_tgt?.struct.rcsb_id.toLowerCase()
 			});
 
-			setloadingtarget(true)
 		}
 
-		if (cur_struct != null && OrigProjection === 'origin') {
+		if (cur_struct != null && cur_vis_tab === 'origin') {
 			viewerInstance.visual.update({
 				moleculeId: cur_struct?.rcsb_id.toLowerCase()
 			});
-			setloadingcurrent(true)
 		}
-	}, [OrigProjection])
+	}, [cur_vis_tab])
 
 
-	const [loading_current, setloadingcurrent] = useState<boolean>(false)
-	const [loading_target, setloadingtarget] = useState<boolean>(false)
 
-	useEffect(() => {
-		if (loading_current) {
-			setTimeout(() => {
-				setloadingcurrent(false)
-			}, 5000);
-		}
-		if (loading_target) {
-			setTimeout(() => {
-				setloadingtarget(false)
-			}, 5000);
-		}
-	}, [loading_current, loading_target])
+	// *Filter Ions
 
+	// *Prediction Switches
 
 
 	const [msaOpen, setMsaOpen] = useState<boolean>(false)
-	const handleopen = () => { setMsaOpen(true) }
-	const handleclose = () => { setMsaOpen(false) }
+	const handleopen            = () => { setMsaOpen(true) }
+	const handleclose           = () => { setMsaOpen(false) }
 
 
 
 	const generatePredictionCSV = () => {
-		if (predictionData === null || _.isEqual(predictionData, {})) {
+		if (prediction_data === null || _.isEqual(prediction_data, {})) {
 			alert("Prediction is empty. Either not chosen by user or no chains with overlapping nomenclature found for target and source structures. ")
 			return
 		}
 		else {
 
-			// predictionData
+			// prediction_data
 
 
 
@@ -614,7 +561,7 @@ const BindingSites = () => {
 					renderInput={(params) => <TextField {...params} label={`Structures  ( ${bsites_derived !== undefined ? bsites_derived.length : "0"} )`} variant="outlined" />}
 				/>
 				<Autocomplete
-					value={curligand}
+					value={cur_lig}
 					className={classes.autocomplete}
 					options={lig_classes_derived as LigandClass[]}
 					getOptionLabel={(lc: LigandClass) => { return lc.ligand ? lc.ligand.chemicalId + " : " + lc.ligand.chemicalName : "" }}
@@ -627,8 +574,8 @@ const BindingSites = () => {
 					<Button
 						fullWidth
 						variant={"outlined"}
-						style={ligstructPair.includes(null) ? { color: "gray" } : {}}
-						color={!ligstructPair.includes(null) ? 'primary' : 'default'}
+						style={[cur_struct,cur_lig].includes(null) ? { color: "gray" } : {}}
+						// color={!ligstructPair.includes(null) ? 'primary' : 'default'}
 						onClick={() => {
 							highlightInterface()
 						}}>
@@ -655,7 +602,7 @@ const BindingSites = () => {
 							fullWidth
 							variant="outlined"
 							// style    = {ligstructPair.includes(null) ? { color: "gray" } : {}}
-							color={!ligstructPair.includes(null) ? 'primary' : 'default'}
+							color={[cur_struct, cur_lig].includes(null) ? 'primary' : 'default'}
 							disabled={interface_data == null}>
 							Download Binding Site (.csv)
 						</Button>
@@ -666,7 +613,7 @@ const BindingSites = () => {
 				</Grid>
 				<Typography className={classes.bsHeader} variant="h5">Prediction</Typography>
 				<Autocomplete
-					value={curTarget}
+					value={cur_tgt}
 					// placeholder={{struct:{
 
 					// 	rcsb
@@ -683,51 +630,32 @@ const BindingSites = () => {
 					<Button
 						// color  ="primary"
 						// style  ={{ marginBottom: "10px" }}
-						style={ligstructPair.includes(null) ? { color: "gray" } : {}}
-						color={!ligstructPair.includes(null) ? 'primary' : 'default'}
+						style={[cur_lig,cur_struct].includes(null) ? { color: "gray" } : {}}
+						color={![cur_lig,cur_struct].includes(null) ? 'primary' : 'default'}
 						onClick={() => {
-
-							if (!(curligand?.ligand && cur_struct?.rcsb_id && curTarget?.struct)) {
-
-								alert("Please select a binding site (Structure and Ligand fields) and a Target Structure to make prediction in.")
-								return
-							}
-
-							getNeo4jData("static_files", {
-								endpoint: "ligand_prediction",
-								params: {
-									chemid: (curligand?.ligand.chemicalId as string),
-									src_struct: (cur_struct?.rcsb_id as string),
-									tgt_struct: (curTarget?.struct.rcsb_id as string),
-								}
-							}).then(resp => { setPredictionData(resp.data) })
 							viewerInstance.visual.reset({ camera: true, theme: true })
 						}}
 						fullWidth
-						variant="outlined"> Predict</Button>
+						variant="outlined"> Visualize Prediction</Button>
 				</Grid>
 
 				<Grid item style={{ marginBottom: "10px" }}>
-
-
 					<Button
 						color="primary"
 						onClick={() => {
 							setMsaOpen(true)
 						}}
 						fullWidth
-						disabled={predictionData === null}
+						disabled={prediction_data === null}
 						variant="outlined"> Inspect Prediction </Button>
 
 				</Grid>
 
 				<Grid item style={{ marginBottom: "10px" }}>
-
-
 					<CSVLink
 						data={[]}
 						onClick={() => {
-							if (predictionData === null || _.isEqual(predictionData, {})) {
+							if (prediction_data === null || _.isEqual(prediction_data, {})) {
 								return false;
 							}
 						}}
@@ -739,7 +667,7 @@ const BindingSites = () => {
 							// 	// alert("Yet to implement conversion to csv.")
 							// }}
 							fullWidth
-							disabled={predictionData === null}
+							disabled={prediction_data === null}
 							variant="outlined"> Download Prediction (.csv) </Button>
 
 					</CSVLink>
@@ -754,10 +682,9 @@ const BindingSites = () => {
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button color="primary"
 						onClick={() => {
-							setCurTarget(null)
-							set_cur_ligand(null)
-							set_cur_struct(null)
-							setLigstructPair([null, null])
+							dispatch(action.current_struct_change(null))
+							dispatch(action.current_ligand_change(null))
+							dispatch(action.current_target_change(null))
 							viewerInstance.visual.reset({ camera: true, theme: true })
 						}}
 						fullWidth
@@ -767,13 +694,13 @@ const BindingSites = () => {
 				<Grid item style={{ marginBottom: "10px" }}>
 
 					<Dialogue
-						src_struct={cur_struct?.rcsb_id as string}
-						tgt_struct={curTarget?.struct.rcsb_id as string}
-						title={`Predicted Residues of ${curligand?.ligand.chemicalId} from structure ${cur_struct?.rcsb_id} in structure ${curTarget?.struct.rcsb_id}`}
-						open={msaOpen}
-						handleclose={handleclose}
-						handleopen={handleopen}
-						aln_obj={predictionData} />
+						src_struct ={                         cur_struct     ?.rcsb_id as string                                                                                }
+						tgt_struct ={                         cur_tgt        ?.struct.rcsb_id as string                                                                         }
+						title      ={`Predicted Residues of ${cur_lig        ?.ligand.chemicalId} from structure ${cur_struct?.rcsb_id} in structure ${cur_tgt?.struct.rcsb_id}`}
+						open       ={                         msaOpen                                                                                                           }
+						handleclose={                         handleclose                                                                                                       }
+						handleopen ={                         handleopen                                                                                                        }
+						aln_obj    ={                         prediction_data                                                                                                   } />
 
 				</Grid>
 
@@ -789,17 +716,18 @@ const BindingSites = () => {
 					</Grid>
 
 					<Grid item>
-						<Button variant="outlined" color={OrigProjection == 'origin' ? 'primary' : "default"} onClick={() => { setOrigProj('origin') }} > Structure  of Origin
-							{cur_struct === null ? "" : `( ${cur_struct.rcsb_id} )`}
+						<Button variant="outlined" color={cur_vis_tab === 'origin' ? 'primary' : "default"} onClick={() => { dispatch(action._data_field_change('visualization_tab','origin'))}} > Structure  of Origin
+							{cur_struct === null ? "" : `(${cur_struct.rcsb_id})`}
 						</Button >
 					</Grid>
 
 					<Grid item>
-						<Button variant="outlined"
-							disabled={curTarget === null}
-							color={OrigProjection == 'projection' ? 'primary' : "default"} onClick={() => { setOrigProj('projection') }} > Prediction
-							{curTarget === null ? "" : `( ${curTarget.struct.rcsb_id} )`}
-						</Button >
+
+						 <Button variant  = "outlined"
+						        disabled = {cur_tgt === null}
+						        color    = {cur_vis_tab === 'prediction' ? 'primary' : "default"} onClick={() => { dispatch(action._data_field_change('visualization_tab','prediction'))}} > Prediction
+							{cur_tgt === null ? "" : `(${cur_tgt.struct.rcsb_id})`}
+						</Button > 
 					</Grid>
 				</Grid>
 				<Grid item xs={12} >
