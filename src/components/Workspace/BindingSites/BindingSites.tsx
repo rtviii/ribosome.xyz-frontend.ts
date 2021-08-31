@@ -25,7 +25,6 @@ import { ChainParentPill } from '../RibosomalProteins/RibosomalProteinCard';
 import { useHistory } from 'react-router-dom';
 import * as action from './../../../redux/reducers/BindingSites/ActionTypes'
 import _ from 'lodash';
-import { cursorTo } from 'readline';
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
@@ -408,7 +407,7 @@ const BindingSites = () => {
 	useEffect(() => {
 		if (cur_lig === null) {
 			set_bsites_derived(bsites)
-			dispatch(action._data_field_change('binding_site_data',null))
+			dispatch(action._partial_state_change({ 'binding_site_data':null }))
 		} else {
 			set_bsites_derived(bsites.filter(bs => bs.chemicalId === cur_lig.ligand.chemicalId))
 			updateBindingSiteData(cur_struct as BindingSite,cur_lig,'')
@@ -490,7 +489,7 @@ const BindingSites = () => {
 				cur_struct?.rcsb_id            as string,
 				cur_tgt!.struct.rcsb_id))
 		}else{
-			dispatch(action._data_field_change('prediction_data',null))
+			dispatch(action._partial_state_change({ 'prediction_data':null }))
 		}
 	}, [cur_tgt])
 
@@ -613,27 +612,21 @@ const BindingSites = () => {
 				</Grid>
 				<Typography className={classes.bsHeader} variant="h5">Prediction</Typography>
 				<Autocomplete
-					value={cur_tgt}
-					// placeholder={{struct:{
-
-					// 	rcsb
-					// }}}
-					className={classes.autocomplete}
-					options={target_structs}
-					getOptionLabel={(parent: NeoStruct) => { return parent.struct ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
+					value         ={ cur_tgt                                                                                                                   }
+					className     ={ classes       .autocomplete                                                                                               }
+					options       ={ target_structs                                                                                                            }
+					getOptionLabel={(parent        : NeoStruct) => { return parent.struct ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
 					// @ts-ignore
-					onChange={handleTargetChange}
-					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
-					renderInput={(params) => <TextField {...params} label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
+					onChange    ={ handleTargetChange                                                                                                                                               }
+					renderOption={(option            ) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title} </div>)                  }
+					renderInput ={(params            ) => <TextField {...params} label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
 
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
-						// color  ="primary"
-						// style  ={{ marginBottom: "10px" }}
-						style={[cur_lig,cur_struct].includes(null) ? { color: "gray" } : {}}
-						color={![cur_lig,cur_struct].includes(null) ? 'primary' : 'default'}
-						onClick={() => {
-							viewerInstance.visual.reset({ camera: true, theme: true })
+						style  ={[cur_lig,cur_struct].includes (null) ? { color: "gray" } : {}}
+						color  ={![cur_lig,cur_struct].includes(null) ? 'primary' : 'default'}
+						onClick={                              (    ) => {
+							viewerInstance.visual.reset({ camera: true, theme: true , moleculeId:true})
 						}}
 						fullWidth
 						variant="outlined"> Visualize Prediction</Button>
@@ -658,26 +651,16 @@ const BindingSites = () => {
 							if (prediction_data === null || _.isEqual(prediction_data, {})) {
 								return false;
 							}
-						}}
-					>
-
+						}}>
 						<Button
 							color="primary"
-							// onClick = {() => {
-							// 	// alert("Yet to implement conversion to csv.")
-							// }}
 							fullWidth
 							disabled={prediction_data === null}
 							variant="outlined"> Download Prediction (.csv) </Button>
 
 					</CSVLink>
-
-
 				</Grid>
 
-				{/* <Grid item style = {{ marginBottom: "10px", height: "10px" }}>
-				<div  style      = {{ width: "100%", height: "0px", outline: "1px solid gray", color: "gray" }} />
-				</Grid> */}
 
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button color="primary"
@@ -716,7 +699,12 @@ const BindingSites = () => {
 					</Grid>
 
 					<Grid item>
-						<Button variant="outlined" color={cur_vis_tab === 'origin' ? 'primary' : "default"} onClick={() => { dispatch(action._data_field_change('visualization_tab','origin'))}} > Structure  of Origin
+						<Button variant="outlined" color={cur_vis_tab === 'origin' ? 'primary' : "default"} onClick={() => { dispatch(
+action._partial_state_change({
+	visualization_tab:'origin'
+})
+
+						)}} > Structure  of Origin
 							{cur_struct === null ? "" : `(${cur_struct.rcsb_id})`}
 						</Button >
 					</Grid>
@@ -725,7 +713,14 @@ const BindingSites = () => {
 
 						 <Button variant  = "outlined"
 						        disabled = {cur_tgt === null}
-						        color    = {cur_vis_tab === 'prediction' ? 'primary' : "default"} onClick={() => { dispatch(action._data_field_change('visualization_tab','prediction'))}} > Prediction
+						        color    = {cur_vis_tab === 'prediction' ? 'primary' : "default"} onClick={() => { 
+									
+									// dispatch(action._data_field_change('visualization_tab','prediction'))
+									dispatch(action._partial_state_change({
+										visualization_tab:'prediction'
+									}))
+								}
+									} > Prediction
 							{cur_tgt === null ? "" : `(${cur_tgt.struct.rcsb_id})`}
 						</Button > 
 					</Grid>

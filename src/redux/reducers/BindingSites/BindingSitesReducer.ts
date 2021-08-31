@@ -55,8 +55,8 @@ export const BindingSitesReducer = (
   switch (action.type) {
 
 
-    case "ARBITRARY_DATA_FIELD_CHANGE":
-      return {...state, [action.reducer_state_key]:action.datum}
+    case "PARTIAL_STATE_CHANGE":
+      return {...state, ...action.statelike_slice}
 
 
 	case "REQUEST_ALL_BSITES_GO":
