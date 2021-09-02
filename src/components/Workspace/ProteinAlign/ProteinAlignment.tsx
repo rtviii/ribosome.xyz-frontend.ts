@@ -24,8 +24,13 @@ import { NeoStruct } from '../../../redux/DataInterfaces';
 
 type StructRespone = {
   struct: RibosomeStructure,
-  rps: { noms: string[], strands: string }[],
+  rps: { 
+    noms: string[],
+
+     strands: string }[],
+
   rnas: string[],
+
   ligands: string[]
 }
 // @ts-ignore
@@ -337,10 +342,7 @@ export default function ProteinAlignment() {
             fullWidth
             variant="outlined"
             onClick={() => {
-
-
               visualizeAlignment()
-
             }}>
             Align
           </Button>

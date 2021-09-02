@@ -220,44 +220,45 @@ const BindingSites = () => {
 	const prediction_data = useSelector(( state:AppState ) => state.binding_sites.prediction_data)
 
 
-	useEffect(() => {
-		// ! Change of prediction_data is triggered by fetching a new prediction on "Predict"
-		if (prediction_data == null) {
-			return
-		}
-		console.log("Got new prediction:", prediction_data);
-		interface MolStarResidue { entity_id?: string, auth_asym_id?: string, struct_asym_id?: string, residue_number?: number, start_residue_number?: number, end_residue_number?: number, auth_residue_number?: number, auth_ins_code_id?: string, start_auth_residue_number?: number, start_auth_ins_code_id?: string, end_auth_residue_number?: number, end_auth_ins_code_id?: string, atoms?: string[], label_comp_id?: string, color: { r: number, g: number, b: number }, focus?: boolean, sideChain?: boolean }
-		var prediction_vis_data: MolStarResidue[] = []
-		for (var chain of Object.values(prediction_data)) {
-			for (var i of chain.target.tgt_ids) {
-				if (i > 0) {
+	// *-------> Prediction Data Code <------------------
+	// useEffect(() => {
+	// 	// ! Change of prediction_data is triggered by fetching a new prediction on "Predict"
+	// 	if (prediction_data == null) {
+	// 		return
+	// 	}
+	// 	console.log("Got new prediction:", prediction_data);
+	// 	interface MolStarResidue { entity_id?: string, auth_asym_id?: string, struct_asym_id?: string, residue_number?: number, start_residue_number?: number, end_residue_number?: number, auth_residue_number?: number, auth_ins_code_id?: string, start_auth_residue_number?: number, start_auth_ins_code_id?: string, end_auth_residue_number?: number, end_auth_ins_code_id?: string, atoms?: string[], label_comp_id?: string, color: { r: number, g: number, b: number }, focus?: boolean, sideChain?: boolean }
+	// 	var prediction_vis_data: MolStarResidue[] = []
+	// 	for (var chain of Object.values(prediction_data)) {
+	// 		for (var i of chain.target.tgt_ids) {
+	// 			if (i > 0) {
 
-					prediction_vis_data.push({
-						residue_number: i,
-						focus: true,
-						color: { r: 1, g: 200, b: 200 },
-						auth_asym_id: chain.target.strand
+	// 				prediction_vis_data.push({
+	// 					residue_number: i,
+	// 					focus: true,
+	// 					color: { r: 1, g: 200, b: 200 },
+	// 					auth_asym_id: chain.target.strand
 
-					})
+	// 				})
 
-				}
-			}
-		}
-		if (prediction_vis_data.length > 300) {
-			// alert("This ligand binds to more than 300 residues. Your browser might take some time to load it.")
-			if (window.confirm("This ligand binds to more than 300 residues. Your browser might take some time to visualize it.")) {
-			}
-			else {
-				return
-			}
-		}
-		viewerInstance.visual.select(
-			{
-				data: prediction_vis_data,
-				nonSelectedColor: { r: 240, g: 240, b: 240 }
-			}
-		)
-	}, [prediction_data])
+	// 			}
+	// 		}
+	// 	}
+	// 	if (prediction_vis_data.length > 300) {
+	// 		// alert("This ligand binds to more than 300 residues. Your browser might take some time to load it.")
+	// 		if (window.confirm("This ligand binds to more than 300 residues. Your browser might take some time to visualize it.")) {
+	// 		}
+	// 		else {
+	// 			return
+	// 		}
+	// 	}
+	// 	viewerInstance.visual.select(
+	// 		{
+	// 			data: prediction_vis_data,
+	// 			nonSelectedColor: { r: 240, g: 240, b: 240 }
+	// 		}
+	// 	)
+	// }, [prediction_data])
 
 
 	const get_strand_asymid_map = (gqlresp: any) => {
@@ -421,6 +422,7 @@ const BindingSites = () => {
 			viewerInstance.visual.update({
 							moleculeId: cur_struct?.rcsb_id.toLowerCase()
 						});
+
 			set_ligclasses_derived(lig_classes.filter(lc => { return lc.presentIn.filter(str => str.rcsb_id === cur_struct.rcsb_id).length > 0 }))
 			// If the structure changes to non-null after being non-null, the selected ligand should be reset.
 			dispatch(action.current_ligand_change(null))
@@ -457,7 +459,6 @@ const BindingSites = () => {
 
 		if (newvalue === null) {
 			dispatch(action.current_target_change(null))
-
 		}
 		else {
 			dispatch(action.current_target_change(newvalue))
@@ -466,16 +467,16 @@ const BindingSites = () => {
 
 	useEffect(() => {
 
-		var options = {
-			moleculeId: 'Element to visualize can be selected above.',
-			hideControls: true,
-			layoutIsExpanded: false,
+		var options          = {
+			    moleculeId      : 'Element to visualize can be selected above.',
+			    hideControls    : true,
+			    layoutIsExpanded: false,
 		}
 		var viewerContainer = document.getElementById('molstar-viewer');
 		viewerInstance.render(viewerContainer, options);
 	}, [])
 
-	const cur_vis_tab =  useSelector(( state:AppState ) => state.binding_sites.visualization_tab)
+	const cur_vis_tab    =  useSelector(( state:AppState ) => state.binding_sites.visualization_tab)
 	const target_structs = useSelector((state: AppState) => state.structures.derived_filtered)
 
 
@@ -509,13 +510,6 @@ const BindingSites = () => {
 			});
 		}
 	}, [cur_vis_tab])
-
-
-
-	// *Filter Ions
-
-	// *Prediction Switches
-
 
 	const [msaOpen, setMsaOpen] = useState<boolean>(false)
 	const handleopen            = () => { setMsaOpen(true) }
@@ -619,7 +613,8 @@ const BindingSites = () => {
 					// @ts-ignore
 					onChange    ={ handleTargetChange                                                                                                                                               }
 					renderOption={(option            ) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title} </div>)                  }
-					renderInput ={(params            ) => <TextField {...params} label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
+					renderInput ={(params            ) => <TextField {...params} 
+					label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
 
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
