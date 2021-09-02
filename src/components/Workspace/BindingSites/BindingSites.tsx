@@ -30,6 +30,16 @@ import _ from 'lodash';
 const viewerInstance = new PDBeMolstarPlugin() as any;
 
 
+
+// Tinge of blue for origin #aad5ff
+// Tinge of green for prediction #fff8bd
+
+
+const origin_blue = '#aad5ff'
+const prediction_yellow = 'fff8bd'
+
+
+
 const ChainAlignmentBlock = ({ src_struct, tgt_struct, nomenclature, tgt_aln, src_aln, aln_ids, tgt_strand, src_strand }: { src_struct: string, tgt_struct: string, nomenclature: string, tgt_strand: string, src_strand: string, tgt_aln: string, src_aln: string, aln_ids: number[] }) => {
 	const history = useHistory();
 	return <Paper
@@ -38,7 +48,7 @@ const ChainAlignmentBlock = ({ src_struct, tgt_struct, nomenclature, tgt_aln, sr
 		<Grid container xs={12} spacing={2}>
 			<Grid item xs={12} direction="row">
 				<Grid item xs={12} style={{ padding: "10px" }}>
-					<Typography variant="h4" style={{ cursor: "pointer", color: "blue", maxWidth:"400px" }} onClick={() => {history.push(`/rps/${nomenclature}`)}}>
+					<Typography variant="h4" style={{ cursor: "pointer", color: "blue", maxWidth: "400px" }} onClick={() => { history.push(`/rps/${nomenclature}`) }}>
 						{nomenclature}
 					</Typography>
 				</Grid>
@@ -116,12 +126,12 @@ const Dialogue = ({ open, handleclose, handleopen, aln_obj, title, src_struct, t
 				<DialogTitle id="max-width-dialog-title">{title}</DialogTitle>
 				<DialogTitle id="max-width-dialog-title">
 
-				<span>
+					<span>
 
-					Calculated binding site residues are highlighted in orange.
+						Calculated binding site residues are highlighted in orange.
 
-				</span>
-					</DialogTitle>
+					</span>
+				</DialogTitle>
 				<DialogContent>
 					{aln_obj === null ? '' :
 						<div id="root-msa" style={{ height: "80vh", width: "max-content" }}>
@@ -202,25 +212,68 @@ const BindingSites = () => {
 		}
 	}))();
 
-
-
 	const dispatch = useDispatch();
 
-	const cur_struct = useSelector(( state:AppState ) => state.binding_sites.current_structure)
-	const cur_lig    = useSelector(( state:AppState ) => state.binding_sites.current_ligand)
-	const cur_tgt    = useSelector(( state:AppState ) => state.binding_sites.current_target)
+	const cur_struct = useSelector((state: AppState) => state.binding_sites.current_structure)
+	const cur_lig = useSelector((state: AppState) => state.binding_sites.current_ligand)
+	const cur_tgt = useSelector((state: AppState) => state.binding_sites.current_target)
 
-	const bsites                            = useSelector((state: AppState) => state.binding_sites.bsites)
-	const lig_classes                       = useSelector((state: AppState) => state.binding_sites.ligand_classes)
+	const bsites = useSelector((state: AppState) => state.binding_sites.bsites)
+	const lig_classes = useSelector((state: AppState) => state.binding_sites.ligand_classes)
 
-	const [bsites_derived, set_bsites_derived]          = useState<BindingSite[]>()
+	const [bsites_derived, set_bsites_derived] = useState<BindingSite[]>()
 	const [lig_classes_derived, set_ligclasses_derived] = useState<LigandClass[]>()
 
-	const interface_data  = useSelector(( state:AppState ) => state.binding_sites.binding_site_data)
-	const prediction_data = useSelector(( state:AppState ) => state.binding_sites.prediction_data)
+	const interface_data = useSelector((state: AppState) => state.binding_sites.binding_site_data)
+	const prediction_data = useSelector((state: AppState) => state.binding_sites.prediction_data)
 
 
-	// *-------> Prediction Data Code <------------------
+
+
+	const color_prediction = () => {
+
+		// ! Change of prediction_data is triggered by fetching a new prediction on "Predict"
+		if (prediction_data == null) {
+			return
+		}
+		console.log("Got new prediction:", prediction_data);
+		interface MolStarResidue { entity_id?: string, auth_asym_id?: string,
+			 struct_asym_id?: string, residue_number?: number,
+			  start_residue_number?: number, end_residue_number?: number,
+			   auth_residue_number?: number, auth_ins_code_id?: string,
+			    start_auth_residue_number?: number, start_auth_ins_code_id?: string, end_auth_residue_number?: number, end_auth_ins_code_id?: string, atoms?: string[], label_comp_id?: string, color: { r: number, g: number, b: number }, focus?: boolean, sideChain?: boolean }
+		var prediction_vis_data: MolStarResidue[] = []
+		for (var chain of Object.values(prediction_data)) {
+			for (var i of chain.target.tgt_ids) {
+				if (i > 0) {
+
+					prediction_vis_data.push({
+						residue_number: i,
+						focus: true,
+						color: { r: 1, g: 200, b: 200 },
+						auth_asym_id: chain.target.strand
+
+					})
+
+				}
+			}
+		}
+		if (prediction_vis_data.length > 300) {
+			// alert("This ligand binds to more than 300 residues. Your browser might take some time to load it.")
+			if (window.confirm("This ligand binds to more than 300 residues. Your browser might take some time to visualize it.")) {
+			}
+			else {
+				return
+			}
+		}
+		viewerInstance.visual.select(
+			{
+				data: prediction_vis_data,
+				nonSelectedColor: { r: 240, g: 240, b: 240 }
+			}
+		)
+	}
+
 	// useEffect(() => {
 	// 	// ! Change of prediction_data is triggered by fetching a new prediction on "Predict"
 	// 	if (prediction_data == null) {
@@ -266,8 +319,8 @@ const BindingSites = () => {
 
 		const map: Record<any, any> = {}
 		for (var poly of _) {
-			var strand  = poly.entity_poly.pdbx_strand_id
-			var asym    = poly.rcsb_polymer_entity_container_identifiers.asym_ids[0]
+			var strand = poly.entity_poly.pdbx_strand_id
+			var asym = poly.rcsb_polymer_entity_container_identifiers.asym_ids[0]
 			map[strand] = { "asymid": asym }
 		}
 		getNeo4jData('neo4j', {
@@ -279,7 +332,7 @@ const BindingSites = () => {
 					if (Object.keys(map).includes(rp.entity_poly_strand_id)) {
 						map[rp.entity_poly_strand_id] = {
 							nomenclature: rp.nomenclature,
-							asymid      : map[rp.entity_poly_strand_id].asymid
+							asymid: map[rp.entity_poly_strand_id].asymid
 						}
 					}
 				}
@@ -393,11 +446,9 @@ const BindingSites = () => {
 		)
 	}
 
-	const updateBindingSiteData = (curstruct:BindingSite ,curligand:LigandClass, flag:any)=>{
-
+	const updateBindingSiteData = (curstruct: BindingSite, curligand: LigandClass, flag: any) => {
 		// alert("Fetched a new file.")
 		dispatch(action.request_LigandBindingSite(curligand?.ligand.chemicalId, curstruct.rcsb_id))
-
 
 	}
 
@@ -408,10 +459,10 @@ const BindingSites = () => {
 	useEffect(() => {
 		if (cur_lig === null) {
 			set_bsites_derived(bsites)
-			dispatch(action._partial_state_change({ 'binding_site_data':null }))
+			dispatch(action._partial_state_change({ 'binding_site_data': null }))
 		} else {
 			set_bsites_derived(bsites.filter(bs => bs.chemicalId === cur_lig.ligand.chemicalId))
-			updateBindingSiteData(cur_struct as BindingSite,cur_lig,'')
+			updateBindingSiteData(cur_struct as BindingSite, cur_lig, '')
 		}
 	}, [cur_lig])
 
@@ -420,10 +471,10 @@ const BindingSites = () => {
 			set_ligclasses_derived(lig_classes)
 		} else {
 			viewerInstance.visual.update({
-							moleculeId: cur_struct?.rcsb_id.toLowerCase()
-						});
-
+				moleculeId: cur_struct?.rcsb_id.toLowerCase()
+			});
 			set_ligclasses_derived(lig_classes.filter(lc => { return lc.presentIn.filter(str => str.rcsb_id === cur_struct.rcsb_id).length > 0 }))
+
 			// If the structure changes to non-null after being non-null, the selected ligand should be reset.
 			dispatch(action.current_ligand_change(null))
 		}
@@ -435,7 +486,6 @@ const BindingSites = () => {
 	useEffect(() => {
 		set_bsites_derived(bsites)
 	}, [bsites])
-
 	const handleStructChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
 		if (newvalue === null) {
 
@@ -459,38 +509,36 @@ const BindingSites = () => {
 
 		if (newvalue === null) {
 			dispatch(action.current_target_change(null))
+			dispatch(action._partial_state_change({ visualization_tab: 'origin' }))
 		}
 		else {
 			dispatch(action.current_target_change(newvalue))
+			dispatch(action._partial_state_change({ visualization_tab: 'prediction' }))
 		}
 	}
 
 	useEffect(() => {
-
-		var options          = {
-			    moleculeId      : 'Element to visualize can be selected above.',
-			    hideControls    : true,
-			    layoutIsExpanded: false,
+		var options = {
+			moleculeId: 'Element to visualize can be selected above.',
+			hideControls: true,
+			layoutIsExpanded: false,
 		}
 		var viewerContainer = document.getElementById('molstar-viewer');
 		viewerInstance.render(viewerContainer, options);
 	}, [])
 
-	const cur_vis_tab    =  useSelector(( state:AppState ) => state.binding_sites.visualization_tab)
+	const cur_vis_tab = useSelector((state: AppState) => state.binding_sites.visualization_tab)
 	const target_structs = useSelector((state: AppState) => state.structures.derived_filtered)
-
 
 	useEffect(() => {
 
-
-
-		if (cur_tgt !==null){
+		if (cur_tgt !== null) {
 			dispatch(action.request_Prediction(
-				cur_lig   ?.ligand .chemicalId as string,
-				cur_struct?.rcsb_id            as string,
+				cur_lig?.ligand.chemicalId as string,
+				cur_struct?.rcsb_id as string,
 				cur_tgt!.struct.rcsb_id))
-		}else{
-			dispatch(action._partial_state_change({ 'prediction_data':null }))
+		} else {
+			dispatch(action._partial_state_change({ 'prediction_data': null }))
 		}
 	}, [cur_tgt])
 
@@ -512,8 +560,8 @@ const BindingSites = () => {
 	}, [cur_vis_tab])
 
 	const [msaOpen, setMsaOpen] = useState<boolean>(false)
-	const handleopen            = () => { setMsaOpen(true) }
-	const handleclose           = () => { setMsaOpen(false) }
+	const handleopen = () => { setMsaOpen(true) }
+	const handleclose = () => { setMsaOpen(false) }
 
 
 
@@ -567,7 +615,7 @@ const BindingSites = () => {
 					<Button
 						fullWidth
 						variant={"outlined"}
-						style={[cur_struct,cur_lig].includes(null) ? { color: "gray" } : {}}
+						style={[cur_struct, cur_lig].includes(null) ? { color: "gray" } : {}}
 						// color={!ligstructPair.includes(null) ? 'primary' : 'default'}
 						onClick={() => {
 							highlightInterface()
@@ -606,22 +654,28 @@ const BindingSites = () => {
 				</Grid>
 				<Typography className={classes.bsHeader} variant="h5">Prediction</Typography>
 				<Autocomplete
-					value         ={ cur_tgt                                                                                                                   }
-					className     ={ classes       .autocomplete                                                                                               }
-					options       ={ target_structs                                                                                                            }
-					getOptionLabel={(parent        : NeoStruct) => { return parent.struct ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
+					value={cur_tgt}
+					className={classes.autocomplete}
+					options={target_structs}
+					getOptionLabel={(parent: NeoStruct) => { return parent.struct ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
 					// @ts-ignore
-					onChange    ={ handleTargetChange                                                                                                                                               }
-					renderOption={(option            ) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title} </div>)                  }
-					renderInput ={(params            ) => <TextField {...params} 
-					label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
+					onChange={handleTargetChange}
+					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title} </div>)}
+					renderInput={(params) => <TextField {...params}
+						label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
 
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
-						style  ={[cur_lig,cur_struct].includes (null) ? { color: "gray" } : {}}
-						color  ={![cur_lig,cur_struct].includes(null) ? 'primary' : 'default'}
-						onClick={                              (    ) => {
-							viewerInstance.visual.reset({ camera: true, theme: true , moleculeId:true})
+						// style  ={[cur_lig,cur_struct].includes (null) ? { color: "gray" } : {}}
+						// color  ={![cur_lig,cur_struct].includes(null) ? 'primary' : 'default'}
+						disabled={[cur_lig, cur_struct].includes(null)}
+						onClick={() => {
+
+
+
+
+
+							// viewerInstance.visual.reset({ camera: true, theme: true , moleculeId:true})
 						}}
 						fullWidth
 						variant="outlined"> Visualize Prediction</Button>
@@ -672,13 +726,13 @@ const BindingSites = () => {
 				<Grid item style={{ marginBottom: "10px" }}>
 
 					<Dialogue
-						src_struct ={                         cur_struct     ?.rcsb_id as string                                                                                }
-						tgt_struct ={                         cur_tgt        ?.struct.rcsb_id as string                                                                         }
-						title      ={`Predicted Residues of ${cur_lig        ?.ligand.chemicalId} from structure ${cur_struct?.rcsb_id} in structure ${cur_tgt?.struct.rcsb_id}`}
-						open       ={                         msaOpen                                                                                                           }
-						handleclose={                         handleclose                                                                                                       }
-						handleopen ={                         handleopen                                                                                                        }
-						aln_obj    ={                         prediction_data                                                                                                   } />
+						src_struct={cur_struct?.rcsb_id as string}
+						tgt_struct={cur_tgt?.struct.rcsb_id as string}
+						title={`Predicted Residues of ${cur_lig?.ligand.chemicalId} from structure ${cur_struct?.rcsb_id} in structure ${cur_tgt?.struct.rcsb_id}`}
+						open={msaOpen}
+						handleclose={handleclose}
+						handleopen={handleopen}
+						aln_obj={prediction_data} />
 
 				</Grid>
 
@@ -690,34 +744,53 @@ const BindingSites = () => {
 			<Grid item container spacing={2} direction="row" xs={10} style={{ height: "100%" }} alignContent="flex-start">
 				<Grid item container xs={12} spacing={2} alignContent="flex-start" alignItems="flex-start" justify="flex-start" >
 
-					<Grid item>
-					</Grid>
 
 					<Grid item>
-						<Button variant="outlined" color={cur_vis_tab === 'origin' ? 'primary' : "default"} onClick={() => { dispatch(
-action._partial_state_change({
-	visualization_tab:'origin'
-})
-
-						)}} > Structure  of Origin
-							{cur_struct === null ? "" : `(${cur_struct.rcsb_id})`}
+						<Button
+							variant="outlined"
+							style={
+								cur_vis_tab === 'origin' ? {
+									transition: "all 0.2s ease-in-out",
+									boxShadow: "0 2px 4px #8ac5ff"
+								} : {}
+							}
+							color={cur_vis_tab === 'origin' ? 'primary' : "default"}
+							onClick={() => {
+								dispatch(
+									action._partial_state_change({
+										visualization_tab: 'origin'
+									}))
+							}
+							} >
+							Original Structure {cur_struct === null ? "" : `(${cur_struct.rcsb_id})`}
 						</Button >
 					</Grid>
 
 					<Grid item>
 
-						 <Button variant  = "outlined"
-						        disabled = {cur_tgt === null}
-						        color    = {cur_vis_tab === 'prediction' ? 'primary' : "default"} onClick={() => { 
-									
-									// dispatch(action._data_field_change('visualization_tab','prediction'))
-									dispatch(action._partial_state_change({
-										visualization_tab:'prediction'
-									}))
-								}
-									} > Prediction
+						<Button
+
+
+							style={
+								cur_vis_tab === 'prediction' ? {
+									transition: "all 0.2s ease-in-out",
+									boxShadow: "0 2px 4px #8ac5ff"
+								} : {}
+							}
+
+							variant="outlined"
+							disabled={cur_tgt === null}
+							color={cur_vis_tab === 'prediction' ? 'primary' : "default"}
+							onClick={() => {
+
+								// dispatch(action._data_field_change('visualization_tab','prediction'))
+								dispatch(action._partial_state_change({
+									visualization_tab: 'prediction'
+								}))
+							}
+							} > Prediction
 							{cur_tgt === null ? "" : `(${cur_tgt.struct.rcsb_id})`}
-						</Button > 
+						</Button >
 					</Grid>
 				</Grid>
 				<Grid item xs={12} >
