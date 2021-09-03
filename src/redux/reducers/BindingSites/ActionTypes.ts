@@ -26,7 +26,8 @@ export const CURRENT_PREDICTION_CHANGE = "CURRENT_PREDICTION_CHANGE";
 
 export const CHANGE_VIS_TAB = "CHANGE_VIS_TAB";
 
-export const DATA_FIELD_CHANGE = "ARBITRARY_DATA_FIELD_CHANGE";
+// export const DATA_FIELD_CHANGE = "ARBITRARY_DATA_FIELD_CHANGE";
+export const PARTIAL_STATE_CHANGE = "PARTIAL_STATE_CHANGE";
 
 
 export interface requestAllBsitesGo      { type: typeof REQUEST_ALL_BSITES_GO                                                            }
@@ -49,10 +50,17 @@ export interface changeVisTab {
 	type: typeof CHANGE_VIS_TAB;
 	tab : 'origin' | 'prediction' }
 
-export interface dataFieldChange   {
-	type             : typeof DATA_FIELD_CHANGE
-	datum            : any
-	reducer_state_key: keyof BindingSitesReducerState
+
+// export interface dataFieldChange   {
+// 	type             : typeof DATA_FIELD_CHANGE
+// 	datum?            : any
+// 	reducer_state_key?: keyof BindingSitesReducerState
+// 					}
+
+//* hack
+export interface _partialStateChange   {
+	type           : typeof PARTIAL_STATE_CHANGE,
+	statelike_slice: Partial<BindingSitesReducerState>
 					}
 
 export type BSitesActions            =
@@ -68,7 +76,7 @@ export type BSitesActions            =
             currentPredictionChange  |
             changeVisTab             |
             fileRequestError         |
-            dataFieldChange
+            _partialStateChange
 
 export type AllLigandsResponseType = {
 	ligand   : Ligand,
@@ -81,17 +89,17 @@ export type AllLigandsResponseType = {
 	}[]
 }
 
-
-
-// Overparametrized function data field change : 
-// either a string and a value for next datum
-// or an object of type Partial<TargetState>
-
-export const _data_field_change = (reducer_state_key: keyof BindingSitesReducerState, datum:any )=>( {
-	type: 'ARBITRARY_DATA_FIELD_CHANGE',
-	reducer_state_key,
-	datum
+export const _partial_state_change = (statelike_slice:Partial<BindingSitesReducerState> ):_partialStateChange=>( {
+	type: "PARTIAL_STATE_CHANGE",
+	statelike_slice
 } )
+
+
+// export const _data_field_change = (reducer_state_key: keyof BindingSitesReducerState, datum:any )=>( {
+// 	type: 'ARBITRARY_DATA_FIELD_CHANGE',
+// 	reducer_state_key,
+// 	datum
+// } )
 
 
 export const current_struct_change=(struct:BindingSite| null):currentStructureChange =>( {

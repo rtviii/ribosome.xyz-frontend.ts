@@ -19,7 +19,6 @@ import { request_all_bsites} from './../redux/reducers/BindingSites/ActionTypes'
 interface OwnProps {}
 interface ReduxProps {}
 interface DispatchProps {
-
   __rx_requestStructures : ()=>void
   __rx_requestAllLigands : ()=>void
   __rx_staticCatalogue   : ()=>void
