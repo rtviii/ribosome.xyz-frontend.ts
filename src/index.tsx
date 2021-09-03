@@ -12,6 +12,7 @@ import 'react-app-polyfill/stable'
 import { createMuiTheme } from '@material-ui/core/styles';
 import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
+import { ToastProvider } from "react-toast-notifications";
 
 const theme = createMuiTheme({
   palette: {
@@ -34,7 +35,13 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
       <React.StrictMode>
-        <Main/>
+        <ToastProvider
+        placement         ={'bottom-left'}
+        autoDismiss       ={true         }
+        autoDismissTimeout={4500         }
+        >
+          <Main/>
+        </ToastProvider>
       </React.StrictMode>
     </Router>
   </Provider>,

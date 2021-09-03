@@ -9,6 +9,7 @@ import        { LigandsReducer                                        } from "./
 import        { UtilitiesReducer                                      } from "./reducers/Utilities/UtilitiesReducer"
 import        { InterfaceReducer                                      } from "./reducers/Interface/InterfaceReducer"
 import        { CartReducer                                           } from "./reducers/Cart/CartReducer"
+import        { VisualizationReducer                                           } from "./reducers/Visualization/VisualizationReducer"
 import        { BindingSitesReducer                                   } from "./reducers/BindingSites/BindingSitesReducer"
 import        { AppActions                                            } from "./AppActions"                                  ;
 import { REQUEST_STRUCTS_GO, REQUEST_STRUCTS_SUCCESS, STRUCTS_SORT_CHANGE } from "./reducers/StructuresReducer/ActionTypes";
@@ -18,21 +19,10 @@ import { REQUEST_BAN_METADATA_GO, REQUEST_BAN_METADATA_SUCCESS } from "./reducer
 import { REQUEST_STATIC_CATALOGUE } from "./reducers/Utilities/ActionTypes";
 import { REQUEST_RNA_CLASS_ERR, REQUEST_RNA_CLASS_GO, REQUEST_RNA_CLASS_SUCCESS } from "./reducers/RNA/ActionTypes";
 
-const collapsFilter = (action: any) => {
+const collapseFilter = (action: any) => {
   var toFilter  =  ["PARTIAL_STATE_CHANGE"];
   return !toFilter.includes(action!.type);
 };
-
-// const ActionTransformer = (a:AppActions) =>{
-//   if ( ["PARTIAL_STATE_CHANGE"].includes(a.type)  ){
-//     return null
-//   }
-//   else{
-//     return a
-//   }
-// }
-
-
 
 const logger = createLogger({
   predicate: (getState, action:AppActions) =>  ![
@@ -53,9 +43,10 @@ const logger = createLogger({
   REQUEST_RNA_CLASS_SUCCESS    ,
   REQUEST_RNA_CLASS_ERR        ,
 ].includes( action.type ) ,
-   collapsed: collapsFilter });
+   collapsed: collapseFilter });
 
 export const rootReducer = combineReducers({
+  visualization: VisualizationReducer,
   filters      : FiltersReducer,
   structures   : _StructuresReducer,
   proteins     : ProteinsReducer,

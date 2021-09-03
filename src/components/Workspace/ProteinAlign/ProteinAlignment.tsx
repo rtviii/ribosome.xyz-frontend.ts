@@ -21,6 +21,27 @@ import { NeoStruct } from '../../../redux/DataInterfaces';
 // Sorted rps (numerical precedence)
 
 
+   export const nomenclatureCompareFn = (a: { noms: string[]; strands: string; }, b: { noms: string[]; strands: string; }) => {
+    if (a.noms.length < 1 && b.noms.length > 0) {
+      return -1
+    }
+    else if (b.noms.length < 1 && a.noms.length > 0) {
+      return 1
+    }
+    else if (b.noms.length < 1 && a.noms.length < 1) {
+      return 0
+    }
+    else if (a.noms[0] > b.noms[0]) {
+      return 1
+    }
+    else if (a.noms[0] < b.noms[0]) {
+      return -1
+    }
+    else {
+      return 0
+    }
+  }
+
 
 type StructRespone = {
   struct: RibosomeStructure,
@@ -114,27 +135,6 @@ export default function ProteinAlignment() {
   const [chains2, setChains2] = useState<{ noms: string[]; strands: string; }[]>([])
 
 
-  var nomCompareFn = (a: { noms: string[]; strands: string; }, b: { noms: string[]; strands: string; }) => {
-    if (a.noms.length < 1 && b.noms.length > 0) {
-      return -1
-    }
-    else if (b.noms.length < 1 && a.noms.length > 0) {
-      return 1
-    }
-    else if (b.noms.length < 1 && a.noms.length < 1) {
-      return 0
-    }
-    else if (a.noms[0] > b.noms[0]) {
-      return 1
-    }
-    else if (a.noms[0] < b.noms[0]) {
-      return -1
-    }
-    else {
-      return 0
-    }
-  }
-
 
 
 
@@ -204,7 +204,7 @@ export default function ProteinAlignment() {
 
         setstruct1(newvalue)
         setChainStructPair1([chainStructPair1[0], newvalue.struct.rcsb_id])
-        setChains1([ ...newvalue.rps.sort(nomCompareFn), ...newvalue.rnas])
+        setChains1([ ...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas])
         setstrand1(null)
 
       }
@@ -218,7 +218,7 @@ export default function ProteinAlignment() {
       } else {
         setstruct2(newvalue)
         setChainStructPair2([chainStructPair2[0], newvalue.struct.rcsb_id])
-        setChains2( [ ...newvalue.rps.sort(nomCompareFn), ...newvalue.rnas ])
+        setChains2( [ ...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas ])
         console.log("Got newvalue rnas: ", newvalue.rnas);
         console.log(newvalue);
         
