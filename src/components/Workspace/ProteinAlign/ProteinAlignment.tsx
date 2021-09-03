@@ -326,7 +326,17 @@ export default function ProteinAlignment() {
             value={strand2}
             className={classes.autocomplete}
             options={chains2}
-            getOptionLabel={(chain: { noms: string[]; strands: string; }) => { return chain.noms.length > 0 ? chain.noms[0] : chain.strands }}
+            getOptionLabel={(chain: { noms: string[]; strands: string; }) => { 
+              
+              if (chain.noms !== null){
+
+                return chain.noms.length > 0 ? chain.noms[0] : chain.strands 
+              }
+              else{
+                return "Undefined Class"
+
+              }
+            }}
             // @ts-ignore
             onChange={handleChainChange(2)}
             renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.noms.length > 0 ? option.noms[0] : " "}</b> {option.strands}  </div>)}
@@ -338,7 +348,7 @@ export default function ProteinAlignment() {
         <Grid item>
 
           <Button
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: "10px",textTransform:"none" }}
             fullWidth
             variant="outlined"
             onClick={() => {
@@ -350,7 +360,7 @@ export default function ProteinAlignment() {
         <Grid item>
 
           <Button
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: "10px" , textTransform:"none"}}
             fullWidth
             variant="outlined"
             onClick={() => {
@@ -366,6 +376,7 @@ export default function ProteinAlignment() {
                   binary: false,
                 },
               });
+
 
 
               requestAlignment(
@@ -390,11 +401,11 @@ export default function ProteinAlignment() {
 
       <Grid item container xs={10}>
 
-        <Grid item xs={12} >
-          <Paper variant="outlined" style={{ height: "50vw", position: "relative", padding: "10px" }} >
-            <div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
-          </Paper>
-        </Grid >
+				<Grid item xs={12} >
+					<Paper variant="outlined" style={{ position: "relative", padding: "10px", height: "80vh" }} >
+						<div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
+					</Paper>
+				</Grid >
 
       </Grid>
 

@@ -38,7 +38,7 @@ ReactDOM.render(
         <ToastProvider
         placement         ={'bottom-left'}
         autoDismiss       ={true         }
-        autoDismissTimeout={4500         }
+        autoDismissTimeout={6000         }
         >
           <Main/>
         </ToastProvider>

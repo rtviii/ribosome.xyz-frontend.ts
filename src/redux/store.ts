@@ -13,11 +13,12 @@ import        { VisualizationReducer                                           }
 import        { BindingSitesReducer                                   } from "./reducers/BindingSites/BindingSitesReducer"
 import        { AppActions                                            } from "./AppActions"                                  ;
 import { REQUEST_STRUCTS_GO, REQUEST_STRUCTS_SUCCESS, STRUCTS_SORT_CHANGE } from "./reducers/StructuresReducer/ActionTypes";
-import { PARTIAL_STATE_CHANGE, REQUEST_ALL_BSITES_GO, REQUEST_ALL_BSITES_SUCCESS } from "./reducers/BindingSites/ActionTypes";
+import { CURRENT_LIGAND_CHANGE, CURRENT_PREDICTION_CHANGE, CURRENT_STRUCTURE_CHANGE, LIGAND_BINDING_SITE_SUCCESS, LIGAND_PREDICTION_SUCCESS, PARTIAL_STATE_CHANGE, REQUEST_ALL_BSITES_GO, REQUEST_ALL_BSITES_SUCCESS, REQUEST_LIGAND_BINDING_SITE, REQUEST_LIGAND_PREDICTION } from "./reducers/BindingSites/ActionTypes";
 import { REQUEST_ALL_LIGANDS_GO, REQUEST_ALL_LIGANDS_SUCCESS } from "./reducers/Ligands/ActionTypes";
 import { REQUEST_BAN_METADATA_GO, REQUEST_BAN_METADATA_SUCCESS } from "./reducers/Proteins/ActionTypes";
 import { REQUEST_STATIC_CATALOGUE } from "./reducers/Utilities/ActionTypes";
 import { REQUEST_RNA_CLASS_ERR, REQUEST_RNA_CLASS_GO, REQUEST_RNA_CLASS_SUCCESS } from "./reducers/RNA/ActionTypes";
+import { STRUCTURE_CHANGE } from "./reducers/Visualization/ActionTypes";
 
 const collapseFilter = (action: any) => {
   var toFilter  =  ["PARTIAL_STATE_CHANGE"];
@@ -26,10 +27,20 @@ const collapseFilter = (action: any) => {
 
 const logger = createLogger({
   predicate: (getState, action:AppActions) =>  ![
-  REQUEST_STRUCTS_GO           ,
-  REQUEST_ALL_LIGANDS_GO       ,
-  REQUEST_BAN_METADATA_GO      ,
-  REQUEST_ALL_BSITES_GO        ,
+  STRUCTURE_CHANGE,
+  STRUCTURE_CHANGE,
+  CURRENT_STRUCTURE_CHANGE,
+  CURRENT_LIGAND_CHANGE,
+  REQUEST_LIGAND_BINDING_SITE,
+  LIGAND_BINDING_SITE_SUCCESS,
+  CURRENT_PREDICTION_CHANGE,
+  PARTIAL_STATE_CHANGE,
+  REQUEST_LIGAND_PREDICTION,
+  LIGAND_PREDICTION_SUCCESS,
+  REQUEST_STRUCTS_GO           ,,
+  REQUEST_ALL_LIGANDS_GO       ,,
+  REQUEST_BAN_METADATA_GO      ,,
+  REQUEST_ALL_BSITES_GO        ,,
   REQUEST_RNA_CLASS_GO         ,
   REQUEST_STATIC_CATALOGUE     ,
   REQUEST_BAN_METADATA_SUCCESS ,
