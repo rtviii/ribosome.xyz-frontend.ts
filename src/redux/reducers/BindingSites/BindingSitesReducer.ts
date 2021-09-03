@@ -100,7 +100,9 @@ export const BindingSitesReducer = (
 
 
     case "CURRENT_PREDICTION_CHANGE":
-      return {...state, current_target:action.next_cur_prediction}
+      return {
+        ...state, 
+        current_target:action.next_cur_prediction}
 
 
 
