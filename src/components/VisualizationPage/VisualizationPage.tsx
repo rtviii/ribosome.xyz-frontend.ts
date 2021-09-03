@@ -33,6 +33,7 @@ import _ from 'lodash'
 import axios from 'axios';
 import { struct_change } from '../../redux/reducers/Visualization/ActionTypes';
 import { ToastProvider, useToasts } from 'react-toast-notifications';
+import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -60,179 +61,99 @@ const useSelectStyles = makeStyles((theme: Theme) =>
 
 interface StructSnip {
   rcsb_id: string,
-  title  : string,
-  any?   : any
+  title: string,
+  any?: any
 }
 
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
 
   const dispatch = useDispatch()
-  const selectStructStyles           = ( makeStyles({
-    autocomoplete:{      width:"100%"
-    }}) )()
+  const selectStructStyles = (makeStyles({
+    autocomoplete: {
+      width: "100%"
+    }
+  }))()
   const { addToast } = useToasts();
+  const current_struct = useSelector((state: AppState) => state.visualization.structure.struct)
+  const chain_to_highlight:string |null = useSelector((state: AppState) => state.visualization.structure.highlighted_chain)
 
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
+    if (newvalue === null) {
+      dispatch(struct_change(chain_to_highlight, null))
+    } else {
+      dispatch(struct_change(null, newvalue))
 
-  const current_struct                      = useSelector(( state:AppState ) => state.visualization.structure.struct            )
-  const chain_to_highlight                  = useSelector(( state:AppState ) => state.visualization.structure.highlighted_chain )
-
-  const [asymidChainMap, setAsymidChainMap] = useState({})
-
-  const get_strand_asymid_map = (gqlresp:any,pdbid:string) =>{
-    var _ = gqlresp.data.data.entry.polymer_entities
-    const map:Record<any,any> = {}
-      for (var poly of _){
-            var strand = poly.entity_poly.pdbx_strand_id
-            var asym   = poly.rcsb_polymer_entity_container_identifiers.asym_ids[0]
-            map[strand] = {
-              "asymid":asym
-          }
+      addToast(`Structure ${newvalue.struct.rcsb_id} is being fetched.`, {
+        appearance: 'info',
+        autoDismiss: true,
+      })
+      viewerInstance.visual.update({
+        moleculeId: newvalue.struct.rcsb_id.toLowerCase()
+      });
     }
-    getNeo4jData('neo4j', {
-      endpoint: "get_struct",
-      params: { pdbid }
-    })
-    .then(r=>{
-      
-     for (var rp of r.data[0].rps){
-       if (Object.keys(map).includes(rp.entity_poly_strand_id )){
-        map[rp.entity_poly_strand_id] = {
-          nomenclature: rp.nomenclature,
-          asymid      : map[rp.entity_poly_strand_id].asymid
-        }
-       }
-     }
-      
-      // iter over rnas
-     for (var rna of r.data[0].rnas){
-       if (Object.keys(map).includes(rna.entity_poly_strand_id )){
-        map[rna.entity_poly_strand_id] = Object.assign({}, map[rna.entity_poly_strand_id],{
-          nomenclature: [ rna.rcsb_pdbx_description ],
-          asymid      : rna.asym_id
-        })
-       }
-
-     }
-    })
-    
-    return map
-
-  }
-  const getGqlQuery = (pdbid:string) =>{
-    return  encodeURI(`https://data.rcsb.org/graphql?query={
-      entry(entry_id: "${pdbid.toLowerCase()}") {
-      rcsb_id
-      polymer_entities {
-          rcsb_polymer_entity_container_identifiers{
-      asym_ids
-    }
-        entity_poly {
-          pdbx_strand_id
-          type
-        }
-      }
-      nonpolymer_entities {
-        rcsb_nonpolymer_entity_container_identifiers{
-          asym_ids
-        }
-        
-        pdbx_entity_nonpoly {
-          
-          comp_id
-          name
-          entity_id
-        }
-        rcsb_nonpolymer_entity {
-          formula_weight
-          pdbx_description
-        }
-      }
-  }}` )
-  }
-
-
-  useEffect(() => {
-    if (current_struct!==null){
-        addToast(`Structure ${current_struct.struct.rcsb_id} is being fetched.`, {
-          appearance: 'info',
-          autoDismiss: true,
-        })
-
-      axios.get(getGqlQuery(current_struct.struct.rcsb_id)).then(
-      r=>{
-        var map = get_strand_asymid_map(r,current_struct.struct.rcsb_id)
-        setAsymidChainMap(map)
-      }
-      ,e=>{console.log("Error", e);
-      }
-    )
-
-    console.log("Current Struct changed:", current_struct);
-    console.log("Its rps :", current_struct.rps);
-    
-	}
-  }, [current_struct])
-
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue:any) => {
-      if (newvalue === null){
-        dispatch(struct_change(chain_to_highlight,null))
-      }else{
-        dispatch(struct_change(null,newvalue))
-        viewerInstance.visual.update({
-          moleculeId: newvalue.struct.rcsb_id.toLowerCase()
-        });
-      }
   };
- const structs = useSelector(( state:AppState ) => state.structures.derived_filtered)
-
-  const handleSelectHighlightChain =  (event: React.ChangeEvent<{ value: unknown }>, newvalue:any) =>{
+  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
+  const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
+    dispatch(struct_change(newvalue.props.children,current_struct))
     viewerInstance.visual.select(
       {
-        data: [{ auth_asym_id: newvalue.props.value,
-            color: { r: 50, g: 50, b: 255 }, focus: true }]
-        ,nonSelectedColor: { r: 180, g: 180, b: 180 }
+        data: [{
+          auth_asym_id: newvalue.props.value,
+          color: { r: 50, g: 50, b: 255 }, focus: true
+        }]
+        , nonSelectedColor: { r: 180, g: 180, b: 180 }
       }
     )
 
   }
 
 
+  // const age=2;
 
+  const classes = ( makeStyles((theme: Theme) =>
+  createStyles({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
+  }),
+) )()
   return (
     <>
-    
-          <Autocomplete
-          className      = {selectStructStyles.autocomoplete}
-          value          = {current_struct}
-          options        = {structs}
-          getOptionLabel = {(parent) =>   parent.struct.rcsb_id}
-          // @ts-ignore
-          onChange     = {handleChange}
-          renderOption = {(option) => (<div style={{fontSize:"10px", width:"400px"}}><b>{option.struct.rcsb_id}</b> ({option.struct.citation_title} ) </div>)}
-          renderInput  = {(params) => <TextField {...params}  label="Structure" variant="outlined" />}
-          />
 
-<ListItem>
-          <FormControl style={{width:"100%"}}>
-            <InputLabel> Highlight Chain</InputLabel>
-            <Select
-              labelId ="demo-simple-select-label"
-              id      ="demo-simple-select"
-              value   ={"chain"}
-              onChange={handleSelectHighlightChain}>
-                <MenuItem> hihi</MenuItem>
-                {
-                current_struct !== null ? 
-                [ ...current_struct.rps, ...current_struct.rnas ].map((i)=> <MenuItem value={i.strands}>{i.noms[0]}</MenuItem>) : null}
+      <Autocomplete
+        className={selectStructStyles.autocomoplete}
+        value={current_struct}
+        options={structs}
+        getOptionLabel={(parent) => parent.struct.rcsb_id}
+        // @ts-ignore
+        onChange={handleChange}
+        renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> ({option.struct.citation_title} ) </div>)}
+        renderInput={(params) => <TextField {...params} label="Structure" variant="outlined" />}
+      />
 
-              {/* {Object.entries(asymidChainMap).map((i:any) => {  
-                return <MenuItem value={i[1].asymid}>{ i[0] + i[1].nomenclature }</MenuItem> 
-                })} */}
+      <ListItem>
+        <FormControl  
+        // className={classes.formControl} 
+        style={{width:"100%"}}>
+          <InputLabel> Highlight Chain</InputLabel>
+          <Select
+            value={chain_to_highlight}
+            onChange={handleSelectHighlightChain}
+            // @ts-ignore
+            renderValue={(value:string)=><div>{ value }</div>}
+            >
 
-            </Select>
-          </FormControl>
-</ListItem>
-</>
+            {
+              current_struct !== null ?
+                [...current_struct.rnas,...current_struct.rps.sort(nomenclatureCompareFn), ].map((i) => <MenuItem value={i.strands}>{i.noms.length>0 ? i.noms[0] : "Unclassified Polymer"}</MenuItem>) : null}
+          </Select>
+        </FormControl>
+      </ListItem>
+    </>
   )
 }
 
@@ -250,10 +171,10 @@ const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMet
     dispatch(requestBanClass(item, false))
     setProtClass(item);
   };
-  const chooseProtParent = (event: React.ChangeEvent<{ value: unknown }>, newvalue:any) => {
+  const chooseProtParent = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
     console.log(newvalue)
-    if (newvalue === null || newvalue.parent_rcsb_id === "Choose a protein class."){
-      return 
+    if (newvalue === null || newvalue.parent_rcsb_id === "Choose a protein class.") {
+      return
     }
     setProtParent(newvalue.parent_rcsb_id);
     getCifChainByClass(curProtClass, newvalue.parent_rcsb_id)
@@ -266,9 +187,9 @@ const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMet
           <FormControl className={styles.sub1}>
             <InputLabel>Protein Class</InputLabel>
             <Select
-              labelId ="demo-simple-select-label"
-              id      ="demo-simple-select"
-              value   ={curProtClass}
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={curProtClass}
               onChange={chooseProtein}>
               {proteins.map((i) => <MenuItem value={i.banClass}>{i.banClass}
               </MenuItem>)}
@@ -296,10 +217,10 @@ const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMet
 
 const SelectRna = ({ items, selectRna }: { items: RNAProfile[], selectRna: (strand: string, parent: string) => void }) => {
 
-  const styles                       = useSelectStyles();
-  const dispatch                     = useDispatch();
+  const styles = useSelectStyles();
+  const dispatch = useDispatch();
 
-  const [curRna, setCurRna]          = React.useState('');
+  const [curRna, setCurRna] = React.useState('');
   const [curRnaParent, setRnaParent] = React.useState('');
 
 
@@ -312,7 +233,7 @@ const SelectRna = ({ items, selectRna }: { items: RNAProfile[], selectRna: (stra
     let item = event.target.value as string
     setRnaParent(item);
     console.log(item);
-    
+
     // selectRna(item)
   };
 
@@ -335,75 +256,75 @@ const SelectRna = ({ items, selectRna }: { items: RNAProfile[], selectRna: (stra
   const [selectBy, setSelectBy] = useState<string>('Parent Structure');
 
 
-const parents = useSelector(( state:AppState ) => Object.values(state.rna.rna_classes_derived)
-.reduce(( agg, rnaclass )=>{return [...agg,...rnaclass]},[]))
-.map((_:RNAProfile)=>( { 
-  des    : _.description,
-  rcsb_id: _.struct,
-  title  : _.parent_citation
-}))
+  const parents = useSelector((state: AppState) => Object.values(state.rna.rna_classes_derived)
+    .reduce((agg, rnaclass) => { return [...agg, ...rnaclass] }, []))
+    .map((_: RNAProfile) => ({
+      des: _.description,
+      rcsb_id: _.struct,
+      title: _.parent_citation
+    }))
 
 
 
-const [selectrnaClass, setSelectRnaClass] = useState<string>('5')
+  const [selectrnaClass, setSelectRnaClass] = useState<string>('5')
 
   return (
     <Grid item xs={12}>
-      <List style={{outline:"1px solid gray", borderRadius:"5px"}}>
+      <List style={{ outline: "1px solid gray", borderRadius: "5px" }}>
 
-<ListItem>
-        <FormControl className={styles.sub1}>
+        <ListItem>
+          <FormControl className={styles.sub1}>
 
-          <InputLabel >RNA Class</InputLabel>
-          <Select
+            <InputLabel >RNA Class</InputLabel>
+            <Select
 
-          labelId  ="demo-simple-select-label"
-          id       ="demo-simple-select"
-          value    = {selectBy}
-          onChange = {(event: any) => {setSelectBy(event.target.value)}}>
-            {[
-             { v: 'mrna', t: 'mRNA' },
-             { v: 'trna', t: 'tRNA' },
-             { v: '5'   , t: '5S'    },
-             { v: '5.8' , t: '5.8S' },
-             { v: '12'  , t: '12S'  },
-             { v: '16S' , t: '16S'  },
-             { v: '21'  , t: '21S'  },
-             { v: '23'  , t: '23S'  },
-             { v: '25'  , t: '25S'  },
-             { v: '28'  , t: '28S'  },
-             { v: '35'  , t: '35S'  },
-             ].map((i) => <MenuItem value={i.v}>{i.t}</MenuItem>)}
-          </Select>
-        </FormControl>
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={selectBy}
+              onChange={(event: any) => { setSelectBy(event.target.value) }}>
+              {[
+                { v: 'mrna', t: 'mRNA' },
+                { v: 'trna', t: 'tRNA' },
+                { v: '5', t: '5S' },
+                { v: '5.8', t: '5.8S' },
+                { v: '12', t: '12S' },
+                { v: '16S', t: '16S' },
+                { v: '21', t: '21S' },
+                { v: '23', t: '23S' },
+                { v: '25', t: '25S' },
+                { v: '28', t: '28S' },
+                { v: '35', t: '35S' },
+              ].map((i) => <MenuItem value={i.v}>{i.t}</MenuItem>)}
+            </Select>
+          </FormControl>
 
-        <FormControl  className={styles.sub2}>
-          <Autocomplete
-          styles={{marginRight:"10px", outline:"none"}}
-          options        = {parents}
-          getOptionLabel = {(parent) =>   parent.rcsb_id }
-          // @ts-ignore
-          onChange     = {(event: any, newValue: string | null) => {
-            if (newValue === null){
-              return
-            }
-            console.log(newValue)
+          <FormControl className={styles.sub2}>
+            <Autocomplete
+              styles={{ marginRight: "10px", outline: "none" }}
+              options={parents}
+              getOptionLabel={(parent) => parent.rcsb_id}
+              // @ts-ignore
+              onChange={(event: any, newValue: string | null) => {
+                if (newValue === null) {
+                  return
+                }
+                console.log(newValue)
 
-          }}
-          renderOption = {(option) => (<div style={{fontSize:"10px", width:"400px"}}><b>{option.rcsb_id}</b> ({option.title} ) ::: <i>{option.des}</i></div>)}
-          renderInput  = {(params) => <TextField {...params} style={{ fontSize:"8px"}} label="Parent Structure" variant="outlined" />}
-          />
-
-
-        </FormControl>
+              }}
+              renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b> ({option.title} ) ::: <i>{option.des}</i></div>)}
+              renderInput={(params) => <TextField {...params} style={{ fontSize: "8px" }} label="Parent Structure" variant="outlined" />}
+            />
 
 
+          </FormControl>
 
-</ListItem>
 
 
-</List>
-</Grid>
+        </ListItem>
+
+
+      </List>
+    </Grid>
   )
 }
 
@@ -413,61 +334,59 @@ const [selectrnaClass, setSelectRnaClass] = useState<string>('5')
 const viewerInstance = new PDBeMolstarPlugin() as any;
 // @ts-ignore
 // const viewerInstance2 = new PDBeMolstarPlugin() as any;
-const VisualizationPage = (props:any) => {
-  const [lastViewed, setLastViewed] = useState  <Array<string | null>>([ null,null ])
-  const  history   :any             = useHistory();
-  const  params                     = history.location.state;
+const VisualizationPage = (props: any) => {
+  const [lastViewed, setLastViewed] = useState<Array<string | null>>([null, null])
+  const history: any = useHistory();
+  const params = history.location.state;
   const dispatch = useDispatch();
 
   useEffect(() => {
     console.log("Got parameters:", params);
-    if ( params === undefined || Object.keys(params).length < 1 ){return}
+    if (params === undefined || Object.keys(params).length < 1) { return }
 
-    if (( params as {
-      banClass:string,
-      parent  :string
-    }).parent)
-
-      {
-      getCifChainByClass(params.banClass,params.parent)
-      }
-    else if (( params as {struct:string}  ).struct){
-      setstruct   (params.struct)
+    if ((params as {
+      banClass: string,
+      parent: string
+    }).parent) {
+      getCifChainByClass(params.banClass, params.parent)
+    }
+    else if ((params as { struct: string }).struct) {
+      setstruct(params.struct)
       selectStruct(params.struct)
     }
   },
-   [
-    params
-  ])
+    [
+      params
+    ])
 
-  const [inView       , setInView       ] = useState<any              >({}                     );
-  const [inViewData   , setInViewData   ] = useState<any              >({}                     );
-  const [structdata   , setstruct       ] = useState<RibosomeStructure>({} as RibosomeStructure);
-  const [protClassInfo, setProtClassInfo] = useState<any              >({}                     );
+  const [inView, setInView] = useState<any>({});
+  const [inViewData, setInViewData] = useState<any>({});
+  const [structdata, setstruct] = useState<RibosomeStructure>({} as RibosomeStructure);
+  const [protClassInfo, setProtClassInfo] = useState<any>({});
 
   useEffect(() => {
     var options = {
-      moleculeId       : 'Element to visualize can be selected above.',
-      hideControls     : true                                         ,
-      layoutIsExpanded : false                                        ,
+      moleculeId: 'Element to visualize can be selected above.',
+      hideControls: true,
+      layoutIsExpanded: false,
     }
     var viewerContainer = document.getElementById('molstar-viewer');
     viewerInstance.render(viewerContainer, options);
 
-    if ( params === undefined || Object.keys(params).length < 1 ){return}
+    if (params === undefined || Object.keys(params).length < 1) { return }
 
-    if (( params as {banClass:string, parent:string}  ).parent){
+    if ((params as { banClass: string, parent: string }).parent) {
 
-      getCifChainByClass(params.banClass,params.parent)
+      getCifChainByClass(params.banClass, params.parent)
     }
-    else 
-    if (( params as {struct:string}  ).struct){
-      dispatch(struct_change(null, params.struct))
-      selectStruct(params.struct)
-    }
+    else
+      if ((params as { struct: string }).struct) {
+        dispatch(struct_change(null, params.struct))
+        selectStruct(params.struct)
+      }
   }, [])
 
-  const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => _.flattenDeep ( Object.values(state.proteins.ban_classes )))
+  const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => _.flattenDeep(Object.values(state.proteins.ban_classes)))
   const structures = useSelector((state: AppState) => state.structures.neo_response.map(
     r => { return { rcsb_id: r.struct.rcsb_id, title: r.struct.citation_title } }))
 
@@ -478,7 +397,7 @@ const VisualizationPage = (props:any) => {
 
   }
   const getCifChainByClass = (banclass: string, parent_struct: string) => {
-    
+
     viewerInstance.visual.update({
       customData: {
         url: `${process.env.REACT_APP_DJANGO_URL}/static_files/cif_chain_by_class/?classid=${banclass}&struct=${parent_struct}`,
@@ -487,259 +406,262 @@ const VisualizationPage = (props:any) => {
       },
     });
     setInView({
-      type  : "chain",
-      id    : banclass,
+      type: "chain",
+      id: banclass,
       parent: parent_struct,
     })
 
-    setLastViewed([`protein.${banclass}`,parent_struct])
+    setLastViewed([`protein.${banclass}`, parent_struct])
 
   }
-  const selectRna  =(strand:string, parent_struct:string)=>{
-    setLastViewed([`rna.${strand}`,parent_struct])
+  const selectRna = (strand: string, parent_struct: string) => {
+    setLastViewed([`rna.${strand}`, parent_struct])
 
   }
 
 
   useEffect(() => {
 
-    if ( inView.type =="struct" ){
-    getNeo4jData("neo4j", {
-      endpoint: "get_struct",
-      params: { pdbid: inView.id },
-    }).then(
-      resp => {
-        const respdata:RibosomeStructure =  ( flattenDeep(resp.data)[0] as any ).structure;
-        setstruct(respdata);
-        setInViewData({ type:"struct", data:respdata})
-      },
+    if (inView.type == "struct") {
+      getNeo4jData("neo4j", {
+        endpoint: "get_struct",
+        params: { pdbid: inView.id },
+      }).then(
+        resp => {
+          const respdata: RibosomeStructure = (flattenDeep(resp.data)[0] as any).structure;
+          setstruct(respdata);
+          setInViewData({ type: "struct", data: respdata })
+        },
 
-      err => {
-        console.log("Got error on /neo request", err);
-      }
-    );
-        
-        
+        err => {
+          console.log("Got error on /neo request", err);
+        }
+      );
+
+
     }
-    else if (inView.type =="chain"){
+    else if (inView.type == "chain") {
 
-      getNeo4jData("neo4j",{endpoint:"nomclass_visualize", params:{ban:inView.id}}).then(r =>{
-        setInViewData({type:"chain", data:r.data})
+      getNeo4jData("neo4j", { endpoint: "nomclass_visualize", params: { ban: inView.id } }).then(r => {
+        setInViewData({ type: "chain", data: r.data })
         setProtClassInfo(r.data[0])
       })
     }
-  
+
 
   }, [inView])
 
-  const RenderInViewInfo = ({type,structdata, protClassInfo}:{ type:string, structdata:RibosomeStructure,protClassInfo:{
-    class:string,
-    comments:string[][],
-    members:{parent:string, chain:string}[]
-  } })=>{
-   switch (type){
+  const RenderInViewInfo = ({ type, structdata, protClassInfo }: {
+    type: string, structdata: RibosomeStructure, protClassInfo: {
+      class: string,
+      comments: string[][],
+      members: { parent: string, chain: string }[]
+    }
+  }) => {
+    switch (type) {
       case "chain":
         return protClassInfo.class ? <List>
           <ListSubheader>Ribosomal Protein Class {protClassInfo.class}</ListSubheader>
-{
-uniq(flattenDeep(protClassInfo.comments)).filter(r=>r!=="NULL").map(r => 
-<ListItem>
-<Typography className={"s"}>{r}</Typography> 
-</ListItem>
-)
-}
+          {
+            uniq(flattenDeep(protClassInfo.comments)).filter(r => r !== "NULL").map(r =>
+              <ListItem>
+                <Typography className={"s"}>{r}</Typography>
+              </ListItem>
+            )
+          }
 
         </List> : <div>Not Found</div>
       case "struct":
-      return          structdata?.rcsb_id  ? 
-        <Card className={classes.card}>
-          <CardHeader
-            title={`${structdata.rcsb_id}`}
-            subheader={structdata._organismName}
-          />
-          <CardActionArea>
-            <CardMedia
-              onClick={()=>{history.push(`/structs/${structdata.rcsb_id.toUpperCase()}`)}}
-              image={process.env.PUBLIC_URL + `/ray_templates/_ray_${structdata.rcsb_id.toUpperCase()}.png`}
-              title={ `${structdata.rcsb_id}\n${structdata.citation_title}` }
-              className={classes.title}
+        return structdata?.rcsb_id ?
+          <Card className={classes.card}>
+            <CardHeader
+              title={`${structdata.rcsb_id}`}
+              subheader={structdata._organismName}
             />
-          </CardActionArea>
-          <List>
-            <CardBodyAnnotation keyname="Species" value={structdata._organismName} />
-            <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
+            <CardActionArea>
+              <CardMedia
+                onClick={() => { history.push(`/structs/${structdata.rcsb_id.toUpperCase()}`) }}
+                image={process.env.PUBLIC_URL + `/ray_templates/_ray_${structdata.rcsb_id.toUpperCase()}.png`}
+                title={`${structdata.rcsb_id}\n${structdata.citation_title}`}
+                className={classes.title}
+              />
+            </CardActionArea>
+            <List>
+              <CardBodyAnnotation keyname="Species" value={structdata._organismName} />
+              <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
               < CardBodyAnnotation keyname="Experimental Method" value={structdata.expMethod} />
-            < CardBodyAnnotation keyname="Title" value={structdata.citation_title} />
+              < CardBodyAnnotation keyname="Title" value={structdata.citation_title} />
 
 
-            < CardBodyAnnotation keyname="Year" value={structdata.citation_year} />
-          </List>
-          <CardActions>
-            <Grid container justify="space-evenly" direction="row">
+              < CardBodyAnnotation keyname="Year" value={structdata.citation_year} />
+            </List>
+            <CardActions>
+              <Grid container justify="space-evenly" direction="row">
 
-              <Grid item>
+                <Grid item>
 
-                <Button size="small" color="primary">
-                  <a href={ `https://www.rcsb.org/structure/${structdata.rcsb_id}` }>
-                  PDB
-                  </a>
-            </Button>
+                  <Button size="small" color="primary">
+                    <a href={`https://www.rcsb.org/structure/${structdata.rcsb_id}`}>
+                      PDB
+                    </a>
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button size="small" color="primary">
+                    <a href={
+
+                      structdata.rcsb_external_ref_link[0]
+                    }>
+                      EMD
+                    </a>
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button size="small" color="primary">
+                    <a href={
+                      `https://doi.org/${structdata.citation_pdbx_doi}`
+                    }>
+                      DOI
+                    </a>
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Button size="small" color="primary">
-                  <a href={
-                    
-                    structdata.rcsb_external_ref_link[0]
-                     }>
-                  EMD
-                  </a>
-            </Button>
-              </Grid>
-              <Grid item>
-                <Button size="small" color="primary">
-                  <a href={
-                     `https://doi.org/${structdata.citation_pdbx_doi}`
-                     }>
-                  DOI
-                  </a>
-            </Button>
-              </Grid>
-            </Grid>
-          </CardActions>
-        </Card>
-                  :<div>"Loading"</div>
-  default:
-    return <div></div>
-  }}
+            </CardActions>
+          </Card>
+          : <div>"Loading"</div>
+      default:
+        return <div></div>
+    }
+  }
 
 
-  const classes=makeStyles({  
-            pageDescription:{
-              padding:"20px",
-              width:"100%",
-              height:"min-content"
-            },
-            card: {
-              width:"100%"
-            },
-            title: {
-              fontSize: 14,
-              height  : 300
-            },
-            heading: {
-              fontSize  : 12,
-              paddingTop: 5,
-            },
-            annotation: { fontSize: 12, },
-            authors   : {
-                transition: "0.1s all",
-                "&:hover" : {
-                  background: "rgba(149,149,149,1)",
-                  cursor    : "pointer",
-              },
-            },
-            nested:{
-              paddingLeft: 20,
-              color      : "black"
-            }
-          })();
+  const classes = makeStyles({
+    pageDescription: {
+      padding: "20px",
+      width: "100%",
+      height: "min-content"
+    },
+    card: {
+      width: "100%"
+    },
+    title: {
+      fontSize: 14,
+      height: 300
+    },
+    heading: {
+      fontSize: 12,
+      paddingTop: 5,
+    },
+    annotation: { fontSize: 12, },
+    authors: {
+      transition: "0.1s all",
+      "&:hover": {
+        background: "rgba(149,149,149,1)",
+        cursor: "pointer",
+      },
+    },
+    nested: {
+      paddingLeft: 20,
+      color: "black"
+    }
+  })();
 
-const [current_tab, set_current_tab] = useState<string>('struct')
-const handleTabClick =(tab:string) =>{
+  const [current_tab, set_current_tab] = useState<string>('struct')
+  const handleTabClick = (tab: string) => {
 
-  set_current_tab(tab)
+    set_current_tab(tab)
 
-}
+  }
 
 
 
-return (
-    <Grid container xs={12} spacing={1}  alignContent="flex-start">
+  return (
+    <Grid container xs={12} spacing={1} alignContent="flex-start">
 
-      <Grid item  xs={12} style={{ padding: "10px"}}>
+      <Grid item xs={12} style={{ padding: "10px" }}>
         <Paper variant="outlined" className={classes.pageDescription}>
-            <Typography variant="h4">
-              Visualization
+          <Typography variant="h4">
+            Visualization
           </Typography>
         </Paper>
       </Grid>
 
 
-      <Grid item  direction="column" xs={3} style={{ padding: "5px" }}>
+      <Grid item direction="column" xs={3} style={{ padding: "5px" }}>
         <List>
 
-        {(() => {
-          if (lastViewed[0] == null && lastViewed[1] != null) {
-            return <ListItem>
-              Last Item Viewed:   Structure {lastViewed[1]}
-            </ListItem>
-          }
-          else if (lastViewed[0] == null && lastViewed[1] == null) {
-            return null
-          }
-          else {
-            return <ListItem>
-              Last Item Viewed: {lastViewed[0]?.split('.')[0] == 'protein' ? 'Protein' : 'RNA'} {lastViewed[0]?.split('.')[1]} in Structure {lastViewed[1]}
-            </ListItem>
-          }
-        }
-        )()}
-
-        <ListSubheader>Select Item Category</ListSubheader>
-        <ListItem style={{ display: "flex", flexDirection: "row" }}>
-
-          <Button size = "small" color = {current_tab === 'struct' ? "primary" : "default"} onClick = {() => { handleTabClick('struct') }} variant = "outlined" style = {{ marginRight: "5px" }} >Structures</Button>
-          <Button size = "small" color = {current_tab === 'rp'     ? "primary" : "default"} onClick = {() => { handleTabClick("rp"    ) }} variant = "outlined" style = {{ marginRight: "5px" }} >Proteins  </Button>
-          <Button size = "small" color = {current_tab === 'rna'    ? "primary" : "default"} onClick = {() => { handleTabClick('rna'   ) }} variant = "outlined" style = {{ marginRight: "5px" }} >RNA       </Button>
-        </ListItem>
-        <ListItem>
           {(() => {
-            switch (current_tab) {
-              case 'rp':
-                return <SelectProtein proteins={prot_classes} getCifChainByClass={getCifChainByClass} />
-              case 'struct':
-                return <SelectStruct items={structures} selectStruct={selectStruct} />
-
-              case 'rna':
-                return <SelectRna items={[]} selectRna={selectRna} />
-              default:
-                return "Null"
+            if (lastViewed[0] == null && lastViewed[1] != null) {
+              return <ListItem>
+                Last Item Viewed:   Structure {lastViewed[1]}
+              </ListItem>
             }
-          })()}
+            else if (lastViewed[0] == null && lastViewed[1] == null) {
+              return null
+            }
+            else {
+              return <ListItem>
+                Last Item Viewed: {lastViewed[0]?.split('.')[0] == 'protein' ? 'Protein' : 'RNA'} {lastViewed[0]?.split('.')[1]} in Structure {lastViewed[1]}
+              </ListItem>
+            }
+          }
+          )()}
 
-        </ListItem>
+          <ListSubheader>Select Item Category</ListSubheader>
+          <ListItem style={{ display: "flex", flexDirection: "row" }}>
 
-  {current_tab === 'struct' ?  
-  <ListItem>
-      <Button fullWidth variant="outlined" color="primary"  onClick={
-        ()=>{
-          viewerInstance.visual.reset({ camera: true, theme: true })
-        }
-      }>
-        Reset
-      </Button>
-      </ListItem>
-      :null
-      
-    }
+            <Button size="small" color={current_tab === 'struct' ? "primary" : "default"} onClick={() => { handleTabClick('struct') }} variant="outlined" style={{ marginRight: "5px" }} >Structures</Button>
+            <Button size="small" color={current_tab === 'rp' ? "primary" : "default"} onClick={() => { handleTabClick("rp") }} variant="outlined" style={{ marginRight: "5px" }} >Proteins  </Button>
+            <Button size="small" color={current_tab === 'rna' ? "primary" : "default"} onClick={() => { handleTabClick('rna') }} variant="outlined" style={{ marginRight: "5px" }} >RNA       </Button>
+          </ListItem>
+          <ListItem>
+            {(() => {
+              switch (current_tab) {
+                case 'rp':
+                  return <SelectProtein proteins={prot_classes} getCifChainByClass={getCifChainByClass} />
+                case 'struct':
+                  return <SelectStruct items={structures} selectStruct={selectStruct} />
 
-        <ListItem>
-          <DashboardButton />
-        </ListItem>
+                case 'rna':
+                  return <SelectRna items={[]} selectRna={selectRna} />
+                default:
+                  return "Null"
+              }
+            })()}
+
+          </ListItem>
+
+          {current_tab === 'struct' ?
+            <ListItem>
+              <Button fullWidth variant="outlined" color="primary" onClick={
+                () => {
+                  viewerInstance.visual.reset({ camera: true, theme: true })
+                }
+              }>
+                Reset
+              </Button>
+            </ListItem>
+            : null
+
+          }
+
+          <ListItem>
+            <DashboardButton />
+          </ListItem>
 
 
 
         </List>
       </Grid>
 
-    <Grid item container direction="row" xs={9} style={{ height: "100%" }}>
+      <Grid item container direction="row" xs={9} style={{ height: "100%" }}>
 
 
-				<Grid item xs={12} >
-					<Paper variant="outlined" style={{ position: "relative", padding: "10px", height: "80vh" }} >
-						<div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
-					</Paper>
-				</Grid >
+        <Grid item xs={12} >
+          <Paper variant="outlined" style={{ position: "relative", padding: "10px", height: "80vh" }} >
+            <div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
+          </Paper>
+        </Grid >
       </Grid>
 
 
