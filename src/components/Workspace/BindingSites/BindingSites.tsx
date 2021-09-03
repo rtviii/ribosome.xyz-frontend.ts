@@ -231,7 +231,6 @@ const BindingSites = () => {
 
 
 	const color_prediction = () => {
-
 		// ! Change of prediction_data is triggered by fetching a new prediction on "Predict"
 		if (prediction_data == null) {
 			return
@@ -242,6 +241,7 @@ const BindingSites = () => {
 			  start_residue_number?: number, end_residue_number?: number,
 			   auth_residue_number?: number, auth_ins_code_id?: string,
 			    start_auth_residue_number?: number, start_auth_ins_code_id?: string, end_auth_residue_number?: number, end_auth_ins_code_id?: string, atoms?: string[], label_comp_id?: string, color: { r: number, g: number, b: number }, focus?: boolean, sideChain?: boolean }
+
 		var prediction_vis_data: MolStarResidue[] = []
 		for (var chain of Object.values(prediction_data)) {
 			for (var i of chain.target.tgt_ids) {
@@ -666,16 +666,11 @@ const BindingSites = () => {
 
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
-						// style  ={[cur_lig,cur_struct].includes (null) ? { color: "gray" } : {}}
-						// color  ={![cur_lig,cur_struct].includes(null) ? 'primary' : 'default'}
 						disabled={[cur_lig, cur_struct].includes(null)}
 						onClick={() => {
+							// 
+							alert("Implement this")
 
-
-
-
-
-							// viewerInstance.visual.reset({ camera: true, theme: true , moleculeId:true})
 						}}
 						fullWidth
 						variant="outlined"> Visualize Prediction</Button>

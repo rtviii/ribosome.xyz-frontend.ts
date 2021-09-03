@@ -17,7 +17,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { AppState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { BanClassMetadata, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces';
+import { BanClassMetadata, NeoStruct, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces';
 import ListSubheader from '@material-ui/core/ListSubheader/ListSubheader';
 import { CardBodyAnnotation } from './../Workspace/StructurePage/StructurePage'
 import { requestBanClass } from '../../redux/reducers/Proteins/ActionTypes';
@@ -30,8 +30,9 @@ import { flattenDeep, uniq } from 'lodash';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { useHistory, useParams } from 'react-router';
 import _ from 'lodash'
-import { Cart } from '../Workspace/Cart/Cart';
 import axios from 'axios';
+import { struct_change } from '../../redux/reducers/Visualization/ActionTypes';
+import { ToastProvider, useToasts } from 'react-toast-notifications';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -57,52 +58,41 @@ const useSelectStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-
 interface StructSnip {
   rcsb_id: string,
   title  : string,
   any?   : any
 }
 
-
-
-
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
+
+  const dispatch = useDispatch()
   const selectStructStyles           = ( makeStyles({
     autocomoplete:{      width:"100%"
     }}) )()
-  const [currentStructure, setCurrentStructure] = useState<string>('');
+  const { addToast } = useToasts();
 
 
+  const current_struct                      = useSelector(( state:AppState ) => state.visualization.structure.struct            )
+  const chain_to_highlight                  = useSelector(( state:AppState ) => state.visualization.structure.highlighted_chain )
 
+  const [asymidChainMap, setAsymidChainMap] = useState({})
 
-  const get_strand_asymid_map = (gqlresp:any) =>{
+  const get_strand_asymid_map = (gqlresp:any,pdbid:string) =>{
     var _ = gqlresp.data.data.entry.polymer_entities
-
-    console.log("got gqlresp", _);
-    
     const map:Record<any,any> = {}
       for (var poly of _){
-        
             var strand = poly.entity_poly.pdbx_strand_id
-            var type   = poly.entity_poly.type
             var asym   = poly.rcsb_polymer_entity_container_identifiers.asym_ids[0]
-
             map[strand] = {
               "asymid":asym
           }
     }
-
-
-
-
     getNeo4jData('neo4j', {
       endpoint: "get_struct",
-      params: { pdbid: currentStructure }
+      params: { pdbid }
     })
     .then(r=>{
-      console.log("Got response from server", r);
-      console.log(r);
       
      for (var rp of r.data[0].rps){
        if (Object.keys(map).includes(rp.entity_poly_strand_id )){
@@ -128,8 +118,6 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     return map
 
   }
-
-  const [asymidChainMap, setAsymidChainMap] = useState({})
   const getGqlQuery = (pdbid:string) =>{
     return  encodeURI(`https://data.rcsb.org/graphql?query={
       entry(entry_id: "${pdbid.toLowerCase()}") {
@@ -163,73 +151,64 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   }
 
 
-
   useEffect(() => {
-    
-        // console.log("set map to  :",asymidChainMap);
-        console.log("entries:", Object.entries(asymidChainMap));
-        
-  }, [asymidChainMap])
+    if (current_struct!==null){
+        addToast(`Structure ${current_struct.struct.rcsb_id} is being fetched.`, {
+          appearance: 'info',
+          autoDismiss: true,
+        })
 
-  useEffect(() => {
-    if (currentStructure.length > 0){
-
-    axios.get(getGqlQuery(currentStructure)).then(
+      axios.get(getGqlQuery(current_struct.struct.rcsb_id)).then(
       r=>{
-        var map = get_strand_asymid_map(r)
-        
-        // console.log("got map",map);
+        var map = get_strand_asymid_map(r,current_struct.struct.rcsb_id)
         setAsymidChainMap(map)
       }
       ,e=>{console.log("Error", e);
       }
     )
+
+    console.log("Current Struct changed:", current_struct);
+    console.log("Its rps :", current_struct.rps);
+    
 	}
-  }, [currentStructure])
+  }, [current_struct])
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue:any) => {
-            if (newvalue === null){
-              return 
-            }
-    selectStruct(newvalue!.rcsb_id)
-    setCurrentStructure(newvalue!.rcsb_id);
-
+      if (newvalue === null){
+        dispatch(struct_change(chain_to_highlight,null))
+      }else{
+        dispatch(struct_change(null,newvalue))
+        viewerInstance.visual.update({
+          moleculeId: newvalue.struct.rcsb_id.toLowerCase()
+        });
+      }
   };
-
-
- const structs = useSelector(( state:AppState ) => state.structures.derived_filtered.map(str=>( { 
-  title: str.struct.citation_title, rcsb_id:str.struct.rcsb_id } )))
+ const structs = useSelector(( state:AppState ) => state.structures.derived_filtered)
 
   const handleSelectHighlightChain =  (event: React.ChangeEvent<{ value: unknown }>, newvalue:any) =>{
-
-    
-viewerInstance.visual.select(
-  {
-    data: [
-      { struct_asym_id: newvalue.props.value,
-         color: { 
-           
-          
-          r: 50, g: 50, b: 255 }, focus: true }
-    ]
-    , nonSelectedColor: { r: 180, g: 180, b: 180 }
-  }
-)
+    viewerInstance.visual.select(
+      {
+        data: [{ auth_asym_id: newvalue.props.value,
+            color: { r: 50, g: 50, b: 255 }, focus: true }]
+        ,nonSelectedColor: { r: 180, g: 180, b: 180 }
+      }
+    )
 
   }
+
 
 
   return (
     <>
+    
           <Autocomplete
-          className={selectStructStyles.autocomoplete}
-          // size           = "small"
+          className      = {selectStructStyles.autocomoplete}
+          value          = {current_struct}
           options        = {structs}
-          getOptionLabel = {(parent) =>   parent.rcsb_id + " : "+ parent.title}
-
+          getOptionLabel = {(parent) =>   parent.struct.rcsb_id}
           // @ts-ignore
           onChange     = {handleChange}
-          renderOption = {(option) => (<div style={{fontSize:"10px", width:"400px"}}><b>{option.rcsb_id}</b> ({option.title} ) </div>)}
+          renderOption = {(option) => (<div style={{fontSize:"10px", width:"400px"}}><b>{option.struct.rcsb_id}</b> ({option.struct.citation_title} ) </div>)}
           renderInput  = {(params) => <TextField {...params}  label="Structure" variant="outlined" />}
           />
 
@@ -241,9 +220,15 @@ viewerInstance.visual.select(
               id      ="demo-simple-select"
               value   ={"chain"}
               onChange={handleSelectHighlightChain}>
-              {Object.entries(asymidChainMap).map((i:any) => {  
+                <MenuItem> hihi</MenuItem>
+                {
+                current_struct !== null ? 
+                [ ...current_struct.rps, ...current_struct.rnas ].map((i)=> <MenuItem value={i.strands}>{i.noms[0]}</MenuItem>) : null}
+
+              {/* {Object.entries(asymidChainMap).map((i:any) => {  
                 return <MenuItem value={i[1].asymid}>{ i[0] + i[1].nomenclature }</MenuItem> 
-                })}
+                })} */}
+
             </Select>
           </FormControl>
 </ListItem>
@@ -429,73 +414,67 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 // @ts-ignore
 // const viewerInstance2 = new PDBeMolstarPlugin() as any;
 const VisualizationPage = (props:any) => {
-  const [lastViewed, setLastViewed] = useState<Array<string | null>>([ null,null ])
-  const history:any                 = useHistory();
-  const params =  history.location.state;
+  const [lastViewed, setLastViewed] = useState  <Array<string | null>>([ null,null ])
+  const  history   :any             = useHistory();
+  const  params                     = history.location.state;
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    if ( params == undefined || Object.keys(params).length < 1 ){return}
-    if (( params as {banClass:string, parent:string}  ).parent){
+    console.log("Got parameters:", params);
+    if ( params === undefined || Object.keys(params).length < 1 ){return}
+
+    if (( params as {
+      banClass:string,
+      parent  :string
+    }).parent)
+
+      {
       getCifChainByClass(params.banClass,params.parent)
-    }
-    else 
-    if (( params as {struct:string}  ).struct){
+      }
+    else if (( params as {struct:string}  ).struct){
+      setstruct   (params.struct)
       selectStruct(params.struct)
     }
-  }, [params])
+  },
+   [
+    params
+  ])
 
-
-
-  const [inView, setInView]               = useState<any>({});
-  const [inViewData, setInViewData]       = useState<any>({});
-  const [structdata, setstruct]           = useState<RibosomeStructure>({} as RibosomeStructure);
-  const [protClassInfo, setProtClassInfo] = useState<any>({});
-
-
-const [mode, setMode] = useState<'single'|'split'>('single')
+  const [inView       , setInView       ] = useState<any              >({}                     );
+  const [inViewData   , setInViewData   ] = useState<any              >({}                     );
+  const [structdata   , setstruct       ] = useState<RibosomeStructure>({} as RibosomeStructure);
+  const [protClassInfo, setProtClassInfo] = useState<any              >({}                     );
 
   useEffect(() => {
     var options = {
-      moleculeId  : 'Element to visualize can be selected above.',
-      hideControls: true,
-       layoutIsExpanded: false,
+      moleculeId       : 'Element to visualize can be selected above.',
+      hideControls     : true                                         ,
+      layoutIsExpanded : false                                        ,
     }
-
     var viewerContainer = document.getElementById('molstar-viewer');
     viewerInstance.render(viewerContainer, options);
 
-
-
-
-    if ( params == undefined || Object.keys(params).length < 1 ){return}
+    if ( params === undefined || Object.keys(params).length < 1 ){return}
 
     if (( params as {banClass:string, parent:string}  ).parent){
+
       getCifChainByClass(params.banClass,params.parent)
     }
     else 
     if (( params as {struct:string}  ).struct){
+      dispatch(struct_change(null, params.struct))
       selectStruct(params.struct)
     }
-  }, [mode])
+  }, [])
 
   const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => _.flattenDeep ( Object.values(state.proteins.ban_classes )))
   const structures = useSelector((state: AppState) => state.structures.neo_response.map(
     r => { return { rcsb_id: r.struct.rcsb_id, title: r.struct.citation_title } }))
 
-
-
   const selectStruct = (rcsb_id: string) => {
-    setInView({
-      type: "struct",
-      id  : rcsb_id,
-      data: {}
-    })
-
     viewerInstance.visual.update({
       moleculeId: rcsb_id.toLowerCase()
     });
-
-    setLastViewed([null, rcsb_id])
-
 
   }
   const getCifChainByClass = (banclass: string, parent_struct: string) => {
@@ -706,10 +685,6 @@ return (
         }
         )()}
 
-        {/* <ListItem>
-          <Cart />
-        </ListItem> */}
-
         <ListSubheader>Select Item Category</ListSubheader>
         <ListItem style={{ display: "flex", flexDirection: "row" }}>
 
@@ -759,23 +734,13 @@ return (
 
     <Grid item container direction="row" xs={9} style={{ height: "100%" }}>
 
-<Grid item xs={12}> 
 
-					<Paper variant="outlined" style={{ height: "50vw", position: "relative", padding: "10px" }} >
-        <div style={{
-          width: "100%",
-          height: "100%"
-        }}
-          id="molstar-viewer">Molstar     Viewer     </div             >
-</Paper>
-</Grid>
+				<Grid item xs={12} >
+					<Paper variant="outlined" style={{ position: "relative", padding: "10px", height: "80vh" }} >
+						<div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
+					</Paper>
+				</Grid >
       </Grid>
-
-
-
-
-    
-
 
 
 
