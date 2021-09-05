@@ -29,7 +29,7 @@
     "i": "^0.3.6",
     "is-core-module": "^2.5.0",
     "js-file-download": "^0.4.12",
-    "marked": "^1.1.1",
+    "marked": "^2.0.0",
     "material-ui": "^0.20.2",
     "msa": "^1.0.3",
     "ngl": "^0.10.4",
