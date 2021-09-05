@@ -441,6 +441,14 @@ const BindingSites = () => {
 				cur_lig?.ligand.chemicalId as string,
 				cur_struct?.rcsb_id as string,
 				cur_tgt!.struct.rcsb_id))
+
+			if (cur_vis_tab==='prediction'){
+				viewerInstance.visual.update({
+					moleculeId: cur_tgt?.struct.rcsb_id.toLowerCase()
+
+				});
+				
+			}
 		} else {
 			dispatch(action._partial_state_change({ 'prediction_data': null }))
 		}

@@ -34,6 +34,7 @@ import axios from 'axios';
 import { struct_change } from '../../redux/reducers/Visualization/ActionTypes';
 import { ToastProvider, useToasts } from 'react-toast-notifications';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
+import StructHero from '../../materialui/StructHero';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -144,12 +145,10 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
             value={chain_to_highlight}
             onChange={handleSelectHighlightChain}
             // @ts-ignore
-            renderValue={(value:string)=><div>{ value }</div>}
+            renderValue={(value)=><div>{ value === undefined && value===null ? "" : value }</div>}
             >
 
-            {
-              current_struct !== null ?
-                [...current_struct.rnas,...current_struct.rps.sort(nomenclatureCompareFn), ].map((i) => <MenuItem value={i.strands}>{i.noms.length>0 ? i.noms[0] : "Unclassified Polymer"}</MenuItem>) : null}
+            {current_struct !== null && current_struct !== undefined ? [...current_struct?.rnas,...current_struct?.rps.sort(nomenclatureCompareFn), ].map((i) => <MenuItem value={i.strands}>{i.noms.length>0 ? i.noms[0] : "Unclassified Polymer"}</MenuItem>) : null}
           </Select>
         </FormControl>
       </ListItem>
@@ -335,10 +334,10 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 // @ts-ignore
 // const viewerInstance2 = new PDBeMolstarPlugin() as any;
 const VisualizationPage = (props: any) => {
-  const [lastViewed, setLastViewed] = useState<Array<string | null>>([null, null])
-  const history: any = useHistory();
-  const params = history.location.state;
-  const dispatch = useDispatch();
+  const [lastViewed, setLastViewed] = useState   <Array<string | null>>([null, null])
+  const  history   : any            = useHistory ();
+  const  params                     = history    .location.state;
+  const  dispatch                   = useDispatch();
 
   useEffect(() => {
     console.log("Got parameters:", params);
@@ -351,13 +350,27 @@ const VisualizationPage = (props: any) => {
       getCifChainByClass(params.banClass, params.parent)
     }
     else if ((params as { struct: string }).struct) {
+      
+      getNeo4jData('neo4j',{endpoint:"get_struct",params:{pdbid:params.struct}}).then(r=>{
+
+        var x:NeoStruct = {}as NeoStruct
+        x[ 'ligands' ] = r.data.ligands.map(( _:any ) =>_.chemicalId)
+        x[ 'struct' ] = r.data.structure
+        x[ 'rps' ] = r.data.rps.map(( _:any)=> ( {strands:_.entity_poly_strand_id, noms:_.nomenclature} ))
+        x[ 'rnas' ] = r.data.rnas.map(( _ :any)=> ( {strands:_.entity_poly_strand_id, noms:_.nomenclature} ))
+        console.log('assembled struct', x);
+        
+
+        dispatch(struct_change(null,x))
+      })
       setstruct(params.struct)
       selectStruct(params.struct)
     }
   },
     [
       params
-    ])
+    ]
+    )
 
   const [inView, setInView] = useState<any>({});
   const [inViewData, setInViewData] = useState<any>({});
