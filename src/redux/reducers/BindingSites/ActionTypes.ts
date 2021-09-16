@@ -136,7 +136,7 @@ export const request_LigandBindingSite = (chemid:string, struct:string) => {
 	};
 };
 
-export const request_Prediction = (chemid:string, src_struct:string,src_tax_id:number, tgt_struct:string,tgt_tax_id:number) => {
+export const request_Prediction = (chemid:string, src_struct:string, tgt_struct:string) => {
 	return async (dispatch: Dispatch<BSitesActions>) => {
 		dispatch({
 			type: "REQUEST_LIGAND_PREDICTION",
@@ -144,9 +144,9 @@ export const request_Prediction = (chemid:string, src_struct:string,src_tax_id:n
 		getNeo4jData("static_files", { endpoint: "ligand_prediction", params: {
 									chemid,
 									src_struct,
-									src_tax_id,
+									// src_tax_id,
 									tgt_struct,
-									tgt_tax_id
+									// tgt_tax_id
 		} })
 			.then(
 				response => {

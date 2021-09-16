@@ -439,9 +439,9 @@ const BindingSites = () => {
 			dispatch(action.request_Prediction(
 				cur_lig?.ligand.chemicalId as string,
 				cur_struct?.rcsb_id as string,
-				cur_struct?._organismId[0] as number,
+				// cur_struct?._organismId[0] as number,
 				cur_tgt!.struct.rcsb_id,
-				cur_tgt.struct._organismId[0]
+				// cur_tgt.struct._organismId[0]
 
 				))
 
