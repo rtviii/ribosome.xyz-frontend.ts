@@ -342,7 +342,7 @@ const _MainContentCard: React.FC<ReduxProps> = prop => {
                 </Typography>
               </Container>
 </Link>
-            <Link to='/rpalign'>
+            <Link to='/super'>
               <Container
                 className={classes.tool}
               >

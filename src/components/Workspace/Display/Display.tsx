@@ -24,7 +24,7 @@ const Display = () => {
         <Redirect to="/home" />
       </Route>
       <Switch>
-        <Route exact path = "/rpalign" component                        = {ProteinAlignment} />
+        <Route exact path = "/super" component                        = {ProteinAlignment} />
         <Route exact path = "/home"                           component = {Home2               } />
         <Route exact path = "/structs"                        component = {WorkspaceCatalogue } />
         <Route exact path = "/structs/:pdbid"                 component = {StructurePage      } />

@@ -148,7 +148,7 @@ Quantitative methods have been developed for the analysis of the ribosome exit t
 
 # RP Alignment
 
-[ /rpalign ](https://ribosome.xyz/rpalign)
+[ /super ](https://ribosome.xyz/super)
 
 
 Not sure what to say here. Will stick a molecular viewer at some point to visualize superimposed chains on the fly.

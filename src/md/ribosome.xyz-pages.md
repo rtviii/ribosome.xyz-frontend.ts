@@ -67,7 +67,7 @@ Listed here are models of the ribosome deposited to the Protein Data Bank (inclu
 
 [/rps](www.ribosome.xyz/rps)
 
-Gathered here are ribosomal proteins that appear in all structures organized into the classes as defined in Ban. All individual chains are available for download, structural- and sequences [ alignment ](www.ribosome.xyz/rpalign).  
+Gathered here are ribosomal proteins that appear in all structures organized into the classes as defined in Ban. All individual chains are available for download, structural- and sequences [ alignment ](www.ribosome.xyz/super).  
 
 
 # Ribosomal RNA
