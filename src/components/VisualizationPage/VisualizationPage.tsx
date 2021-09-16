@@ -35,6 +35,7 @@ import { struct_change } from '../../redux/reducers/Visualization/ActionTypes';
 import { ToastProvider, useToasts } from 'react-toast-notifications';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
 import StructHero from '../../materialui/StructHero';
+import { parentPort } from 'worker_threads';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -62,8 +63,8 @@ const useSelectStyles = makeStyles((theme: Theme) =>
 
 interface StructSnip {
   rcsb_id: string,
-  title: string,
-  any?: any
+  title  : string,
+  any?   : any
 }
 
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
@@ -74,16 +75,16 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
       width: "100%"
     }
   }))()
-  const { addToast } = useToasts();
-  const current_struct = useSelector((state: AppState) => state.visualization.structure.struct)
-  const chain_to_highlight:string |null = useSelector((state: AppState) => state.visualization.structure.highlighted_chain)
+  const current_struct                  = useSelector((state: AppState) => state.visualization.structure_tab.struct)
+  const chain_to_highlight:string |null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
+  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
+  const { addToast }                    = useToasts();
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
+  const paintStructure = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
     if (newvalue === null) {
       dispatch(struct_change(chain_to_highlight, null))
     } else {
       dispatch(struct_change(null, newvalue))
-
       addToast(`Structure ${newvalue.struct.rcsb_id} is being fetched.`, {
         appearance: 'info',
         autoDismiss: true,
@@ -93,8 +94,9 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
       });
     }
   };
-  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
+
   const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
+
     dispatch(struct_change(newvalue.props.children,current_struct))
     viewerInstance.visual.select(
       {
@@ -107,8 +109,6 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     )
 
   }
-
-
   // const age=2;
 
   const classes = ( makeStyles((theme: Theme) =>
@@ -125,13 +125,24 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   return (
     <>
 
+{/* <div>cur struct {current_struct === null ? "null" :current_struct?.struct.rcsb_id}</div>
+<div>cur chain to highlight {chain_to_highlight === null ? "Null" :" nothing"}</div> */}
+
       <Autocomplete
         className={selectStructStyles.autocomoplete}
-        value={current_struct}
+        // value={current_struct}
+        value={useSelector(( state:AppState ) => state.visualization.structure_tab.struct)}
         options={structs}
-        getOptionLabel={(parent) => parent.struct.rcsb_id}
+        getOptionLabel={(parent) =>  
+          {
+            if (parent.struct === undefined){
+          return "null"
+            }
+            else {return parent.struct.rcsb_id}
+          }
+        }
         // @ts-ignore
-        onChange={handleChange}
+        onChange={paintStructure}
         renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> ({option.struct.citation_title} ) </div>)}
         renderInput={(params) => <TextField {...params} label="Structure" variant="outlined" />}
       />
@@ -142,13 +153,22 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
         style={{width:"100%"}}>
           <InputLabel> Highlight Chain</InputLabel>
           <Select
-            value={chain_to_highlight}
+            value   ={null}
             onChange={handleSelectHighlightChain}
             // @ts-ignore
-            renderValue={(value)=><div>{ value === undefined && value===null ? "" : value }</div>}
+            renderValue={(value)=>{ 
+              if (value === null){
+                return "null"
+              }
+              else{
+                return            <div>val</div> 
+                // return            <div>{ value === undefined || value===null ? "" : value }</div> 
+              }
+          }}
             >
-
-            {current_struct !== null && current_struct !== undefined ? [...current_struct?.rnas,...current_struct?.rps.sort(nomenclatureCompareFn), ].map((i) => <MenuItem value={i.strands}>{i.noms.length>0 ? i.noms[0] : "Unclassified Polymer"}</MenuItem>) : null}
+              {/* {useSelector(( state:AppState ) => state.visualization.structure_tab.struct?.struct) === null ? null : <MenuItem value="f">{}</MenuItem>} */}
+            {current_struct !== null && current_struct !== undefined ? [...current_struct?.rnas,...current_struct?.rps.sort(nomenclatureCompareFn), ]
+              .map((i) => <MenuItem value={i.strands}>{i.noms.length>0 ? i.noms[0] : "Unclassified Polymer"}</MenuItem>) : null}
           </Select>
         </FormControl>
       </ListItem>
@@ -338,33 +358,42 @@ const VisualizationPage = (props: any) => {
   const  history   : any            = useHistory ();
   const  params                     = history    .location.state;
   const  dispatch                   = useDispatch();
+  const {addToast } = useToasts();
 
   useEffect(() => {
-    console.log("Got parameters:", params);
+
     if (params === undefined || Object.keys(params).length < 1) { return }
 
-    if ((params as {
-      banClass: string,
-      parent: string
-    }).parent) {
-      getCifChainByClass(params.banClass, params.parent)
-    }
+
     else if ((params as { struct: string }).struct) {
-      
+
       getNeo4jData('neo4j',{endpoint:"get_struct",params:{pdbid:params.struct}}).then(r=>{
 
-        var x:NeoStruct = {}as NeoStruct
-        x[ 'ligands' ] = r.data.ligands.map(( _:any ) =>_.chemicalId)
-        x[ 'struct' ] = r.data.structure
-        x[ 'rps' ] = r.data.rps.map(( _:any)=> ( {strands:_.entity_poly_strand_id, noms:_.nomenclature} ))
-        x[ 'rnas' ] = r.data.rnas.map(( _ :any)=> ( {strands:_.entity_poly_strand_id, noms:_.nomenclature} ))
-        console.log('assembled struct', x);
-        
+        if (r.data.length < 1){
+        dispatch(struct_change(null,null))
+        }
+        else{
 
-        dispatch(struct_change(null,x))
+          var x:any ={}
+          x[ 'ligands' ] = r.data[0].ligands  .map(( _:any ) =>_.chemicalId)
+          x[ 'struct'  ] = r.data[0].structure
+          x[ 'rps'     ] = r.data[0].rps      .map(( _:any)=> ( {strands:_.entity_poly_strand_id, noms:_.nomenclature} ))
+          x[ 'rnas'    ] = r.data[0].rnas     .map(( _ :any)=> ( {strands:_.entity_poly_strand_id, noms:_.nomenclature} ))
+
+          dispatch(struct_change(null,x))
+
+      addToast(`Structure ${x.struct.rcsb_id} is being fetched.`, {
+        appearance: 'info',
+        autoDismiss: true,
       })
-      setstruct(params.struct)
-      selectStruct(params.struct)
+        }
+          
+      })
+      // setstruct(params.struct)
+      // selectStruct(params.struct)
+      // dispatch(struct_change(null,null))
+
+
     }
   },
     [
@@ -373,9 +402,9 @@ const VisualizationPage = (props: any) => {
     )
 
   const [inView, setInView] = useState<any>({});
-  const [inViewData, setInViewData] = useState<any>({});
-  const [structdata, setstruct] = useState<RibosomeStructure>({} as RibosomeStructure);
-  const [protClassInfo, setProtClassInfo] = useState<any>({});
+  // const [inViewData, setInViewData] = useState<any>({});
+  // const [structdata, setstruct] = useState<RibosomeStructure>({} as RibosomeStructure);
+  // const [protClassInfo, setProtClassInfo] = useState<any>({});
 
   useEffect(() => {
     var options = {
@@ -394,7 +423,7 @@ const VisualizationPage = (props: any) => {
     }
     else
       if ((params as { struct: string }).struct) {
-        dispatch(struct_change(null, params.struct))
+        // dispatch(struct_change(null, params.struct))
         selectStruct(params.struct)
       }
   }, [])
@@ -442,22 +471,20 @@ const VisualizationPage = (props: any) => {
       }).then(
         resp => {
           const respdata: RibosomeStructure = (flattenDeep(resp.data)[0] as any).structure;
-          setstruct(respdata);
-          setInViewData({ type: "struct", data: respdata })
+          // setstruct(respdata);
+          // setInViewData({ type: "struct", data: respdata })
         },
 
         err => {
           console.log("Got error on /neo request", err);
         }
       );
-
-
     }
     else if (inView.type == "chain") {
 
       getNeo4jData("neo4j", { endpoint: "nomclass_visualize", params: { ban: inView.id } }).then(r => {
-        setInViewData({ type: "chain", data: r.data })
-        setProtClassInfo(r.data[0])
+        // setInViewData({ type: "chain", data: r.data })
+        // setProtClassInfo(r.data[0])
       })
     }
 
@@ -465,10 +492,12 @@ const VisualizationPage = (props: any) => {
   }, [inView])
 
   const RenderInViewInfo = ({ type, structdata, protClassInfo }: {
-    type: string, structdata: RibosomeStructure, protClassInfo: {
-      class: string,
-      comments: string[][],
-      members: { parent: string, chain: string }[]
+    type         : string ,
+     structdata   : RibosomeStructure,
+     protClassInfo: {
+     class        : string ,
+     comments     : string[][],
+     members      : { parent: string , chain: string }[]
     }
   }) => {
     switch (type) {

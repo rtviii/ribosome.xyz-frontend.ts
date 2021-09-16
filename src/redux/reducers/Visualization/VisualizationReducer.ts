@@ -5,16 +5,16 @@ import { VisualizationActions } from './ActionTypes'
 
 
 export interface VisualizationReducerState{
-    component_tab: "rna" | "protein"|"structure",
-	structure    :{
+    component_tab: "rna_tab" | "protein_tab"|"structure_tab",
+	structure_tab    :{
 		struct            :NeoStruct|null,
 		highlighted_chain :string   |null
 	},
-	protein:{
+	protein_tab:{
 		class :BanClass|null,
 		parent:string  |null
 	},
-	rna:{
+	rna_tab:{
 		class :RnaClass| null,
 		parent:string  | null
 	}
@@ -22,16 +22,16 @@ export interface VisualizationReducerState{
 }
 
 const init:VisualizationReducerState = {
-	component_tab:"structure",
-	structure:{
+	component_tab:"structure_tab",
+	structure_tab:{
 		highlighted_chain :null,
 		struct            :null
 	},
-	protein:{
+	protein_tab:{
 		class :null,
 		parent:null
 	},
-	rna:{
+	rna_tab:{
 		class :null,
 		parent:null
 	}
@@ -49,23 +49,25 @@ export const VisualizationReducer = (
 	return {...state, component_tab:action.tab}
 
 	case "PROTEIN_CHANGE":
-	return {...state, protein:{
+	return {...state, protein_tab:{
 		class:action.class,
 		parent:action.parent
 	}}
 
 	case "RNA_CHANGE":
-	return {...state, rna:{
+	return {...state, rna_tab:{
 		class:action.class,
 		parent:action.parent
 	}}
 
 	case "STRUCTURE_CHANGE":
+		console.log("assigned state with ", action);
+		
 		return {
 			...state,
-			structure:{
+			structure_tab:{
 				highlighted_chain:action.highlighted_chain,
-				struct:action.structure
+				struct           :action.structure
 			}
 		}
 	default:

@@ -416,9 +416,8 @@ const BindingSites = () => {
 				set_ligclasses_derived(lig_classes.filter(lc => { return lc.presentIn.filter(str => str.rcsb_id === cur_struct.rcsb_id).length > 0 }))
 
 			}
-			else{
-
-			updateBindingSiteData(cur_struct,cur_lig)
+			else {
+				updateBindingSiteData(cur_struct,cur_lig)
 			}
 
 			if ( cur_vis_tab ==='origin') {
@@ -440,7 +439,11 @@ const BindingSites = () => {
 			dispatch(action.request_Prediction(
 				cur_lig?.ligand.chemicalId as string,
 				cur_struct?.rcsb_id as string,
-				cur_tgt!.struct.rcsb_id))
+				cur_struct?._organismId[0] as number,
+				cur_tgt!.struct.rcsb_id,
+				cur_tgt.struct._organismId[0]
+
+				))
 
 			if (cur_vis_tab==='prediction'){
 				viewerInstance.visual.update({

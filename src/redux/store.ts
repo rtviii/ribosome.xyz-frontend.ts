@@ -28,7 +28,6 @@ const collapseFilter = (action: any) => {
 const logger = createLogger({
   predicate: (getState, action:AppActions) =>  ![
   STRUCTURE_CHANGE,
-  STRUCTURE_CHANGE,
   CURRENT_STRUCTURE_CHANGE,
   CURRENT_LIGAND_CHANGE,
   REQUEST_LIGAND_BINDING_SITE,
@@ -53,6 +52,7 @@ const logger = createLogger({
   STRUCTS_SORT_CHANGE          ,
   REQUEST_RNA_CLASS_SUCCESS    ,
   REQUEST_RNA_CLASS_ERR        ,
+  "ANY"
 ].includes( action.type ) ,
    collapsed: collapseFilter });
 

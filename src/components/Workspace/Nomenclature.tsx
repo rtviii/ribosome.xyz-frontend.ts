@@ -84,6 +84,7 @@ export default function Nomenclature() {
     return summary
 
   }
+
   type NomenclatureParams = {
     subcomponent: string | undefined
   }

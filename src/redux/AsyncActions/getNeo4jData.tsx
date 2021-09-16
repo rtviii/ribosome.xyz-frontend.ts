@@ -23,12 +23,13 @@ type StaticFilesEndpoints =
     endpoint:"ligand_prediction",
     params:{
       src_struct: string,
+      src_tax_id: number,
       tgt_struct: string,
+      tgt_tax_id: number,
       chemid    : string,
     }
 
   }
-
 
 interface download_structure {
   endpoint: "download_structure",

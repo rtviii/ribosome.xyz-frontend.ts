@@ -1,14 +1,12 @@
 import   React         , { useEffect, useState } from "react"                        ;
 import { Link          , Route, useParams }      from "react-router-dom"             ;
 import   VisibilityIcon                          from '@material-ui/icons/Visibility';
-
 import {
   Ligand,
   RibosomalProtein,
   RibosomeStructure,
   rRNA,
 } from "../../../redux/RibosomeTypes";
-
 import                                            "./StructurePage.css"                          ;
 import { getNeo4jData } from                      "../../../redux/AsyncActions/getNeo4jData"     ;
 import { flattenDeep } from                       "lodash"                                       ;
@@ -17,7 +15,7 @@ import { AppState } from                          "../../../redux/store"        
 import { useHistory } from                        'react-router-dom'                             ;
 import { ThunkDispatch } from                     "redux-thunk"                                  ;
 import { AppActions } from                        "../../../redux/AppActions"                    ;
-import LoadingSpinner from                        './../../Other/LoadingSpinner'
+// import LoadingSpinner from                        './../../Other/LoadingSpinner'
 import { Tooltip } from                           "react-bootstrap"                              ;
 import { OverlayTrigger } from                    "react-bootstrap"                              ;
 import Card from                                  "@material-ui/core/Card"                       ;
@@ -47,6 +45,7 @@ import { RNACard } from                           "../RNA/RNACard"              
 import { cart_add_item } from                     "../../../redux/reducers/Cart/ActionTypes"     ;
 import { RNAProfile } from "../../../redux/DataInterfaces";
 import { Cart } from "../Cart/Cart";
+import { _StructuresReducer } from "../../../redux/reducers/StructuresReducer/StructuresReducer";
 
  export const CardBodyAnnotation =({ keyname,value,onClick }:{keyname:string,onClick?:any, value:string| string[]|number})=>{
 
@@ -150,13 +149,15 @@ export const StructHeroCard =({rcsb_id, nomedia}:{
 
 
 
-  const [structdata, setstructdata] = useState<GetStructResponseShape>({} as GetStructResponseShape) 
+  const [structdata, setstructdata] = useState<null| GetStructResponseShape>({} as GetStructResponseShape) 
 
   useEffect(() => {
 
   getNeo4jData("neo4j",{endpoint:"get_struct",params:{
     pdbid:rcsb_id
   }}).then(r=>{
+    console.log("Got data:", r.data);
+    
     setstructdata(r.data[0])
   }, e=>{
     console.log("errored out requesting struct", e);
@@ -174,7 +175,7 @@ export const StructHeroCard =({rcsb_id, nomedia}:{
     setOpen(!authorsOpen);
   };
 
-  return structdata.structure !== undefined ? (
+  return structdata !== null && structdata.structure !== undefined ? (
     <Card>
           <CardHeader
             title     = {`${structdata.structure.rcsb_id}`}
@@ -262,10 +263,15 @@ export const StructHeroCard =({rcsb_id, nomedia}:{
               <Grid item>
 
                 <Button 
-                size="small"
-                style={{textTransform:"none"}}
-                
-                onClick={() => { history.push({ pathname: `/vis`, state: { struct: structdata.structure.rcsb_id } }) }}>
+                size   ="small"
+                style  ={{textTransform:"none"}}
+                onClick={() => { 
+                  
+                  console.log("sending params to vis:", { pathname: `/vis`, state: { 
+                    struct: structdata.structure.rcsb_id 
+                  }});
+                  
+                  history.push({ pathname: `/vis`, state: { struct: structdata.structure.rcsb_id } }) }}>
                   <VisibilityIcon />
           Visualize
           </Button>
@@ -384,9 +390,8 @@ const StructurePage: React.FC<StructurePageProps> = (
     switch (activecategory) {
       case "protein":
         return (
-          lsu.length < 1 ? <SimpleBackdrop/> :
+        structdata === null ? <SimpleBackdrop/> :
           <Grid  item container  spacing={1}>
-
             <Grid item justify="flex-start" alignItems='flex-start' alignContent='flex-start' container xs={4} spacing={1}>
               <Grid item xs={12} style={{ paddingTop: "10px" }} >
                 <Typography color="primary" variant="h4">
