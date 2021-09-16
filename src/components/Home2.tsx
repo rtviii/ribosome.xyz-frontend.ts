@@ -4,8 +4,6 @@ import pdb from "./../static/pdb.png";
 import pfam from "./../static/pfam.gif";
 import raylogo from             "./../static/ray-transp-logo.png"        ;
 import ubc from                 "./../static/ubc-logo.png"               ;
-import gatech from              "./../static/gatech.png"                 ;
-import InlineSpinner from       "./Other/InlineSpinner"                  ;
 import { DashboardButton } from "../materialui/Dashboard/Dashboard"       ;
 import Grid from                "@material-ui/core/Grid"                  ;
 import                          './Home.css'
@@ -175,22 +173,17 @@ export const Home2 = () => {
 	)
 }
 
-
-
 const MainContent = () =>{
 
-	const structnumber = useSelector(( state:AppState ) => state.structures.derived_filtered.length)
-	 const [protn, setsprotn] = useState<number>(0)
-
-
-	 const history = useHistory()
+	const  structnumber             = useSelector        (( state:AppState ) => state.structures.derived_filtered.length)
+	 const [protn       , setsprotn] = useState   <number>(0                                                             )
+	 const  history                  = useHistory         (                                                              )
 	useEffect(() => {
 		getNeo4jData('neo4j',{endpoint:'proteins_number', params:null}).then(r=> setsprotn(r.data[0]))
 		return () => {
 		}
 	}, [])
 	const rnan         = useSelector(( state:AppState ) => Object.values(state.rna.rna_classes_derived).reduce((a,b)=>{ return a + b.length}, 0))
-
 	const mainstyles   = ( makeStyles((theme: Theme) =>
     createStyles({
       root: {
@@ -251,7 +244,7 @@ return(
 		<Grid container item style={{  padding: "10px" }} alignItems="flex-start"  alignContent='flex-start' xs={12} spacing={3}>
 
 			<Grid item xs={4}>
-				<img src={raylogo} className={mainstyles.logo} />
+				<img src={raylogo} className={mainstyles.logo}/>
 			</Grid>
 
 			<Grid item xs={8} alignContent='center' alignItems='center'>

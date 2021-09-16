@@ -16,6 +16,10 @@ options undefined  when returning from a protclass link to a ligand prediction.
 
 # General
 
+
+- [ ] Clean up the unused files and npm installs
+
+- [ ] Parameter-passing everywhere
 - [ ] 3d align page downloads workable
 - [ ] certain structs (?7k8f) don't load
 - [ ] regenerate taxonomy
@@ -23,7 +27,15 @@ options undefined  when returning from a protclass link to a ligand prediction.
 - [ ] species-search bugs (abstract the tax-tree component out)
 
 
+# RNA Page
 
+- [ ] Downloads as csvs
+- [ ] Wrong router parametrs crash the show
+
+
+# Structure Page
+
+- [ ] Layout, alphabetical protein/rna layout
 
 # Binding Sites
 

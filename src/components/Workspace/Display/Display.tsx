@@ -35,9 +35,8 @@ const Display = () => {
         <Route exact path = "/rnas/:rnaclass"                 component = {RNACatalogue       } />
         <Route exact path = "/rnas"                           component = {RNACatalogue       } />
         <Route exact path = "/bindingsites"                   component = {BindingSites         } />
-        {/* <Route exact path = "/rpclassification"               component = {RPClassification   } /> */}
         <Route exact path = "/vis"                            component = {VisualizationPage  } />
-        <Route exact path = "/nomenclature"                            component = {Nomenclature  } />
+        <Route       path = "/nomenclature/:subcomponent?" component = {Nomenclature } />
       </Switch>
     </div>
 
