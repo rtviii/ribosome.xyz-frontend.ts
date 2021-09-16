@@ -219,7 +219,7 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
         <ListSubheader>Tools</ListSubheader>
         <MenuItem key='new1' icon={eye} menutext="Visualization" linkto='/vis' />
         {/*  */}
-        <MenuItem key='new1' icon={align} menutext="3D Superimposition" linkto='/rpalign' /> 
+        <MenuItem key='new1' icon={align} menutext="3D Superimposition" linkto='/super' /> 
         <MenuItem key='new1' icon={ligands} menutext="Ligands/Binding Sites" linkto='/bindingsites' />
 
       <ListItem button key={"wspace-dash"} onClick={() => {
