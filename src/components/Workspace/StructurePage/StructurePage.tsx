@@ -1,14 +1,12 @@
 import   React         , { useEffect, useState } from "react"                        ;
 import { Link          , Route, useParams }      from "react-router-dom"             ;
 import   VisibilityIcon                          from '@material-ui/icons/Visibility';
-
 import {
   Ligand,
   RibosomalProtein,
   RibosomeStructure,
   rRNA,
 } from "../../../redux/RibosomeTypes";
-
 import                                            "./StructurePage.css"                          ;
 import { getNeo4jData } from                      "../../../redux/AsyncActions/getNeo4jData"     ;
 import { flattenDeep } from                       "lodash"                                       ;
@@ -262,10 +260,15 @@ export const StructHeroCard =({rcsb_id, nomedia}:{
               <Grid item>
 
                 <Button 
-                size="small"
-                style={{textTransform:"none"}}
-                
-                onClick={() => { history.push({ pathname: `/vis`, state: { struct: structdata.structure.rcsb_id } }) }}>
+                size   ="small"
+                style  ={{textTransform:"none"}}
+                onClick={() => { 
+                  
+                  console.log("sending params to vis:", { pathname: `/vis`, state: { 
+                    struct: structdata.structure.rcsb_id 
+                  }});
+                  
+                  history.push({ pathname: `/vis`, state: { struct: structdata.structure.rcsb_id } }) }}>
                   <VisibilityIcon />
           Visualize
           </Button>

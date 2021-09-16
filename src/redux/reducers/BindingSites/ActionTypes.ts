@@ -95,12 +95,6 @@ export const _partial_state_change = (statelike_slice:Partial<BindingSitesReduce
 } )
 
 
-// export const _data_field_change = (reducer_state_key: keyof BindingSitesReducerState, datum:any )=>( {
-// 	type: 'ARBITRARY_DATA_FIELD_CHANGE',
-// 	reducer_state_key,
-// 	datum
-// } )
-
 
 export const current_struct_change=(struct:BindingSite| null):currentStructureChange =>( {
 	type           : "CURRENT_STRUCTURE_CHANGE",
@@ -142,7 +136,7 @@ export const request_LigandBindingSite = (chemid:string, struct:string) => {
 	};
 };
 
-export const request_Prediction = (chemid:string, src_struct:string, tgt_struct:string) => {
+export const request_Prediction = (chemid:string, src_struct:string,src_tax_id:number, tgt_struct:string,tgt_tax_id:number) => {
 	return async (dispatch: Dispatch<BSitesActions>) => {
 		dispatch({
 			type: "REQUEST_LIGAND_PREDICTION",
@@ -150,7 +144,9 @@ export const request_Prediction = (chemid:string, src_struct:string, tgt_struct:
 		getNeo4jData("static_files", { endpoint: "ligand_prediction", params: {
 									chemid,
 									src_struct,
-									tgt_struct
+									src_tax_id,
+									tgt_struct,
+									tgt_tax_id
 		} })
 			.then(
 				response => {
