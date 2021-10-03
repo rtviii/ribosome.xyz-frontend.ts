@@ -30,7 +30,9 @@ export interface gotopage {type: typeof GOTO_PAGE_STRUCTS; page_id:number}
 export interface nextpage {type: typeof NEXT_PAGE_STRUCTS}
 export interface prevpage {type: typeof PREV_PAGE_STRUCTS}
 
-export interface requestStructsSuccess  {type: typeof REQUEST_STRUCTS_SUCCESS;payload: NeoStruct[]}
+export interface requestStructsSuccess  {
+  type   : typeof REQUEST_STRUCTS_SUCCESS;
+  payload: NeoStruct[]}
 export interface requestStructsGo       {type: typeof REQUEST_STRUCTS_GO;}
 export interface requestStructsErr      {type: typeof REQUEST_STRUCTS_ERR;error: Error;}
 

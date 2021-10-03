@@ -103,7 +103,6 @@ export const FilterPredicates: Record<
         .includes(value as string);
     }
   },
-
   YEAR: {
     STRUCTURE: value => (item: ApplicationDataTypes) => {
       var struct = item as NeoStruct;
@@ -162,7 +161,7 @@ export const FilterPredicates: Record<
 
       return lig.presentIn.reduce(
         // oute reduce: for eveyr structure, check wether it is present in the selected species
-        (structWiseAccumulator :boolean, struct) => structWiseAccumulator  || struct._organismId.reduce(
+        (structWiseAccumulator :boolean, struct) => structWiseAccumulator  || struct.src_organism_ids.reduce(
         // inner reduce: for every species associated with a structure, check whether it is inside fitler values
         (inStructSpeciesAccumulator: boolean, taxid) =>inStructSpeciesAccumulator || (value as number[]).includes(taxid),false)
         ,false)

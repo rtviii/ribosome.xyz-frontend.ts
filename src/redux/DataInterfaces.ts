@@ -7,7 +7,7 @@ import {  RibosomeStructure,  Protein, RNA, Ligand, ProteinClass, RNAClass} from
 export interface NeoStruct{
   struct   :  RibosomeStructure;
   ligands  :  string[];
-  rps      :  Array<{ noms: string[]; strands: string }>;
+  rps      :  Array<{noms:string[]; strands: string }>;
   rnas     :  Array<{noms:string[], strands:string}>
 }
 
@@ -113,8 +113,8 @@ export interface RNAProfile {
 }
 
 export interface StructureWithLigand{
-  _organismId          : number[];
-  _organismName        : string[];
+  src_organism_ids     : number[];
+  src_organism_names   : string[];
   rcsb_id              : string;
   expMethod            : string;
   resolution           : number;

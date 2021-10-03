@@ -131,15 +131,13 @@ export const RNACard: React.FC<RNACardProps> = (prop) => {
                 variant="body1"
               >
                 {prop.e.nomenclature.length> 0 ?
+                <Typography  onClick={()=>{history.push('/rnas/')}}>{prop.e.nomenclature}</Typography>
                 
-                <Typography  onClick={()=>{history.push('/rnas/')}}>{prop.e.nomenclature[0]}</Typography>
-                
-                 : prop.e.description}
+                 : `Unidentified(${prop.e.description })`}
               </Typography>
             </Grid>
             {
               prop.displayPill ?
-
                 <Grid item >
                   <ChainParentPill parent_id = {prop.e.struct as string} strand_id = {prop.e.strand as string} />
                 </Grid>: ""

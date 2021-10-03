@@ -26,7 +26,7 @@ type StaticFilesEndpoints =
       chemid    : string,
     }
 
-  }
+}
 
 interface download_structure {
   endpoint: "download_structure",
@@ -214,7 +214,7 @@ interface gmoNomClass {
 }
 interface getAllLigands {
   endpoint: 'get_all_ligands',
-  params: null
+  params  : null
 }
 
 export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {

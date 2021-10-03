@@ -146,7 +146,6 @@ export const StructHeroCard =({rcsb_id, nomedia}:{
   })) )()
 
 
-
   const [structdata, setstructdata] = useState<null| GetStructResponseShape>({} as GetStructResponseShape) 
 
   useEffect(() => {
@@ -160,10 +159,6 @@ export const StructHeroCard =({rcsb_id, nomedia}:{
   }, e=>{
     console.log("errored out requesting struct", e);
   })
-  
-
-
-
 }, [])
 
   const dispatch               = useDispatch()
@@ -265,9 +260,9 @@ export const StructHeroCard =({rcsb_id, nomedia}:{
                 style  ={{textTransform:"none"}}
                 onClick={() => { 
                   
-                  console.log("sending params to vis:", { pathname: `/vis`, state: { 
-                    struct: structdata.structure.rcsb_id 
-                  }});
+                  // console.log("sending params to vis:", { pathname: `/vis`, state: { 
+                  //   struct: structdata.structure.rcsb_id 
+                  // }});
                   
                   history.push({ pathname: `/vis`, state: { struct: structdata.structure.rcsb_id } }) }}>
                   <VisibilityIcon />
@@ -326,20 +321,33 @@ Download
     };
 type StructurePageProps = OwnProps & ReduxProps & DispatchProps;
 const StructurePage: React.FC<StructurePageProps> = (
+  // useEffect(() => {
+
+    
+  //   console.log("Got rna class ", params);
+    
+  //   if (![5.8,5, 12,16,21,23,25,28,35].includes(chosenRnaClass) ){
+  //     dispatch(select_rna_class('5'))
+  //   }
+  // }, [])
+
   props: StructurePageProps
 ) => {
 
   const { pdbid }: { pdbid: string }  =  useParams();
+  
+
   const [structdata, setstruct]       =  useState<RibosomeStructure>();
   const [protdata, setprots]          =  useState<Protein[]>([]);
   const [rrnas, setrrnas]             =  useState<RNA[]>([]);
   const [ligands, setligands]         =  useState<Ligand[]>([]);
   const [ions, setions]               =  useState(true);
 
+  const history       = useHistory()
   const activecat                     =  useSelector(( state:AppState ) => state.Interface.structure_page.component)
-  
-
   useEffect(() => {
+
+   
     getNeo4jData("neo4j", {
       endpoint: "get_struct",
       params: { pdbid: pdbid },
@@ -348,6 +356,11 @@ const StructurePage: React.FC<StructurePageProps> = (
         const respdat: GetStructResponseShape = flattenDeep(
           resp.data
         )[0] as GetStructResponseShape;
+       if (respdat === undefined)  {
+      history.push('/structs')
+        return
+       }
+
 
 
         setstruct(respdat.structure);
