@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import { RNAProfile } from '../../DataInterfaces';
-import { RibosomalProtein, RibosomeStructure } from '../../RibosomeTypes';
+import { Protein, RibosomeStructure } from '../../RibosomeTypes';
 import {CartActions, CartItem} from './ActionTypes'
 
-export function isProt(i:CartItem): i is RibosomalProtein{
-    return (i as RibosomalProtein).entity_poly_strand_id !==undefined;
+export function isProt(i:CartItem): i is Protein{
+    return (i as Protein).entity_poly_strand_id !==undefined;
 }
 export function isStruct(i:CartItem): i is RibosomeStructure{
     return (i as RibosomeStructure).rcsb_id !==undefined;

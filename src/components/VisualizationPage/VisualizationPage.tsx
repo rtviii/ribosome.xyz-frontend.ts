@@ -518,7 +518,7 @@ const VisualizationPage = (props: any) => {
           <Card className={classes.card}>
             <CardHeader
               title={`${structdata.rcsb_id}`}
-              subheader={structdata._organismName}
+              subheader={ structdata.src_organism_ids.length> 0 ? structdata.src_organism_names[0] : ""}
             />
             <CardActionArea>
               <CardMedia
@@ -529,7 +529,7 @@ const VisualizationPage = (props: any) => {
               />
             </CardActionArea>
             <List>
-              <CardBodyAnnotation keyname="Species" value={structdata._organismName} />
+              <CardBodyAnnotation keyname="Species" value={ structdata.src_organism_ids.length> 0 ? structdata.src_organism_names[0] : ""} />
               <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
               < CardBodyAnnotation keyname="Experimental Method" value={structdata.expMethod} />
               < CardBodyAnnotation keyname="Title" value={structdata.citation_title} />

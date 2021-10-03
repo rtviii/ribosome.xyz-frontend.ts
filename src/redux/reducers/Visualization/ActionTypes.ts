@@ -1,6 +1,6 @@
 import { TableHeadClassKey } from "@material-ui/core";
 import { NeoStruct } from "../../DataInterfaces";
-import { BanClass, Ligand, RNAClass } from "../../RibosomeTypes";
+import { ProteinClass, Ligand, RNAClass } from "../../RibosomeTypes";
 import { RnaClass } from "../RNA/RNAReducer";
 
 export const STRUCTURE_CHANGE     = "STRUCTURE_CHANGE"
@@ -19,7 +19,7 @@ export interface structureChange {
 	}
 	export interface proteinChange {
 		type  : typeof PROTEIN_CHANGE
-		class : BanClass|null,
+		class : ProteinClass|null,
 		parent:string|null
 	}
 	export interface rnaChange {
@@ -28,7 +28,7 @@ export interface structureChange {
 		parent:string|null
 }
 
-export const protein_change = (protclass:BanClass|null,parent:string|null):proteinChange =>({
+export const protein_change = (protclass:ProteinClass|null,parent:string|null):proteinChange =>({
 	type:"PROTEIN_CHANGE",
 	parent,
 	class:protclass

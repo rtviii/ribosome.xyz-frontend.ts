@@ -23,7 +23,7 @@ import { CartItem                 , cart_add_item }            from '../../../re
 import { AppState                  }                           from '../../../redux/store'                           ;
 import { Dispatch                  }                           from 'redux'
 import { AppActions                }                           from '../../../redux/AppActions'                      ;
-import { RibosomalProtein         , RibosomeStructure }        from '../../../redux/RibosomeTypes'                   ;
+import { Protein         , RibosomeStructure }        from '../../../redux/RibosomeTypes'                   ;
 import   Chip                                                  from '@material-ui/core/Chip'                         ;
 import   CardHeader                                            from '@material-ui/core/CardHeader/CardHeader'        ;
 import   CardActionArea                                        from '@material-ui/core/CardActionArea/CardActionArea';
@@ -157,7 +157,10 @@ export const ChainParentPill = ({ strand_id, parent_id }: { strand_id: string, p
                 style={{ cursor: "pointer" }}
                 onClick={() => { history.push({ pathname: `/structs/${parent_id}` }) }}
                 title={`${structdata.rcsb_id}`}
-                subheader={structdata._organismName}
+                subheader={
+                  structdata.src_organism_names.length> 0 ? structdata.src_organism_names[0] :" "
+                  // structdata._organismName
+                }
               />
               <CardActionArea>
                 <CardMedia
@@ -167,7 +170,10 @@ export const ChainParentPill = ({ strand_id, parent_id }: { strand_id: string, p
                 />
               </CardActionArea>
               <List>
-                <CardBodyAnnotation keyname="Species" value={structdata._organismName} />
+                <CardBodyAnnotation keyname="Species" value={
+                                    structdata.src_organism_names.length> 0 ? structdata.src_organism_names[0] :" "
+                  // structdata._organismName
+                  } />
                 <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
                 < CardBodyAnnotation keyname="Title" value={structdata.citation_title} />
 
@@ -281,7 +287,7 @@ const useStyles = makeStyles({
 });
 
 interface OwnProps {
-  protein: RibosomalProtein
+  protein: Protein,
   displayPill: boolean
 }
 interface StateProps {
@@ -349,7 +355,7 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
                 prop.handleFilterChange(
                   prop.allFilters as FiltersReducerState,
                   "SPECIES",
-                  prop.protein.rcsb_source_organism_id
+                  prop.protein.src_organism_ids.length > 0 ? prop.protein.src_organism_ids[0] : ""
                 );
               }}
               item

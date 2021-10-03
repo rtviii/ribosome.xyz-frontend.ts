@@ -1,4 +1,3 @@
-import { RibosomalProtein } from './../../RibosomeTypes'
 import { BanClassMetadataFiltType, ProteinActions, ProteinClassFilterTypes, ProteinSortType } from './ActionTypes'
 import { Filter, FilterRegistry } from '../Filters/ActionTypes';
 import { BanClassMetadata, ProteinProfile } from '../../DataInterfaces';
@@ -149,7 +148,7 @@ return rp.parent_resolution >= (value as number[])[0] && rp.parent_resolution <=
       value: "",
       set: false,
       predicate: (value) => (rp) => {
-        return ( rp.nomenclature.reduce((x,y)=>{ return x+y},'') + rp.parent_rcsb_id +rp.rcsb_pdbx_description + rp.pfam_descriptions + rp.rcsb_source_organism_description ).toLowerCase().includes(value)
+        return ( rp.nomenclature.reduce((x,y)=>{ return x+y},'') + rp.parent_rcsb_id +rp.rcsb_pdbx_description + rp.pfam_descriptions + rp.src_organism_names ).toLowerCase().includes(value)
       }
     },
     "SPECIES": {
@@ -157,7 +156,7 @@ return rp.parent_resolution >= (value as number[])[0] && rp.parent_resolution <=
       set      : false,
       predicate: (value) => (rp) => {
         if (value.length ===0){return true}
-        return _.intersection(value, rp.rcsb_source_organism_id).length > 0 
+        return _.intersection(value, rp.src_organism_ids).length > 0 
       }
     },
   },

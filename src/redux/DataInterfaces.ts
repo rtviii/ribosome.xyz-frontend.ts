@@ -1,4 +1,4 @@
-import {  RibosomeStructure,  RibosomalProtein, rRNA, Ligand, BanClass, RNAClass} from "./RibosomeTypes";
+import {  RibosomeStructure,  Protein, RNA, Ligand, ProteinClass, RNAClass} from "./RibosomeTypes";
 
 // DataInterfaces contains declarations for most datatypes that the application
 // uses. Some(non-composite) are imported from RibosomeTypes  non-composite types that also resemble neo4j-schema.
@@ -84,12 +84,12 @@ export interface NeoHomolog {
   parent : string;
   orgname: string[]
   orgid  : number[]
-  protein: RibosomalProtein;
+  protein: Protein;
   title  : string
 
 }
 
-export type ProteinProfile = RibosomalProtein & {
+export type ProteinProfile = Protein & {
 
   parent_resolution: number
   parent_year      : number
@@ -129,11 +129,11 @@ export interface LigandResponseShape  {
   presentIn: StructureWithLigand[]
 };
 export interface BanClassMetadata{
-      banClass : BanClass,
+      banClass : ProteinClass,
       organisms: number[],
       comments : string[][],
       structs  : RibosomeStructure[]
 }
 
 
-export type RXZDataTypes= NeoStruct | RibosomalProtein | RNAProfile | LigandResponseShape | BanClassMetadata;
+export type ApplicationDataTypes = NeoStruct | Protein | RNAProfile | LigandResponseShape | BanClassMetadata;

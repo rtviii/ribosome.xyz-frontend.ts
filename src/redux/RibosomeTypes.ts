@@ -1,9 +1,4 @@
-// Types filtered down from RCSB's API response.
-// * https://data.rcsb.org/graphql/index.html
-
-
 export interface RibosomeStructure {
-
   rcsb_id               : string;
   expMethod             : string;
   resolution            : number;
@@ -23,15 +18,24 @@ export interface RibosomeStructure {
   citation_pdbx_doi    : string
   // keywords
   // custom
-  _organismId   : number[];
-  _organismName : string[];
+  src_organism_ids   : number[];
+  src_organism_names : string[];
 
-  proteins : RibosomalProtein[]       ;
-  rnas     : rRNA            [] | null;
+  host_organism_ids   : number[];
+  host_organism_names : string[];
+
+  proteins : Protein[]       ;
+  rnas     : RNA            [] | null;
   ligands  : Ligand          [] | null;
 
 }
-export interface rRNA { 
+
+
+
+
+
+
+export interface RNA { 
 
 
   asym_ids                        : string[],
@@ -40,8 +44,13 @@ export interface rRNA {
   nomenclature                    : RNAClass[]
 
   parent_rcsb_id                  : string       ;
-  rcsb_source_organism_id         : number[]     ;
-  rcsb_source_organism_description: string[]     ;
+
+  src_organism_names : string[],
+  host_organism_names: string[],
+  src_organism_ids   : number[],
+  host_organism_ids  : number[],
+
+
   rcsb_pdbx_description           : string | null;
   // entity_polymer
   entity_poly_strand_id              : string;
@@ -50,22 +59,29 @@ export interface rRNA {
   entity_poly_seq_length             : number;
   entity_poly_polymer_type           : string;
   entity_poly_entity_type            : string;
+
+  // whether this is an elongation factor,etc 
+  ligand_like:boolean
  }
 
 
-export interface RibosomalProtein {
+export interface Protein {
   asym_ids     : string[],
   auth_asym_ids: string[],
 
-  parent_rcsb_id                     : string;
+  parent_rcsb_id    : string;
+  pfam_accessions   : string[]
+  pfam_comments     : string[]
+  pfam_descriptions : string[]
 
+  src_organism_names : string[],
+  host_organism_names: string[],
+  src_organism_ids   : number[],
+  host_organism_ids  : number[],
 
-  pfam_accessions                    : string[]
-  pfam_comments                      : string[]
-  pfam_descriptions                  : string[]
+  // whether this is an elongation factor, etc.
+  ligand_like:boolean
 
-  rcsb_source_organism_id            : number[];
-  rcsb_source_organism_description   : string[];
   uniprot_accession                  : string[]
 
   rcsb_pdbx_description              : string | null;
@@ -77,7 +93,7 @@ export interface RibosomalProtein {
   entity_poly_polymer_type           : string;
   entity_poly_entity_type            : string;
 
-  nomenclature                       : BanClass[];
+  nomenclature                       : ProteinClass[];
 }
 
 export interface Ligand {
@@ -109,8 +125,10 @@ export interface PFAMFamily {
 }
 
 export interface NomenclatureClass {
-  class_id: BanClass;
+  class_id: ProteinClass;
 }
+
+
 
 export type RNAClass = 
 "5SrRNA"|
@@ -125,7 +143,7 @@ export type RNAClass =
 "mRNA"|
 "tRNA"
 
-export type BanClass =
+export type ProteinClass =
   | "eL39"
   | "eL38"
   | "eL37"

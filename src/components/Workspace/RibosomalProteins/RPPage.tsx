@@ -18,7 +18,7 @@ import RibosomalProteinCard from                                                
 import Typography from                                                                    "@material-ui/core/Typography"                         ;
 import { DashboardButton } from                                                           "../../../materialui/Dashboard/Dashboard"              ;
 import { Cart } from                                                                          "./../../Workspace/Cart/Cart"                          ;
-import { RibosomalProtein } from                                                          "../../../redux/RibosomeTypes"                         ;
+import { Protein } from                                                          "../../../redux/RibosomeTypes"                         ;
 import Backdrop from                                                                      "@material-ui/core/Backdrop"                           ;
 import _ from                                                                             "lodash"                                               ;
 import DropdownTreeSelect from                                                            "react-dropdown-tree-select"                           ;
@@ -59,9 +59,9 @@ const BulkDownloadMenu=()=> {
     bulkDownload[0].push("pfam_accessions")
     proteins.map((v,i) => bulkDownload[i+1].push(v.pfam_accessions))
     bulkDownload[0].push("source_organisms_id")
-    proteins.map((v,i) => bulkDownload[i+1].push(v.rcsb_source_organism_id))
+    proteins.map((v,i) => bulkDownload[i+1].push(v.src_organism_ids))
     bulkDownload[0].push("source_organisms_description")
-    proteins.map((v,i) => bulkDownload[i+1].push(v.rcsb_source_organism_description))
+    proteins.map((v,i) => bulkDownload[i+1].push(v.src_organism_names))
     bulkDownload[0].push("uniprot_accession")
     proteins.map((v,i) => bulkDownload[i+1].push(v.uniprot_accession))
     bulkDownload[0].push("rcsb_description")
@@ -112,7 +112,7 @@ const BulkDownloadMenu=()=> {
 
 
 interface ReduxProps{
-  current_rps      : RibosomalProtein[]
+  current_rps      : Protein[]
   pagestotal       :  number
   currentpage      :  number
 }
@@ -349,7 +349,7 @@ const classes = useRxztheme();
            
           {prop.current_rps
             .slice((prop.currentpage - 1) * 20, prop.currentpage * 20)
-            .map((protein: RibosomalProtein) => {
+            .map((protein: Protein) => {
               return (
                 <Grid item xs={12}>
                   <RibosomalProteinCard displayPill={true}protein={ protein }  />

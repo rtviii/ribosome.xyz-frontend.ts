@@ -144,14 +144,14 @@ const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
           struct.struct.citation_title +
           struct.struct.citation_year +
           struct.struct.citation_rcsb_authors +
-          struct.struct._organismName
+          struct.struct.src_organism_names
         ).toLowerCase().includes(value as string) }
    },
    "SPECIES"         : {
      value:[],
      set:false,
      predicate:(value) =>(struct) =>
-       struct.struct._organismId.reduce(
+       struct.struct.src_organism_ids.reduce(
         (accumulator: boolean, taxid) =>
           accumulator || (value as number[]).includes(taxid),
         false

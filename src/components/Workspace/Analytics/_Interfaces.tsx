@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 // import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
-import { Ligand, rRNA } from "../../../redux/RibosomeTypes";
+import { Ligand, RNA } from "../../../redux/RibosomeTypes";
 import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
-import { Button, Card, Col, Form } from "react-bootstrap";
+import { Button, Card,Form } from "react-bootstrap";
 import "./Interfaces.css"
 // import { useParams } from "react-router-dom";
-import { filter, flattenDeep, isEmpty, uniq } from "lodash";
+import {  flattenDeep, isEmpty  } from "lodash";
 import { Accordion } from "react-bootstrap";
 import fileDownload from "js-file-download";
 import downicon from './../../../static/download.png'
@@ -14,7 +14,7 @@ import pic from './../../../static/3j9m_gdp.png'
 
 interface InterfacesProp {
   type  : "ligand" | "rna";
-  target: Ligand | rRNA;
+  target: Ligand | RNA;
 }
 
 interface Response {

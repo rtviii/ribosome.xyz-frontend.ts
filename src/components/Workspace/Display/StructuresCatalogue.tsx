@@ -444,7 +444,7 @@ const useCheckboxStyles = makeStyles((theme: Theme) =>
           bulkDownload[0].push("resolution")
           structs.map((v,i)=>bulkDownload[i+1].push(v.struct.resolution))
           bulkDownload[0].push("organisms")
-          structs.map((v,i)=>bulkDownload[i+1].push(v.struct._organismName))
+          structs.map((v,i)=>bulkDownload[i+1].push(v.struct.src_organism_names))
           bulkDownload[0].push("ligands")
           structs.map((v,i)=>bulkDownload[i+1].push(v.ligands))
       

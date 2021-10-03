@@ -1,10 +1,7 @@
 import {  Dispatch } from "redux";
 import { getNeo4jData } from "../../AsyncActions/getNeo4jData";
-import { BanClassMetadata, NeoHomolog, ProteinProfile} from './../../DataInterfaces'
+import { BanClassMetadata, ProteinProfile} from './../../DataInterfaces'
 import { flattenDeep } from "lodash";
-import { BanClass, RibosomalProtein } from "../../RibosomeTypes";
-import { filterChange } from "../Filters/ActionTypes";
-import { TypeOfExpression } from "typescript";
 import { AppActions } from "../../AppActions";
 
 export const REQUEST_ALL_PROTEINS_GO      = "REQUEST_ALL_PROTEINS_GO"     ;

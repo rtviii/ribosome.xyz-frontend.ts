@@ -17,7 +17,7 @@ import AppBar from                                                     '@materia
 import Toolbar from                                                    '@material-ui/core/Toolbar'                   ;
 import Typography from                                                 '@material-ui/core/Typography'                ;
 import CloseIcon from                                                  '@material-ui/icons/Close'                    ;
-import { RibosomalProtein, RibosomeStructure } from                    '../../../redux/RibosomeTypes'
+import { Protein, RibosomeStructure } from                    '../../../redux/RibosomeTypes'
 import DeleteIcon from                                                 '@material-ui/icons/Delete'                   ;
 import { cart_remove_item, toggle_cart, toggle_cart_item_select } from '../../../redux/reducers/Cart/ActionTypes'
 import {CartItem} from                                                 './../../../redux/reducers/Cart/ActionTypes'
@@ -97,7 +97,10 @@ export const Cart= () => {
       for( var it of selectedItems) {
         if(isStruct(it)){
 
-            summary.push([ 'riboxyz_workspace_structure',it.rcsb_id, it.citation_title, it.expMethod,`${ it.resolution }Å`,it.citation_year, it._organismId,it.pdbx_keywords_text  ])
+            summary.push([ 'riboxyz_workspace_structure',it.rcsb_id, it.citation_title, it.expMethod,`${ it.resolution }Å`,it.citation_year, 
+            it.src_organism_ids[0]
+            // it._organismId
+            ,it.pdbx_keywords_text  ])
         }
         if(isRNA(it)){
             summary.push(['riboxyz_workspace_rna', it.description,it.struct + "_" + it.strand,it.parent_method, it.parent_resolution+"Å", it.parent_citation,it.parent_year,it.seq])
@@ -212,7 +215,7 @@ export const Item = ({i,selected}:{ i:CartItem, selected:boolean })=>{
     }
 
 }
-const ProtItem = ({selected,i}:{ selected:boolean,i:RibosomalProtein })=>{
+const ProtItem = ({selected,i}:{ selected:boolean,i:Protein })=>{
 
     const history = useHistory();
     const dispatch = useDispatch();

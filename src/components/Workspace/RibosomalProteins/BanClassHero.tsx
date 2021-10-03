@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
 import Paper from '@material-ui/core/Paper';
-import { BanClass, RibosomeStructure } from '../../../redux/RibosomeTypes';
+import { ProteinClass, RibosomeStructure } from '../../../redux/RibosomeTypes';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
 import HelpIcon from '@material-ui/icons/Help';
@@ -19,7 +19,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 const BanClassHero = ({ nom_class,  unique_organisms  , comments, structures}:
   {
-    nom_class: BanClass,  unique_organisms: number[],   comments: string[][], structures: RibosomeStructure[]
+    nom_class: ProteinClass,  unique_organisms: number[],   comments: string[][], structures: RibosomeStructure[]
   }) => {
   const pfamcomments = _.flattenDeep(comments).filter(s => s !== "NULL")
   const history      = useHistory();

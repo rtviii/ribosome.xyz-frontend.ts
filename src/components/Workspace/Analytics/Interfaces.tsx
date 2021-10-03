@@ -16,7 +16,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData';
-import { Ligand, RibosomalProtein, RibosomeStructure, rRNA } from '../../../redux/RibosomeTypes';
+import { Ligand, Protein, RibosomeStructure, RNA } from '../../../redux/RibosomeTypes';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -35,8 +35,8 @@ import { DashboardButton } from '../../../materialui/Dashboard/Dashboard';
 
 interface StructDBProfile{
   ligands    :  Ligand[],
-  rnas       :  rRNA[],
-  rps        :  RibosomalProtein[],
+  rnas       :  RNA[],
+  rps        :  Protein[],
   structure  :  RibosomeStructure
 }
 
@@ -128,7 +128,12 @@ const history = useHistory();
         </Typography>
 
         <Typography >
-          {props.structure._organismName[0]}
+          {
+          
+          
+          props.structure.src_organism_names.length > 0 ? props.structure.src_organism_names[0] : ""
+          // props.structure._organismName[0]
+          }
         </Typography>
 
       </CardContent>

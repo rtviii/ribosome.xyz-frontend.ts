@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData'
 import './ExitTunnelPage.css'
 import downicon from './../../../static/download.png'
-import { Ligand, RibosomalProtein, RibosomeStructure, rRNA } from '../../../redux/RibosomeTypes'
+import { Ligand, Protein, RibosomeStructure, RNA } from '../../../redux/RibosomeTypes'
 import {ReactMarkdownElement,md_files} from './../../Other/ReactMarkdownElement'
 import {resolved_tunnels} from './../../../static/tunnel/resolved_tunnels'
 import Paper from "@material-ui/core/Paper";
@@ -63,8 +63,8 @@ interface TunnelWall{
 type StructResponseShape = {
   structure: RibosomeStructure,
   ligands  : Ligand[],
-  rnas     : rRNA[],
-  rps      : RibosomalProtein[]
+  rnas     : RNA[],
+  rps      : Protein[]
 }
 
 const WallChain:React.FC<{banid:string|null, chain:string, resids:ResidueProfile[], pdbid:string}> = ({chain, resids, banid, pdbid}) =>{

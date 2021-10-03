@@ -2,7 +2,7 @@ import axios from "axios";
 import Axios from "axios";
 import qs from 'qs'
 import { RnaClass } from "../reducers/RNA/RNAReducer";
-import { BanClass } from "../RibosomeTypes";
+import { ProteinClass } from "../RibosomeTypes";
 
 const BACKEND: any = process.env.REACT_APP_DJANGO_URL;
 type DjangoAPIs = "neo4j" | "static_files"
@@ -12,9 +12,8 @@ type StaticFilesEndpoints =
   | downloadCifChain
   | download_ligand_nbhd
   | get_tunnel
-  | pairwise_align
+  | align_3d
   | get_static_catalogue
-  // | downloadArchive
   | cif_chain_by_class
   | download_structure
   | ligand_prediction
@@ -23,9 +22,7 @@ type StaticFilesEndpoints =
     endpoint:"ligand_prediction",
     params:{
       src_struct: string,
-      // src_tax_id: number,
       tgt_struct: string,
-      // tgt_tax_id: number,
       chemid    : string,
     }
 
@@ -66,8 +63,8 @@ interface get_tunnel {
     filetype: "report" | "centerline";
   }
 }
-interface pairwise_align {
-  endpoint: "pairwise_align",
+interface align_3d {
+  endpoint: "align_3d",
   params: {
     struct1: string,
     struct2: string,
@@ -79,14 +76,9 @@ interface get_static_catalogue {
   endpoint: 'get_static_catalogue',
   params: null
 }
-// interface downloadArchive {
-//   endpoint: 'downloadArchive',
-//   params  : { 
-//     rna:string[],
-//     structs: string[],
-//     rps    : string[],
-//    }
-// }
+
+
+
 type Neo4jEndpoints =
   nomclass_visualize
   | getStructure
@@ -120,7 +112,7 @@ interface proteins_number {
 interface banclass_annotation {
   endpoint: "banclass_annotation",
   params: {
-    banclass: BanClass
+    banclass: ProteinClass
   }
 }
 
