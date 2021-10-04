@@ -1,6 +1,7 @@
 import { BSitesActions } from './ActionTypes'
-import { BindingSite, LigandBindingSite, LigandClass, LigandPrediction, NeoStruct } from '../../DataInterfaces'
+import { BindingSite, LigandBindingSite, LigandClass, LigandPrediction, MixedLigand, NeoStruct } from '../../DataInterfaces'
 import { Protein } from '../../RibosomeTypes'
+import _ from 'lodash'
 
 
 export interface BindingSitesReducerState{
@@ -11,13 +12,17 @@ export interface BindingSitesReducerState{
 
     visualization_tab: "origin" | 'prediction',
 
-    bsites                : BindingSite[]
-    ligand_classes        : LigandClass[],
-    bsites_derived        : BindingSite[],
-    ligand_classes_derived: LigandClass[],
+    bsites        : BindingSite[],
+    bsites_derived: BindingSite[],
+
+    mixed_ligands: MixedLigand[],
+    factors      : MixedLigand[],
+    antibiotics  : MixedLigand[],
+
 
     current_structure: BindingSite | null,
-    current_ligand   : LigandClass | null,
+
+    current_ligand   : MixedLigand | null,
     current_target   : NeoStruct   | null,
 
     binding_site_data : LigandBindingSite | null,
@@ -26,6 +31,7 @@ export interface BindingSitesReducerState{
 }
 
 const initialstateBindinginSitesReducer:BindingSitesReducerState = {
+
     error      : null,
     is_loading : false,
     errored_out: false,
@@ -33,9 +39,14 @@ const initialstateBindinginSitesReducer:BindingSitesReducerState = {
     visualization_tab: 'origin',
 
     bsites                : [],
-    ligand_classes        : [],
-    bsites_derived        : [],
-    ligand_classes_derived: [],
+    bsites_derived                : [],
+
+    mixed_ligands: [],
+    factors      : [],
+    antibiotics  : [],
+
+
+    // mixed_ligands:MixedLigand[],
 
     current_ligand   : null,
     current_structure: null,
@@ -63,7 +74,49 @@ export const BindingSitesReducer = (
 	case "REQUEST_ALL_BSITES_ERR":
 		return state
 	case "REQUEST_ALL_BSITES_SUCCESS":
-		return {...state, bsites:action.bsites, ligand_classes:action.ligand_classes}
+
+  var antibioitcs:MixedLigand[] = [];
+  var factors    :MixedLigand[] = [];
+  var mixed      :MixedLigand[] = [];
+    
+  action.mixed_ligands.map(r=>{if(r.molecule.chemicalId?.toUpperCase()?.includes("ERY")){
+    console.log(r);
+    
+    alert("Found ery")
+  }})
+
+    action.mixed_ligands.map(l =>{
+      if (l.molecule.description.toLowerCase().includes('mycin')){
+        antibioitcs.push(l)
+      }
+      else if(l.molecule.description.toLowerCase().includes('factor')){
+        factors.push(l)
+      }
+      // else if(l.molecule.description?.toLowerCase().includes('ion')){
+      //   (()=>{})()
+      // }
+      else {
+        mixed.push(l)
+      }
+
+    })
+    
+    
+
+		return {
+      ...state, 
+      bsites        : _.uniqBy(action.mixed_ligands.reduce((acc:BindingSite[],next:MixedLigand)=> [...acc, ...next.present_in.map(bs=>( {
+
+        src_organism_ids      : bs.src_organism_ids,
+        citation_title        : bs.citation_title,
+        expMethod             : bs.expMethod,
+        rcsb_id               : bs.rcsb_id,
+        resolution            : bs.resolution,
+      } ))],[]), 'rcsb_id'),
+      mixed_ligands : mixed      ,
+      factors       : factors    ,
+      antibiotics   : antibioitcs
+    }
 
     case "FILE_REQUEST_ERROR":
   return {...state, is_loading:false, error:action.error}

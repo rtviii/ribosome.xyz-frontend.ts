@@ -207,6 +207,10 @@ interface get_all_ligandlike {
   endpoint: "get_all_ligandlike",
   params: null
 }
+interface getAllLigands {
+  endpoint: 'get_all_ligands',
+  params  : null
+}
 
 interface get_ligand_nbhd {
   endpoint: "get_ligand_nbhd";
@@ -214,10 +218,6 @@ interface get_ligand_nbhd {
     struct: string;
     chemid: string;
   };
-}
-interface getAllLigands {
-  endpoint: 'get_all_ligands',
-  params  : null
 }
 
 export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {
