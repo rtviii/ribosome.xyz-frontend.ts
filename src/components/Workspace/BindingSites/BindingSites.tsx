@@ -26,6 +26,8 @@ import { useHistory } from 'react-router-dom';
 import * as action from './../../../redux/reducers/BindingSites/ActionTypes'
 import _ from 'lodash';
 import { useToasts } from 'react-toast-notifications';
+import { loadingIndicatorCSS } from 'react-select/src/components/indicators';
+import { Protein } from '../../../redux/RibosomeTypes';
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
@@ -216,14 +218,14 @@ const BindingSites = () => {
 	const dispatch = useDispatch();
 
 	const cur_struct = useSelector((state: AppState) => state.binding_sites.current_structure)
-	const cur_lig = useSelector((state: AppState) => state.binding_sites.current_ligand)
-	const cur_tgt = useSelector((state: AppState) => state.binding_sites.current_target)
+	const cur_lig: LigandClass  | Protein | null    = useSelector((state: AppState) => state.binding_sites.current_ligand)
+	const cur_tgt    = useSelector((state: AppState) => state.binding_sites.current_target)
 
 	const  bsites                                = useSelector               ((state: AppState) => state.binding_sites.bsites)
 	const [bsites_derived , set_bsites_derived ] = useState   <BindingSite[]>(                                               )
 
 	const  lig_classes                                  = useSelector               ((state: AppState) => state.binding_sites.ligand_classes)
-	const [lig_classes_derived, set_ligclasses_derived] = useState   <LigandClass[]>(                                                       )
+	const [lig_classes_derived, set_ligclasses_derived] = useState   <LigandClass[]>([])
 
 	const interface_data = useSelector((state: AppState) => state.binding_sites.binding_site_data)
 	const prediction_data = useSelector((state: AppState) => state.binding_sites.prediction_data)
@@ -346,7 +348,46 @@ const BindingSites = () => {
 	}
 
 
+	// const state = useSelector(( state:AppState ) => s)
 
+	// *=============================================================================================================
+	const [ligandlike, setligandlike] = useState<Protein[]>([])
+	useEffect(() => {
+		getNeo4jData('neo4j',{endpoint:"get_all_ligandlike", params:null}).then(
+			r=> { console.log(r.data) 
+				setligandlike(r.data)
+			}
+		)
+	}, [])
+
+	useEffect(() => {
+		var reg =/(\w*(?<!(cha|pro\w*))in\b)|(\b\w*zyme\b)|(factor)/gi;
+		console.log(
+			ligandlike.map(r => r.rcsb_pdbx_description)
+		);
+
+		var factors = ligandlike.filter( _ => {var m = _.rcsb_pdbx_description!.match(/factor/gi)
+			if (m !== null) {
+				return  true
+			}
+			return false
+		})
+		var antibios = ligandlike.filter( _ => {var m = _.rcsb_pdbx_description!.match(/(\w*(?<!(cha|pro\w*))in\b)/gi)
+			if (m !== null) {
+				return  true
+			}
+			return false
+		})
+		console.log(factors,antibios);
+	}, [ligandlike])
+
+
+
+	
+
+
+
+	// *=============================================================================================================
 	useEffect(() => {
 		set_ligclasses_derived(lig_classes)
 	}, [lig_classes])
@@ -403,7 +444,6 @@ const BindingSites = () => {
 	}, [cur_lig])
 
 	useEffect(() => {
-		console.log("changed curstruct. curlig", cur_lig);
 		
 		if (cur_struct === null) {
 			if (cur_lig ===null)	{
@@ -518,6 +558,16 @@ const BindingSites = () => {
 	}
 
 
+	const isLigandlike = (i:any): i is Protein=>{
+		return (i as Protein).rcsb_pdbx_description !==undefined;
+	}
+
+	const isLigand = (i:any): i is LigandClass=>{
+		return (i as LigandClass).ligand.chemicalId !==undefined;
+	}
+
+	
+
 
 	return (
 		<Grid container xs={12} spacing={1} style={{ outline: "1px solid gray", height: "100vh" }} alignContent="flex-start">
@@ -540,22 +590,59 @@ const BindingSites = () => {
 					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b> {option.citation_title}  </div>)}
 					renderInput={(params) => <TextField {...params} label={`Structures  ( ${bsites_derived !== undefined ? bsites_derived.filter(bsite=>!bsite.chemicalName.toLowerCase().includes("ion")).length : "0"} )`} variant="outlined" />}
 				/>
-				<Autocomplete
+
+				{/* <Autocomplete
 					value={cur_lig}
 					className={classes.autocomplete}
-					options={lig_classes_derived === undefined ? [] : ( lig_classes_derived as LigandClass[]  ).filter((ligand_class)=>!ligand_class.ligand.chemicalName.toLowerCase().includes("ion"))}
-					getOptionLabel={(lc: LigandClass) => { return lc.ligand ? lc.ligand.chemicalId + " : " + lc.ligand.chemicalName : "" }}
+					options={[ ...lig_classes_derived, ...ligandlike ] === undefined ? [] :  [ ...lig_classes_derived, ...ligandlike ]
+						.filter((ligand)=>{ 
+							if(isLigand(ligand)){
+								return !ligand.ligand.chemicalName.toLowerCase().includes("ion") 
+							}
+							if(isLigandlike(ligand)){
+								return true
+							}
+						})}
+
+					groupBy={(option) => {    
+						if(isLigand(option)){
+							return "Ligand"
+						}else if(isLigandlike(option)){
+							return "LigandLike"
+						}
+							else return "Uncharacterized"
+						 }}
+
+					getOptionLabel={(lc: LigandClass | Protein) => { 
+						if (isLigand(lc)){
+							return lc.ligand ? lc.ligand.chemicalId + " : " + lc.ligand.chemicalName : "" 
+						}
+						else if (isLigandlike(lc)){
+							return lc.rcsb_pdbx_description !== null ? lc.rcsb_pdbx_description : "Uncharacterized"
+						}
+						else return "hey"
+					}}
 					// @ts-ignore
 					onChange={handleLigChange}
-					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.ligand.chemicalId}</b> ({option.ligand.chemicalName}) </div>)}
-					renderInput={(params) => <TextField {...params} label={`Ligands  (${lig_classes_derived !== undefined ? lig_classes_derived.filter((ligand_class)=>!ligand_class.ligand.chemicalName.toLowerCase().includes("ion")).length : "0"})`} variant="outlined" />} />
+					renderOption={(option) => {
+						
+						
+						if(isLigand(option)){
+							return<div style={{ fontSize: "10px", width: "400px" }}><b>{option.ligand.chemicalId}</b> ({option.ligand.chemicalName}) </div> 
+						}
+						else if (isLigandlike(option)){
+							return<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_pdbx_description}</b> ({option.entity_poly_strand_id}) </div> 
+						}
+						
+					
+					}}
+					renderInput={(params) => <TextField {...params} label={`Ligands  (${lig_classes_derived !== undefined ? lig_classes_derived.filter((ligand_class)=>!ligand_class.ligand.chemicalName.toLowerCase().includes("ion")).length : "0"})`} variant="outlined" />} /> */}
 
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
 						fullWidth
 						variant={"outlined"}
 						style={[cur_struct, cur_lig].includes(null) ? { color: "gray", textTransform:"none" } : {textTransform:"none"}}
-						// color={!ligstructPair.includes(null) ? 'primary' : 'default'}
 						onClick={() => {
 							highlightInterface()
 						}}>

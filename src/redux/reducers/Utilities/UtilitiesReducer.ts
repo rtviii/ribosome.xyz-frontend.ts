@@ -52,20 +52,3 @@ export const UtilitiesReducer = (
       return state;
   }
 };
-export const requestStaticCatalogue = () => {
-  return async (dispatch: Dispatch<UtilitiesActions>) => {
-    getNeo4jData("static_files", {
-      endpoint: "get_static_catalogue",
-      params: null,
-    }).then(
-      response => {
-        dispatch(A_requestStaticFilesCatalogue(response.data));
-      },
-      error => {
-        console.log("Didn't receive static files catalogue.");
-        // alert("Didn't receive static files catalogue.");
-        dispatch(A_requestStaticFilesCatalogue([]));
-      }
-    );
-  };
-};

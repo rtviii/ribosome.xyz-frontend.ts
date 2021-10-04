@@ -65,6 +65,10 @@ export interface RNA {
  }
 
 
+
+
+
+
 export interface Protein {
   asym_ids     : string[],
   auth_asym_ids: string[],

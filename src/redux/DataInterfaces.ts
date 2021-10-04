@@ -58,35 +58,64 @@ export interface BindingInterface {
 
 // Binding Site is the residue-wise account of 
 export type BindingSite  =  {
-    chemicalId       : string;
-    chemicalName     : string;
-    formula_weight   : number;
-    pdbx_description : string;
-    _organismId      : number[],
-    citation_title   : string ,
-    expMethod        : string ,
-    rcsb_id          : string,
-    resolution       : number
+    chemicalId      : string;
+    chemicalName    : string;
+    formula_weight  : number;
+    pdbx_description: string;
+    src_organims_ids: number[],
+    number_of_instances:number,
+    citation_title  : string,
+    expMethod       : string,
+    rcsb_id         : string,
+    resolution      : number
 		}
 
+
+
+// Union of Ligand and Polymer(Protein&RNA ligand-likes)
+export interface MixedLigand{
+    molecule:{
+      polymer    : boolean,
+      description: string;
+
+      // polymer-specific features
+      entity_poly_strand_id?: string;
+
+      // non-polymer-specifc features
+      chemicalId         ?: string
+      chemicalName       ?: string;
+      number_of_instances ?: number;
+  },
+  present_in: {
+    src_organism_ids   : number[],
+    citation_title     : string,
+    expMethod          : string,
+    rcsb_id            : string,
+    number_of_instances: number,
+    resolution         : number,
+  }[]
+
+}
+
+
 export interface LigandClass {
-  ligand: Ligand, presentIn: {
-    _organismId   : number[],
-    citation_title: string,
-    expMethod     : string,
-    rcsb_id       : string,
-    resolution    : number,
+  ligand: Ligand, 
+  presentIn: {
+    src_organism_ids   : number[],
+    citation_title     : string,
+    expMethod          : string,
+    rcsb_id            : string,
+    number_of_instances: number,
+    resolution         : number,
   }[]
 }
 
 export interface NeoHomolog {
-
   parent : string;
   orgname: string[]
   orgid  : number[]
   protein: Protein;
   title  : string
-
 }
 
 export type ProteinProfile = Protein & {

@@ -1,5 +1,6 @@
 import { BSitesActions } from './ActionTypes'
 import { BindingSite, LigandBindingSite, LigandClass, LigandPrediction, NeoStruct } from '../../DataInterfaces'
+import { Protein } from '../../RibosomeTypes'
 
 
 export interface BindingSitesReducerState{
@@ -18,8 +19,6 @@ export interface BindingSitesReducerState{
     current_structure: BindingSite | null,
     current_ligand   : LigandClass | null,
     current_target   : NeoStruct   | null,
-
-
 
     binding_site_data : LigandBindingSite | null,
     prediction_data   : LigandPrediction  | null

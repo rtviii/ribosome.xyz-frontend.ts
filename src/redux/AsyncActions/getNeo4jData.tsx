@@ -13,7 +13,6 @@ type StaticFilesEndpoints =
   | download_ligand_nbhd
   | get_tunnel
   | align_3d
-  | get_static_catalogue
   | cif_chain_by_class
   | download_structure
   | ligand_prediction
@@ -72,10 +71,6 @@ interface align_3d {
     strand2: string
   }
 }
-interface get_static_catalogue {
-  endpoint: 'get_static_catalogue',
-  params: null
-}
 
 
 
@@ -102,6 +97,7 @@ type Neo4jEndpoints =
   | TEMP_classification_sample
   | banclass_annotation
   | proteins_number
+  | get_all_ligandlike
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
 
@@ -155,13 +151,6 @@ interface match_structs_by_proteins {
     proteins: string
   }
 }
-interface get_ligand_nbhd {
-  endpoint: "get_ligand_nbhd";
-  params: {
-    struct: string;
-    chemid: string;
-  };
-}
 interface getRnasByStruct {
   endpoint: "get_rnas_by_struct",
   params: null
@@ -210,6 +199,20 @@ interface gmoNomClass {
   endpoint: "gmo_nom_class"
   params: {
     banName: string;
+  };
+}
+
+
+interface get_all_ligandlike {
+  endpoint: "get_all_ligandlike",
+  params: null
+}
+
+interface get_ligand_nbhd {
+  endpoint: "get_ligand_nbhd";
+  params: {
+    struct: string;
+    chemid: string;
   };
 }
 interface getAllLigands {

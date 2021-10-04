@@ -2,7 +2,7 @@ import { flattenDeep } from "lodash";
 import { Dispatch } from "redux";
 import { getNeo4jData } from "../../AsyncActions/getNeo4jData";
 import { BindingSite, LigandBindingSite, LigandClass, LigandPrediction, NeoStruct } from "../../DataInterfaces";
-import { Ligand } from "../../RibosomeTypes";
+import { Ligand, Protein } from "../../RibosomeTypes";
 import { BindingSitesReducer,BindingSitesReducerState } from "./BindingSitesReducer";
 
 export type BSitesFilter                = "SPECIES" | "SEARCH" | "YEAR" | "EXPERIMENTAL_METHOD" | "RESOLUTION"
@@ -43,7 +43,7 @@ export interface ligandBindingSiteSuccess { type: typeof LIGAND_BINDING_SITE_SUC
 export interface ligandPredictionSuccess  { type: typeof LIGAND_PREDICTION_SUCCESS  ; prediction_object: LigandPrediction}
 
 export interface currentStructureChange  { type: typeof CURRENT_STRUCTURE_CHANGE  ; next_cur_struct     : BindingSite| null }
-export interface currentLigandChange     { type: typeof CURRENT_LIGAND_CHANGE     ; next_cur_ligand     : LigandClass| null }
+export interface currentLigandChange     { type: typeof CURRENT_LIGAND_CHANGE     ; next_cur_ligand     : LigandClass | null }
 export interface currentPredictionChange { type: typeof CURRENT_PREDICTION_CHANGE ; next_cur_prediction : NeoStruct  | null }
 
 export interface changeVisTab { 
@@ -79,20 +79,36 @@ export type BSitesActions            =
             _partialStateChange
 
 export type AllLigandsResponseType = {
-	ligand   : Ligand,
+	description   : string,
 	presentIn: {
-		_organismId   : number[],
-		citation_title: string,
-		expMethod     : string,
-		rcsb_id       : string,
-		resolution    : number,
+		src_orgnanism_ids  : number[],
+		citation_title     : string,
+		expMethod          : string,
+		rcsb_id            : string,
+		number_of_instances: number,
+		resolution         : number,
 	}[]
 }
+
+
+
+export type AllLigandlikeResponseType = {
+	description   : string,
+	presentIn: {
+		src_orgnanism_ids  : number[],
+		citation_title     : string,
+		expMethod          : string,
+		rcsb_id            : string,
+		number_of_instances: number,
+		resolution         : number,
+	}[]
+}
+
 
 export const _partial_state_change = (statelike_slice:Partial<BindingSitesReducerState> ):_partialStateChange=>( {
 	type: "PARTIAL_STATE_CHANGE",
 	statelike_slice
-} )
+})
 
 
 
@@ -100,7 +116,7 @@ export const current_struct_change=(struct:BindingSite| null):currentStructureCh
 	type           : "CURRENT_STRUCTURE_CHANGE",
 	next_cur_struct: struct
 })
-export const current_ligand_change=(lig:LigandClass|null):currentLigandChange =>( {
+export const current_ligand_change=(lig:LigandClass | null):currentLigandChange =>( {
 	type           : "CURRENT_LIGAND_CHANGE",
 	next_cur_ligand: lig
 })
@@ -171,18 +187,30 @@ export const request_all_bsites = () => {
 		dispatch({
 			type: "REQUEST_ALL_BSITES_GO"
 		});
+
+
+
+
+		// Has to returned merge ligands with ligand-likes
+
 		getNeo4jData("neo4j", { endpoint: "get_all_ligands", params: null })
 			.then(
 				response => {
 
 					var ligand_classes = response.data
-					var disaggregated = response.data.map((bs: AllLigandsResponseType) => { return bs.presentIn.map(struct => Object.assign({}, { ...bs.ligand }, struct)) })
-					disaggregated = flattenDeep(disaggregated)
-					dispatch({
-						type: REQUEST_ALL_BSITES_SUCCESS,
-						bsites: disaggregated,
-						ligand_classes
-					});
+					console.log("Got ligands", ligand_classes);
+
+
+
+					
+					// var disaggregated = response.data.map((bs: AllLigandsResponseType) => { 
+					// 	return bs.presentIn.map(struct => Object.assign({}, { ...bs.ligand }, struct)) })
+					// disaggregated = flattenDeep(disaggregated)
+					// dispatch({
+					// 	type: REQUEST_ALL_BSITES_SUCCESS,
+					// 	bsites: disaggregated,
+					// 	ligand_classes
+					// });
 				},
 				error => {
 					console.log("errored out");
@@ -194,6 +222,27 @@ export const request_all_bsites = () => {
 					});
 				}
 			)
-	};
+
+
+	getNeo4jData("neo4j", { endpoint: "get_all_ligandlike", params: null })
+				.then(
+					response => {
+
+						var ligandlikes = response.data
+						console.log("Got ligandlikes:", ligandlikes);
+						
+					},
+					error => {
+						console.log("errored out");
+						console.log(error);
+
+						dispatch({
+							type: REQUEST_ALL_BSITES_ERR,
+							error: error,
+						});
+					}
+				)
+
+		};
 };
 

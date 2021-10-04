@@ -9,7 +9,6 @@ import { connect, useDispatch } from "react-redux";
 import { TemporaryDrawer } from './../materialui/Dashboard/Dashboard'
 
 import { requestAllLigands } from "../redux/reducers/Ligands/ActionTypes";
-import { requestStaticCatalogue } from "../redux/reducers/Utilities/UtilitiesReducer";
 import { requestBanMetadata } from "../redux/reducers/Proteins/ActionTypes";
 import { requestRnaClass } from "../redux/reducers/RNA/ActionTypes";
 import { RnaClass } from "../redux/reducers/RNA/RNAReducer";
@@ -21,7 +20,6 @@ interface ReduxProps {}
 interface DispatchProps {
   __rx_requestStructures : ()=>void
   __rx_requestAllLigands : ()=>void
-  __rx_staticCatalogue   : ()=>void
 
 }
 
@@ -32,7 +30,6 @@ const Main: React.FC<MainProps> = (prop:MainProps) => {
     useEffect(() => {
     prop.__rx_requestStructures()
     prop.__rx_requestAllLigands()
-    prop.__rx_staticCatalogue()
 
     dispatch(requestBanMetadata('b','LSU'))
     dispatch(requestBanMetadata('e','LSU'))
@@ -71,7 +68,6 @@ const mapdispatch = (
   __rx_requestStructures: ()=> dispatch(redux.requestAllStructuresDjango()),
   // __rx_requestRNAs      : ()=> dispatch(requestAllRNAs()),
   __rx_requestAllLigands: ()=> dispatch(requestAllLigands()),
-  __rx_staticCatalogue  : ()=> dispatch(requestStaticCatalogue()),
 });
 
 export default connect(mapstate, mapdispatch)(Main);
