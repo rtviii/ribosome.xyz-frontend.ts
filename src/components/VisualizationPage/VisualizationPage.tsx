@@ -342,6 +342,7 @@ const SelectRna = ({ items, selectRna }: { items: RNAProfile[], selectRna: (stra
   )
 }
 
+
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
 // @ts-ignore
