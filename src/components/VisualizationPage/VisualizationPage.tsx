@@ -26,7 +26,7 @@ import Paper from '@material-ui/core/Paper/Paper';
 import CardHeader from '@material-ui/core/CardHeader/CardHeader';
 import Card from '@material-ui/core/Card/Card';
 import { RibosomeStructure } from '../../redux/RibosomeTypes';
-import { flattenDeep, uniq } from 'lodash';
+import { chain, flattenDeep, uniq } from 'lodash';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { useHistory, useParams } from 'react-router';
 import _ from 'lodash'
@@ -109,7 +109,6 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     )
 
   }
-  // const age=2;
 
   const classes = ( makeStyles((theme: Theme) =>
   createStyles({
@@ -124,10 +123,6 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 ) )()
   return (
     <>
-
-{/* <div>cur struct {current_struct === null ? "null" :current_struct?.struct.rcsb_id}</div>
-<div>cur chain to highlight {chain_to_highlight === null ? "Null" :" nothing"}</div> */}
-
       <Autocomplete
         className={selectStructStyles.autocomoplete}
         // value={current_struct}
@@ -153,7 +148,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
         style={{width:"100%"}}>
           <InputLabel> Highlight Chain</InputLabel>
           <Select
-            value   ={null}
+            value   ={chain_to_highlight}
             onChange={handleSelectHighlightChain}
             // @ts-ignore
             renderValue={(value)=>{ 
@@ -161,7 +156,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
                 return "null"
               }
               else{
-                return            <div>val</div> 
+                return            <div>{`${value}`}</div> 
                 // return            <div>{ value === undefined || value===null ? "" : value }</div> 
               }
           }}
@@ -346,8 +341,6 @@ const SelectRna = ({ items, selectRna }: { items: RNAProfile[], selectRna: (stra
     </Grid>
   )
 }
-
-
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;

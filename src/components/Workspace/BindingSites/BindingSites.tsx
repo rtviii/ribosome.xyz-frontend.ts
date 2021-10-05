@@ -433,7 +433,6 @@ const BindingSites = () => {
 	}, [cur_lig])
 
 	useEffect(() => {
-		console.log("Changed cur struct", cur_struct);
 		
 		if (cur_struct === null) {
 			if (cur_lig ===null)	{
@@ -467,29 +466,36 @@ const BindingSites = () => {
 		}
 	}, [cur_struct])
 
-	// useEffect(() => {
+	useEffect(() => {
 
-	// 	if (cur_tgt !== null) {
-	// 		dispatch(action.request_Prediction(
-	// 			cur_lig?.ligand.chemicalId as string,
-	// 			cur_struct?.rcsb_id as string,
-	// 			// cur_struct?._organismId[0] as number,
-	// 			cur_tgt!.struct.rcsb_id,
-	// 			// cur_tgt.struct._organismId[0]
+		if (cur_tgt !== null) {
 
-	// 			))
+			if (cur_lig?.molecule.polymer){
 
-	// 		if (cur_vis_tab==='prediction'){
-	// 			viewerInstance.visual.update({
-	// 				moleculeId: cur_tgt?.struct.rcsb_id.toLowerCase()
+				alert("Implement prediction logic for ligand-like polymers.")
+			}else{
 
-	// 			});
-				
-	// 		}
-	// 	} else {
-	// 		dispatch(action._partial_state_change({ 'prediction_data': null }))
-	// 	}
-	// }, [cur_tgt])
+				dispatch(action.request_Prediction(
+					cur_lig?.molecule.chemicalId as string,
+					cur_struct?.rcsb_id as string,
+					cur_tgt!.struct.rcsb_id,
+
+					))
+
+				if (cur_vis_tab==='prediction'){
+					viewerInstance.visual.update({
+						moleculeId: cur_tgt?.struct.rcsb_id.toLowerCase()
+
+					});
+					
+				}
+
+			}
+
+		} else {
+			dispatch(action._partial_state_change({ 'prediction_data': null }))
+		}
+	}, [cur_tgt])
 
 
 	useEffect(() => {
@@ -553,6 +559,29 @@ const BindingSites = () => {
 
 
 
+	const MixedLigandComparison = (a:MixedLigand,b:MixedLigand)=>{
+							
+
+							if (a.category !== undefined && b.category !== undefined){
+								var ac = a.category
+								var bc = b.category
+
+								if (ac==='Antibiotics'){
+									return -1
+								}
+								else if (ac==='Factors' && bc ==='E/T/I Factors'){
+									return -1
+								}
+								else if (ac==='E/T/I Factors' && bc ==='Mixed Ligands'){
+									return -1
+								}
+								else return 1
+							
+							}
+							else return 1
+					
+
+						}
 	
 
 
@@ -581,10 +610,28 @@ const BindingSites = () => {
 				<Autocomplete
 					value={cur_lig}
 					className={classes.autocomplete}
-					options={[ ...derived_mixed, ...derived_antibiotics,...derived_factors ] === undefined ? [] :  [ ...derived_mixed, ...derived_antibiotics,...derived_factors ]}
+					options={
+						[ ...derived_mixed, ...derived_antibiotics,...derived_factors ]
+						=== undefined ? [] :
+						  [ ...derived_mixed, ...derived_antibiotics,...derived_factors ].sort(MixedLigandComparison)
+						}
 					getOptionLabel={(lc: MixedLigand) => lc.molecule.description}
 					// @ts-ignore
-					onChange={handleLigChange}
+
+
+					groupBy={(option) => {
+						if(antibiotics.includes(option)){
+							return "Antibiotics"
+						}
+						if(derived_factors.includes(option)){
+							return "E/T/I Factors"
+						}
+						if(derived_mixed.includes(option)){
+							return "Mixed Ligands"
+						}
+					}}
+
+					onChange={(e:any,v:any)=>handleLigChange(e,v)}
 					renderOption={(option) => {
 							return<div style={{ fontSize: "10px", width: "400px" }}><b>{option.molecule.description}</b> {option.molecule.chemicalId}  </div> 
 						}

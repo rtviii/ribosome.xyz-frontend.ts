@@ -79,24 +79,28 @@ export const BindingSitesReducer = (
   var factors    :MixedLigand[] = [];
   var mixed      :MixedLigand[] = [];
     
-  action.mixed_ligands.map(r=>{if(r.molecule.chemicalId?.toUpperCase()?.includes("ERY")){
-    console.log(r);
-    
-    alert("Found ery")
-  }})
 
     action.mixed_ligands.map(l =>{
       if (l.molecule.description.toLowerCase().includes('mycin')){
-        antibioitcs.push(l)
+        antibioitcs.push({
+          category: 'Antibiotics',
+          ...l
+        })
       }
       else if(l.molecule.description.toLowerCase().includes('factor')){
-        factors.push(l)
+        factors.push({
+          category:'I/T/E Factors',
+          ...l
+        })
       }
-      // else if(l.molecule.description?.toLowerCase().includes('ion')){
-      //   (()=>{})()
-      // }
+      else if(l.molecule.description?.toLowerCase().includes('ion')){
+        (()=>{})()
+      }
       else {
-        mixed.push(l)
+        mixed.push({
+          category:"Mixed Ligands",
+          ...l
+        })
       }
 
     })

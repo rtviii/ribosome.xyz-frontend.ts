@@ -68,6 +68,7 @@ export type BindingSite  =  {
 
 // Union of Ligand and Polymer(Protein&RNA ligand-likes)
 export interface MixedLigand{
+    category?:string,
     molecule:{
       polymer    : boolean,
       description: string;
