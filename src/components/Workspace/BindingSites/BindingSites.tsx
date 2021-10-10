@@ -38,7 +38,7 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 // Tinge of green for prediction #fff8bd
 
 
-const origin_blue = '#aad5ff'
+const origin_blue       = '#aad5ff'
 const prediction_yellow = 'fff8bd'
 
 
@@ -235,6 +235,10 @@ const BindingSites = () => {
 	const  interface_data                                     = useSelector                ((state: AppState) => state.binding_sites.binding_site_data)
 	const  prediction_data                                    = useSelector                ((state: AppState) => state.binding_sites.prediction_data  )
 
+	useEffect(() => {
+		console.log("current ligand" ,cur_lig);
+		
+	}, [cur_lig])
 
 
 	useEffect(() => {
@@ -349,41 +353,60 @@ const BindingSites = () => {
 	}
 
 	const updateBindingSiteData = (current_bs: BindingSite, curligand: MixedLigand) => {
-		if (!curligand.molecule.polymer){
-			dispatch(action.request_LigandBindingSite( curligand.molecule.chemicalId as string , current_bs.rcsb_id))
-		}
-		else{
-			alert("Implement polymer neighborhood calculation.")
-	
+		if(curligand.polymer){
+				console.log("Dispatching");
+				console.log( curligand.asymid as string ,curligand.polymer, current_bs.rcsb_id)
+			dispatch(action.request_LigandBindingSite( curligand.asymid as string ,curligand.polymer, current_bs.rcsb_id))
+		}else{
+
+			dispatch(action.request_LigandBindingSite( curligand.chemicalId as string ,curligand.polymer, current_bs.rcsb_id))
 		}
 	}
 
 
 	// const state = useSelector(( state:AppState ) => s)
-
-	// *=============================================================================================================
 	const [ligandlike, setligandlike] = useState<Protein[]>([])
 
+	// to sort alphabetically
+	var comparefn = (a:MixedLigand,b:MixedLigand) => {
 
+			if(a.description[0].toLowerCase() > b.description[0].toLowerCase()){
+				return  1
+			}
 
-	
+			if(a.description[0].toLowerCase() < b.description[0].toLowerCase()){
+				return  -1
+			}
 
+			else 
+			{return 0}
+	} 
 
-
-	// *=============================================================================================================
 	useEffect(() => {
-		set_derived_antibiotics(antibiotics)
+		set_derived_antibiotics(antibiotics.sort(comparefn))
 	}, [antibiotics])
 	useEffect(() => {
-		set_derived_factors(factors)
+		set_derived_factors(factors.sort(comparefn))
 	}, [factors])
 	useEffect(() => {
-		set_derived_mixed(mixed)
+		set_derived_mixed(mixed.sort(comparefn))
 	}, [mixed])
 
 	useEffect(() => {
 		set_bsites_derived(bsites)
 	}, [bsites])
+
+
+		useEffect(() => {
+			console.log("Interface data changeD:",interface_data);
+			
+			
+		}, [interface_data])
+		useEffect(() => {
+			
+			console.log("Pred change" , prediction_data);
+		}, [prediction_data])
+
 
 	const handleStructChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
 		if (newvalue === null) {
@@ -418,13 +441,12 @@ const BindingSites = () => {
 	const target_structs = useSelector((state: AppState) => state.structures.derived_filtered)
 
 	useEffect(() => {
-		console.log("Current ligand changed", cur_lig);
-		
 		if (cur_lig === null) {
 			set_bsites_derived(bsites)
 			dispatch(action._partial_state_change({ 'binding_site_data': null }))
 		} else {
-			set_bsites_derived(bsites.filter(bs => cur_lig.present_in.map(f=>f.rcsb_id).includes(bs.rcsb_id)  ))
+			set_bsites_derived(
+				bsites.filter(bs => cur_lig.present_in.map(f=>f.rcsb_id).includes(bs.rcsb_id)  ))
 			// // * Make sure this is nonnull
 			if (cur_struct !== null){
 				updateBindingSiteData(cur_struct as BindingSite, cur_lig)
@@ -470,27 +492,31 @@ const BindingSites = () => {
 
 		if (cur_tgt !== null) {
 
-			if (cur_lig?.molecule.polymer){
+			if (cur_lig !== null ){
+				if (cur_lig.polymer){
+					dispatch(action.request_Prediction(
+							cur_lig.polymer,
+							cur_lig.asymid as string,
+							cur_struct!.rcsb_id,
+							cur_tgt!.struct.rcsb_id,
+						))
+				}
+				else {
+					dispatch(action.request_Prediction(
+							cur_lig.polymer,
+							cur_lig.chemicalId as string,
+							cur_struct!.rcsb_id,
+							cur_tgt!.struct.rcsb_id,
+						))
 
-				alert("Implement prediction logic for ligand-like polymers.")
-			}else{
-
-				dispatch(action.request_Prediction(
-					cur_lig?.molecule.chemicalId as string,
-					cur_struct?.rcsb_id as string,
-					cur_tgt!.struct.rcsb_id,
-
-					))
+				}
+			}
 
 				if (cur_vis_tab==='prediction'){
 					viewerInstance.visual.update({
 						moleculeId: cur_tgt?.struct.rcsb_id.toLowerCase()
-
 					});
-					
 				}
-
-			}
 
 		} else {
 			dispatch(action._partial_state_change({ 'prediction_data': null }))
@@ -615,7 +641,7 @@ const BindingSites = () => {
 						=== undefined ? [] :
 						  [ ...derived_mixed, ...derived_antibiotics,...derived_factors ].sort(MixedLigandComparison)
 						}
-					getOptionLabel={(lc: MixedLigand) => lc.molecule.description}
+					getOptionLabel={(lc: MixedLigand) => lc.description}
 					// @ts-ignore
 
 
@@ -633,7 +659,7 @@ const BindingSites = () => {
 
 					onChange={(e:any,v:any)=>handleLigChange(e,v)}
 					renderOption={(option) => {
-							return<div style={{ fontSize: "10px", width: "400px" }}><b>{option.molecule.description}</b> {option.molecule.chemicalId}  </div> 
+							return<div style={{ fontSize: "10px", width: "400px" }}><b>{option.description}</b> {option.chemicalId}  </div> 
 						}
 					}
 					renderInput={(params) => <TextField {...params} label={
@@ -758,7 +784,7 @@ const BindingSites = () => {
 					<Dialogue
 						src_struct ={                         cur_struct     ?.rcsb_id as string                                                                                }
 						tgt_struct ={                         cur_tgt        ?.struct.rcsb_id as string                                                                         }
-						title      ={`Predicted Residues of ${cur_lig?.molecule.description} from structure ${cur_struct?.rcsb_id} in structure ${cur_tgt?.struct.rcsb_id}`}
+						title      ={`Predicted Residues of ${cur_lig?.description} from structure ${cur_struct?.rcsb_id} in structure ${cur_tgt?.struct.rcsb_id}`}
 						open       ={                         msaOpen                                                                                                           }
 						handleclose={                         handleclose                                                                                                       }
 						handleopen ={                         handleopen                                                                                                        }

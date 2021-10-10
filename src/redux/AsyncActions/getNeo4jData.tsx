@@ -20,9 +20,10 @@ type StaticFilesEndpoints =
   interface ligand_prediction{
     endpoint:"ligand_prediction",
     params:{
-      src_struct: string,
-      tgt_struct: string,
-      chemid    : string,
+      src_struct   : string,
+      tgt_struct   : string,
+      ligandlike_id: string,
+      is_polymer   : boolean,
     }
 
 }
@@ -215,8 +216,9 @@ interface getAllLigands {
 interface get_ligand_nbhd {
   endpoint: "get_ligand_nbhd";
   params: {
-    struct: string;
-    chemid: string;
+    src_struct   : string;
+    ligandlike_id: string;
+    is_polymer   : boolean,
   };
 }
 

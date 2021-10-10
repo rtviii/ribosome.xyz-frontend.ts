@@ -1,4 +1,4 @@
-import { flattenDeep, merge } from "lodash";
+import { flattenDeep, isPlainObject, merge } from "lodash";
 import { Dispatch } from "redux";
 import { getNeo4jData } from "../../AsyncActions/getNeo4jData";
 import { BindingSite, LigandBindingSite, LigandClass, LigandPrediction, MixedLigand, NeoStruct } from "../../DataInterfaces";
@@ -88,13 +88,13 @@ export type AllLigandsResponseType = {
 
 export type AllLigandlikeResponseType = {
 	polymer    : boolean,
-	description: string ,
-	presentIn: {
+	description: string,
+	asymid     : string,
+	presentIn            : {
 		src_organism_ids     : number[],
 		citation_title       : string  ,
 		expMethod            : string  ,
 		rcsb_id              : string  ,
-		entity_poly_strand_id: string  ,
 		resolution           : number  ,
 	}[]
 }[]
@@ -120,15 +120,16 @@ export const current_target_change = (tgt: NeoStruct | null): currentPredictionC
 	next_cur_prediction: tgt
 })
 
-export const request_LigandBindingSite = (chemid: string, struct: string) => {
+export const request_LigandBindingSite = (ligandlike_id:string, is_polymer:boolean, src_struct: string) => {
 	return async (dispatch: Dispatch<BSitesActions>) => {
 		dispatch({
 			type: "REQUEST_LIGAND_BINDING_SITE",
 		});
 		getNeo4jData("static_files", {
 			endpoint: "get_ligand_nbhd", params: {
-				chemid,
-				struct
+				src_struct,
+				ligandlike_id,
+				is_polymer,
 			}
 		})
 			.then(
@@ -140,7 +141,7 @@ export const request_LigandBindingSite = (chemid: string, struct: string) => {
 					});
 				},
 				error => {
-					console.log(`Error fetching the Binding Site for ligand ${chemid} in struct ${struct}.`);
+					console.log(`Error fetching the Binding Site for ligand ${ligandlike_id} in struct ${src_struct}.`);
 					dispatch({
 						type: FILE_REQUEST_ERROR,
 						error: error,
@@ -150,14 +151,20 @@ export const request_LigandBindingSite = (chemid: string, struct: string) => {
 	};
 };
 
-export const request_Prediction = (chemid: string, src_struct: string, tgt_struct: string) => {
+
+export const request_Prediction = (is_polymer:boolean, ligandlike_id: string, src_struct: string, tgt_struct: string) => {
+
+
+	console.log("REQUESTED POLY PREDICTION", is_polymer, ligandlike_id);
+	
 	return async (dispatch: Dispatch<BSitesActions>) => {
 		dispatch({
 			type: "REQUEST_LIGAND_PREDICTION",
 		});
 		getNeo4jData("static_files", {
 			endpoint: "ligand_prediction", params: {
-				chemid,
+				is_polymer,
+				ligandlike_id,
 				src_struct,
 				// src_tax_id,
 				tgt_struct,
@@ -165,14 +172,16 @@ export const request_Prediction = (chemid: string, src_struct: string, tgt_struc
 			}
 		})
 			.then(
+				
 				response => {
+				console.log(response.data);
 					dispatch({
 						type: "LIGAND_PREDICTION_SUCCESS",
 						prediction_object: response.data
 					});
 				},
 				error => {
-					console.log(`Error fetching prediction data for ligand ${chemid}(from source struct ${src_struct}) in target struct ${tgt_struct}.`);
+					console.log(`Error fetching prediction data for ligand ${ligandlike_id}(from source struct ${src_struct}) in target struct ${tgt_struct}.`);
 					dispatch({
 						type: FILE_REQUEST_ERROR,
 						error: error,
@@ -196,19 +205,16 @@ export const request_all_bsites = () => {
 		]).then(responses => {
 
 			var lig_coerced_to_mixed = (responses[0].data as AllLigandsResponseType).map(_ => ({
-				molecule: {
-					description: _.description,
-					polymer    : _.polymer    ,
-					chemicalId : _.chemicalId ,
-				},
+				description: _.description,
+				polymer    : _.polymer    ,
+				chemicalId : _.chemicalId ,
 				present_in: _.presentIn
 			}))
 
 			var liglike_coerced_to_mixed = (responses[1].data as AllLigandlikeResponseType).map(_ => ({
-				molecule: {
-					description: _.description,
-					polymer    : _.polymer    ,
-				},
+				description: _.description,
+				polymer    : _.polymer,
+				asymid     : _.asymid,
 				present_in: _.presentIn
 
 			}))

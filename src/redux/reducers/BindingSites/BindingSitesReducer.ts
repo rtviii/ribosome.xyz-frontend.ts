@@ -38,8 +38,8 @@ const initialstateBindinginSitesReducer:BindingSitesReducerState = {
 
     visualization_tab: 'origin',
 
-    bsites                : [],
-    bsites_derived                : [],
+    bsites        : [],
+    bsites_derived: [],
 
     mixed_ligands: [],
     factors      : [],
@@ -79,21 +79,24 @@ export const BindingSitesReducer = (
   var factors    :MixedLigand[] = [];
   var mixed      :MixedLigand[] = [];
     
+  console.log("received all bsites",action);
 
-    action.mixed_ligands.map(l =>{
-      if (l.molecule.description.toLowerCase().includes('mycin')){
+
+    action.mixed_ligands.map(( l ) => {
+      if (l.description.toLowerCase().includes('mycin')){
         antibioitcs.push({
           category: 'Antibiotics',
           ...l
         })
       }
-      else if(l.molecule.description.toLowerCase().includes('factor')){
+      else if(l.description.toLowerCase().includes('factor')){
+        
         factors.push({
           category:'I/T/E Factors',
           ...l
         })
       }
-      else if(l.molecule.description?.toLowerCase().includes('ion')){
+      else if(l.description?.toLowerCase().includes('ion')){
         (()=>{})()
       }
       else {
@@ -128,10 +131,9 @@ export const BindingSitesReducer = (
 
     case "REQUEST_LIGAND_BINDING_SITE":
       return {...state, is_loading:true}
+
     case "REQUEST_LIGAND_PREDICTION":
       return {...state, is_loading:true}
-
-
 
 
   case "LIGAND_BINDING_SITE_SUCCESS":
@@ -143,17 +145,11 @@ export const BindingSitesReducer = (
     case "CHANGE_VIS_TAB":
       return{...state, visualization_tab:action.tab}
 
-
-
     case "CURRENT_LIGAND_CHANGE":
       return {...state, current_ligand:action.next_cur_ligand}
 
-
-
     case "CURRENT_STRUCTURE_CHANGE":
       return {...state, current_structure:action.next_cur_struct}
-
-
 
     case "CURRENT_PREDICTION_CHANGE":
       return {

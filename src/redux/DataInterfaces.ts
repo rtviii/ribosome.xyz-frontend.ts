@@ -61,24 +61,20 @@ export type BindingSite  =  {
       citation_title        : string,
       expMethod             : string,
       rcsb_id               : string,
-      // number_of_instances?  : number,
-      // entity_poly_strand_id?: string,
       resolution            : number,
 		}
 
 // Union of Ligand and Polymer(Protein&RNA ligand-likes)
 export interface MixedLigand{
-    category?:string,
-    molecule:{
-      polymer    : boolean,
-      description: string;
-      // polymer-specific features
-      entity_poly_strand_id?: string;
-      // non-polymer-specifc features
-      chemicalId         ?: string
-      chemicalName       ?: string;
-  },
-  present_in: BindingSite[]
+
+    category     ?: string,
+    polymer       : boolean,
+    description   : string;
+    asymid       ?: string;
+    chemicalId   ?: string
+    chemicalName ?: string;
+
+    present_in: BindingSite[]
 }
 
 
