@@ -31,7 +31,7 @@ const StructsSortsState:Record<StructSortType,{
     compareFn: (a,b)=>{
       var first  = a.struct.rcsb_id
       var second = b.struct.rcsb_id
-      if (first==second){
+      if (first===second){
         return 0
       }
       if (first>second){
@@ -66,7 +66,7 @@ const StructsSortsState:Record<StructSortType,{
     compareFn: (a,b)=>{
       var first  = a.struct.resolution
       var second = b.struct.resolution
-      if (first==second){
+      if (first===second){
         return 0
       }
       if (first>second){
@@ -121,12 +121,15 @@ const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
      value:[],
      set:false,
      predicate:(value) =>(struct) =>
-        {var presence = struct.rps.reduce((accumulator: string[], instance) => {
-        return instance.noms.length === 0
-          ? accumulator
-          : value.includes(instance.noms[0])
-          ? [...accumulator, instance.noms[0]]
-          : accumulator;
+        {
+
+          var presence = struct.rps.reduce((accumulator: string[], instance) => {
+            return (instance.noms === null || instance.noms.length === 0 )
+            ? accumulator
+            : value.includes(instance.noms[0])
+
+            ? [...accumulator, instance.noms[0]]
+            : accumulator;
       }, []);
       // If accumulator contains the same elements as the passed value ==> the struct passes
       return _.isEmpty(_.xor(value, presence));
@@ -138,20 +141,19 @@ const StructsFilterRegistry:FilterRegistry<StructFilterType, NeoStruct> = {
 
      predicate:(value) =>(struct) =>
               { 
-                
                 return  (
           struct.struct.rcsb_id +
           struct.struct.citation_title +
           struct.struct.citation_year +
           struct.struct.citation_rcsb_authors +
-          struct.struct._organismName
+          struct.struct.src_organism_names
         ).toLowerCase().includes(value as string) }
    },
    "SPECIES"         : {
      value:[],
      set:false,
      predicate:(value) =>(struct) =>
-       struct.struct._organismId.reduce(
+       struct.struct.src_organism_ids.reduce(
         (accumulator: boolean, taxid) =>
           accumulator || (value as number[]).includes(taxid),
         false

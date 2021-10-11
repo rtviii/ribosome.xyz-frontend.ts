@@ -3,9 +3,9 @@ import { Link          , Route, useParams }      from "react-router-dom"        
 import   VisibilityIcon                          from '@material-ui/icons/Visibility';
 import {
   Ligand,
-  RibosomalProtein,
+  Protein,
   RibosomeStructure,
-  rRNA,
+  RNA,
 } from "../../../redux/RibosomeTypes";
 import                                            "./StructurePage.css"                          ;
 import { getNeo4jData } from                      "../../../redux/AsyncActions/getNeo4jData"     ;
@@ -15,7 +15,6 @@ import { AppState } from                          "../../../redux/store"        
 import { useHistory } from                        'react-router-dom'                             ;
 import { ThunkDispatch } from                     "redux-thunk"                                  ;
 import { AppActions } from                        "../../../redux/AppActions"                    ;
-// import LoadingSpinner from                        './../../Other/LoadingSpinner'
 import { Tooltip } from                           "react-bootstrap"                              ;
 import { OverlayTrigger } from                    "react-bootstrap"                              ;
 import Card from                                  "@material-ui/core/Card"                       ;
@@ -24,7 +23,6 @@ import Grid from                                  "@material-ui/core/Grid"      
 import Typography from                            "@material-ui/core/Typography"                 ;
 import CardActions from                           "@material-ui/core/CardActions"                ;
 import Button from                                "@material-ui/core/Button"                     ;
-import Popover from                               "@material-ui/core/Popover"                    ;
 import { makeStyles, Theme } from                        "@material-ui/core/styles"                     ;
 import { DashboardButton } from                   "../../../materialui/Dashboard/Dashboard"      ;
 import RibosomalProteinCard from                  "../RibosomalProteins/RibosomalProteinCard"    ;
@@ -148,7 +146,6 @@ export const StructHeroCard =({rcsb_id, nomedia}:{
   })) )()
 
 
-
   const [structdata, setstructdata] = useState<null| GetStructResponseShape>({} as GetStructResponseShape) 
 
   useEffect(() => {
@@ -162,10 +159,6 @@ export const StructHeroCard =({rcsb_id, nomedia}:{
   }, e=>{
     console.log("errored out requesting struct", e);
   })
-  
-
-
-
 }, [])
 
   const dispatch               = useDispatch()
@@ -179,7 +172,7 @@ export const StructHeroCard =({rcsb_id, nomedia}:{
     <Card>
           <CardHeader
             title     = {`${structdata.structure.rcsb_id}`}
-            subheader = {structdata.structure._organismName}
+            subheader = {structdata.structure.src_organism_names[0]}
           />
           {nomedia ? 
           null: 
@@ -192,7 +185,7 @@ export const StructHeroCard =({rcsb_id, nomedia}:{
           </CardActionArea>
           }
           <List>
-            <CardBodyAnnotation keyname="Species" value={structdata.structure._organismName} />
+            <CardBodyAnnotation keyname="Species" value={structdata.structure.src_organism_names[0]} />
             <CardBodyAnnotation keyname="Resolution" value={`${ structdata.structure.resolution } Å`} />
             <CardBodyAnnotation keyname="Experimental Method" value={structdata.structure.expMethod} />
             <CardBodyAnnotation keyname="Title" value={structdata.structure.citation_title} />
@@ -267,9 +260,9 @@ export const StructHeroCard =({rcsb_id, nomedia}:{
                 style  ={{textTransform:"none"}}
                 onClick={() => { 
                   
-                  console.log("sending params to vis:", { pathname: `/vis`, state: { 
-                    struct: structdata.structure.rcsb_id 
-                  }});
+                  // console.log("sending params to vis:", { pathname: `/vis`, state: { 
+                  //   struct: structdata.structure.rcsb_id 
+                  // }});
                   
                   history.push({ pathname: `/vis`, state: { struct: structdata.structure.rcsb_id } }) }}>
                   <VisibilityIcon />
@@ -320,28 +313,41 @@ Download
 
 }
 
-        export type GetStructResponseShape = {
-          structure  :  RibosomeStructure;
-          ligands    :  Ligand[];
-          rnas       :  rRNA[];
-          rps        :  RibosomalProtein[];
-        };
+    export type GetStructResponseShape = {
+      structure  :  RibosomeStructure;
+      ligands    :  Ligand[];
+      rnas       :  RNA[];
+      rps        :  Protein[];
+    };
 type StructurePageProps = OwnProps & ReduxProps & DispatchProps;
 const StructurePage: React.FC<StructurePageProps> = (
+  // useEffect(() => {
+
+    
+  //   console.log("Got rna class ", params);
+    
+  //   if (![5.8,5, 12,16,21,23,25,28,35].includes(chosenRnaClass) ){
+  //     dispatch(select_rna_class('5'))
+  //   }
+  // }, [])
+
   props: StructurePageProps
 ) => {
 
   const { pdbid }: { pdbid: string }  =  useParams();
+  
+
   const [structdata, setstruct]       =  useState<RibosomeStructure>();
-  const [protdata, setprots]          =  useState<RibosomalProtein[]>([]);
-  const [rrnas, setrrnas]             =  useState<rRNA[]>([]);
+  const [protdata, setprots]          =  useState<Protein[]>([]);
+  const [rrnas, setrrnas]             =  useState<RNA[]>([]);
   const [ligands, setligands]         =  useState<Ligand[]>([]);
   const [ions, setions]               =  useState(true);
 
+  const history       = useHistory()
   const activecat                     =  useSelector(( state:AppState ) => state.Interface.structure_page.component)
-  
-
   useEffect(() => {
+
+   
     getNeo4jData("neo4j", {
       endpoint: "get_struct",
       params: { pdbid: pdbid },
@@ -350,6 +356,11 @@ const StructurePage: React.FC<StructurePageProps> = (
         const respdat: GetStructResponseShape = flattenDeep(
           resp.data
         )[0] as GetStructResponseShape;
+       if (respdat === undefined)  {
+      history.push('/structs')
+        return
+       }
+
 
 
         setstruct(respdat.structure);
@@ -366,9 +377,9 @@ const StructurePage: React.FC<StructurePageProps> = (
 
   }, [pdbid]);
 
-  const [lsu, setlsu]     = useState<RibosomalProtein[]>([])
-  const [ssu, setssu]     = useState<RibosomalProtein[]>([])
-  const [other, setother] = useState<RibosomalProtein[]>([])
+  const [lsu, setlsu]     = useState<Protein[]>([])
+  const [ssu, setssu]     = useState<Protein[]>([])
+  const [other, setother] = useState<Protein[]>([])
 
 
 
@@ -395,7 +406,6 @@ const StructurePage: React.FC<StructurePageProps> = (
             <Grid item justify="flex-start" alignItems='flex-start' alignContent='flex-start' container xs={4} spacing={1}>
               <Grid item xs={12} style={{ paddingTop: "10px" }} >
                 <Typography color="primary" variant="h4">
-
                   LSU Proteins
               </Typography>
               </Grid>
@@ -448,7 +458,7 @@ const StructurePage: React.FC<StructurePageProps> = (
           <Grid item xs={12}>
             <RNACard e={{
 description      : obj.rcsb_pdbx_description as string,
-orgid            : obj.rcsb_source_organism_id,
+orgid            : obj.src_organism_ids,
 seq              : obj.entity_poly_seq_one_letter_code,
 strand           : obj.entity_poly_strand_id,
 struct           : obj.parent_rcsb_id,

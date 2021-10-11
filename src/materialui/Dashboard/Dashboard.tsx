@@ -189,7 +189,7 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
   ]
 
       for( var it of selectedItems) {
-        if(isStruct(it)){summary.push([ 'riboxyz_workspace_structure', it.rcsb_id       ,       it.citation_title                         , it.expMethod    ,`${ it.resolution        }Å`, it.citation_year    , it._organismId      , it.pdbx_keywords_text              ])}
+        if(isStruct(it)){summary.push([ 'riboxyz_workspace_structure', it.rcsb_id       ,       it.citation_title                         , it.expMethod    ,`${ it.resolution        }Å`, it.citation_year    , it.src_organism_ids      , it.pdbx_keywords_text              ])}
         if(isRNA   (it)){summary.push([ 'riboxyz_workspace_rna'      , it.description   ,       it.struct                + "_" + it.strand, it.parent_method,    it.parent_resolution+"Å", it.parent_citation  , it.parent_year      , it.seq                             ])}
         if(isProt  (it)){summary.push([ 'riboxyz_workspace_protein'  , it.parent_rcsb_id +"_" + it.entity_poly_strand_id                  , it.nomenclature ,    it.pfam_descriptions    , it.pfam_descriptions, it.uniprot_accession, it.entity_poly_seq_one_letter_code ])}
       }

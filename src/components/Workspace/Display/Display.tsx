@@ -23,6 +23,7 @@ const Display = () => {
       <Route exact path="/">
         <Redirect to="/home" />
       </Route>
+
       <Switch>
         <Route exact path = "/super" component                        = {ProteinAlignment} />
         <Route exact path = "/home"                           component = {Home2               } />
@@ -37,6 +38,7 @@ const Display = () => {
         <Route exact path = "/bindingsites"                   component = {BindingSites         } />
         <Route exact path = "/vis"                            component = {VisualizationPage  } />
         <Route       path = "/nomenclature/:subcomponent?" component = {Nomenclature } />
+        <Route render={() => <Redirect to="/home" />} />
       </Switch>
     </div>
 

@@ -1,4 +1,3 @@
-import {RibosomalProtein} from '../../RibosomeTypes'
 import {LigandResponseShape, NeoHomolog} from '../../DataInterfaces'
 import { filterChange, FilterPredicates } from '../Filters/ActionTypes';
 import { LigandsActions } from './ActionTypes';

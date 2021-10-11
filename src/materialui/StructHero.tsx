@@ -143,7 +143,7 @@ export const StructHero=({d,inCart}:{ d:NeoStruct, inCart:boolean })=> {
             component="div"
           >
 
-          <CardBodyAnnotation keyname={"Organism"} value={truncate( d.struct._organismName[0], 20,20)}/>
+          <CardBodyAnnotation keyname={"Organism"} value={truncate( d.struct.src_organism_names[0], 20,20)}/>
           <CardBodyAnnotation keyname={"Method"} value={d.struct.expMethod}/>
           <CardBodyAnnotation keyname={"Proteins"} value={d.rps.length}/>
           <CardBodyAnnotation keyname={"RNA"} value={d.rnas.length}/>

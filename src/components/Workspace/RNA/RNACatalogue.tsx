@@ -150,13 +150,10 @@ const rnatabsstyles = (makeStyles((theme: Theme) => ({
 
   var   params: any     = useParams();
   const chosenRnaClass = params.rnaclass
+
   useEffect(() => {
-    if (chosenRnaClass === undefined){
-      dispatch(select_rna_class('5'))
-    }
-  }, [])
-  useEffect(() => {
-    if (chosenRnaClass === undefined){
+    console.log("Got rna class ", params);
+    if (!["5.8","5", "12","16","21","23","25","28","35", 'mrna','trna'].includes(chosenRnaClass)){
       return
     }
     if ( ['mrna','trna'].includes( chosenRnaClass ) ){
@@ -615,7 +612,7 @@ const classr28  = useSelector(( state:AppState ) => state.rna.rna_classes_derive
 const classr35  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[35])
 const indexlabels = [ 
   [5, '5SrRNA'     ]
-, [58, '5.8SrRNA']
+, [5.8, '5.8SrRNA']
 , [12, '12SrRNA' ]
 , [16, '16SrRNA' ]
 , [21, '21SrRNA' ]

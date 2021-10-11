@@ -7,7 +7,7 @@ import { BanClassMetadataFiltType, BanMetadataFilterChangeAC } from '../../../re
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../redux/store';
 import BanClassHero from './BanClassHero';
-import { BanClass } from '../../../redux/RibosomeTypes';
+import { ProteinClass } from '../../../redux/RibosomeTypes';
 import { Cart } from '../Cart/Cart';
 import List from '@material-ui/core/List/List';
 import ListItem from '@material-ui/core/ListItem/ListItem';
@@ -187,7 +187,7 @@ useEffect(() => {
                                 structures       = {_.structs}
                                 comments         = {_.comments}
                                 unique_organisms = {_.organisms}
-                                nom_class        = {_.banClass as BanClass}
+                                nom_class        = {_.banClass as ProteinClass}
                                 />
                             </ListItem>
                         })}
@@ -204,7 +204,7 @@ useEffect(() => {
                                 structures={_.structs}
                                     comments={_.comments}
                                     unique_organisms={_.organisms}
-                                    nom_class={_.banClass as BanClass}
+                                    nom_class={_.banClass as ProteinClass}
                                 />
                             </ListItem>
                         })}
@@ -221,7 +221,7 @@ useEffect(() => {
                                 structures={_.structs}
                                 comments={_.comments}
                                 unique_organisms={_.organisms}
-                                nom_class={_.banClass as BanClass}
+                                nom_class={_.banClass as ProteinClass}
                             />
                         </ListItem>
                     })}

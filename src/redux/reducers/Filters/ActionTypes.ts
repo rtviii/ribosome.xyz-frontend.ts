@@ -1,13 +1,13 @@
 import _ from "lodash";
 import BanClassHero from "../../../components/Workspace/RibosomalProteins/BanClassHero";
 import {
-  RXZDataTypes,
+  ApplicationDataTypes,
   NeoStruct,
   NeoHomolog,
   RNAProfile,
   LigandResponseShape,
 } from "../../DataInterfaces";
-import { RibosomalProtein } from "../../RibosomeTypes";
+import { Protein } from "../../RibosomeTypes";
 import { FiltersReducerState } from "./FiltersReducer";
 
 export interface Filter<T>{
@@ -49,7 +49,7 @@ export type FilterType =
   | "SEARCH"
   | "SPECIES";
 
-export type FilterPredicate = (value: string[] | string | number[] | number) => (item: RXZDataTypes) => boolean;
+export type FilterPredicate = (value: string[] | string | number[] | number) => (item: ApplicationDataTypes) => boolean;
 
 export type FilterData = {
   set          :  boolean;
@@ -67,45 +67,44 @@ export const FilterPredicates: Record<
   PartialRecord<DataType, FilterPredicate>
 > = {
   SEARCH: {
-    STRUCTURE: (value: any) => (item: RXZDataTypes) => {
+    STRUCTURE: (value: any) => (item: ApplicationDataTypes) => {
       var struct = item as NeoStruct;
       return (
         struct.struct.rcsb_id +
         struct.struct.citation_title +
         struct.struct.citation_year +
         struct.struct.citation_rcsb_authors +
-        struct.struct._organismName
+        struct.struct.src_organism_names
       )
         .toLowerCase()
         .includes(value as string);
     },
-    PROTEIN: (value: any) => (item: RXZDataTypes) => {
-      var prot = item as RibosomalProtein;
+    PROTEIN: (value: any) => (item: ApplicationDataTypes) => {
+      var prot = item as Protein;
       return (
         prot.nomenclature +
         prot.pfam_comments.reduce((acc, name) => acc + name, "") +
         prot.pfam_descriptions +
         prot.rcsb_pdbx_description +
-        prot.rcsb_source_organism_id.reduce((acc, name) => acc + name, "")
+        prot.src_organism_ids.reduce((acc, name) => acc + name, "")
       )
         .toLowerCase()
         .includes(value as string);
     },
-    RNA: (value: any) => (item: RXZDataTypes) => {
+    RNA: (value: any) => (item: ApplicationDataTypes) => {
       var rna = item as RNAProfile;
       return true
 
     },
-    LIGAND: (value: any) => (item: RXZDataTypes) => {
+    LIGAND: (value: any) => (item: ApplicationDataTypes) => {
       var lig = item as LigandResponseShape;
       return (lig.ligand.chemicalName + lig.ligand.chemicalId)
         .toLowerCase()
         .includes(value as string);
     }
   },
-
   YEAR: {
-    STRUCTURE: value => (item: RXZDataTypes) => {
+    STRUCTURE: value => (item: ApplicationDataTypes) => {
       var struct = item as NeoStruct;
       return (
         struct.struct.citation_year >= (value as number[])[0] &&
@@ -113,12 +112,12 @@ export const FilterPredicates: Record<
       );
     },
     PROTEIN: value => item => true,
-    RNA: (value: any) => (item: RXZDataTypes) => true,
-    LIGAND: (value: any) => (item: RXZDataTypes) => true
+    RNA: (value: any) => (item: ApplicationDataTypes) => true,
+    LIGAND: (value: any) => (item: ApplicationDataTypes) => true
   },
 
   RESOLUTION: {
-    STRUCTURE: (value: any) => (item: RXZDataTypes) => {
+    STRUCTURE: (value: any) => (item: ApplicationDataTypes) => {
       var struct = item as NeoStruct;
 
       return (
@@ -127,29 +126,28 @@ export const FilterPredicates: Record<
       );
     },
     PROTEIN: value => item => true,
-    RNA: (value: any) => (item: RXZDataTypes) => true,
-
-    LIGAND: (value: any) => (item: RXZDataTypes) => true
+    RNA: (value: any) => (item: ApplicationDataTypes) => true,
+    LIGAND: (value: any) => (item: ApplicationDataTypes) => true
   },
 
   SPECIES: {
-    STRUCTURE: (value: any) => (item: RXZDataTypes) => {
+    STRUCTURE: (value: any) => (item: ApplicationDataTypes) => {
       var struct = item as NeoStruct;
-      return struct.struct._organismId.reduce(
+      return struct.struct.src_organism_ids.reduce(
         (accumulator: boolean, taxid) =>
           accumulator || (value as number[]).includes(taxid),
         false
       );
     },
-    PROTEIN: (value: any) => (item: RXZDataTypes) => {
-      var prot = item as RibosomalProtein;
-      return prot.rcsb_source_organism_id.reduce(
+    PROTEIN: (value: any) => (item: ApplicationDataTypes) => {
+      var prot = item as Protein;
+      return prot.src_organism_ids.reduce(
         (accumulator: boolean, taxid) =>
           accumulator || (value as number[]).includes(taxid),
         false
       );
     },
-    RNA: (value: any) => (item: RXZDataTypes) => {
+    RNA: (value: any) => (item: ApplicationDataTypes) => {
       var rna = item as RNAProfile;
 
       return rna.orgid.reduce(
@@ -158,12 +156,12 @@ export const FilterPredicates: Record<
         false
       );
     },
-    LIGAND: (value: any) => (item: RXZDataTypes) => {
+    LIGAND: (value: any) => (item: ApplicationDataTypes) => {
       var lig = item as LigandResponseShape;
 
       return lig.presentIn.reduce(
         // oute reduce: for eveyr structure, check wether it is present in the selected species
-        (structWiseAccumulator :boolean, struct) => structWiseAccumulator  || struct._organismId.reduce(
+        (structWiseAccumulator :boolean, struct) => structWiseAccumulator  || struct.src_organism_ids.reduce(
         // inner reduce: for every species associated with a structure, check whether it is inside fitler values
         (inStructSpeciesAccumulator: boolean, taxid) =>inStructSpeciesAccumulator || (value as number[]).includes(taxid),false)
         ,false)
@@ -172,7 +170,7 @@ export const FilterPredicates: Record<
   // Should be made into generics --------
 
   PROTEIN_COUNT: {
-    STRUCTURE: (value: any) => (item: RXZDataTypes) => {
+    STRUCTURE: (value: any) => (item: ApplicationDataTypes) => {
       var struct = item as NeoStruct;
       return (
         struct.rps.length >= (value as number[])[0] &&
@@ -180,11 +178,11 @@ export const FilterPredicates: Record<
       );
     },
     PROTEIN: value => item => true,
-    RNA: (value: any) => (item: RXZDataTypes) => true,
-    LIGAND: (value: any) => (item: RXZDataTypes) => true
+    RNA: (value: any) => (item: ApplicationDataTypes) => true,
+    LIGAND: (value: any) => (item: ApplicationDataTypes) => true
   },
   PROTEINS_PRESENT: {
-    STRUCTURE: (value: any) => (item: RXZDataTypes) => {
+    STRUCTURE: (value: any) => (item: ApplicationDataTypes) => {
       // if (typeof struct === NeoStruct)
       // for every rp that a structure has, check whether
       // length is zero
@@ -201,8 +199,8 @@ export const FilterPredicates: Record<
       return _.isEmpty(_.xor(value, presence));
     },
     PROTEIN: value => item => true,
-    RNA: (value: any) => (item: RXZDataTypes) => true,
-    LIGAND: (value: any) => (item: RXZDataTypes) => true
+    RNA: (value: any) => (item: ApplicationDataTypes) => true,
+    LIGAND: (value: any) => (item: ApplicationDataTypes) => true
   },
 };
 

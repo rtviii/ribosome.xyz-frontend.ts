@@ -1,5 +1,7 @@
 import { BSitesActions } from './ActionTypes'
-import { BindingSite, LigandBindingSite, LigandClass, LigandPrediction, NeoStruct } from '../../DataInterfaces'
+import { BindingSite, LigandBindingSite, LigandClass, LigandPrediction, MixedLigand, NeoStruct } from '../../DataInterfaces'
+import { Protein } from '../../RibosomeTypes'
+import _ from 'lodash'
 
 
 export interface BindingSitesReducerState{
@@ -10,16 +12,20 @@ export interface BindingSitesReducerState{
 
     visualization_tab: "origin" | 'prediction',
 
-    bsites                : BindingSite[]
-    ligand_classes        : LigandClass[],
-    bsites_derived        : BindingSite[],
-    ligand_classes_derived: LigandClass[],
+    bsites        : BindingSite[],
+    bsites_derived: BindingSite[],
+
+    mixed_ligands: MixedLigand[],
+    factors      : MixedLigand[],
+    antibiotics  : MixedLigand[],
+    mrna  : MixedLigand[],
+    trna  : MixedLigand[],
+
 
     current_structure: BindingSite | null,
-    current_ligand   : LigandClass | null,
+
+    current_ligand   : MixedLigand | null,
     current_target   : NeoStruct   | null,
-
-
 
     binding_site_data : LigandBindingSite | null,
     prediction_data   : LigandPrediction  | null
@@ -27,16 +33,24 @@ export interface BindingSitesReducerState{
 }
 
 const initialstateBindinginSitesReducer:BindingSitesReducerState = {
+
     error      : null,
     is_loading : false,
     errored_out: false,
 
     visualization_tab: 'origin',
 
-    bsites                : [],
-    ligand_classes        : [],
-    bsites_derived        : [],
-    ligand_classes_derived: [],
+    bsites        : [],
+    bsites_derived: [],
+
+    mixed_ligands: [],
+    factors      : [],
+    antibiotics  : [],
+    mrna         : [],
+    trna         : [],
+
+
+    // mixed_ligands:MixedLigand[],
 
     current_ligand   : null,
     current_structure: null,
@@ -64,7 +78,70 @@ export const BindingSitesReducer = (
 	case "REQUEST_ALL_BSITES_ERR":
 		return state
 	case "REQUEST_ALL_BSITES_SUCCESS":
-		return {...state, bsites:action.bsites, ligand_classes:action.ligand_classes}
+
+  var antibioitcs:MixedLigand[] = [];
+  var factors    :MixedLigand[] = [];
+  var mixed      :MixedLigand[] = [];
+  var mrna      :MixedLigand[]  = [];
+  var trna      :MixedLigand[]  = [];
+    
+
+
+    action.mixed_ligands.map(( l ) => {
+      if (l.description.toLowerCase().includes('mycin')){
+        antibioitcs.push({
+          category: 'Antibiotics',
+          ...l
+        })
+      }
+      else if(l.description.toLowerCase().includes('factor')){
+        
+        factors.push({
+          category:'I/T/E Factors',
+          ...l
+        })
+      }
+      else if(l.description.toLowerCase().includes('mrna')||l.description.toLowerCase().includes('messenger')){
+        mrna.push({
+          category:'mRNA',
+          ...l
+        })
+      }
+      else if(l.description.toLowerCase().includes('trna')||l.description.toLowerCase().includes('transfer')){
+        trna.push({
+          category:'tRNA',
+          ...l
+        })
+      }
+      else if(l.description?.toLowerCase().includes('ion')){
+        (()=>{})()
+      }
+
+      else {
+        mixed.push({
+          category:"Mixed Ligands",
+          ...l
+        })
+      }
+
+    })
+    
+
+		return {
+      ...state, 
+      bsites        : _.uniqBy(action.mixed_ligands.reduce((acc:BindingSite[],next:MixedLigand)=> [...acc, ...next.present_in.map(bs=>( {
+        src_organism_ids      : bs.src_organism_ids,
+        citation_title        : bs.citation_title,
+        expMethod             : bs.expMethod,
+        rcsb_id               : bs.rcsb_id,
+        resolution            : bs.resolution,
+      } ))],[]), 'rcsb_id'),
+      mixed_ligands: mixed,
+      factors      : factors,
+      antibiotics  : antibioitcs,
+      mrna         : mrna,
+      trna         : trna
+    }
 
     case "FILE_REQUEST_ERROR":
   return {...state, is_loading:false, error:action.error}
@@ -72,10 +149,9 @@ export const BindingSitesReducer = (
 
     case "REQUEST_LIGAND_BINDING_SITE":
       return {...state, is_loading:true}
+
     case "REQUEST_LIGAND_PREDICTION":
       return {...state, is_loading:true}
-
-
 
 
   case "LIGAND_BINDING_SITE_SUCCESS":
@@ -87,17 +163,11 @@ export const BindingSitesReducer = (
     case "CHANGE_VIS_TAB":
       return{...state, visualization_tab:action.tab}
 
-
-
     case "CURRENT_LIGAND_CHANGE":
       return {...state, current_ligand:action.next_cur_ligand}
 
-
-
     case "CURRENT_STRUCTURE_CHANGE":
       return {...state, current_structure:action.next_cur_struct}
-
-
 
     case "CURRENT_PREDICTION_CHANGE":
       return {

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import downicon from "./../../../static/download.png"
 import fileDownload from "js-file-download";
 import { getNeo4jData } from "../../../redux/AsyncActions/getNeo4jData";
-import { RibosomalProtein } from "../../../redux/RibosomeTypes";
+import { Protein } from "../../../redux/RibosomeTypes";
 import Accordion from "react-bootstrap/esm/Accordion";
 import { Button, Card, ListGroup } from "react-bootstrap";
 
@@ -14,7 +14,7 @@ const RibosomalProteinHero = ({
   data,
 }: {
   pdbid: string;
-  data: RibosomalProtein;
+  data: Protein;
 }) => {
   const [isFetching, setisFetching] = useState<boolean>(false);
   const parseAndDownloadChain = (pdbid: string, cid: string) => {
@@ -131,8 +131,13 @@ const RibosomalProteinHero = ({
                   <div>
 
                   <p>Source organism:</p>{" "}
-                  {data.rcsb_source_organism_description} (
-                  {data.rcsb_source_organism_id})
+                  {
+
+                  // data.rcsb_source_organism_description
+                  data.src_organism_names.length > 0 ? data.src_organism_names[0] : ""
+
+                  } (
+                  {data.src_organism_ids.length>0 ? data.src_organism_ids[0] :""})
                   <p>RCSB Profile:</p> {data.rcsb_pdbx_description}
                   <p>PFAM Description:</p>
                   <div className='pfamdescription-aa'>

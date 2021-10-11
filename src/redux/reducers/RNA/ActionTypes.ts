@@ -73,8 +73,9 @@ export const requestRnaClass = (rna_class: RnaClass) => {
     })
       .then(
         response => {
+          
           dispatch({
-            type: REQUEST_RNA_CLASS_SUCCESS,
+            type   : REQUEST_RNA_CLASS_SUCCESS,
             payload: flattenDeep(response.data) as any,
             rna_class
           });
@@ -86,11 +87,6 @@ export const requestRnaClass = (rna_class: RnaClass) => {
           });
         }
       )
-      // .then(
-      //   a => {
-      //     dispatch(select_rna_class("5"))
-      //   }
-      // )
   };
 };
 

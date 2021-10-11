@@ -1,5 +1,5 @@
 import {  RNAProfile } from "../../DataInterfaces";
-import { RibosomalProtein, RibosomeStructure } from "../../RibosomeTypes";
+import { Protein, RibosomeStructure } from "../../RibosomeTypes";
 
 export const TOGGLE_CART             = "TOGGLE_CART";
 export const CART_REMOVE_ITEM        = "CART_REMOVE_ITEM";
@@ -7,7 +7,7 @@ export const CART_ADD_ITEM           = "CART_ADD_ITEM";
 export const CART_CLEAR_ITEMS        = "CART_CLEAR_ITEMS";
 export const CART_TOGGLE_ITEM_SELECT = "CART_TOGGLE_ITEM_SELECT";
 
-export type CartItem = RibosomalProtein | RibosomeStructure | RNAProfile
+export type CartItem = Protein | RibosomeStructure | RNAProfile
 
 export interface toggleCart     {type: typeof TOGGLE_CART}
 

@@ -60,15 +60,13 @@ const AcknowlegementsList = () => {
 			</Grid>
 
 			<Grid item xs={10}>
-				<Typography variant="caption" className={plugstyles.ackntext} >
+				<Typography  className={plugstyles.ackntext} style={{marginTop:"10px"}}>
 					Crystallographic strucutures and some of the annotations are
 					acquired from <a href={"https://www.rcsb.org/"}>RCSB PDB</a>.
 					<a href="https://data.rcsb.org/index.html#gql-api">
-						RCSB GQ9
-					</a>{" "}
+						RCSB GraphQL					</a>
 					greatly faciliatates the integration of data across structures
 				</Typography>
-
 			</Grid>
 		</Grid>
 
@@ -104,17 +102,14 @@ const AcknowlegementsList = () => {
 				  </Grid>
 
 				  <Grid item xs={10}>
-              <Typography variant="caption" className={plugstyles.ackntext}>
-                  Developed by the <a href="https://kdaoduc.com/">Khanh Dao-Duc's group</a>{" "}
-                  at the University of British Columbia.
-                  In collaboration with{" "}
-                  <a href="https://ww2.chemistry.gatech.edu/~lw26/index.html#PI">
+              <Typography variant="caption" className={plugstyles.ackntext} >
+
+                <p style={{marginTop:"20px"}}>
+Developed by <a href="https://kdaoduc.com/">Khanh Dao-Duc's group</a> at the University of British Columbia, in collaboration with <a href="https://ww2.chemistry.gatech.edu/~lw26/index.html#PI">
                     Loren Williams' group
-                  </a>{" "}
-                  at Georgia Institute of Technology.
-                   All usability and
-                  conceptual suggestions would be very much appreciated. Thanks
-                  for <a href="mailto:rtkushner@gmail.com">getting in touch</a>!
+                  </a> at Georgia Institute of Technology.
+ Please address your questions and suggestions regarding RiboXYZ to <a href="mailto:ribosome.xyz@gmail.com">ribosome.xyz@gmail.com</a>.
+ </p>
 
               </Typography>
 				  </Grid>

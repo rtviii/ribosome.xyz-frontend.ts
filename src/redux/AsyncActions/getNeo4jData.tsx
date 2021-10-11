@@ -2,7 +2,7 @@ import axios from "axios";
 import Axios from "axios";
 import qs from 'qs'
 import { RnaClass } from "../reducers/RNA/RNAReducer";
-import { BanClass } from "../RibosomeTypes";
+import { ProteinClass } from "../RibosomeTypes";
 
 const BACKEND: any = process.env.REACT_APP_DJANGO_URL;
 type DjangoAPIs = "neo4j" | "static_files"
@@ -12,9 +12,7 @@ type StaticFilesEndpoints =
   | downloadCifChain
   | download_ligand_nbhd
   | get_tunnel
-  | pairwise_align
-  | get_static_catalogue
-  // | downloadArchive
+  | align_3d
   | cif_chain_by_class
   | download_structure
   | ligand_prediction
@@ -22,14 +20,13 @@ type StaticFilesEndpoints =
   interface ligand_prediction{
     endpoint:"ligand_prediction",
     params:{
-      src_struct: string,
-      // src_tax_id: number,
-      tgt_struct: string,
-      // tgt_tax_id: number,
-      chemid    : string,
+      src_struct   : string,
+      tgt_struct   : string,
+      ligandlike_id: string,
+      is_polymer   : boolean,
     }
 
-  }
+}
 
 interface download_structure {
   endpoint: "download_structure",
@@ -66,8 +63,8 @@ interface get_tunnel {
     filetype: "report" | "centerline";
   }
 }
-interface pairwise_align {
-  endpoint: "pairwise_align",
+interface align_3d {
+  endpoint: "align_3d",
   params: {
     struct1: string,
     struct2: string,
@@ -75,18 +72,9 @@ interface pairwise_align {
     strand2: string
   }
 }
-interface get_static_catalogue {
-  endpoint: 'get_static_catalogue',
-  params: null
-}
-// interface downloadArchive {
-//   endpoint: 'downloadArchive',
-//   params  : { 
-//     rna:string[],
-//     structs: string[],
-//     rps    : string[],
-//    }
-// }
+
+
+
 type Neo4jEndpoints =
   nomclass_visualize
   | getStructure
@@ -110,6 +98,7 @@ type Neo4jEndpoints =
   | TEMP_classification_sample
   | banclass_annotation
   | proteins_number
+  | get_all_ligandlike
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
 
@@ -120,7 +109,7 @@ interface proteins_number {
 interface banclass_annotation {
   endpoint: "banclass_annotation",
   params: {
-    banclass: BanClass
+    banclass: ProteinClass
   }
 }
 
@@ -162,13 +151,6 @@ interface match_structs_by_proteins {
   params: {
     proteins: string
   }
-}
-interface get_ligand_nbhd {
-  endpoint: "get_ligand_nbhd";
-  params: {
-    struct: string;
-    chemid: string;
-  };
 }
 interface getRnasByStruct {
   endpoint: "get_rnas_by_struct",
@@ -220,9 +202,24 @@ interface gmoNomClass {
     banName: string;
   };
 }
+
+
+interface get_all_ligandlike {
+  endpoint: "get_all_ligandlike",
+  params: null
+}
 interface getAllLigands {
   endpoint: 'get_all_ligands',
-  params: null
+  params  : null
+}
+
+interface get_ligand_nbhd {
+  endpoint: "get_ligand_nbhd";
+  params: {
+    src_struct   : string;
+    ligandlike_id: string;
+    is_polymer   : boolean,
+  };
 }
 
 export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {

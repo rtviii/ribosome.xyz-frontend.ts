@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import RibosomalProteinHero from "../RibosomalProteins/RibosomalProteinHero";
 import {
   Ligand,
-  RibosomalProtein,
-  rRNA,
+  Protein,
+  RNA,
 } from "./../../../redux/RibosomeTypes";
 import { Grid } from "@material-ui/core";
 
@@ -16,14 +16,14 @@ const StructGrid = ({
   ligands,
 }: {
   pdbid   : string;
-  protdata: RibosomalProtein[];
-  rrnas   : rRNA[];
+  protdata: Protein[];
+  rrnas   : RNA[];
   ligands : Ligand[];
 }) => {
 
-  const [lsu, setlsu]     = useState<RibosomalProtein[]>([])
-  const [ssu, setssu]     = useState<RibosomalProtein[]>([])
-  const [other, setother] = useState<RibosomalProtein[]>([])
+  const [lsu, setlsu]     = useState<Protein[]>([])
+  const [ssu, setssu]     = useState<Protein[]>([])
+  const [other, setother] = useState<Protein[]>([])
 
 
 

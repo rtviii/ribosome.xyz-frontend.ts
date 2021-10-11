@@ -20,7 +20,7 @@ const CSVDownloadElement = ({prop}:{ prop:'proteins'|'structs' }) => {
     bulkDownloads = [["rcsb_id", "species", "year", "author"]]
     structs.map(s => {
       bulkDownloads.push(
-        [s.struct.rcsb_id, s.struct._organismId, s.struct.citation_year, s.struct.citation_rcsb_authors.reduce((acc, next) => acc + next), ""]
+        [s.struct.rcsb_id, s.struct.src_organism_ids[0], s.struct.citation_year, s.struct.citation_rcsb_authors.reduce((acc, next) => acc + next), ""]
 
       )
     })

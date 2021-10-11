@@ -90,13 +90,13 @@ const StructHero: React.FC<{
 
             <td>
               <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-                {struct._organismName.length > 1
+                {struct.src_organism_names.length > 1
                   ? truncate(
-                      struct._organismName.reduce((acc, curr) => {
+                      struct.src_organism_names.reduce((acc, curr) => {
                         return acc.concat(curr, ",");
                       }, "")
                     )
-                  : truncate(struct._organismName[0])}
+                  : truncate(struct.src_organism_names[0])}
               </span>
             </td>
           </tr>

@@ -103,9 +103,6 @@ export default function ProteinAlignment() {
     },
     formControl: {
       width: "40%",
-      // marginBottom:"10px"
-      // margin  : theme.spacing(1),
-      // minWidth: 120,
     },
     selectEmpty: {
       marginTop: theme.spacing(2),
@@ -135,9 +132,6 @@ export default function ProteinAlignment() {
   const [chains2, setChains2] = useState<{ noms: string[]; strands: string; }[]>([])
 
 
-
-
-
   const visualizeAlignment = (
   )=>{
         console.log("Got:",
@@ -150,7 +144,7 @@ export default function ProteinAlignment() {
               viewerInstance.visual.update({
                 customData: {
                   url:
-                    `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
+                    `${process.env.REACT_APP_DJANGO_URL}/static_files/align_3d/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
                   format: "pdb",
                   binary: false,
                 },
@@ -177,7 +171,7 @@ export default function ProteinAlignment() {
     }
 
     getNeo4jData("static_files", {
-      endpoint: "pairwise_align",
+      endpoint: "align_3d",
       params: {
         struct1,
         struct2,
@@ -219,10 +213,6 @@ export default function ProteinAlignment() {
         setstruct2(newvalue)
         setChainStructPair2([chainStructPair2[0], newvalue.struct.rcsb_id])
         setChains2( [ ...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas ])
-        console.log("Got newvalue rnas: ", newvalue.rnas);
-        console.log(newvalue);
-        
-        
         setstrand2(null)
       }
     }
@@ -371,7 +361,7 @@ export default function ProteinAlignment() {
 
               viewerInstance.visual.update({
                 customData: {
-                  url: `${process.env.REACT_APP_DJANGO_URL}/static_files/pairwise_align/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
+                  url: `${process.env.REACT_APP_DJANGO_URL}/static_files/align_3d/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
                   format: "pdb",
                   binary: false,
                 },
