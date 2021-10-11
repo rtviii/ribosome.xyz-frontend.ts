@@ -224,12 +224,16 @@ const BindingSites = () => {
 	const  bsites                                             = useSelector                ((state: AppState) => state.binding_sites.bsites           )
 	const [bsites_derived      , set_bsites_derived ]         = useState    <BindingSite[]>(                                                          )
 
-	const antibiotics                                   = useSelector                ((state: AppState) => state.binding_sites.antibiotics   )
-	const factors                                       = useSelector                ((state: AppState) => state.binding_sites.factors   )
-	const mixed                                         = useSelector                ((state: AppState) => state.binding_sites.mixed_ligands   )
+	const antibiotics = useSelector                ((state: AppState) => state.binding_sites.antibiotics   )
+	const factors     = useSelector                ((state: AppState) => state.binding_sites.factors   )
+	const mrna        = useSelector                ((state: AppState) => state.binding_sites.mrna   )
+	const trna        = useSelector                ((state: AppState) => state.binding_sites.trna   )
+	const mixed       = useSelector                ((state: AppState) => state.binding_sites.mixed_ligands   )
 
 	const [derived_antibiotics , set_derived_antibiotics ] = useState <MixedLigand[]>([] )
 	const [derived_factors     , set_derived_factors     ] = useState <MixedLigand[]>([] )
+	const [derived_mrna       , set_derived_mrna       ]   = useState <MixedLigand[]>([] )
+	const [derived_trna       , set_derived_trna      ]    = useState <MixedLigand[]>([] )
 	const [derived_mixed       , set_derived_mixed       ] = useState <MixedLigand[]>([] )
 
 	const  interface_data                                     = useSelector                ((state: AppState) => state.binding_sites.binding_site_data)
@@ -355,8 +359,8 @@ const BindingSites = () => {
 	const updateBindingSiteData = (current_bs: BindingSite, curligand: MixedLigand) => {
 		if(curligand.polymer){
 				console.log("Dispatching");
-				console.log( curligand.asymid as string ,curligand.polymer, current_bs.rcsb_id)
-			dispatch(action.request_LigandBindingSite( curligand.asymid as string ,curligand.polymer, current_bs.rcsb_id))
+				console.log( curligand.auth_asym_id as string  ,curligand.polymer, current_bs.rcsb_id)
+			dispatch(action.request_LigandBindingSite( curligand.auth_asym_id as string ,curligand.polymer, current_bs.rcsb_id))
 		}else{
 
 			dispatch(action.request_LigandBindingSite( curligand.chemicalId as string ,curligand.polymer, current_bs.rcsb_id))
@@ -391,6 +395,14 @@ const BindingSites = () => {
 	useEffect(() => {
 		set_derived_mixed(mixed.sort(comparefn))
 	}, [mixed])
+
+	useEffect(() => {
+		set_derived_mrna(mrna.sort(comparefn))
+	}, [mrna])
+
+	useEffect(() => {
+		set_derived_trna(trna.sort(comparefn))
+	}, [trna])
 
 	useEffect(() => {
 		set_bsites_derived(bsites)
@@ -461,6 +473,8 @@ const BindingSites = () => {
 				set_derived_antibiotics(antibiotics)
 				set_derived_factors(factors)
 				set_derived_mixed(mixed)
+				set_derived_mrna(mrna)
+				set_derived_trna(trna)
 			}
 		} else {
 
@@ -468,6 +482,8 @@ const BindingSites = () => {
 				set_derived_antibiotics(antibiotics.filter(strs=>strs.present_in.map(container=>container.rcsb_id).includes(cur_struct.rcsb_id)))
 				set_derived_factors(factors.filter(strs=>strs.present_in.map(container=>container.rcsb_id).includes(cur_struct.rcsb_id)))
 				set_derived_mixed(mixed.filter(strs=>strs.present_in.map(container=>container.rcsb_id).includes(cur_struct.rcsb_id)))
+				set_derived_mrna(mrna.filter(strs=>strs.present_in.map(container=>container.rcsb_id).includes(cur_struct.rcsb_id)))
+				set_derived_trna(trna.filter(strs=>strs.present_in.map(container=>container.rcsb_id).includes(cur_struct.rcsb_id)))
 
 			}
 			else {
@@ -496,7 +512,7 @@ const BindingSites = () => {
 				if (cur_lig.polymer){
 					dispatch(action.request_Prediction(
 							cur_lig.polymer,
-							cur_lig.asymid as string,
+							cur_lig.auth_asym_id as string,
 							cur_struct!.rcsb_id,
 							cur_tgt!.struct.rcsb_id,
 						))
@@ -610,7 +626,6 @@ const BindingSites = () => {
 						}
 	
 
-
 	return (
 		<Grid container xs={12} spacing={1} style={{ outline: "1px solid gray", height: "100vh" }} alignContent="flex-start">
 			<Paper variant="outlined" className={classes.pageDescription}>
@@ -637,15 +652,21 @@ const BindingSites = () => {
 					value={cur_lig}
 					className={classes.autocomplete}
 					options={
-						[ ...derived_mixed, ...derived_antibiotics,...derived_factors ]
+						[ ...derived_mixed, ...derived_antibiotics,...derived_factors, ...derived_mrna, ...derived_trna]
 						=== undefined ? [] :
-						  [ ...derived_mixed, ...derived_antibiotics,...derived_factors ].sort(MixedLigandComparison)
+						  [ ...derived_mixed, ...derived_antibiotics,...derived_factors, ...derived_mrna, ...derived_trna].sort(MixedLigandComparison)
 						}
 					getOptionLabel={(lc: MixedLigand) => lc.description}
 					// @ts-ignore
 
 
 					groupBy={(option) => {
+						if(trna.includes(option)){
+							return "tRNA"
+						}
+						if(mrna.includes(option)){
+							return "mRNA"
+						}
 						if(antibiotics.includes(option)){
 							return "Antibiotics"
 						}
@@ -663,7 +684,7 @@ const BindingSites = () => {
 						}
 					}
 					renderInput={(params) => <TextField {...params} label={
-						`Ligands  (${[ ...derived_mixed, ...derived_antibiotics,...derived_factors ] !== undefined ? [ ...derived_mixed, ...derived_antibiotics,...derived_factors ].length : "0"})`
+						`Ligands  (${[ ...derived_mixed, ...derived_antibiotics,...derived_factors, ...derived_mrna, ...derived_trna] !== undefined ? [ ...derived_mixed, ...derived_antibiotics,...derived_factors, ...derived_mrna, ...derived_trna].length : "0"})`
 						} variant="outlined" />} />
 
 				<Grid item style={{ marginBottom: "10px" }}>

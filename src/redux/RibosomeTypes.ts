@@ -38,11 +38,10 @@ export interface RibosomeStructure {
 export interface RNA { 
 
 
-  asym_ids                        : string[],
-
-  auth_asym_id                   : string,
-  nomenclature                    : RNAClass[]
-  parent_rcsb_id                  : string       ;
+  asym_ids      : string[],
+  auth_asym_id  : string,
+  nomenclature  : RNAClass[]
+  parent_rcsb_id: string       ;
 
   src_organism_names : string[],
   host_organism_names: string[],

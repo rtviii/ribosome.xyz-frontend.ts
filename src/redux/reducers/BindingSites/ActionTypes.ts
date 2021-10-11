@@ -87,10 +87,10 @@ export type AllLigandsResponseType = {
 }[]
 
 export type AllLigandlikeResponseType = {
-	polymer    : boolean,
-	description: string,
-	asymid     : string,
-	presentIn            : {
+	polymer     : boolean,
+	description : string,
+	auth_asym_id: string,
+	presentIn   : {
 		src_organism_ids     : number[],
 		citation_title       : string  ,
 		expMethod            : string  ,
@@ -204,6 +204,9 @@ export const request_all_bsites = () => {
 			getNeo4jData("neo4j", { endpoint: "get_all_ligandlike", params: null })
 		]).then(responses => {
 
+			console.log(responses[0].data);
+			console.log(responses[1].data);
+			
 			var lig_coerced_to_mixed = (responses[0].data as AllLigandsResponseType).map(_ => ({
 				description: _.description,
 				polymer    : _.polymer    ,
@@ -212,10 +215,10 @@ export const request_all_bsites = () => {
 			}))
 
 			var liglike_coerced_to_mixed = (responses[1].data as AllLigandlikeResponseType).map(_ => ({
-				description: _.description,
-				polymer    : _.polymer,
-				asymid     : _.asymid,
-				present_in: _.presentIn
+				description : _.description,
+				polymer     : _.polymer,
+				auth_asym_id: _.auth_asym_id,
+				present_in  : _.presentIn
 
 			}))
 

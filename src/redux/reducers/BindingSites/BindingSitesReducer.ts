@@ -18,6 +18,8 @@ export interface BindingSitesReducerState{
     mixed_ligands: MixedLigand[],
     factors      : MixedLigand[],
     antibiotics  : MixedLigand[],
+    mrna  : MixedLigand[],
+    trna  : MixedLigand[],
 
 
     current_structure: BindingSite | null,
@@ -44,6 +46,8 @@ const initialstateBindinginSitesReducer:BindingSitesReducerState = {
     mixed_ligands: [],
     factors      : [],
     antibiotics  : [],
+    mrna         : [],
+    trna         : [],
 
 
     // mixed_ligands:MixedLigand[],
@@ -78,8 +82,9 @@ export const BindingSitesReducer = (
   var antibioitcs:MixedLigand[] = [];
   var factors    :MixedLigand[] = [];
   var mixed      :MixedLigand[] = [];
+  var mrna      :MixedLigand[]  = [];
+  var trna      :MixedLigand[]  = [];
     
-  console.log("received all bsites",action);
 
 
     action.mixed_ligands.map(( l ) => {
@@ -96,9 +101,22 @@ export const BindingSitesReducer = (
           ...l
         })
       }
+      else if(l.description.toLowerCase().includes('mrna')||l.description.toLowerCase().includes('messenger')){
+        mrna.push({
+          category:'mRNA',
+          ...l
+        })
+      }
+      else if(l.description.toLowerCase().includes('trna')||l.description.toLowerCase().includes('transfer')){
+        trna.push({
+          category:'tRNA',
+          ...l
+        })
+      }
       else if(l.description?.toLowerCase().includes('ion')){
         (()=>{})()
       }
+
       else {
         mixed.push({
           category:"Mixed Ligands",
@@ -108,21 +126,21 @@ export const BindingSitesReducer = (
 
     })
     
-    
 
 		return {
       ...state, 
       bsites        : _.uniqBy(action.mixed_ligands.reduce((acc:BindingSite[],next:MixedLigand)=> [...acc, ...next.present_in.map(bs=>( {
-
         src_organism_ids      : bs.src_organism_ids,
         citation_title        : bs.citation_title,
         expMethod             : bs.expMethod,
         rcsb_id               : bs.rcsb_id,
         resolution            : bs.resolution,
       } ))],[]), 'rcsb_id'),
-      mixed_ligands : mixed      ,
-      factors       : factors    ,
-      antibiotics   : antibioitcs
+      mixed_ligands: mixed,
+      factors      : factors,
+      antibiotics  : antibioitcs,
+      mrna         : mrna,
+      trna         : trna
     }
 
     case "FILE_REQUEST_ERROR":

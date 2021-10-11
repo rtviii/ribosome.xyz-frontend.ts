@@ -70,9 +70,8 @@ export interface MixedLigand{
     category     ?: string,
     polymer       : boolean,
     description   : string;
-    asymid       ?: string;
+    auth_asym_id ?: string;
     chemicalId   ?: string
-    chemicalName ?: string;
 
     present_in: BindingSite[]
 }
