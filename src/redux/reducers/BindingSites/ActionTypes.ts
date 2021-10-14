@@ -43,7 +43,7 @@ export interface ligandBindingSiteSuccess { type: typeof LIGAND_BINDING_SITE_SUC
 export interface ligandPredictionSuccess  { type: typeof LIGAND_PREDICTION_SUCCESS  ; prediction_object  : LigandPrediction  }
 
 export interface currentStructureChange  { type: typeof CURRENT_STRUCTURE_CHANGE ; next_cur_struct    : BindingSite | null }
-export interface currentLigandChange     { type: typeof CURRENT_LIGAND_CHANGE    ; next_cur_ligand    : MixedLigand | null }
+export interface currentLigandChange     { type: typeof CURRENT_LIGAND_CHANGE    ; next_cur_ligand    : LigandClass | null }
 export interface currentPredictionChange { type: typeof CURRENT_PREDICTION_CHANGE; next_cur_prediction: NeoStruct   | null }
 
 export interface changeVisTab {
@@ -79,24 +79,27 @@ export type AllLigandsResponseType = {
 	presentIn: {
 		src_organism_ids   : number[],
 		citation_title     : string  ,
+	description: string ,
+
 		expMethod          : string  ,
 		rcsb_id            : string  ,
 		number_of_instances: number  ,
 		resolution         : number  ,
-	}[]
+	}
 }[]
 
 export type AllLigandlikeResponseType = {
 	polymer     : boolean,
 	description : string,
-	auth_asym_id: string,
 	presentIn   : {
-		src_organism_ids     : number[],
-		citation_title       : string  ,
-		expMethod            : string  ,
-		rcsb_id              : string  ,
-		resolution           : number  ,
-	}[]
+		auth_asym_id    : string,
+		src_organism_ids: number[],
+		citation_title  : string,
+	description: string ,
+		expMethod       : string,
+		rcsb_id         : string,
+		resolution      : number,
+	}
 }[]
 
 
@@ -111,7 +114,7 @@ export const current_struct_change = (struct: BindingSite | null): currentStruct
 	type: "CURRENT_STRUCTURE_CHANGE",
 	next_cur_struct: struct
 })
-export const current_ligand_change = (lig: MixedLigand | null): currentLigandChange => ({
+export const current_ligand_change = (lig: LigandClass | null): currentLigandChange => ({
 	type: "CURRENT_LIGAND_CHANGE",
 	next_cur_ligand: lig
 })
@@ -197,15 +200,14 @@ export const request_all_bsites = () => {
 			type: "REQUEST_ALL_BSITES_GO"
 		});
 
-		var merged: MixedLigand[] = [];
 
 		Promise.all([
 			getNeo4jData("neo4j", { endpoint: "get_all_ligands", params: null }),
 			getNeo4jData("neo4j", { endpoint: "get_all_ligandlike", params: null })
 		]).then(responses => {
 
-			console.log(responses[0].data);
-			console.log(responses[1].data);
+			console.log("got repsonse ligands", responses[0].data);
+			console.log("got repsonse ligandlike", responses[1].data);
 			
 			var lig_coerced_to_mixed = (responses[0].data as AllLigandsResponseType).map(_ => ({
 				description: _.description,
@@ -217,7 +219,6 @@ export const request_all_bsites = () => {
 			var liglike_coerced_to_mixed = (responses[1].data as AllLigandlikeResponseType).map(_ => ({
 				description : _.description,
 				polymer     : _.polymer,
-				auth_asym_id: _.auth_asym_id,
 				present_in  : _.presentIn
 
 			}))

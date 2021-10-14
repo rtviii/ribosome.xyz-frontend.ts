@@ -189,10 +189,10 @@ export const FilterPredicates: Record<
       // any of the names conform with the values passed (push to accumulator if yes)
       var struct = item as NeoStruct;
       var presence = struct.rps.reduce((accumulator: string[], instance) => {
-        return instance.noms.length === 0
+        return instance.nomenclature.length === 0
           ? accumulator
-          : value.includes(instance.noms[0])
-          ? [...accumulator, instance.noms[0]]
+          : value.includes(instance.nomenclature[0])
+          ? [...accumulator, instance.nomenclature[0]]
           : accumulator;
       }, []);
       // If accumulator contains the same elements as the passed value ==> the struct passes

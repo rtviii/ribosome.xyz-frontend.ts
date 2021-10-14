@@ -315,7 +315,7 @@ export default function Nomenclature() {
                     .slice((curpage - 1) * 20, curpage * 20)
                     .map(s => {
 
-                      const source = s.rnas.map(rp => ({ [rp.strands]: rp.noms }))
+                      const source = s.rnas.map(rp => ({ [rp.auth_asym_id]: rp.nomenclature }))
                       return <Accordion
                       
                         style={{marginBottom:"10px"}}
@@ -367,7 +367,7 @@ const StructPaper = (struct:NeoStruct) =>{
 
   useEffect(() => {
     for (var _ of struct.rnas){
-      if ( _.noms == null ){
+      if ( _.nomenclature == null ){
         console.log("------>",struct);
         console.log(struct.rnas);
         
@@ -377,9 +377,8 @@ const StructPaper = (struct:NeoStruct) =>{
 
   return <Paper variant="outlined">
   {struct.rnas !== null ?   struct.rnas.map(rna => {
-    
-    if (rna.noms!== null){
-    return <pre> {rna.strands}:{rna.noms.length> 0 ? rna.noms : "Undefined"} </pre>
+    if (rna.nomenclature!== null){
+    return <pre> {rna.auth_asym_id}:{rna.nomenclature.length> 0 ? rna.nomenclature : "Undefined"} </pre>
     }
   }
     ) 
@@ -390,7 +389,7 @@ const StructPaper = (struct:NeoStruct) =>{
 
 
 
-  {struct.rps !== null ? struct.rps.map(rp  => {return <pre> {rp.strands}:{rp.noms.length> 0 ? rp.noms.reduce((a,b)=>{return a + ',' + b}, '') : "Undefined"} </pre>}): ""}
+  {struct.rps !== null ? struct.rps.map(rp  => {return <pre> {rp.auth_asym_id}:{rp.nomenclature.length> 0 ? rp.nomenclature.reduce((a,b)=>{return a + ',' + b}, '') : "Undefined"} </pre>}): ""}
               </Paper>
 
 }

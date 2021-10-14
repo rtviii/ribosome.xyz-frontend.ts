@@ -25,7 +25,7 @@ import { getNeo4jData } from '../../redux/AsyncActions/getNeo4jData';
 import Paper from '@material-ui/core/Paper/Paper';
 import CardHeader from '@material-ui/core/CardHeader/CardHeader';
 import Card from '@material-ui/core/Card/Card';
-import { RibosomeStructure } from '../../redux/RibosomeTypes';
+import { RibosomeStructure, RNAClass } from '../../redux/RibosomeTypes';
 import { chain, flattenDeep, uniq } from 'lodash';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { useHistory, useParams } from 'react-router';
@@ -163,7 +163,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
             >
               {/* {useSelector(( state:AppState ) => state.visualization.structure_tab.struct?.struct) === null ? null : <MenuItem value="f">{}</MenuItem>} */}
             {current_struct !== null && current_struct !== undefined ? [...current_struct?.rnas,...current_struct?.rps.sort(nomenclatureCompareFn), ]
-              .map((i) => <MenuItem value={i.strands}>{i.noms.length>0 ? i.noms[0] : "Unclassified Polymer"}</MenuItem>) : null}
+              .map((i) => <MenuItem value={i.auth_asym_id}>{i.nomenclature.length>0 ? i.nomenclature[0] : "Unclassified Polymer"}</MenuItem>) : null}
           </Select>
         </FormControl>
       </ListItem>
@@ -229,42 +229,14 @@ const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMet
   )
 }
 
-const SelectRna = ({ items, selectRna }: { items: RNAProfile[], selectRna: (strand: string, parent: string) => void }) => {
+const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifChainByClass: (strand: string, parent: string) => void }) => {
 
-  const styles = useSelectStyles();
+  const styles   = useSelectStyles();
   const dispatch = useDispatch();
 
-  const [curRna, setCurRna] = React.useState('');
+  const [curRna, setCurRna]          = React.useState('');
   const [curRnaParent, setRnaParent] = React.useState('');
 
-
-  const chooseRna = (event: React.ChangeEvent<{ value: unknown }>) => {
-    let item = event.target.value as string
-    // dispatch(requestBanClass(item, false))
-    setCurRna(item);
-  };
-  const chooseRnaParent = (event: React.ChangeEvent<{ value: unknown }>) => {
-    let item = event.target.value as string
-    setRnaParent(item);
-    console.log(item);
-
-    // selectRna(item)
-  };
-
-
-
-  const [state, setState] = React.useState<{ age: string | number; name: string }>({
-    age: '',
-    name: 'hai',
-  });
-
-  const handleChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-    const name = event.target.name as keyof typeof state;
-    setState({
-      ...state,
-      [name]: event.target.value,
-    });
-  };
 
 
   const [selectBy, setSelectBy] = useState<string>('Parent Structure');
@@ -273,56 +245,63 @@ const SelectRna = ({ items, selectRna }: { items: RNAProfile[], selectRna: (stra
   const parents = useSelector((state: AppState) => Object.values(state.rna.rna_classes_derived)
     .reduce((agg, rnaclass) => { return [...agg, ...rnaclass] }, []))
     .map((_: RNAProfile) => ({
-      des: _.description,
+      des    : _.description,
       rcsb_id: _.struct,
-      title: _.parent_citation
+      title  : _.parent_citation
     }))
 
 
 
+  useEffect(() => {
+    // getCifChainByClass(curR)
+
+  }, [curRna, curRnaParent])
+
+
   const [selectrnaClass, setSelectRnaClass] = useState<string>('5')
 
+  var rnaClasses:{v:string, t:RNAClass}[]= [
+                { v: 'mRNA'     , t: 'mRNA'     },
+                { v: 'tRNA'     , t: 'tRNA'     },
+                { v: '5SrRNA'   , t: '5SrRNA'   },
+                { v: '5.8SrRNA' , t: '5.8SrRNA' },
+                { v: '12SrRNA'  , t: '12SrRNA'  },
+                { v: '16SrRNA'  , t: '16SrRNA'  },
+                { v: '21SrRNA'  , t: '21SrRNA'  },
+                { v: '23SrRNA'  , t: '23SrRNA'  },
+                { v: '25SrRNA'  , t: '25SrRNA'  },
+                { v: '28SrRNA'  , t: '28SrRNA'  },
+                { v: '35SrRNA'  , t: '35SrRNA'  },
+              ]
   return (
     <Grid item xs={12}>
       <List style={{ outline: "1px solid gray", borderRadius: "5px" }}>
 
         <ListItem>
           <FormControl className={styles.sub1}>
-
             <InputLabel >RNA Class</InputLabel>
             <Select
+              labelId  = "demo-simple-select-label"
+              id       = "demo-simple-select"
+              value    = {selectBy}
+              onChange = {(event: any) => { 
 
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={selectBy}
-              onChange={(event: any) => { setSelectBy(event.target.value) }}>
-              {[
-                { v: 'mrna', t: 'mRNA' },
-                { v: 'trna', t: 'tRNA' },
-                { v: '5', t: '5S' },
-                { v: '5.8', t: '5.8S' },
-                { v: '12', t: '12S' },
-                { v: '16S', t: '16S' },
-                { v: '21', t: '21S' },
-                { v: '23', t: '23S' },
-                { v: '25', t: '25S' },
-                { v: '28', t: '28S' },
-                { v: '35', t: '35S' },
-              ].map((i) => <MenuItem value={i.v}>{i.t}</MenuItem>)}
+                setCurRna(event.target.value)
+
+                }}>
+              {rnaClasses.map((i) => <MenuItem value={i.v}>{i.t}</MenuItem>)}
             </Select>
           </FormControl>
 
           <FormControl className={styles.sub2}>
             <Autocomplete
+            //@ts-ignore
               styles={{ marginRight: "10px", outline: "none" }}
               options={parents}
               getOptionLabel={(parent) => parent.rcsb_id}
               // @ts-ignore
-              onChange={(event: any, newValue: string | null) => {
-                if (newValue === null) {
-                  return
-                }
-                console.log(newValue)
+              onChange={(event: any, newValue: any) => {
+                setRnaParent(newValue.rcsb_id)
 
               }}
               renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b> ({option.title} ) ::: <i>{option.des}</i></div>)}
@@ -657,9 +636,8 @@ const VisualizationPage = (props: any) => {
                   return <SelectProtein proteins={prot_classes} getCifChainByClass={getCifChainByClass} />
                 case 'struct':
                   return <SelectStruct items={structures} selectStruct={selectStruct} />
-
                 case 'rna':
-                  return <SelectRna items={[]} selectRna={selectRna} />
+                  return <SelectRna items={[]} getCifChainByClass={getCifChainByClass} />
                 default:
                   return "Null"
               }

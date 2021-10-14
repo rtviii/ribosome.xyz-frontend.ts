@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete';
 import TextField from '@material-ui/core/TextField/TextField';
 import Paper from '@material-ui/core/Paper/Paper';
-import { NeoStruct } from '../../../redux/DataInterfaces';
+import { NeoStruct, PolymerMinimal } from '../../../redux/DataInterfaces';
 
 
 // TODO:
@@ -21,20 +21,22 @@ import { NeoStruct } from '../../../redux/DataInterfaces';
 // Sorted rps (numerical precedence)
 
 
-   export const nomenclatureCompareFn = (a: { noms: string[]; strands: string; }, b: { noms: string[]; strands: string; }) => {
-    if (a.noms.length < 1 && b.noms.length > 0) {
+
+
+   export const nomenclatureCompareFn = (a: PolymerMinimal, b: PolymerMinimal) => {
+    if (a.nomenclature.length < 1 && b.nomenclature.length > 0) {
       return -1
     }
-    else if (b.noms.length < 1 && a.noms.length > 0) {
+    else if (b.nomenclature.length < 1 && a.nomenclature.length > 0) {
       return 1
     }
-    else if (b.noms.length < 1 && a.noms.length < 1) {
+    else if (b.nomenclature.length < 1 && a.nomenclature.length < 1) {
       return 0
     }
-    else if (a.noms[0] > b.noms[0]) {
+    else if (a.nomenclature[0] > b.nomenclature[0]) {
       return 1
     }
-    else if (a.noms[0] < b.noms[0]) {
+    else if (a.nomenclature[0] < b.nomenclature[0]) {
       return -1
     }
     else {
@@ -43,17 +45,6 @@ import { NeoStruct } from '../../../redux/DataInterfaces';
   }
 
 
-type StructRespone = {
-  struct: RibosomeStructure,
-  rps: { 
-    noms: string[],
-
-     strands: string }[],
-
-  rnas: string[],
-
-  ligands: string[]
-}
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
 
@@ -125,17 +116,17 @@ export default function ProteinAlignment() {
   const [struct1, setstruct1] = useState<NeoStruct | null>(null)
   const [struct2, setstruct2] = useState<NeoStruct | null>(null)
 
-  const [strand1, setstrand1] = useState<any>(null)
-  const [strand2, setstrand2] = useState<any>(null)
+  const [auth_asym_id1, set_auth_asym_id1] = useState<any>(null)
+  const [auth_asym_id2, set_auth_asym_id2] = useState<any>(null)
 
-  const [chains1, setChains1] = useState<{ noms: string[]; strands: string; }[]>([])
-  const [chains2, setChains2] = useState<{ noms: string[]; strands: string; }[]>([])
+  const [chains2, setChains2] = useState<PolymerMinimal[]>([])
+  const [chains1, setChains1] = useState<PolymerMinimal[]>([])
 
 
   const visualizeAlignment = (
   )=>{
         console.log("Got:",
-        struct1,struct2,strand1,strand2
+        struct1,struct2,auth_asym_id1,auth_asym_id2
         );
 
       if ( chainStructPair1.includes(null) || chainStructPair2.includes(null) ){
@@ -144,7 +135,7 @@ export default function ProteinAlignment() {
               viewerInstance.visual.update({
                 customData: {
                   url:
-                    `${process.env.REACT_APP_DJANGO_URL}/static_files/align_3d/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
+                    `${process.env.REACT_APP_DJANGO_URL}/static_files/align_3d/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&auth_asym_id1=${chainStructPair1[0]}&auth_asym_id2=${chainStructPair2[0]}`,
                   format: "pdb",
                   binary: false,
                 },
@@ -153,34 +144,24 @@ export default function ProteinAlignment() {
   const requestAlignment = (
     struct1: string,
     struct2: string,
-    strand1: string,
-    strand2: string,
+    auth_asym_id1: string,
+    auth_asym_id2: string,
   ) => {
 
 
-      console.log("Got:",
-      struct1,struct2,strand1,strand2);
-      
-    if (strand1.includes(',')) {
-      alert(`Please select two single-chain proteins for now: \n ${strand1} is a duplicated chain (as per ${struct1}-PDB deposition). Working on parsing this. `)
-      return
-    }
-    if (strand1.includes(',')) {
-      alert(`Please select two single-chain proteins for now: \n ${strand1} is a duplicated chain (as per ${struct1}-PDB deposition). Working on parsing this. `)
-      return
-    }
+      console.log("Got:",      struct1,struct2,auth_asym_id1,auth_asym_id2);
 
     getNeo4jData("static_files", {
       endpoint: "align_3d",
       params: {
         struct1,
         struct2,
-        strand1,
-        strand2
+        auth_asym_id1,
+        auth_asym_id2
       },
     })
       .then(
-        resp => { fileDownload(resp.data, `${struct1}-${strand1}_over_${struct2}-${strand2}.pdb`) },
+        resp => { fileDownload(resp.data, `${struct1}-${auth_asym_id1}_over_${struct2}-${auth_asym_id2}.pdb`) },
         e => console.log(e)
       )
   };
@@ -192,14 +173,14 @@ export default function ProteinAlignment() {
       if (newvalue === null) {
         setstruct1(null)
         setChainStructPair1([chainStructPair1[0], null])
-        setstrand1(null)
+        set_auth_asym_id1(null)
       }
       else {
 
         setstruct1(newvalue)
         setChainStructPair1([chainStructPair1[0], newvalue.struct.rcsb_id])
         setChains1([ ...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas])
-        setstrand1(null)
+        set_auth_asym_id1(null)
 
       }
     }
@@ -208,43 +189,37 @@ export default function ProteinAlignment() {
       if (newvalue === null) {
         setstruct2(null)
         setChainStructPair2([chainStructPair2[0], null])
-        setstrand2(null)
+        set_auth_asym_id2(null)
       } else {
         setstruct2(newvalue)
         setChainStructPair2([chainStructPair2[0], newvalue.struct.rcsb_id])
         setChains2( [ ...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas ])
-        setstrand2(null)
+        set_auth_asym_id2(null)
       }
     }
   }
 
 
   const handleChainChange = (chain_number: number) => (event: React.ChangeEvent<{ value: unknown }>,
-    newvalue: {
-        noms   : string[];
-        strands: string  ;
-    }) => {
-    
-    if (newvalue !== null && newvalue.strands.includes(',')) {
-      newvalue.strands = newvalue.strands.split(',')[0]
-    }
+    newvalue: PolymerMinimal) => {
+
     if (chain_number === 1) {
       if (newvalue === null) {
-        setstrand1(null)
+        set_auth_asym_id1(null)
         setChainStructPair1([null, chainStructPair1[1]])
       } else {
-        setstrand1(newvalue)
-        setChainStructPair1([newvalue.strands, chainStructPair1[1]])
+        set_auth_asym_id1(newvalue)
+        setChainStructPair1([newvalue.auth_asym_id, chainStructPair1[1]])
       }
     }
 
     if (chain_number === 2) {
       if (newvalue === null) {
-        setstrand2(null)
+        set_auth_asym_id2(null)
         setChainStructPair2([null, chainStructPair2[1]])
       } else {
-        setstrand2(newvalue)
-        setChainStructPair2([newvalue.strands, chainStructPair2[1]])
+        set_auth_asym_id2(newvalue)
+        setChainStructPair2([newvalue.auth_asym_id, chainStructPair2[1]])
       }
     }
   }
@@ -284,17 +259,18 @@ export default function ProteinAlignment() {
             renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title} </div>)}
             renderInput={(params) => <TextField {...params} label={`Structure 1`} variant="outlined" />}
           />
-
           <Autocomplete
-            value={strand1}
-            className={classes.autocomplete}
-            options={chains1}
-            getOptionLabel={(chain: { noms: string[]; strands: string; }) => { return chain.noms.length > 0 ? chain.noms[0] : chain.strands }}
-
+            value          = {auth_asym_id1}
+            className      = {classes.autocomplete}
+            options        = {chains1}
+            getOptionLabel = {(chain: PolymerMinimal) => { 
+              // if (chain.nomenclature === null)
+              
+              return chain.nomenclature && chain.nomenclature.length > 0 ? chain.nomenclature[0] : chain.auth_asym_id }}
             // @ts-ignore
-            onChange={handleChainChange(1)}
-            renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.noms.length > 0 ? option.noms[0] : " "}</b> {option.strands}  </div>)}
-            renderInput={(params) => <TextField {...params} label={`Chain 1`} variant="outlined" />}
+            onChange     = {handleChainChange(1)}
+            renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.nomenclature.length > 0 ? option.nomenclature[0] : " "}</b> {option.auth_asym_id}  </div>)}
+            renderInput  = {(params) => <TextField {...params} label={`Chain 1`} variant="outlined" />}
           />
 
         </Grid>
@@ -302,25 +278,25 @@ export default function ProteinAlignment() {
         <Grid item style={{ marginBottom: "40px" }}>
 
           <Autocomplete
-            value={struct2}
-            className={classes.autocomplete}
-            options={structs}
-            getOptionLabel={(parent: NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
+            value          = {struct2}
+            className      = {classes.autocomplete}
+            options        = {structs}
+            getOptionLabel = {(parent: NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
             // @ts-ignore
-            onChange={handleStructChange(2)}
-            renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
-            renderInput={(params) => <TextField {...params} label={`Structure 2`} variant="outlined" />}
+            onChange     = {handleStructChange(2)}
+            renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
+            renderInput  = {(params) => <TextField {...params} label={`Structure 2`} variant="outlined" />}
           />
 
           <Autocomplete
-            value={strand2}
+            value={auth_asym_id2}
             className={classes.autocomplete}
             options={chains2}
-            getOptionLabel={(chain: { noms: string[]; strands: string; }) => { 
+            getOptionLabel={(chain: PolymerMinimal) => { 
               
-              if (chain.noms !== null){
+              if (chain.nomenclature !== null){
 
-                return chain.noms.length > 0 ? chain.noms[0] : chain.strands 
+                return chain.nomenclature.length > 0 ? chain.nomenclature[0] : chain.auth_asym_id
               }
               else{
                 return "Undefined Class"
@@ -329,7 +305,7 @@ export default function ProteinAlignment() {
             }}
             // @ts-ignore
             onChange={handleChainChange(2)}
-            renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.noms.length > 0 ? option.noms[0] : " "}</b> {option.strands}  </div>)}
+            renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.nomenclature.length > 0 ? option.nomenclature[0] : " "}</b> {option.auth_asym_id}  </div>)}
             renderInput={(params) => <TextField {...params} label={`Chain 2`} variant="outlined" />}
           />
 

@@ -66,10 +66,10 @@ interface get_tunnel {
 interface align_3d {
   endpoint: "align_3d",
   params: {
-    struct1: string,
-    struct2: string,
-    strand1: string,
-    strand2: string
+    struct1      : string,
+    struct2      : string,
+    auth_asym_id1: string,
+    auth_asym_id2: string
   }
 }
 

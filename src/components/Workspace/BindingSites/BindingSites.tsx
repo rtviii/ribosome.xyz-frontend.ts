@@ -217,32 +217,40 @@ const BindingSites = () => {
 
 	const dispatch = useDispatch();
 
-	const  cur_struct                                         = useSelector                ((state: AppState) => state.binding_sites.current_structure)
-	const  cur_lig             : MixedLigand | null = useSelector                ((state: AppState) => state.binding_sites.current_ligand   )
-	const  cur_tgt                                            = useSelector                ((state: AppState) => state.binding_sites.current_target   )
+	const current_binding_site : BindingSite | null      = useSelector ((state: AppState) => state.binding_sites.current_binding_site )
+	const cur_ligclass              : LigandClass | null = useSelector ((state: AppState) => state.binding_sites.current_ligand_class       )
+	const cur_tgt              : NeoStruct   | null      = useSelector ((state: AppState) => state.binding_sites.current_target       )
+
 
 	const  bsites                                             = useSelector                ((state: AppState) => state.binding_sites.bsites           )
-	const [bsites_derived      , set_bsites_derived ]         = useState    <BindingSite[]>(                                                          )
-
 	const antibiotics = useSelector                ((state: AppState) => state.binding_sites.antibiotics   )
 	const factors     = useSelector                ((state: AppState) => state.binding_sites.factors   )
 	const mrna        = useSelector                ((state: AppState) => state.binding_sites.mrna   )
 	const trna        = useSelector                ((state: AppState) => state.binding_sites.trna   )
-	const mixed       = useSelector                ((state: AppState) => state.binding_sites.mixed_ligands   )
+	// const mixed       = useSelector                ((state: AppState) => state.binding_sites.mixed_ligands   )
 
-	const [derived_antibiotics , set_derived_antibiotics ] = useState <MixedLigand[]>([] )
-	const [derived_factors     , set_derived_factors     ] = useState <MixedLigand[]>([] )
-	const [derived_mrna       , set_derived_mrna       ]   = useState <MixedLigand[]>([] )
-	const [derived_trna       , set_derived_trna      ]    = useState <MixedLigand[]>([] )
-	const [derived_mixed       , set_derived_mixed       ] = useState <MixedLigand[]>([] )
+	const [bsites_derived      , set_derived_bsites ]         = useState    <BindingSite[]>(                                                          )
+	useEffect(() => {set_derived_bsites(bsites)}, [bsites])
+	const [derived_antibiotics , set_derived_antibiotics ] = useState <LigandClass[]>([] )
+	useEffect(() => {set_derived_antibiotics(antibiotics)}, [antibiotics])
+	const [derived_factors     , set_derived_factors     ] = useState <LigandClass[]>([] )
+	useEffect(() => {set_derived_factors(factors)}, [factors])
+	const [derived_mrna       , set_derived_mrna       ]   = useState <LigandClass[]>([] )
+	useEffect(() => {set_derived_mrna(mrna)}, [mrna])
+	const [derived_trna       , set_derived_trna      ]    = useState <LigandClass[]>([] )
+	useEffect(() => {set_derived_trna(trna)}, [trna])
+
 
 	const  interface_data                                     = useSelector                ((state: AppState) => state.binding_sites.binding_site_data)
 	const  prediction_data                                    = useSelector                ((state: AppState) => state.binding_sites.prediction_data  )
 
+	const cur_vis_tab    = useSelector((state: AppState) => state.binding_sites.visualization_tab)
+	const target_structs = useSelector((state: AppState) => state.structures.neo_response)
+
 	useEffect(() => {
-		console.log("current ligand" ,cur_lig);
+		console.log("current ligand" ,cur_ligclass);
 		
-	}, [cur_lig])
+	}, [cur_ligclass])
 
 
 	useEffect(() => {
@@ -309,7 +317,7 @@ const BindingSites = () => {
 			{
 				data: prediction_vis_data,
 				nonSelectedColor: { r: 240, g: 240, b: 240 }
-			}
+		}
 		)
 	}
 
@@ -319,17 +327,37 @@ const BindingSites = () => {
 			alert("Select a binding site.")
 			return
 		}
-		interface MolStarResidue { entity_id?: string, auth_asym_id?: string, struct_asym_id?: string, residue_number?: number, start_residue_number?: number, end_residue_number?: number, auth_residue_number?: number, auth_ins_code_id?: string, start_auth_residue_number?: number, start_auth_ins_code_id?: string, end_auth_residue_number?: number, end_auth_ins_code_id?: string, atoms?: string[], label_comp_id?: string, color: { r: number, g: number, b: number }, focus?: boolean, sideChain?: boolean }
+		interface MolStarResidue            { 
+			           entity_id                ?  : string,
+			           auth_asym_id              ? : string,
+			           struct_asym_id            ? : string,
+			           residue_number            ? : number,
+			           start_residue_number      ? : number,
+			           end_residue_number        ? : number,
+			           auth_residue_number       ? : number,
+			           auth_ins_code_id          ? : string,
+			           start_auth_residue_number?  : number,
+			           start_auth_ins_code_id    ? : string,
+			           end_auth_residue_number   ? : number,
+			           end_auth_ins_code_id      ? : string,
+			           atoms                     ? : string[],
+			           label_comp_id             ? : string,
+			           color                       : { r: number, g: number,b: number },
+			           focus                     ? : boolean,
+			           sideChain                 ? : boolean }
 		var vis_data: MolStarResidue[] = []
 
 		for (var chain of Object.values(interface_data)) {
 			var reduced = chain.residues.reduce((x: MolStarResidue[], y: Residue) => {
 				if (y.residue_id > 0) {
 					x.push({
+						// @ts-ignore
+						// entity_id     : current_binding_site?.rcsb_id.toLowerCase(),
+						auth_asym_id: y.parent_auth_asym_id,
 						residue_number: y.residue_id,
-						focus: false,
-						color: { r: 1, g: 200, b: 200 },
-						auth_asym_id: y.parent_strand_id
+						color         : { r: 1, g: 200, b: 200 },
+						focus         : false,
+
 					})
 				}
 				return x
@@ -339,8 +367,8 @@ const BindingSites = () => {
 		}
 
 
+		console.log("Painting visdata", vis_data);
 		if (vis_data.length > 300) {
-			// alert("This ligand binds to more than 300 residues. Your browser might take some time to load it.")
 			if (window.confirm("This ligand binds to more than 300 residues. Your browser might take some time to visualize it.")) {
 			}
 			else {
@@ -348,87 +376,91 @@ const BindingSites = () => {
 			}
 		}
 
-		viewerInstance.visual.select(
-			{
-				data: vis_data,
-				nonSelectedColor: { r: 240, g: 240, b: 240 }
+		console.log("Painting visdata", vis_data);
+
+		var by_chain:Record<string, MolStarResidue[]> ={}
+		for (var u of vis_data){
+			if (Object.keys(by_chain).includes(u.auth_asym_id as string)){
+				by_chain[u.auth_asym_id as string] = [...by_chain[u.auth_asym_id as string], u]
 			}
-		)
+			else{
+				by_chain[u.auth_asym_id as string] = [u]
+			}
+			
+		}
+		
+
+		for (var chain_ress of Object.values(by_chain)){
+			viewerInstance.visual.select(
+
+				{ data            : chain_ress,
+				nonSelectedColor: { r: 240, g: 240, b: 240 }, }
+			)
+
+		}
+		
+		// viewerInstance.visual.highlight(
+
+		// 				{ data: [], color: {r:1, g:1, b:1},  structureNumber: current_binding_site?.rcsb_id }
+		// )
+		// viewerInstance.visual.select(
+		// 	{
+		// 		data            : vis_data,
+		// 		// focus           : true,
+		// 		nonSelectedColor: { r: 240, g: 240, b: 240 },
+		// 		// structure_number: current_binding_site?.rcsb_id
+
+
+		// 	}
+		// )
 	}
 
-	const updateBindingSiteData = (current_bs: BindingSite, curligand: MixedLigand) => {
-		if(curligand.polymer){
-				console.log("Dispatching");
-				console.log( curligand.auth_asym_id as string  ,curligand.polymer, current_bs.rcsb_id)
-			dispatch(action.request_LigandBindingSite( curligand.auth_asym_id as string ,curligand.polymer, current_bs.rcsb_id))
-		}else{
 
-			dispatch(action.request_LigandBindingSite( curligand.chemicalId as string ,curligand.polymer, current_bs.rcsb_id))
+	const updateBindingSiteData = (current_bs: BindingSite, curligand: LigandClass) => {
+		
+		if(curligand[getdesc(curligand)][0].polymer){
+				console.log("Dispatching:");
+				console.log(current_bs.auth_asym_id ,curligand[getdesc(curligand)][0].polymer  , current_bs.rcsb_id)
+			dispatch(action.request_LigandBindingSite( current_bs.auth_asym_id as string ,curligand[getdesc(curligand)][0].polymer  , current_bs.rcsb_id))
+		}else{
+			dispatch(action.request_LigandBindingSite( curligand[getdesc(curligand)][0].chemicalId as string ,curligand[getdesc(curligand)][0].polymer, current_bs.rcsb_id))
 		}
 	}
 
 
-	// const state = useSelector(( state:AppState ) => s)
-	const [ligandlike, setligandlike] = useState<Protein[]>([])
+	var comparefn = (a:LigandClass,b:LigandClass) => {
+			var akey= Object.keys(a)[0];
+			var bkey= Object.keys(b)[0];
 
-	// to sort alphabetically
-	var comparefn = (a:MixedLigand,b:MixedLigand) => {
-
-			if(a.description[0].toLowerCase() > b.description[0].toLowerCase()){
+			if(akey.toLowerCase() > bkey.toLowerCase()){
 				return  1
 			}
 
-			if(a.description[0].toLowerCase() < b.description[0].toLowerCase()){
+			if(akey.toLowerCase() < bkey.toLowerCase()){
 				return  -1
 			}
-
 			else 
 			{return 0}
 	} 
 
-	useEffect(() => {
-		set_derived_antibiotics(antibiotics.sort(comparefn))
-	}, [antibiotics])
-	useEffect(() => {
-		set_derived_factors(factors.sort(comparefn))
-	}, [factors])
-	useEffect(() => {
-		set_derived_mixed(mixed.sort(comparefn))
-	}, [mixed])
-
-	useEffect(() => {
-		set_derived_mrna(mrna.sort(comparefn))
-	}, [mrna])
-
-	useEffect(() => {
-		set_derived_trna(trna.sort(comparefn))
-	}, [trna])
-
-	useEffect(() => {
-		set_bsites_derived(bsites)
-	}, [bsites])
 
 
 		useEffect(() => {
 			console.log("Interface data changeD:",interface_data);
-			
-			
 		}, [interface_data])
 		useEffect(() => {
-			
 			console.log("Pred change" , prediction_data);
 		}, [prediction_data])
 
 
-	const handleStructChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
+	const currentBindingSiteChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: BindingSite) => {
 		if (newvalue === null) {
-
 			dispatch(action.current_struct_change(null))
 		} else {
 			dispatch(action.current_struct_change(newvalue))
 		}
 	}
-	const handleLigChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: MixedLigand) => {
+	const currentLigandClassChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: LigandClass) => {
 		if (newvalue === null) {
 			dispatch(action.current_ligand_change(null))
 		}
@@ -436,92 +468,92 @@ const BindingSites = () => {
 			dispatch(action.current_ligand_change(newvalue))
 		}
 	}
-	const handleTargetChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: NeoStruct) => {
-
+	const currentTargetChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: NeoStruct) => {
 		if (newvalue === null) {
 			dispatch(action.current_target_change(null))
 			dispatch(action._partial_state_change({ visualization_tab: 'origin' }))
 		}
 		else {
 			dispatch(action.current_target_change(newvalue))
-			// dispatch(action._partial_state_change({ visualization_tab: 'prediction' }))
 		}
 	}
 
 
-	const cur_vis_tab = useSelector((state: AppState) => state.binding_sites.visualization_tab)
-	const target_structs = useSelector((state: AppState) => state.structures.derived_filtered)
 
 	useEffect(() => {
-		if (cur_lig === null) {
-			set_bsites_derived(bsites)
+		if (cur_ligclass === null) {
+			set_derived_bsites(bsites)
 			dispatch(action._partial_state_change({ 'binding_site_data': null }))
+
 		} else {
-			set_bsites_derived(
-				bsites.filter(bs => cur_lig.present_in.map(f=>f.rcsb_id).includes(bs.rcsb_id)  ))
-			// // * Make sure this is nonnull
-			if (cur_struct !== null){
-				updateBindingSiteData(cur_struct as BindingSite, cur_lig)
+
+			set_derived_bsites(bsites.filter(bs=> cur_ligclass[getdesc(cur_ligclass)].map(f=>f.description).includes(bs.description)))
+			if (current_binding_site !== null){
+				updateBindingSiteData(current_binding_site as BindingSite, cur_ligclass)
 			}
 		}
-	}, [cur_lig])
+	}, [cur_ligclass])
 
 	useEffect(() => {
-		
-		if (cur_struct === null) {
-			if (cur_lig ===null)	{
+
+		if (current_binding_site === null) {
+			if (cur_ligclass === null) {
 				set_derived_antibiotics(antibiotics)
 				set_derived_factors(factors)
-				set_derived_mixed(mixed)
 				set_derived_mrna(mrna)
 				set_derived_trna(trna)
 			}
 		} else {
-
-			if ( cur_lig  === null){
-				set_derived_antibiotics(antibiotics.filter(strs=>strs.present_in.map(container=>container.rcsb_id).includes(cur_struct.rcsb_id)))
-				set_derived_factors(factors.filter(strs=>strs.present_in.map(container=>container.rcsb_id).includes(cur_struct.rcsb_id)))
-				set_derived_mixed(mixed.filter(strs=>strs.present_in.map(container=>container.rcsb_id).includes(cur_struct.rcsb_id)))
-				set_derived_mrna(mrna.filter(strs=>strs.present_in.map(container=>container.rcsb_id).includes(cur_struct.rcsb_id)))
-				set_derived_trna(trna.filter(strs=>strs.present_in.map(container=>container.rcsb_id).includes(cur_struct.rcsb_id)))
+			if (cur_ligclass === null) {
+				set_derived_antibiotics(
+					antibiotics
+						.filter((ligclass: LigandClass) => { return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) })
+				)
+				set_derived_factors(factors
+					.filter((ligclass: LigandClass) => { return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) })
+				)
+				set_derived_mrna(mrna
+					.filter((ligclass: LigandClass) => { return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) })
+				)
+				set_derived_trna(trna
+					.filter((ligclass: LigandClass) => { return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) })
+				)
 
 			}
 			else {
-				updateBindingSiteData(cur_struct,cur_lig)
+				updateBindingSiteData(current_binding_site, cur_ligclass)
 			}
 
-			if ( cur_vis_tab ==='origin') {
-								addToast(`Structure ${cur_struct?.rcsb_id} is being loaded.`,
-													{
-								appearance: 'info',
-								autoDismiss: true,
-							})
-			viewerInstance.visual.update({
-				moleculeId: cur_struct?.rcsb_id.toLowerCase()
-			});
+			if (cur_vis_tab === 'origin') {
+				addToast(`Structure ${current_binding_site?.rcsb_id} is being loaded.`,
+					{
+						appearance: 'info',
+						autoDismiss: true,
+					})
+				viewerInstance.visual.update({
+					moleculeId: current_binding_site?.rcsb_id.toLowerCase()
+				});
 			}
 
 		}
-	}, [cur_struct])
+	}, [current_binding_site])
 
 	useEffect(() => {
-
 		if (cur_tgt !== null) {
-
-			if (cur_lig !== null ){
-				if (cur_lig.polymer){
+			if (cur_ligclass !== null ){
+				if (cur_ligclass[getdesc(cur_ligclass)][0].polymer){
 					dispatch(action.request_Prediction(
-							cur_lig.polymer,
-							cur_lig.auth_asym_id as string,
-							cur_struct!.rcsb_id,
-							cur_tgt!.struct.rcsb_id,
+						cur_ligclass[getdesc(cur_ligclass)][0].polymer,
+							current_binding_site?.auth_asym_id as string,
+							current_binding_site?.rcsb_id as string,
+							cur_tgt.struct.rcsb_id
 						))
 				}
 				else {
 					dispatch(action.request_Prediction(
-							cur_lig.polymer,
-							cur_lig.chemicalId as string,
-							cur_struct!.rcsb_id,
+							cur_ligclass[getdesc(cur_ligclass)][0].polymer,
+							cur_ligclass[getdesc(cur_ligclass)][0].chemicalId as string,
+							current_binding_site!.rcsb_id as string,
 							cur_tgt!.struct.rcsb_id,
 						))
 
@@ -538,7 +570,6 @@ const BindingSites = () => {
 			dispatch(action._partial_state_change({ 'prediction_data': null }))
 		}
 	}, [cur_tgt])
-
 
 	useEffect(() => {
 
@@ -560,20 +591,20 @@ const BindingSites = () => {
 
 		}
 
-		if (cur_struct != null && cur_vis_tab === 'origin') {
+		if (current_binding_site != null && cur_vis_tab === 'origin') {
 
 								addToast(`Switched into ORIGINAL STRUCTURE view.`,
 													{
 							appearance: 'warning',
 							autoDismiss: true,
 						})
-								addToast(`Structure ${cur_struct?.rcsb_id} is being loaded.`,
+								addToast(`Structure ${current_binding_site?.rcsb_id} is being loaded.`,
 													{
 							appearance: 'info',
 							autoDismiss: true,
 						})
 			viewerInstance.visual.update({
-				moleculeId: cur_struct?.rcsb_id.toLowerCase()
+				moleculeId: current_binding_site?.rcsb_id.toLowerCase()
 			});
 		}
 	}, [cur_vis_tab])
@@ -600,13 +631,15 @@ const BindingSites = () => {
 	}
 
 
+	const getdesc = (l:LigandClass):string => Object.keys(l)[0]
 
-	const MixedLigandComparison = (a:MixedLigand,b:MixedLigand)=>{
+	const MixedLigandComparison = (a:LigandClass,b:LigandClass)=>{
 							
 
-							if (a.category !== undefined && b.category !== undefined){
-								var ac = a.category
-								var bc = b.category
+						
+							if (a !== null && b !== null){
+								var ac = Object.keys(a)[0]
+								var bc = Object.keys(b)[0]
 
 								if (ac==='Antibiotics'){
 									return -1
@@ -624,7 +657,6 @@ const BindingSites = () => {
 					
 
 						}
-	
 
 	return (
 		<Grid container xs={12} spacing={1} style={{ outline: "1px solid gray", height: "100vh" }} alignContent="flex-start">
@@ -637,26 +669,30 @@ const BindingSites = () => {
 				<Typography className={classes.bsHeader} variant="h5">Original Structure</Typography>
 
 				<Autocomplete
-					value     = {cur_struct}
+					value     = {current_binding_site}
 					className = {classes.autocomplete}
 					options   = {bsites_derived ===undefined ? [] : bsites_derived}
-					// options={bsites_derived as any}
-					getOptionLabel={(parent: BindingSite) => { return parent.rcsb_id ? parent.rcsb_id + " : " + parent.citation_title : "" }}
+					getOptionLabel={(bs: BindingSite) =>  bs.rcsb_id + bs.description}
 					// @ts-ignore
-					onChange={handleStructChange}
-					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b> {option.citation_title}  </div>)}
-					renderInput={(params) => <TextField {...params} label={`Structures  ( ${bsites_derived !== undefined ? bsites_derived.length : "0"} )`} variant="outlined" />}
+					groupBy={(option:BindingSite) => `Structure ${option.rcsb_id}`}
+					// @ts-ignore
+					onChange={currentBindingSiteChange}
+					renderOption={(option:BindingSite) => (<>
+				
+					<div style={{ fontSize: "10px", width: "100%",zIndex:2000 }}><b>{option.description}</b></div>
+					</>)}
+					renderInput={(params) => <TextField {...params} label={`Binding Sites ( ${bsites_derived !== undefined ? bsites_derived.length : "0"} )`} variant="outlined" />}
 				/>
 
 				<Autocomplete
-					value={cur_lig}
+					value={cur_ligclass}
 					className={classes.autocomplete}
 					options={
-						[ ...derived_mixed, ...derived_antibiotics,...derived_factors, ...derived_mrna, ...derived_trna]
+						[  ...derived_antibiotics,...derived_factors, ...derived_mrna, ...derived_trna]
 						=== undefined ? [] :
-						  [ ...derived_mixed, ...derived_antibiotics,...derived_factors, ...derived_mrna, ...derived_trna].sort(MixedLigandComparison)
+						  [  ...derived_antibiotics,...derived_factors, ...derived_mrna, ...derived_trna].sort(MixedLigandComparison)
 						}
-					getOptionLabel={(lc: MixedLigand) => lc.description}
+					getOptionLabel={(lc: LigandClass) => Object.keys(lc)[0]}
 					// @ts-ignore
 
 
@@ -673,25 +709,22 @@ const BindingSites = () => {
 						if(derived_factors.includes(option)){
 							return "E/T/I Factors"
 						}
-						if(derived_mixed.includes(option)){
-							return "Mixed Ligands"
-						}
 					}}
 
-					onChange={(e:any,v:any)=>handleLigChange(e,v)}
+					onChange={(e:any,v:any)=>currentLigandClassChange(e,v)}
 					renderOption={(option) => {
-							return<div style={{ fontSize: "10px", width: "400px" }}><b>{option.description}</b> {option.chemicalId}  </div> 
+							return<div style={{ fontSize: "10px", width: "400px" }}><b>{option.description}</b> {option.chemicalId} {getdesc(option)}  </div> 
 						}
 					}
 					renderInput={(params) => <TextField {...params} label={
-						`Ligands  (${[ ...derived_mixed, ...derived_antibiotics,...derived_factors, ...derived_mrna, ...derived_trna] !== undefined ? [ ...derived_mixed, ...derived_antibiotics,...derived_factors, ...derived_mrna, ...derived_trna].length : "0"})`
+						`Ligands  (${[  ...derived_antibiotics,...derived_factors, ...derived_mrna, ...derived_trna] !== undefined ? [  ...derived_antibiotics,...derived_factors, ...derived_mrna, ...derived_trna].length : "0"})`
 						} variant="outlined" />} />
 
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
 						fullWidth
 						variant={"outlined"}
-						style={[cur_struct, cur_lig].includes(null) ? { color: "gray", textTransform:"none" } : {textTransform:"none"}}
+						style={[current_binding_site, cur_ligclass].includes(null) ? { color: "gray", textTransform:"none" } : {textTransform:"none"}}
 						onClick={() => {
 							highlightInterface()
 						}}>
@@ -718,7 +751,7 @@ const BindingSites = () => {
 							fullWidth
 							variant="outlined"
 							style    = {{textTransform:"none"}}
-							color={[cur_struct, cur_lig].includes(null) ? 'primary' : 'default'}
+							color={[current_binding_site, cur_ligclass].includes(null) ? 'primary' : 'default'}
 							disabled={interface_data == null}>
 							Download Binding Site 
 						</Button>
@@ -736,14 +769,14 @@ const BindingSites = () => {
 
 						style={{textTransform:"none"}}
 					// @ts-ignore
-					onChange={handleTargetChange}
+					onChange={currentTargetChange}
 					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title} </div>)}
 					renderInput={(params) => <TextField {...params}
 						label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
 
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
-						disabled={[cur_lig, cur_struct].includes(null)}
+						disabled={[cur_ligclass, current_binding_site].includes(null)}
 						onClick={() => {
 							// 
 							// alert("Implement this")
@@ -803,14 +836,14 @@ const BindingSites = () => {
 				<Grid item style={{ marginBottom: "10px" }}>
 
 					<Dialogue
-						src_struct ={                         cur_struct     ?.rcsb_id as string                                                                                }
+						src_struct ={                         current_binding_site     ?.rcsb_id as string                                                                                }
 						tgt_struct ={                         cur_tgt        ?.struct.rcsb_id as string                                                                         }
-						title      ={`Predicted Residues of ${cur_lig?.description} from structure ${cur_struct?.rcsb_id} in structure ${cur_tgt?.struct.rcsb_id}`}
+						title      ={`Predicted Residues of ${cur_ligclass?.description} from structure ${current_binding_site?.rcsb_id} in structure ${cur_tgt?.struct.rcsb_id}`}
 						open       ={                         msaOpen                                                                                                           }
 						handleclose={                         handleclose                                                                                                       }
 						handleopen ={                         handleopen                                                                                                        }
 						aln_obj    ={                         prediction_data                                                                                                   } />
-
+`
 				</Grid>
 
 				<Grid item xs={4} justify={"center"} >
@@ -842,7 +875,7 @@ const BindingSites = () => {
 									}))
 							}
 							} >
-							Original Structure {cur_struct === null ? "" : `(${cur_struct.rcsb_id})`}
+							Original Structure {current_binding_site === null ? "" : `(${current_binding_site.rcsb_id})`}
 						</Button >
 					</Grid>
 

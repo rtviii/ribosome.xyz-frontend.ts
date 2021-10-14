@@ -4,18 +4,23 @@ import {  RibosomeStructure,  Protein, RNA, Ligand, ProteinClass, RNAClass} from
 // uses. Some(non-composite) are imported from RibosomeTypes  non-composite types that also resemble neo4j-schema.
 // Preload for strucutrescatalogue.
 
-export interface NeoStruct{
-  struct   :  RibosomeStructure;
-  ligands  :  string[];
-  rps      :  Array<{noms:string[]; strands: string }>;
-  rnas     :  Array<{noms:string[], strands:string}>
+export interface PolymerMinimal{
+  nomenclature: string[];
+  auth_asym_id: string; 
 }
+
+  export interface NeoStruct{
+  struct  : RibosomeStructure;
+  ligands : string[];
+  rps     : Array<PolymerMinimal>;
+  rnas    : Array<PolymerMinimal>
+  }
 
 
 export interface Residue{
-				residue_name    : string
-				residue_id      : number
-				parent_strand_id: string
+				residue_name       : string
+				residue_id         : number
+				parent_auth_asym_id: string
 }
 export type LigandBindingSite = {
   [ chainname    :string ] :
@@ -55,39 +60,33 @@ export interface BindingInterface {
     }>
 }
 
+export type LigandClass = {
+  [ligand_description:string]: MixedLigand[]
+}
+
+export type StructureBindingSites  =  {
+  [rcsb_id:string]: BindingSite[]
+}
 
 export type BindingSite  =  {
-      src_organism_ids      : number[],
-      citation_title        : string,
-      expMethod             : string,
-      rcsb_id               : string,
-      resolution            : number,
-		}
+                                 src_organism_ids: number[],
+                                 description     : string,
+                                 citation_title  : string,
+                    auth_asym_id ?               : string;
+                                 expMethod       : string,
+                                 rcsb_id         : string,
+                                 resolution      : number,
+}
 
-// Union of Ligand and Polymer(Protein&RNA ligand-likes)
 export interface MixedLigand{
-
     category     ?: string,
     polymer       : boolean,
     description   : string;
-    auth_asym_id ?: string;
     chemicalId   ?: string
+    present_in: BindingSite
 
-    present_in: BindingSite[]
 }
 
-
-export interface LigandClass {
-  ligand: Ligand, 
-  presentIn: {
-    src_organism_ids   : number[],
-    citation_title     : string,
-    expMethod          : string,
-    rcsb_id            : string,
-    number_of_instances: number,
-    resolution         : number,
-  }[]
-}
 
 export interface NeoHomolog {
   parent : string;
