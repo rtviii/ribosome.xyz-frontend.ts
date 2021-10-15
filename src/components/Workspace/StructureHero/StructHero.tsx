@@ -13,7 +13,7 @@ const truncate = (str:string) =>{
 const StructHero: React.FC<{
   struct : RibosomeStructure;
   ligands: string[];
-  rps    : Array<{ noms: string[]; strands: string }>;
+  rps    : Array<{ nomenclature: string[]; auth_asym_id: string }>;
   rnas   : string[];
 }> = props => {
   const struct: RibosomeStructure = props.struct;

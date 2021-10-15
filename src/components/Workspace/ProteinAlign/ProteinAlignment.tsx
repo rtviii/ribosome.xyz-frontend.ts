@@ -177,6 +177,11 @@ export default function ProteinAlignment() {
 
   const handleStructChange = (struct_number: number) => (event: React.ChangeEvent<{ value: unknown }>, newvalue: NeoStruct) => {
 
+
+
+
+    console.log("Got neostruct", newvalue);
+    
     if (struct_number === 1) {
       if (newvalue === null) {
         setstruct1(null)
@@ -210,6 +215,7 @@ export default function ProteinAlignment() {
 
   const handleChainChange = (chain_number: number) => (event: React.ChangeEvent<{ value: unknown }>,
     newvalue: PolymerMinimal) => {
+      
 
     if (chain_number === 1) {
       if (newvalue === null) {
@@ -273,6 +279,7 @@ export default function ProteinAlignment() {
             options        = {chains1}
             getOptionLabel = {(chain: PolymerMinimal) => { 
               // if (chain.nomenclature === null)
+
               
               return chain.nomenclature && chain.nomenclature.length > 0 ? chain.nomenclature[0] : chain.auth_asym_id }}
             // @ts-ignore
@@ -342,7 +349,6 @@ export default function ProteinAlignment() {
           onClick={() =>{
 
             if (typeof resrange1 === 'number' && typeof resrange2 ==='number' && resrange1 <= resrange2){
-
 
 
             viewerInstance.visual.select({
