@@ -236,9 +236,6 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
 
   const [curRna, setCurRna]          = React.useState('');
   const [curRnaParent, setRnaParent] = React.useState('');
-
-
-
   const [selectBy, setSelectBy] = useState<string>('Parent Structure');
 
 
@@ -254,7 +251,6 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
 
   useEffect(() => {
     // getCifChainByClass(curR)
-
   }, [curRna, curRnaParent])
 
 
@@ -302,7 +298,6 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
               // @ts-ignore
               onChange={(event: any, newValue: any) => {
                 setRnaParent(newValue.rcsb_id)
-
               }}
               renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b> ({option.title} ) ::: <i>{option.des}</i></div>)}
               renderInput={(params) => <TextField {...params} style={{ fontSize: "8px" }} label="Parent Structure" variant="outlined" />}
@@ -350,8 +345,8 @@ const VisualizationPage = (props: any) => {
           var x:any ={}
           x[ 'ligands' ] = r.data[0].ligands  .map(( _:any ) =>_.chemicalId)
           x[ 'struct'  ] = r.data[0].structure
-          x[ 'rps'     ] = r.data[0].rps      .map(( _:any)=> ( {strands:_.entity_poly_strand_id, noms:_.nomenclature} ))
-          x[ 'rnas'    ] = r.data[0].rnas     .map(( _ :any)=> ( {strands:_.entity_poly_strand_id, noms:_.nomenclature} ))
+          x[ 'rps'     ] = r.data[0].rps      .map(( _:any)=> ( {strands:_.entity_poly_strand_id, nomenclature:_.nomenclature} ))
+          x[ 'rnas'    ] = r.data[0].rnas     .map(( _ :any)=> ( {strands:_.entity_poly_strand_id, nomenclature:_.nomenclature} ))
 
           dispatch(struct_change(null,x))
 

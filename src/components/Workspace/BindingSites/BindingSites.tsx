@@ -140,16 +140,14 @@ const Dialogue = ({ open, handleclose, handleopen, aln_obj, title, src_struct, t
 						<div id="root-msa" style={{ height: "80vh", width: "max-content" }}>
 							{
 								Object.entries(aln_obj).map(chain => {
-									return <ChainAlignmentBlock src_struct={src_struct}
-										tgt_struct={tgt_struct}
-										nomenclature={chain[0]}
-										src_strand={chain[1].source.strand}
-										tgt_strand={chain[1].target.strand}
-
-										aln_ids={chain[1].alignment.aln_ids}
-
-										src_aln={chain[1].alignment.src_aln}
-										tgt_aln={chain[1].alignment.tgt_aln} />
+									return <ChainAlignmentBlock src_struct = {src_struct}
+									       tgt_struct                      = {tgt_struct}
+									       nomenclature                    = {chain[0]}
+									       src_strand                      = {chain[1].source.auth_asym_id}
+									       tgt_strand                      = {chain[1].target.auth_asym_id}
+									       aln_ids                         = {chain[1].alignment.aln_ids}
+									       src_aln                         = {chain[1].alignment.src_aln}
+									       tgt_aln                         = {chain[1].alignment.tgt_aln} />
 								})
 							}
 						</div>
@@ -247,11 +245,6 @@ const BindingSites = () => {
 	const cur_vis_tab    = useSelector((state: AppState) => state.binding_sites.visualization_tab)
 	const target_structs = useSelector((state: AppState) => state.structures.neo_response)
 
-	useEffect(() => {
-		console.log("current ligand" ,cur_ligclass);
-		
-	}, [cur_ligclass])
-
 
 	useEffect(() => {
 		var options = {
@@ -262,6 +255,11 @@ const BindingSites = () => {
 		var viewerContainer = document.getElementById('molstar-viewer');
 		viewerInstance.render(viewerContainer, options);
 	}, [])
+
+	useEffect(() => {
+		console.log("Current prediction changed" , prediction_data);
+		
+	}, [prediction_data])
 
 
 	const color_prediction = () => {
@@ -294,6 +292,7 @@ const BindingSites = () => {
 			}
 
 		var prediction_vis_data: MolStarResidue[] = []
+
 		for (var chain of Object.values(prediction_data)) {
 			for (var i of chain.target.tgt_ids) {
 				if (i > 0) {
@@ -301,7 +300,7 @@ const BindingSites = () => {
 						residue_number: i,
 						focus: false,
 						color: { r: 1, g: 200, b: 200 },
-						auth_asym_id: chain.target.strand
+						auth_asym_id: chain.target.auth_asym_id
 					})
 				}
 			}
@@ -313,12 +312,33 @@ const BindingSites = () => {
 				return
 			}
 		}
-		viewerInstance.visual.select(
-			{
-				data: prediction_vis_data,
-				nonSelectedColor: { r: 240, g: 240, b: 240 }
+
+
+		var by_chain:Record<string, MolStarResidue[]> ={}
+		for (var u of prediction_vis_data){
+			if (Object.keys(by_chain).includes(u.auth_asym_id as string)){
+				by_chain[u.auth_asym_id as string] = [...by_chain[u.auth_asym_id as string], u]
+			}
+			else{
+				by_chain[u.auth_asym_id as string] = [u]
+			}
+			
 		}
-		)
+
+		for (var chain_ress of Object.values(by_chain)){
+			viewerInstance.visual.select(
+				{ data            : chain_ress,
+				nonSelectedColor: { r: 240, g: 240, b: 240 }, }
+			)
+
+		}
+
+		// viewerInstance.visual.select(
+		// 	{
+		// 		data: prediction_vis_data,
+		// 		nonSelectedColor: { r: 240, g: 240, b: 240 }
+		// }
+		// )
 	}
 
 	const highlightInterface = () => {
@@ -376,8 +396,6 @@ const BindingSites = () => {
 			}
 		}
 
-		console.log("Painting visdata", vis_data);
-
 		var by_chain:Record<string, MolStarResidue[]> ={}
 		for (var u of vis_data){
 			if (Object.keys(by_chain).includes(u.auth_asym_id as string)){
@@ -392,27 +410,12 @@ const BindingSites = () => {
 
 		for (var chain_ress of Object.values(by_chain)){
 			viewerInstance.visual.select(
-
 				{ data            : chain_ress,
 				nonSelectedColor: { r: 240, g: 240, b: 240 }, }
 			)
 
 		}
 		
-		// viewerInstance.visual.highlight(
-
-		// 				{ data: [], color: {r:1, g:1, b:1},  structureNumber: current_binding_site?.rcsb_id }
-		// )
-		// viewerInstance.visual.select(
-		// 	{
-		// 		data            : vis_data,
-		// 		// focus           : true,
-		// 		nonSelectedColor: { r: 240, g: 240, b: 240 },
-		// 		// structure_number: current_binding_site?.rcsb_id
-
-
-		// 	}
-		// )
 	}
 
 
@@ -444,13 +447,6 @@ const BindingSites = () => {
 	} 
 
 
-
-		useEffect(() => {
-			console.log("Interface data changeD:",interface_data);
-		}, [interface_data])
-		useEffect(() => {
-			console.log("Pred change" , prediction_data);
-		}, [prediction_data])
 
 
 	const currentBindingSiteChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: BindingSite) => {
@@ -540,10 +536,17 @@ const BindingSites = () => {
 
 	useEffect(() => {
 		if (cur_tgt !== null) {
+			console.log("this fired");
+			
 			if (cur_ligclass !== null ){
-				if (cur_ligclass[getdesc(cur_ligclass)][0].polymer){
+					console.log("Pre dispatch: " );
+					console.log(current_binding_site );
+					console.log(cur_ligclass[getdesc(cur_ligclass)][0].polymer );
+				if (cur_ligclass[getdesc(cur_ligclass)][0].polymer === true){
+
+					
 					dispatch(action.request_Prediction(
-						cur_ligclass[getdesc(cur_ligclass)][0].polymer,
+							true,
 							current_binding_site?.auth_asym_id as string,
 							current_binding_site?.rcsb_id as string,
 							cur_tgt.struct.rcsb_id
@@ -551,7 +554,7 @@ const BindingSites = () => {
 				}
 				else {
 					dispatch(action.request_Prediction(
-							cur_ligclass[getdesc(cur_ligclass)][0].polymer,
+							false,
 							cur_ligclass[getdesc(cur_ligclass)][0].chemicalId as string,
 							current_binding_site!.rcsb_id as string,
 							cur_tgt!.struct.rcsb_id,
@@ -672,14 +675,14 @@ const BindingSites = () => {
 					value     = {current_binding_site}
 					className = {classes.autocomplete}
 					options   = {bsites_derived ===undefined ? [] : bsites_derived}
-					getOptionLabel={(bs: BindingSite) =>  bs.rcsb_id + bs.description}
+					getOptionLabel={(bs: BindingSite) =>  bs.rcsb_id + "  " +  bs.description + " " }
 					// @ts-ignore
 					groupBy={(option:BindingSite) => `Structure ${option.rcsb_id}`}
 					// @ts-ignore
 					onChange={currentBindingSiteChange}
 					renderOption={(option:BindingSite) => (<>
 				
-					<div style={{ fontSize: "10px", width: "100%",zIndex:2000 }}><b>{option.description}</b></div>
+					<div style={{ fontSize: "10px", width: "100%",zIndex:2000 }}><b>{option.description} {current_binding_site?.auth_asym_id ? current_binding_site.auth_asym_id : null}</b></div>
 					</>)}
 					renderInput={(params) => <TextField {...params} label={`Binding Sites ( ${bsites_derived !== undefined ? bsites_derived.length : "0"} )`} variant="outlined" />}
 				/>
@@ -843,7 +846,7 @@ const BindingSites = () => {
 						handleclose={                         handleclose                                                                                                       }
 						handleopen ={                         handleopen                                                                                                        }
 						aln_obj    ={                         prediction_data                                                                                                   } />
-`
+
 				</Grid>
 
 				<Grid item xs={4} justify={"center"} >

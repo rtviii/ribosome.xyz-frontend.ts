@@ -155,10 +155,14 @@ export const request_LigandBindingSite = (ligandlike_id:string, is_polymer:boole
 };
 
 
-export const request_Prediction = (is_polymer:boolean, ligandlike_id: string, src_struct: string, tgt_struct: string) => {
+export const request_Prediction = (
+	is_polymer   : boolean,
+	ligandlike_id: string,
+	src_struct   : string,
+	tgt_struct   : string) => {
 
 
-	console.log("REQUESTED POLY PREDICTION", is_polymer, ligandlike_id);
+	console.log("REQUESTED POLY PREDICTION", " is polymer: ", is_polymer, "liglike id:" ,ligandlike_id);
 	
 	return async (dispatch: Dispatch<BSitesActions>) => {
 		dispatch({
@@ -169,9 +173,7 @@ export const request_Prediction = (is_polymer:boolean, ligandlike_id: string, sr
 				is_polymer,
 				ligandlike_id,
 				src_struct,
-				// src_tax_id,
 				tgt_struct,
-				// tgt_tax_id
 			}
 		})
 			.then(

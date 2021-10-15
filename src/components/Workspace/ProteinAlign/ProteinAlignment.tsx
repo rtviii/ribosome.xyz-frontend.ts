@@ -13,7 +13,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete';
 import TextField from '@material-ui/core/TextField/TextField';
 import Paper from '@material-ui/core/Paper/Paper';
 import { NeoStruct, PolymerMinimal } from '../../../redux/DataInterfaces';
-
+import { Input } from '@mui/material';
+import Box from '@mui/material/Box';
+import { Typography } from '@material-ui/core';
 
 // TODO:
 // Elements are actually downloadable and visualizable
@@ -24,6 +26,8 @@ import { NeoStruct, PolymerMinimal } from '../../../redux/DataInterfaces';
 
 
    export const nomenclatureCompareFn = (a: PolymerMinimal, b: PolymerMinimal) => {
+    //  console.log("Got two to sort" , a, b);
+     
     if (a.nomenclature.length < 1 && b.nomenclature.length > 0) {
       return -1
     }
@@ -121,6 +125,10 @@ export default function ProteinAlignment() {
 
   const [chains2, setChains2] = useState<PolymerMinimal[]>([])
   const [chains1, setChains1] = useState<PolymerMinimal[]>([])
+
+
+  const [resrange1, setresrange1] = useState<number>(0)
+  const [resrange2, setresrange2] = useState<number>(0)
 
 
   const visualizeAlignment = (
@@ -293,7 +301,6 @@ export default function ProteinAlignment() {
             className={classes.autocomplete}
             options={chains2}
             getOptionLabel={(chain: PolymerMinimal) => { 
-              
               if (chain.nomenclature !== null){
 
                 return chain.nomenclature.length > 0 ? chain.nomenclature[0] : chain.auth_asym_id
@@ -305,10 +312,54 @@ export default function ProteinAlignment() {
             }}
             // @ts-ignore
             onChange={handleChainChange(2)}
-            renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.nomenclature.length > 0 ? option.nomenclature[0] : " "}</b> {option.auth_asym_id}  </div>)}
+            renderOption={(option) => { 
+              
+              
+              return <div style={{ fontSize: "10px", width: "400px" }}><b>{ option.nomenclature && option.auth_asym_id ? option.nomenclature.length > 0 ? option.nomenclature[0] : " " : " "}</b> {option.auth_asym_id}  </div> }}
             renderInput={(params) => <TextField {...params} label={`Chain 2`} variant="outlined" />}
           />
 
+        </Grid>
+
+
+
+
+        <Grid item>
+          <div       style = {{marginBottom: "10px"}}>
+          <TextField style = {{width:"100%"}}id = "standard-basic" value={resrange1}  label = "Start Residue"  onChange = {(e)=>{setresrange1(parseInt(e.target.value))}}/>
+          <TextField style = {{width:"100%"}}id = "standard-basic"   value={resrange2} label = "End Residue"   onChange = {(e)=>{setresrange2(parseInt(e.target.value))}}/>
+</div>
+        </Grid>
+
+
+
+        <Grid item>
+
+          <Button
+            style={{ marginBottom: "10px",textTransform:"none" }}
+            fullWidth
+            variant="outlined"
+          onClick={() =>{
+
+            if (typeof resrange1 === 'number' && typeof resrange2 ==='number' && resrange1 <= resrange2){
+
+
+
+            viewerInstance.visual.select({
+                data:[
+                  {  start_residue_number: resrange1, end_residue_number: resrange2 , color:{r:10,g:200,b:200}, focus:true}
+                ],
+                nonSelectedColor:{r:240,g:240,b:240}
+              })
+            
+            
+            } else{
+              alert("Enter an appropriate residue range.")
+            }
+
+            }}>
+            Select Residue Range
+          </Button>
         </Grid>
 
         <Grid item>
@@ -324,6 +375,7 @@ export default function ProteinAlignment() {
           </Button>
         </Grid>
         <Grid item>
+
 
           <Button
             style={{ marginBottom: "10px" , textTransform:"none"}}

@@ -70,7 +70,6 @@ const WorkspaceCatalogue: React.FC<WorkspaceCatalogueProps> = (
   const dispatch       = useDispatch(                                                     );
   useEffect(() => {
     dispatch(structsSortChangeAC('PDB_CODENAME'))
-    dispatch(structsSortChangeAC('PDB_CODENAME'))
   }, [])
   const last_sort_set  = useSelector(( state:AppState ) => state.structures.last_sort_set )
   const sortPredicates = useSelector(( state:AppState ) => state.structures.sorts_registry)

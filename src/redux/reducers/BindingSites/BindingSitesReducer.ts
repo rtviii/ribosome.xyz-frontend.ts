@@ -13,7 +13,6 @@ export interface BindingSitesReducerState{
     visualization_tab: "origin" | 'prediction',
 
     bsites        : BindingSite[],
-    bsites_derived: BindingSite[],
 
     factors    : LigandClass[],
     antibiotics: LigandClass[],
@@ -39,7 +38,6 @@ const initialstateBindinginSitesReducer:BindingSitesReducerState = {
     visualization_tab: 'origin',
 
     bsites        : [],
-    bsites_derived: [],
 
     factors      : [],
     antibiotics  : [],

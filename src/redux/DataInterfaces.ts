@@ -34,9 +34,9 @@ export type LigandBindingSite = {
 export type LigandPrediction = {
   [ polypeptide_class :string ] :
   {
-  source    : {src    :string, strand :string, src_ids:number[]},
-  target    : {tgt    :string, strand :string, tgt_ids:number[]},
-  alignment : {src_aln:string, tgt_aln:string, aln_ids:number[]},
+  source   : {src    :string, auth_asym_id :string, src_ids:number[]},
+  target   : {tgt    :string, auth_asym_id :string, tgt_ids:number[]},
+  alignment: {src_aln:string, tgt_aln:string, aln_ids:number[]},
   }
 
 }
