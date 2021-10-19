@@ -177,10 +177,10 @@ export default function ProteinAlignment() {
 
   const handleStructChange = (struct_number: number) => (event: React.ChangeEvent<{ value: unknown }>, newvalue: NeoStruct) => {
 
-
-
-
     console.log("Got neostruct", newvalue);
+    console.log(chainStructPair1);
+      
+
     
     if (struct_number === 1) {
       if (newvalue === null) {

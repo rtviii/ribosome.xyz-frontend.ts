@@ -9,7 +9,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../redux/store';
 import TextField from '@material-ui/core/TextField/TextField';
-import { BindingInterface, BindingSite, LigandBindingSite, LigandClass, LigandPrediction, MixedLigand, NeoStruct, Residue } from '../../../redux/DataInterfaces';
+import { BindingSite, LigandBindingSite, LigandClass, LigandPrediction, MixedLigand, NeoStruct, Residue } from '../../../redux/DataInterfaces';
 import { Button } from '@material-ui/core';
 import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData';
 import fileDownload from 'js-file-download';
@@ -232,7 +232,12 @@ const BindingSites = () => {
 	const [derived_antibiotics , set_derived_antibiotics ] = useState <LigandClass[]>([] )
 	useEffect(() => {set_derived_antibiotics(antibiotics)}, [antibiotics])
 	const [derived_factors     , set_derived_factors     ] = useState <LigandClass[]>([] )
-	useEffect(() => {set_derived_factors(factors)}, [factors])
+	useEffect(() => {
+		console.log("Factors",factors);
+		factors.map(f =>  f[getdesc(f)])
+		
+		
+		set_derived_factors(factors)}, [factors])
 	const [derived_mrna       , set_derived_mrna       ]   = useState <LigandClass[]>([] )
 	useEffect(() => {set_derived_mrna(mrna)}, [mrna])
 	const [derived_trna       , set_derived_trna      ]    = useState <LigandClass[]>([] )

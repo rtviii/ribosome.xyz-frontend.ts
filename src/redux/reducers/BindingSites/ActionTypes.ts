@@ -109,7 +109,6 @@ export const _partial_state_change = (statelike_slice: Partial<BindingSitesReduc
 })
 
 
-
 export const current_struct_change = (struct: BindingSite | null): currentStructureChange => ({
 	type: "CURRENT_STRUCTURE_CHANGE",
 	next_cur_struct: struct
@@ -153,7 +152,6 @@ export const request_LigandBindingSite = (ligandlike_id:string, is_polymer:boole
 			)
 	};
 };
-
 
 export const request_Prediction = (
 	is_polymer   : boolean,
@@ -202,15 +200,10 @@ export const request_all_bsites = () => {
 			type: "REQUEST_ALL_BSITES_GO"
 		});
 
-
 		Promise.all([
 			getNeo4jData("neo4j", { endpoint: "get_all_ligands", params: null }),
 			getNeo4jData("neo4j", { endpoint: "get_all_ligandlike", params: null })
 		]).then(responses => {
-
-			console.log("got repsonse ligands", responses[0].data);
-			console.log("got repsonse ligandlike", responses[1].data);
-			
 			var lig_coerced_to_mixed = (responses[0].data as AllLigandsResponseType).map(_ => ({
 				description: _.description,
 				polymer    : _.polymer    ,

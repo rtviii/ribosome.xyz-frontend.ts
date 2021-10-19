@@ -1,7 +1,7 @@
 import { BSitesActions } from './ActionTypes'
 import { BindingSite, LigandBindingSite, LigandClass, LigandPrediction, MixedLigand, NeoStruct, StructureBindingSites } from '../../DataInterfaces'
 import { Protein } from '../../RibosomeTypes'
-import _ from 'lodash'
+import _, { filter } from 'lodash'
 
 
 export interface BindingSitesReducerState{
@@ -26,6 +26,7 @@ export interface BindingSitesReducerState{
 
     binding_site_data : LigandBindingSite | null,
     prediction_data   : LigandPrediction  | null
+
 
 }
 
@@ -81,20 +82,21 @@ export const BindingSitesReducer = (
     var mrna        :LigandClass[] = [];
     var trna        :LigandClass[] = [];
 
-    // var grouped =_.groupBy(action.mixed_ligands, 'description')
-    
-    // action.mixed_ligands,'description'
+    var filtered= action.mixed_ligands
 
-    var filtered = action.mixed_ligands.filter(prelig =>null===prelig.description.match(/ion|cluster\b|((\[|\(|\-).+(\]|\)|\-))/gi));
+    var grouped    = _.groupBy(filtered,'description')
+    var bsites_all = filtered.reduce(( a:BindingSite[],b:MixedLigand )=>{
+      return [...a, b.present_in]
+    },[])
 
+    // console.log("All mixed ligands:" , action.mixed_ligands);
+    // console.log("Factors initially" , action.mixed_ligands.filter(a => a.description.toLowerCase().includes("elongation") || a.description.toLowerCase().includes("initiation")));
+    // console.log("Cleaned" , filtered);
+    // console.log("Factors cleaned" , filtered.filter(a => a.description.toLowerCase().includes("elongation") || a.description.toLowerCase().includes("initiation")));
+    // console.log("Grouped into ligand_classes" , grouped);
+    // console.log("Factors cleaned" , Object.keys(grouped).filter(a => a.toLowerCase().includes("elongation") || a.toLowerCase().includes("initiation")))
+    // console.log("Bsites_extracted:" , bsites_all);
 
-
-    var bsites_all                                 = action.mixed_ligands.reduce((bsites:BindingSite[],a:MixedLigand)=> [...bsites, a.present_in] ,[])
-    var bsites_by_struct:[string, BindingSite[]][] = Object.entries(_.groupBy(bsites_all,'rcsb_id'))
-    var by_struct_array:StructureBindingSites[]    = bsites_by_struct.reduce((a:StructureBindingSites[], b:any)=>[...a, {[ b[0] ]:b[1]}],[])
-
-
-    var grouped = _.groupBy(filtered,'description')
     
 
     Object.entries(grouped).map(( l ) => {

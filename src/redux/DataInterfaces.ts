@@ -42,24 +42,6 @@ export type LigandPrediction = {
 }
 
 
-
-export interface BindingInterface {
-  constituents: Array<{
-    banClass : null | string,
-    resid    : number
-    resn     : string
-    strand_id: string
-    struct   : string
-    }>,
-    nbrs: Array<{
-    banClass : null | string,
-    resid    : number
-    resn     : string
-    strand_id: string
-    struct   : string
-    }>
-}
-
 export type LigandClass = {
   [ligand_description:string]: MixedLigand[]
 }
@@ -72,7 +54,7 @@ export type BindingSite  =  {
                                  src_organism_ids: number[],
                                  description     : string,
                                  citation_title  : string,
-                    auth_asym_id ?               : string;
+                        auth_asym_id ?               : string;
                                  expMethod       : string,
                                  rcsb_id         : string,
                                  resolution      : number,
