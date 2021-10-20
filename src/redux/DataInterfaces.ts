@@ -38,7 +38,6 @@ export type LigandPrediction = {
   target   : {tgt    :string, auth_asym_id :string, tgt_ids:number[]},
   alignment: {src_aln:string, tgt_aln:string, aln_ids:number[]},
   }
-
 }
 
 
@@ -51,13 +50,13 @@ export type StructureBindingSites  =  {
 }
 
 export type BindingSite  =  {
-                                 src_organism_ids: number[],
-                                 description     : string,
-                                 citation_title  : string,
-                        auth_asym_id ?               : string;
-                                 expMethod       : string,
-                                 rcsb_id         : string,
-                                 resolution      : number,
+                                 src_organism_ids   : number[],
+                                 description        : string,
+                                 citation_title     : string,
+                                 auth_asym_id     ? : string;
+                                 expMethod          : string,
+                                 rcsb_id            : string,
+                                 resolution         : number,
 }
 
 export interface MixedLigand{

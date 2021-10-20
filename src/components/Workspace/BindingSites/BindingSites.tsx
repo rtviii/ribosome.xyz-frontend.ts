@@ -233,9 +233,6 @@ const BindingSites = () => {
 	useEffect(() => {set_derived_antibiotics(antibiotics)}, [antibiotics])
 	const [derived_factors     , set_derived_factors     ] = useState <LigandClass[]>([] )
 	useEffect(() => {
-		console.log("Factors",factors);
-		factors.map(f =>  f[getdesc(f)])
-		
 		
 		set_derived_factors(factors)}, [factors])
 	const [derived_mrna       , set_derived_mrna       ]   = useState <LigandClass[]>([] )
@@ -497,13 +494,13 @@ const BindingSites = () => {
 
 	useEffect(() => {
 
+		console.log("Current binding site changed to " ,current_binding_site);
+		
 		if (current_binding_site === null) {
-			if (cur_ligclass === null) {
 				set_derived_antibiotics(antibiotics)
 				set_derived_factors(factors)
 				set_derived_mrna(mrna)
 				set_derived_trna(trna)
-			}
 		} else {
 			if (cur_ligclass === null) {
 				set_derived_antibiotics(
