@@ -42,8 +42,6 @@ import { NeoStruct } from '../../redux/DataInterfaces';
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
-    // maxWidth: 700
-
   },
   labelContainer: {
     width: "auto",

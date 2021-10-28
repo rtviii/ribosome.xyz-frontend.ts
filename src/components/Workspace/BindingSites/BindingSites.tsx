@@ -346,15 +346,11 @@ const BindingSites = () => {
 
 	const highlightInterface = (source_auth_asym_id:string|null) => {
 
-
-
-		console.log("Dispatched higlight interfaces with source id:" , source_auth_asym_id);
-		
-
 		if (interface_data === null || interface_data === undefined) {
 			alert("Select a binding site.")
 			return
 		}
+
 		interface MolStarResidue            { 
 			           entity_id                ?  : string,
 			           auth_asym_id              ? : string,
@@ -372,9 +368,10 @@ const BindingSites = () => {
 			           label_comp_id             ? : string,
 			           color                       : { r: number, g: number,b: number },
 			           focus                     ? : boolean,
-			           sideChain                 ? : boolean }
-		var vis_data: MolStarResidue[] = []
+			           sideChain                 ? : boolean 
+				}
 
+		var vis_data: MolStarResidue[] = []
 		for (var chain of Object.values(interface_data)) {
 			var reduced = chain.residues.reduce((x: MolStarResidue[], y: Residue) => {
 				if (y.residue_id > 0) {
@@ -412,10 +409,8 @@ const BindingSites = () => {
 			else{
 				by_chain[u.auth_asym_id as string] = [u]
 			}
-			
 		}
 		
-		// viewerInstance.visual.select({ data: { struct_asym_id: source_auth_asym_id, color:{r:255,g:100,b:0}, focus:true}, nonSelectedColor: { r: 255, g: 255, b: 255 } })
 		viewerInstance.visual.select({ data: [{auth_asym_id: source_auth_asym_id, color:{r: 255, g:100, b:0}, focus:true}], nonSelectedColor: {r:255,g:255,b:255} })
 
 		for (var chain_ress of Object.values(by_chain)){
@@ -790,7 +785,6 @@ const BindingSites = () => {
 					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title} </div>)}
 					renderInput={(params) => <TextField {...params}
 						label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
-
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
 						disabled={[cur_ligclass, current_binding_site].includes(null)}
@@ -804,7 +798,6 @@ const BindingSites = () => {
 						fullWidth
 						variant="outlined"> Visualize Prediction</Button>
 				</Grid>
-
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
 						color="primary"
@@ -817,7 +810,6 @@ const BindingSites = () => {
 						variant="outlined"> Inspect Prediction </Button>
 
 				</Grid>
-
 				<Grid item style={{ marginBottom: "10px" }}>
 					<CSVLink
 						data={[]}
@@ -835,8 +827,6 @@ const BindingSites = () => {
 
 					</CSVLink>
 				</Grid>
-
-
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button color="primary"
 						style={{textTransform:"none"}}
@@ -849,7 +839,6 @@ const BindingSites = () => {
 						fullWidth
 						variant="outlined"> Reset</Button>
 				</Grid>
-
 				<Grid item style={{ marginBottom: "10px" }}>
 
 					<Dialogue
@@ -862,11 +851,9 @@ const BindingSites = () => {
 						aln_obj    ={                         prediction_data                                                                                                   } />
 
 				</Grid>
-
 				<Grid item xs={4} justify={"center"} >
 					<DashboardButton />
 				</Grid>
-
 			</Grid>
 			<Grid item container spacing={2} direction="row" xs={10} style={{ height: "100%" }} alignContent="flex-start">
 				<Grid item container xs={12} spacing={2} alignContent="flex-start" alignItems="flex-start" justify="flex-start" >

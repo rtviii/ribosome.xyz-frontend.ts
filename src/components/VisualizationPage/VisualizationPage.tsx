@@ -228,29 +228,33 @@ const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMet
 
 const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifChainByClass: (strand: string, parent: string) => void }) => {
 
-  const styles   = useSelectStyles();
-  const dispatch = useDispatch();
+  const styles                       = useSelectStyles();
+  const dispatch                     = useDispatch();
 
-  const [curRna, setCurRna]          = React.useState('');
-  const [curRnaParent, setRnaParent] = React.useState('');
-  const [selectBy, setSelectBy] = useState<string>('Parent Structure');
+  const [curRna, setCurRna]          = React.useState<RNAClass | null> (null);
+  const [curRnaParent, setRnaParent] = React.useState<string|null>(null);
+  const [selectBy, setSelectBy]      = useState<string>('Parent Structure');
+
+  const parents = useSelector((state: AppState) => state.rna.rna_classes_derived)
+
+    // .reduce((agg, rnaclass) => { return [...agg, ...rnaclass] }, []))
+    // .map((_: RNAProfile) => (
+    //   {
+    //   des    : _.rcsb_pdbx_description,
+    //   rcsb_id: _.parent_rcsb_id,
+    // })))
 
 
-  const parents = useSelector((state: AppState) => Object.values(state.rna.rna_classes_derived)
-    .reduce((agg, rnaclass) => { return [...agg, ...rnaclass] }, []))
-    .map((_: RNAProfile) => ({
-      des    : _.rcsb_pdbx_description,
-      rcsb_id: _.parent_rcsb_id,
-    }))
 
 
 
+
+
+
+    
   useEffect(() => {
     // getCifChainByClass(curR)
   }, [curRna, curRnaParent])
-
-
-  const [selectrnaClass, setSelectRnaClass] = useState<string>('5')
 
   var rnaClasses:{v:string, t:RNAClass}[]= [
                 { v: 'mRNA'     , t: 'mRNA'     },
@@ -265,6 +269,10 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
                 { v: '28SrRNA'  , t: '28SrRNA'  },
                 { v: '35SrRNA'  , t: '35SrRNA'  },
               ]
+
+
+
+
   return (
     <Grid item xs={12}>
       <List style={{ outline: "1px solid gray", borderRadius: "5px" }}>
@@ -275,12 +283,8 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
             <Select
               labelId  = "demo-simple-select-label"
               id       = "demo-simple-select"
-              value    = {selectBy}
-              onChange = {(event: any) => { 
-
-                setCurRna(event.target.value)
-
-                }}>
+              value    = {curRna}
+              onChange = {(event: any) => { setCurRna(event.target.value)}}>
               {rnaClasses.map((i) => <MenuItem value={i.v}>{i.t}</MenuItem>)}
             </Select>
           </FormControl>
@@ -288,17 +292,19 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
           <FormControl className={styles.sub2}>
             <Autocomplete
             //@ts-ignore
-              styles={{ marginRight: "10px", outline: "none" }}
-              options={parents}
-              getOptionLabel={(parent) => parent.rcsb_id}
+              styles         = {{ marginRight: "10px", outline: "none" }}
+              options        = {curRna === null ? [] : parents[curRna as RNAClass]}
+              getOptionLabel = {(parent) => parent.parent_rcsb_id}
               // @ts-ignore
-              onChange={(event: any, newValue: any) => {
-                setRnaParent(newValue.rcsb_id)
-              }}
-              renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b>  ::: <i>{option.des}</i></div>)}
-              renderInput={(params) => <TextField {...params} style={{ fontSize: "8px" }} label="Parent Structure" variant="outlined" />}
-            />
 
+              onChange     = {(event: any, newValue: any) => {
+                if (newValue!==null){
+                  getCifChainByClass(curRna as string, newValue.parent_rcsb_id)
+                }
+              }}
+              renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.parent_rcsb_id}</b>  ::: <i>{option.src_organism_names}</i></div>)}
+              renderInput  = {(params) => <TextField {...params} style={{ fontSize: "8px" }} label="Parent Structure" variant="outlined" />}
+            />
 
           </FormControl>
 
@@ -319,16 +325,13 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 // const viewerInstance2 = new PDBeMolstarPlugin() as any;
 const VisualizationPage = (props: any) => {
   const [lastViewed, setLastViewed] = useState   <Array<string | null>>([null, null])
-  const  history   : any            = useHistory ();
-  const  params                     = history    .location.state;
-  const  dispatch                   = useDispatch();
-  const {addToast } = useToasts();
+  const history   : any             = useHistory ();
+  const params                      = history    .location.state;
+  const dispatch                    = useDispatch();
+  const {addToast}                  = useToasts();
 
   useEffect(() => {
-
     if (params === undefined || Object.keys(params).length < 1) { return }
-
-
     else if ((params as { struct: string }).struct) {
 
       getNeo4jData('neo4j',{endpoint:"get_struct",params:{pdbid:params.struct}}).then(r=>{
