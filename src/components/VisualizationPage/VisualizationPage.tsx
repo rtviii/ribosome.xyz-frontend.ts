@@ -1,41 +1,38 @@
-import React, { useEffect, useState } from 'react'
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
-import Popover from "@material-ui/core/Popover";
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { AppState } from '../../redux/store';
-import { useDispatch, useSelector } from 'react-redux';
-import { BanClassMetadata, NeoStruct, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces';
-import ListSubheader from '@material-ui/core/ListSubheader/ListSubheader';
-import { CardBodyAnnotation } from './../Workspace/StructurePage/StructurePage'
-import { requestBanClass } from '../../redux/reducers/Proteins/ActionTypes';
-import { getNeo4jData } from '../../redux/AsyncActions/getNeo4jData';
-import Paper from '@material-ui/core/Paper/Paper';
-import CardHeader from '@material-ui/core/CardHeader/CardHeader';
-import Card from '@material-ui/core/Card/Card';
-import { RibosomeStructure, RNAClass } from '../../redux/RibosomeTypes';
-import { chain, flattenDeep, uniq } from 'lodash';
-import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
-import { useHistory, useParams } from 'react-router';
-import _ from 'lodash'
-import axios from 'axios';
-import { struct_change } from '../../redux/reducers/Visualization/ActionTypes';
-import { ToastProvider, useToasts } from 'react-toast-notifications';
-import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
-import StructHero from '../../materialui/StructHero';
-import { parentPort } from 'worker_threads';
+import   React                , { useEffect, useState }                 from 'react'
+import   Grid                                                           from "@material-ui/core/Grid"                        ;
+import   Typography                                                     from "@material-ui/core/Typography"                  ;
+import   CardActions                                                    from "@material-ui/core/CardActions"                 ;
+import   Button                                                         from "@material-ui/core/Button"                      ;
+import   Popover                                                        from "@material-ui/core/Popover"                     ;
+import   CardMedia                                                      from '@material-ui/core/CardMedia'                   ;
+import   CardActionArea                                                 from '@material-ui/core/CardActionArea'              ;
+import   List                                                           from "@material-ui/core/List"                        ;
+import   ListItem                                                       from "@material-ui/core/ListItem"                    ;
+import { createStyles         , lighten, makeStyles, Theme }            from '@material-ui/core/styles'                      ;
+import   InputLabel                                                     from '@material-ui/core/InputLabel'                  ;
+import   MenuItem                                                       from '@material-ui/core/MenuItem'                    ;
+import   FormControl                                                    from '@material-ui/core/FormControl'                 ;
+import   Select                                                         from '@material-ui/core/Select'                      ;
+import   TextField                                                      from '@material-ui/core/TextField'                   ;
+import   Autocomplete                                                   from '@material-ui/lab/Autocomplete'                 ;
+import { AppState              }                                        from '../../redux/store'                             ;
+import { useDispatch          , useSelector }                           from 'react-redux'                                   ;
+import { BanClassMetadata     , NeoStruct, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces'                    ;
+import   ListSubheader                                                  from '@material-ui/core/ListSubheader/ListSubheader' ;
+import { CardBodyAnnotation    }                                        from './../Workspace/StructurePage/StructurePage'
+import { requestBanClass       }                                        from '../../redux/reducers/Proteins/ActionTypes'     ;
+import { getNeo4jData          }                                        from '../../redux/AsyncActions/getNeo4jData'         ;
+import   Paper                                                          from '@material-ui/core/Paper/Paper'                 ;
+import   CardHeader                                                     from '@material-ui/core/CardHeader/CardHeader'       ;
+import   Card                                                           from '@material-ui/core/Card/Card'                   ;
+import { RibosomeStructure    , RNAClass }                              from '../../redux/RibosomeTypes'                     ;
+import { chain                , flattenDeep, uniq }                     from 'lodash'                                        ;
+import { DashboardButton       }                                        from '../../materialui/Dashboard/Dashboard'          ;
+import { useHistory           , useParams }                             from 'react-router'                                  ;
+import   _                                                              from 'lodash'
+import { struct_change         }                                        from '../../redux/reducers/Visualization/ActionTypes';
+import { ToastProvider        , useToasts }                             from 'react-toast-notifications'                     ;
+import { nomenclatureCompareFn }                                        from '../Workspace/ProteinAlign/ProteinAlignment'    ;
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -242,9 +239,8 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
   const parents = useSelector((state: AppState) => Object.values(state.rna.rna_classes_derived)
     .reduce((agg, rnaclass) => { return [...agg, ...rnaclass] }, []))
     .map((_: RNAProfile) => ({
-      des    : _.description,
-      rcsb_id: _.struct,
-      title  : _.parent_citation
+      des    : _.rcsb_pdbx_description,
+      rcsb_id: _.parent_rcsb_id,
     }))
 
 
@@ -299,7 +295,7 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
               onChange={(event: any, newValue: any) => {
                 setRnaParent(newValue.rcsb_id)
               }}
-              renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b> ({option.title} ) ::: <i>{option.des}</i></div>)}
+              renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.rcsb_id}</b>  ::: <i>{option.des}</i></div>)}
               renderInput={(params) => <TextField {...params} style={{ fontSize: "8px" }} label="Parent Structure" variant="outlined" />}
             />
 

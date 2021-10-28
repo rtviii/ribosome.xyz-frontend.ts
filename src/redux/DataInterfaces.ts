@@ -85,20 +85,30 @@ export type ProteinProfile = Protein & {
 
 };
 
-export interface RNAProfile {
+export type RNAProfile = RNA & {
 
-  struct           : string,
-  orgid            : number[]
-  description      : string
-  seq              : string
-  strand           : string
   parent_year      : number
   parent_resolution: number
   parent_method    : string
-  parent_citation  : string
-  nomenclature     : RNAClass[]
 
 }
+
+
+// export interface RNAProfile {
+
+//   struct           : string,
+//   orgid            : number[]
+//   description      : string
+//   seq              : string
+//   strand           : string
+//   parent_year      : number
+//   parent_resolution: number
+//   parent_method    : string
+//   parent_citation  : string
+//   nomenclature     : RNAClass[]
+
+// }
+
 
 export interface StructureWithLigand{
   src_organism_ids     : number[];

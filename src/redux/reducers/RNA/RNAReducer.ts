@@ -2,8 +2,9 @@ import { RNAActions, RnaFilter } from './ActionTypes'
 import { RNAProfile} from '../../DataInterfaces'
 import { Filter ,FilterRegistry } from '../Filters/ActionTypes';
 import _ from 'lodash';
+import { RNAClass } from '../../RibosomeTypes';
 
-export type RnaClass  =  "mrna" | "trna" | "5" | "5.8" | "12" | "16"| "21" | "23" | "25" |"28" |"35" | 'other'
+// export type RnaClass  =  "mrna" | "trna" | "5" | "5.8" | "12" | "16"| "21" | "23" | "25" |"28" |"35" | 'other'
 
 
 export type RnaSortType = "PDB_CODENAME" | "RESOLUTION" | "YEAR" | "SEQLEN"
@@ -14,8 +15,8 @@ const RnaSortsState:Record<RnaSortType,{
   "PDB_CODENAME":{
     reverse:false,
     compareFn: (a,b)=>{
-      var first  = a.struct
-      var second = b.struct
+      var first  = a.parent_rcsb_id
+      var second = b.parent_rcsb_id
       if (first===second){
         return 0
       }
@@ -67,8 +68,8 @@ const RnaSortsState:Record<RnaSortType,{
   "SEQLEN": {
     reverse:false,
     compareFn: (a,b)=>{
-      var first  = a.seq.length
-      var second = b.seq.length
+      var first  = a.entity_poly_seq_one_letter_code.length
+      var second = b.entity_poly_seq_one_letter_code.length
       if (first===second){
         return 0
       }
@@ -117,7 +118,7 @@ return rna.parent_resolution >= (value as number[])[0] && rna.parent_resolution 
       value: "",
       set: false,
       predicate: (value) => (rna) => {
-        return ( rna.parent_citation + rna.description + rna.orgid.reduce((a,b)=>a+b, '') ).toLowerCase().includes(value.toLowerCase())
+        return (  rna.rcsb_pdbx_description + rna.host_organism_ids.reduce((a,b)=>a+b, '') ).toLowerCase().includes(value.toLowerCase())
       }
     },
     "SPECIES": {
@@ -125,7 +126,7 @@ return rna.parent_resolution >= (value as number[])[0] && rna.parent_resolution 
       set      : false,
       predicate: (value) => (rna) => {
         if (value.length ===0 ){return true}
-        return _.intersection(value, rna.orgid).length > 0 
+        return _.intersection(value, rna.host_organism_ids).length > 0 
       }
     },
   },
@@ -137,7 +138,7 @@ return rna.parent_resolution >= (value as number[])[0] && rna.parent_resolution 
 interface RNAReducerState{
 
     seq_sort_applied : boolean
-    current_rna_class: RnaClass
+    current_rna_class: RNAClass
     error            : any,
     is_loading       : boolean;
     errored_out      : boolean;
@@ -147,10 +148,10 @@ interface RNAReducerState{
     compareFn        : (a:RNAProfile, b:RNAProfile) => 1 | 0 | -1
   }>,
     rna_classes      : {
-      [K in RnaClass]: RNAProfile[]
+      [K in RNAClass]: RNAProfile[]
     },
     rna_classes_derived:{
-      [K in RnaClass]: RNAProfile[]
+      [K in RNAClass]: RNAProfile[]
     },
     current_page: number,
     pages_total : number,
@@ -158,34 +159,32 @@ interface RNAReducerState{
 
 const initialStateRNAReducer:RNAReducerState = {
   seq_sort_applied         : false,
-  current_rna_class        : "5",
+  current_rna_class        : "5SrRNA",
   rna_classes              : {
-    '5'    : [],
-    "5.8"  : [],
-    "12"   : [],
-    "16"   : [],
-    "21"   : [],
-    "23"   : [],
-    "25"   : [],
-    "28"   : [],
-    "35"   : [],
-    "other": [],
-    "mrna" : [],
-    "trna" : [],
+    "5SrRNA"  : [],
+    "5.8SrRNA": [],
+    "12SrRNA" : [],
+    "16SrRNA" : [],
+    "21SrRNA" : [],
+    "23SrRNA" : [],
+    "25SrRNA" : [],
+    "28SrRNA" : [],
+    "35SrRNA" : [],
+    "mRNA"    : [],
+    "tRNA"    : [],
   },
   rna_classes_derived:{
-    '5'    : [],
-    "5.8"  : [],
-    "12"   : [],
-    "16"   : [],
-    "21"   : [],
-    "23"   : [],
-    "25"   : [],
-    "28"   : [],
-    "35"   : [],
-    "other": [],
-    "mrna" : [],
-    "trna" : [],
+    "5SrRNA"  : [],
+    '5.8SrRNA': [],
+    "12SrRNA" : [],
+    "16SrRNA" : [],
+    "21SrRNA" : [],
+    "23SrRNA" : [],
+    "25SrRNA" : [],
+    "28SrRNA" : [],
+    "35SrRNA" : [],
+    "mRNA"    : [],
+    "tRNA"    : [],
   },
     rna_filters : RnaClassFilterRegistry,
     sorts_registry: RnaSortsState,
@@ -254,7 +253,7 @@ export const RNAReducer = (
       for (var filter of newApplied) {
         for (var key of Object.keys(state.rna_classes)) {
 
-        var filtx = [...state.rna_classes[key as RnaClass]].filter(state.rna_filters.filtstate[action.filter_type].predicate(action.newvalue))
+        var filtx = [...state.rna_classes[key as RNAClass]].filter(state.rna_filters.filtstate[action.filter_type].predicate(action.newvalue))
         Object.assign(filtered_classes, {[key] : filtx  })
         }
 

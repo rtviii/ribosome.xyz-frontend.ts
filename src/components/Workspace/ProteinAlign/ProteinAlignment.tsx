@@ -156,9 +156,6 @@ export default function ProteinAlignment() {
     auth_asym_id2: string,
   ) => {
 
-
-      console.log("Got:",      struct1,struct2,auth_asym_id1,auth_asym_id2);
-
     getNeo4jData("static_files", {
       endpoint: "align_3d",
       params: {
@@ -177,8 +174,6 @@ export default function ProteinAlignment() {
 
   const handleStructChange = (struct_number: number) => (event: React.ChangeEvent<{ value: unknown }>, newvalue: NeoStruct) => {
 
-    console.log("Got neostruct", newvalue);
-    console.log(chainStructPair1);
       
 
     

@@ -170,7 +170,7 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
             selected_items.rps.push(`${it.parent_rcsb_id.toLowerCase()}.${it.entity_poly_strand_id}`)
           }
           if (isRNA(it)){
-            selected_items.rna.push(`${it.struct.toLowerCase()}.${it.strand}`)
+            selected_items.rna.push(`${it.parent_rcsb_id.toLowerCase()}.${it.auth_asym_id}`)
           }
           if (isStruct(it)){
             selected_items.structs.push(`${it.rcsb_id.toLowerCase()}`)
@@ -190,7 +190,7 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
 
       for( var it of selectedItems) {
         if(isStruct(it)){summary.push([ 'riboxyz_workspace_structure', it.rcsb_id       ,       it.citation_title                         , it.expMethod    ,`${ it.resolution        }Å`, it.citation_year    , it.src_organism_ids      , it.pdbx_keywords_text              ])}
-        if(isRNA   (it)){summary.push([ 'riboxyz_workspace_rna'      , it.description   ,       it.struct                + "_" + it.strand, it.parent_method,    it.parent_resolution+"Å", it.parent_citation  , it.parent_year      , it.seq                             ])}
+        if(isRNA   (it)){summary.push([ 'riboxyz_workspace_rna'      , it.rcsb_pdbx_description,it.parent_rcsb_id+ "_" + it.auth_asym_id, it.parent_method,    it.parent_resolution+"Å", , it.parent_year      , it.entity_poly_seq_one_letter_code                             ])}
         if(isProt  (it)){summary.push([ 'riboxyz_workspace_protein'  , it.parent_rcsb_id +"_" + it.entity_poly_strand_id                  , it.nomenclature ,    it.pfam_descriptions    , it.pfam_descriptions, it.uniprot_accession, it.entity_poly_seq_one_letter_code ])}
       }
 

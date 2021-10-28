@@ -27,7 +27,6 @@ import Dialog from                                                     "@materia
 import DialogTitle from                                                "@material-ui/core/DialogTitle/DialogTitle"             ;
 import DialogContent from                                              "@material-ui/core/DialogContent/DialogContent"         ;
 import DialogContentText from                                          "@material-ui/core/DialogContentText/DialogContentText" ;
-import { RnaClass } from                                               "../../../redux/reducers/RNA/RNAReducer"                ;
 import { Cart } from "../Cart/Cart";
 import { ValueSlider } from "../Display/StructuresCatalogue";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup/ToggleButtonGroup";
@@ -40,6 +39,7 @@ import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import { useRxztheme } from "../../../theme";
 import _ from "lodash";
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
+import { RNAClass } from "../../../redux/RibosomeTypes";
 
 const pageData = {
   title: "RNA",
@@ -49,7 +49,7 @@ const pageData = {
 const BulkDownloadMenu=()=> {
 
   const [open              , setOpen] = React       . useState(false);
-  const current_class:RnaClass        = useSelector(( state    : AppState) => state.rna.current_rna_class)
+  const current_class:RNAClass        = useSelector(( state    : AppState) => state.rna.current_rna_class)
   const current_class_derived         = useSelector(( state    : AppState) => state.rna.rna_classes_derived[current_class])
 
 
@@ -63,16 +63,16 @@ const BulkDownloadMenu=()=> {
   const createSummary = ():any[][] =>{
 
   var bulkDownload:Array<Array<any>> = [
-    ['parent_structure_rcsb_id'],...current_class_derived.map(r =>[ r.struct ])]
+    ['parent_structure_rcsb_id'],...current_class_derived.map(r =>[ r.parent_rcsb_id ])]
 
             bulkDownload[0].push("source_organisms")
-            current_class_derived.map((v,i)=>bulkDownload[i+1].push(v.orgid))
+            current_class_derived.map((v,i)=>bulkDownload[i+1].push(v.host_organism_ids))
             bulkDownload[0].push("rcsb_descriptions")
-            current_class_derived.map((v,i)=>bulkDownload[i+1].push(v.description))
+            current_class_derived.map((v,i)=>bulkDownload[i+1].push(v.rcsb_pdbx_description))
             bulkDownload[0].push("nucleotide_sequence")
-            current_class_derived.map((v,i)=>bulkDownload[i+1].push(v.seq))
+            current_class_derived.map((v,i)=>bulkDownload[i+1].push(v.entity_poly_seq_one_letter_code))
             bulkDownload[0].push("in-structure_strand_id")
-            current_class_derived.map((v,i)=>bulkDownload[i+1].push(v.strand))
+            current_class_derived.map((v,i)=>bulkDownload[i+1].push(v.auth_asym_id))
     return bulkDownload
   }
   return (
@@ -141,22 +141,21 @@ const rnatabsstyles = (makeStyles((theme: Theme) => ({
     var change = e.target.value
     setSearch(change)
   }
-  const [rnaSubgroup  , setRnaSubgrop] = useState   <'exogenous' | 'ribosomal' | 'other'>('ribosomal')
+  const [rnaSubgroup  , setRnaSubgrop] = useState   <'ribosomal' | 'exogenous'>('ribosomal')
   const pages_total                    = useSelector                                     ((state: AppState) => state.rna.pages_total                        )
   const current_class                  = useSelector                                     ((state: AppState) => state.rna.current_rna_class                  )
   const current_page                   = useSelector                                     ((state: AppState) => state.rna.current_page                       )
   const currclass                      = useSelector                                     (( state:AppState ) => state.rna.rna_classes_derived[current_class])
-  const other                          = useSelector                                     ((state: AppState) => state.rna.rna_classes_derived.other          )
 
   var   params: any     = useParams();
   const chosenRnaClass = params.rnaclass
 
   useEffect(() => {
     console.log("Got rna class ", params);
-    if (!["5.8","5", "12","16","21","23","25","28","35", 'mrna','trna'].includes(chosenRnaClass)){
+    if (!["5.8SrRNA","5SrRNA", "12SrRNA","16SrRNA","21SrRNA","23SrRNA","25SrRNA","28SrRNA","35SrRNA", 'mRNA','tRNA'].includes(chosenRnaClass)){
       return
     }
-    if ( ['mrna','trna'].includes( chosenRnaClass ) ){
+    if ( ['mRNA','tRNA'].includes( chosenRnaClass ) ){
       setRnaSubgrop('exogenous')
       dispatch(select_rna_class(chosenRnaClass))
     }
@@ -299,14 +298,14 @@ const [, forceUpdate] = useReducer(x => x + 1, 0);
                 }} variant={'outlined'}
                   onClick={() => {
                     setRnaSubgrop('ribosomal')
-                    dispatch(select_rna_class("5"))
+                    dispatch(select_rna_class("5SrRNA"))
                   }}
                   color={rnaSubgroup == 'ribosomal' ? 'primary' : 'default'}> Ribosomal RNA</Button>
               </Grid>
               <Grid item>
                 <Button style={{ marginRight: "5px", textTransform: "none" }} variant={'outlined'} onClick={() => {
                   setRnaSubgrop('exogenous')
-                  dispatch(select_rna_class("trna"))
+                  dispatch(select_rna_class("tRNA"))
                 }}
                   color={rnaSubgroup === 'exogenous' ? 'primary' : 'default'}> Non-ribosomal RNA</Button>
               </Grid>
@@ -372,13 +371,6 @@ const [, forceUpdate] = useReducer(x => x + 1, 0);
                   return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <RRNATabs tagname={'rrna'} />
                 case 'exogenous':
                   return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <ExogenousTabs tagname={'exo-rna'} />
-                case 'other':
-                  return (currclass.length == 0 && filters.length == 0) ? <LinearProgress /> : <List>
-                    {other.slice((current_page - 1) * 20, current_page * 20).map(other => <ListItem>
-                      <RNACard
-
-                    displayPill={true}
-                    e={other} /></ListItem>)}</List>
                 default:
                   return <></>
               }
@@ -390,6 +382,22 @@ const [, forceUpdate] = useReducer(x => x + 1, 0);
     </Grid>
 );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const SpinnerOrNoneFound = ({spin}:{ spin:boolean }) =>{
   
@@ -446,10 +454,10 @@ const classes           = useStyles();
 
 
 const selected_rnaclass = useSelector(( state:AppState ) => state.rna.current_rna_class)
-const rnaclass_to_tab_index = (_:RnaClass)=>{
+const rnaclass_to_tab_index = (_:RNAClass)=>{
   var m:Record< string,number> = {
-    'trna':0,
-    'mrna':1,
+    'tRNA':0,
+    'mRNA':1,
   }
   return m[_]
 }
@@ -459,11 +467,11 @@ const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
 
   
   if (newValue === 0){
-      dispatch(select_rna_class("trna"))
+      dispatch(select_rna_class("tRNA"))
       console.log("DISPATCHED ON MOUNT:no");
   }
   if (newValue === 1){
-      dispatch(select_rna_class("mrna"))
+      dispatch(select_rna_class("mRNA"))
       console.log("DISPATCHED ON MOUNT:no");
   }
   setValue(newValue);
@@ -477,8 +485,8 @@ const [mrna, setmrna] = useState<RNAProfile[]>([])
 const [trna, settrna] = useState<RNAProfile[]>([])
 
 useEffect(() => {
-settrna(whole.trna)
-setmrna(whole.mrna)
+settrna(whole.tRNA)
+setmrna(whole.mRNA)
 }, [whole])
 
 
@@ -551,17 +559,17 @@ function a11yProps(index: any) {
 }
 
 const current_page = useSelector(( state:AppState ) => state.rna.current_page)
-const rnaclass_to_tab_index = (_:RnaClass)=>{
+const rnaclass_to_tab_index = (_:RNAClass)=>{
   var m:Record< string,number> = {
-    "5"  : 0,
-    "5.8": 1,
-    "12" : 2,
-    "16" : 3,
-    "21" : 4,
-    "23" : 5,
-    "25" : 6,
-    "28" : 7,
-    "35" : 8,
+    "5SrRNA"  : 0,
+    "5.8SrRNA": 1,
+    "12SrRNA" : 2,
+    "16SrRNA" : 3,
+    "21SrRNA" : 4,
+    "23SrRNA" : 5,
+    "25SrRNA" : 6,
+    "28SrRNA" : 7,
+    "35SrRNA" : 8,
   }
   return m[_]
 }
@@ -571,45 +579,46 @@ const [value, setValue] = React.useState(rnaclass_to_tab_index(currentClass));
 
 const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
   if (newValue === 0){
-      dispatch(select_rna_class("5"))
+      dispatch(select_rna_class("5SrRNA"))
   }
   if (newValue === 1){
-      dispatch(select_rna_class("5.8"))
+      dispatch(select_rna_class("5.8SrRNA"))
   }
   if (newValue === 2){
-      dispatch(select_rna_class("12"))
+      dispatch(select_rna_class("12SrRNA"))
       
   }
   if (newValue === 3){
-      dispatch(select_rna_class("16"))
+      dispatch(select_rna_class("16SrRNA"))
   }
   if (newValue === 4){
-      dispatch(select_rna_class("21"))
+      dispatch(select_rna_class("21SrRNA"))
   }
   if (newValue === 5){
-      dispatch(select_rna_class("23"))
+      dispatch(select_rna_class("23SrRNA"))
   }
   if (newValue === 6){
-      dispatch(select_rna_class("25"))
+      dispatch(select_rna_class("25SrRNA"))
   }
   if (newValue === 7){
-      dispatch(select_rna_class("28"))
+      dispatch(select_rna_class("28SrRNA"))
   }
   if (newValue === 8){
-      dispatch(select_rna_class("35"))
+      dispatch(select_rna_class("35SrRNA"))
   }
   setValue(newValue);
 };
 
-const classr5   = useSelector(( state:AppState ) => state.rna.rna_classes_derived[5])
-const classr5_8 = useSelector(( state:AppState ) => state.rna.rna_classes_derived["5.8"])
-const classr12  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[12])
-const classr16  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[16])
-const classr21  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[21])
-const classr23  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[23])
-const classr25  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[25])
-const classr28  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[28])
-const classr35  = useSelector(( state:AppState ) => state.rna.rna_classes_derived[35])
+const classr5   = useSelector(( state:AppState ) => state.rna.rna_classes_derived["5SrRNA"])
+const classr5_8 = useSelector(( state:AppState ) => state.rna.rna_classes_derived["5.8SrRNA"])
+const classr12  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["12SrRNA"])
+const classr16  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["16SrRNA"])
+const classr21  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["21SrRNA"])
+const classr23  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["23SrRNA"])
+const classr25  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["25SrRNA"])
+const classr28  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["28SrRNA"])
+const classr35  = useSelector(( state:AppState ) => state.rna.rna_classes_derived["35SrRNA"])
+
 const indexlabels = [ 
   [5, '5SrRNA'     ]
 , [5.8, '5.8SrRNA']

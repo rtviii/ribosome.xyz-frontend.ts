@@ -1,8 +1,7 @@
 import axios from "axios";
 import Axios from "axios";
 import qs from 'qs'
-import { RnaClass } from "../reducers/RNA/RNAReducer";
-import { ProteinClass } from "../RibosomeTypes";
+import { ProteinClass, RNAClass } from "../RibosomeTypes";
 
 const BACKEND: any = process.env.REACT_APP_DJANGO_URL;
 type DjangoAPIs = "neo4j" | "static_files"
@@ -167,7 +166,7 @@ interface get_uncategorized_rna {
 interface get_rna_class {
   endpoint: "get_rna_class";
   params: {
-    rna_class: RnaClass
+    rna_class: RNAClass
   }
 }
 interface getStructure {

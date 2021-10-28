@@ -32,6 +32,8 @@ import   List                                                  from '@material-u
 import { CardBodyAnnotation        }                           from '../StructurePage/StructurePage'                 ;
 import   LinearProgress                                        from '@material-ui/core/LinearProgress'               ;
 import { flattenDeep               }                           from 'lodash'                                         ;
+import { ThemeProvider } from '@mui/material';
+import { DefaultTheme } from '../../..';
 
 const RPLoader = () => (
   <div className="prot-loading">
@@ -287,18 +289,20 @@ const useStyles = makeStyles({
 });
 
 interface OwnProps {
-  protein: Protein,
-  displayPill: boolean
+  protein    : Protein,
+  displayPill: boolean // whether to display the pill which links to the parent strucutre: useful in situations when the protein card is on its own.
 }
 interface StateProps {
   allFilters: FiltersReducerState
 }
 interface DispatchProps {
   handleFilterChange: (allFilters: FiltersReducerState, filtertype: FilterType, newavalue: number | string | number[] | string[]) => void
-  addCartItem: (item: CartItem) => void
+  addCartItem       : (item: CartItem) => void
 }
 type RibosomalProtCardProps = DispatchProps & StateProps & OwnProps
+
 const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
+
   const history                     = useHistory()
   const [isFetching, setisFetching] = useState<boolean>(false);
   const downloadChain               = (pdbid: string, cid: string) => {
@@ -336,7 +340,8 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id   = open ? 'simple-popover' : undefined;
+
   return (
     <Card className={classes.root} variant="outlined" >
 
@@ -351,13 +356,13 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
           >
             <Grid
               // className={classes.hover}
-              onClick={() => {
-                prop.handleFilterChange(
-                  prop.allFilters as FiltersReducerState,
-                  "SPECIES",
-                  prop.protein.src_organism_ids.length > 0 ? prop.protein.src_organism_ids[0] : ""
-                );
-              }}
+              // onClick={() => {
+              //   prop.handleFilterChange(
+              //     prop.allFilters as FiltersReducerState,
+              //     "SPECIES",
+              //     prop.protein.src_organism_ids.length > 0 ? prop.protein.src_organism_ids[0] : ""
+              //   );
+              // }}
               item
               container
               xs={6}
@@ -370,6 +375,10 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
               <Grid item>
                 <Typography className={classes.banclass} onClick={() => { return prop.protein.nomenclature[0] ? history.push(`/rps/${prop.protein.nomenclature[0]}`) : "" }}>
                   {prop.protein.nomenclature[0] ? prop.protein.nomenclature[0] : " "}
+                </Typography>
+
+                <Typography className={classes.banclass} >
+                  {prop.protein.rcsb_pdbx_description}
                 </Typography>
               </Grid>
 
@@ -415,8 +424,6 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
                 // alert("hi")
                 var text = `>${prop.protein.parent_rcsb_id}_${prop.protein.entity_poly_strand_id} : ${prop.protein.nomenclature.length > 0 ? prop.protein.nomenclature[0] : ''} | ${prop.protein.pfam_descriptions} | uniprot_acc: ${prop.protein.uniprot_accession}\n${prop.protein.entity_poly_seq_one_letter_code}`
                 fileDownload(text, `${prop.protein.nomenclature.length > 0 ? prop.protein.nomenclature[0] : ''}_${prop.protein.parent_rcsb_id}_${prop.protein.entity_poly_strand_id}.fasta`)
-
-
               }}>
 
               Download Sequence(.fasta)
@@ -471,10 +478,6 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
               <VisibilityIcon />
             </Button>
             </Grid>
-
-
-
-
             <Grid item>
 
             <Button
