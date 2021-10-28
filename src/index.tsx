@@ -16,6 +16,10 @@ import green from '@material-ui/core/colors/green';
 import { ToastProvider } from "react-toast-notifications";
 
 
+
+const origin_blue       = '#aad5ff'
+const prediction_yellow = 'fff8bd'
+
 let theme = createTheme({
 
   palette: {
