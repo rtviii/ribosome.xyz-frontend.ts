@@ -1,38 +1,41 @@
-import   React                , { useEffect, useState }                 from 'react'
-import   Grid                                                           from "@material-ui/core/Grid"                        ;
-import   Typography                                                     from "@material-ui/core/Typography"                  ;
-import   CardActions                                                    from "@material-ui/core/CardActions"                 ;
-import   Button                                                         from "@material-ui/core/Button"                      ;
-import   Popover                                                        from "@material-ui/core/Popover"                     ;
-import   CardMedia                                                      from '@material-ui/core/CardMedia'                   ;
-import   CardActionArea                                                 from '@material-ui/core/CardActionArea'              ;
-import   List                                                           from "@material-ui/core/List"                        ;
-import   ListItem                                                       from "@material-ui/core/ListItem"                    ;
-import { createStyles         , lighten, makeStyles, Theme }            from '@material-ui/core/styles'                      ;
-import   InputLabel                                                     from '@material-ui/core/InputLabel'                  ;
-import   MenuItem                                                       from '@material-ui/core/MenuItem'                    ;
-import   FormControl                                                    from '@material-ui/core/FormControl'                 ;
-import   Select                                                         from '@material-ui/core/Select'                      ;
-import   TextField                                                      from '@material-ui/core/TextField'                   ;
-import   Autocomplete                                                   from '@material-ui/lab/Autocomplete'                 ;
-import { AppState              }                                        from '../../redux/store'                             ;
-import { useDispatch          , useSelector }                           from 'react-redux'                                   ;
-import { BanClassMetadata     , NeoStruct, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces'                    ;
-import   ListSubheader                                                  from '@material-ui/core/ListSubheader/ListSubheader' ;
-import { CardBodyAnnotation    }                                        from './../Workspace/StructurePage/StructurePage'
-import { requestBanClass       }                                        from '../../redux/reducers/Proteins/ActionTypes'     ;
-import { getNeo4jData          }                                        from '../../redux/AsyncActions/getNeo4jData'         ;
-import   Paper                                                          from '@material-ui/core/Paper/Paper'                 ;
-import   CardHeader                                                     from '@material-ui/core/CardHeader/CardHeader'       ;
-import   Card                                                           from '@material-ui/core/Card/Card'                   ;
-import { RibosomeStructure    , RNAClass }                              from '../../redux/RibosomeTypes'                     ;
-import { chain                , flattenDeep, uniq }                     from 'lodash'                                        ;
-import { DashboardButton       }                                        from '../../materialui/Dashboard/Dashboard'          ;
-import { useHistory           , useParams }                             from 'react-router'                                  ;
-import   _                                                              from 'lodash'
-import { struct_change         }                                        from '../../redux/reducers/Visualization/ActionTypes';
-import { ToastProvider        , useToasts }                             from 'react-toast-notifications'                     ;
-import { nomenclatureCompareFn }                                        from '../Workspace/ProteinAlign/ProteinAlignment'    ;
+import React, { useEffect, useState } from 'react'
+import Grid from "@material-ui/core/Grid";
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import Typography from "@material-ui/core/Typography";
+import CardActions from "@material-ui/core/CardActions";
+import Button from "@material-ui/core/Button";
+import Popover from "@material-ui/core/Popover";
+import CardMedia from '@material-ui/core/CardMedia';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { AppState } from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { BanClassMetadata, NeoStruct, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces';
+import ListSubheader from '@material-ui/core/ListSubheader/ListSubheader';
+import { CardBodyAnnotation } from './../Workspace/StructurePage/StructurePage'
+import { requestBanClass } from '../../redux/reducers/Proteins/ActionTypes';
+import { getNeo4jData } from '../../redux/AsyncActions/getNeo4jData';
+import Paper from '@material-ui/core/Paper/Paper';
+import CardHeader from '@material-ui/core/CardHeader/CardHeader';
+import Card from '@material-ui/core/Card/Card';
+import { ProteinClass, RibosomeStructure, RNAClass } from '../../redux/RibosomeTypes';
+import { chain, flattenDeep, uniq } from 'lodash';
+import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
+import { useHistory, useParams } from 'react-router';
+import _ from 'lodash'
+import { COMPONENT_TAB_CHANGE, protein_change, rna_change, struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
+import { ToastProvider, useToasts } from 'react-toast-notifications';
+import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
+import { RNACard } from '../Workspace/RNA/RNACard';
+import fileDownload from 'js-file-download';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -60,8 +63,8 @@ const useSelectStyles = makeStyles((theme: Theme) =>
 
 interface StructSnip {
   rcsb_id: string,
-  title  : string,
-  any?   : any
+  title: string,
+  any?: any
 }
 
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
@@ -72,10 +75,10 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
       width: "100%"
     }
   }))()
-  const current_struct                  = useSelector((state: AppState) => state.visualization.structure_tab.struct)
-  const chain_to_highlight:string |null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
+  const current_struct = useSelector((state: AppState) => state.visualization.structure_tab.struct)
+  const chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
   const structs = useSelector((state: AppState) => state.structures.derived_filtered)
-  const { addToast }                    = useToasts();
+  const { addToast } = useToasts();
 
   const paintStructure = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
     if (newvalue === null) {
@@ -94,7 +97,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
 
-    dispatch(struct_change(newvalue.props.children,current_struct))
+    dispatch(struct_change(newvalue.props.children, current_struct))
     viewerInstance.visual.select(
       {
         data: [{
@@ -107,31 +110,30 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   }
 
-  const classes = ( makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-  }),
-) )()
+  const classes = (makeStyles((theme: Theme) =>
+    createStyles({
+      formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+      },
+      selectEmpty: {
+        marginTop: theme.spacing(2),
+      },
+    }),
+  ))()
   return (
     <>
       <Autocomplete
         className={selectStructStyles.autocomoplete}
         // value={current_struct}
-        value={useSelector(( state:AppState ) => state.visualization.structure_tab.struct)}
+        value={useSelector((state: AppState) => state.visualization.structure_tab.struct)}
         options={structs}
-        getOptionLabel={(parent) =>  
-          {
-            if (parent.struct === undefined){
-          return "null"
-            }
-            else {return parent.struct.rcsb_id}
+        getOptionLabel={(parent) => {
+          if (parent.struct === undefined) {
+            return "null"
           }
+          else { return parent.struct.rcsb_id }
+        }
         }
         // @ts-ignore
         onChange={paintStructure}
@@ -140,27 +142,27 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
       />
 
       <ListItem>
-        <FormControl  
-        // className={classes.formControl} 
-        style={{width:"100%"}}>
+        <FormControl
+          // className={classes.formControl} 
+          style={{ width: "100%" }}>
           <InputLabel> Highlight Chain</InputLabel>
           <Select
-            value   ={chain_to_highlight}
+            value={chain_to_highlight}
             onChange={handleSelectHighlightChain}
             // @ts-ignore
-            renderValue={(value)=>{ 
-              if (value === null){
+            renderValue={(value) => {
+              if (value === null) {
                 return "null"
               }
-              else{
-                return            <div>{`${value}`}</div> 
+              else {
+                return <div>{`${value}`}</div>
                 // return            <div>{ value === undefined || value===null ? "" : value }</div> 
               }
-          }}
-            >
-              {/* {useSelector(( state:AppState ) => state.visualization.structure_tab.struct?.struct) === null ? null : <MenuItem value="f">{}</MenuItem>} */}
-            {current_struct !== null && current_struct !== undefined ? [...current_struct?.rnas,...current_struct?.rps.sort(nomenclatureCompareFn), ]
-              .map((i) => <MenuItem value={i.auth_asym_id}>{i.nomenclature.length>0 ? i.nomenclature[0] : "Unclassified Polymer"}</MenuItem>) : null}
+            }}
+          >
+            {/* {useSelector(( state:AppState ) => state.visualization.structure_tab.struct?.struct) === null ? null : <MenuItem value="f">{}</MenuItem>} */}
+            {current_struct !== null && current_struct !== undefined ? [...current_struct?.rnas, ...current_struct?.rps.sort(nomenclatureCompareFn),]
+              .map((i) => <MenuItem value={i.auth_asym_id}>{i.nomenclature.length > 0 ? i.nomenclature[0] : "Unclassified Polymer"}</MenuItem>) : null}
           </Select>
         </FormControl>
       </ListItem>
@@ -173,22 +175,25 @@ const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMet
   const styles = useSelectStyles();
   const dispatch = useDispatch();
 
-  const [curProtClass, setProtClass] = React.useState('');
+  const [curProtClass, setProtClass] = React.useState<ProteinClass | null>(null);
   const [curProtParent, setProtParent] = React.useState('');
   const availablestructs = useSelector((state: AppState) => state.proteins.ban_class)
 
   const chooseProtein = (event: React.ChangeEvent<{ value: unknown }>) => {
     let item = event.target.value as string
     dispatch(requestBanClass(item, false))
-    setProtClass(item);
+    setProtClass(item as ProteinClass);
+    dispatch(protein_change(event.target.value as ProteinClass, curProtParent))
   };
   const chooseProtParent = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
-    console.log(newvalue)
     if (newvalue === null || newvalue.parent_rcsb_id === "Choose a protein class.") {
+      protein_change(curProtClass, null)
       return
     }
+
     setProtParent(newvalue.parent_rcsb_id);
-    getCifChainByClass(curProtClass, newvalue.parent_rcsb_id)
+    getCifChainByClass(curProtClass as ProteinClass, newvalue.parent_rcsb_id)
+    dispatch(protein_change(curProtClass, newvalue.parent_rcsb_id))
 
   };
   return (
@@ -228,51 +233,29 @@ const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMet
 
 const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifChainByClass: (strand: string, parent: string) => void }) => {
 
-  const styles                       = useSelectStyles();
-  const dispatch                     = useDispatch();
+  const styles = useSelectStyles();
+  const dispatch = useDispatch();
 
-  const [curRna, setCurRna]          = React.useState<RNAClass | null> (null);
-  const [curRnaParent, setRnaParent] = React.useState<string|null>(null);
-  const [selectBy, setSelectBy]      = useState<string>('Parent Structure');
+  const [curRna, setCurRna] = React.useState<RNAClass | null>(null);
+  const [curRnaParent, setRnaParent] = React.useState<string | null>(null);
 
   const parents = useSelector((state: AppState) => state.rna.rna_classes_derived)
-
-    // .reduce((agg, rnaclass) => { return [...agg, ...rnaclass] }, []))
-    // .map((_: RNAProfile) => (
-    //   {
-    //   des    : _.rcsb_pdbx_description,
-    //   rcsb_id: _.parent_rcsb_id,
-    // })))
-
-
-
-
-
-
-
-
-    
   useEffect(() => {
-    // getCifChainByClass(curR)
   }, [curRna, curRnaParent])
 
-  var rnaClasses:{v:string, t:RNAClass}[]= [
-                { v: 'mRNA'     , t: 'mRNA'     },
-                { v: 'tRNA'     , t: 'tRNA'     },
-                { v: '5SrRNA'   , t: '5SrRNA'   },
-                { v: '5.8SrRNA' , t: '5.8SrRNA' },
-                { v: '12SrRNA'  , t: '12SrRNA'  },
-                { v: '16SrRNA'  , t: '16SrRNA'  },
-                { v: '21SrRNA'  , t: '21SrRNA'  },
-                { v: '23SrRNA'  , t: '23SrRNA'  },
-                { v: '25SrRNA'  , t: '25SrRNA'  },
-                { v: '28SrRNA'  , t: '28SrRNA'  },
-                { v: '35SrRNA'  , t: '35SrRNA'  },
-              ]
-
-
-
-
+  var rnaClasses: { v: string, t: RNAClass }[] = [
+    { v: 'mRNA', t: 'mRNA' },
+    { v: 'tRNA', t: 'tRNA' },
+    { v: '5SrRNA', t: '5SrRNA' },
+    { v: '5.8SrRNA', t: '5.8SrRNA' },
+    { v: '12SrRNA', t: '12SrRNA' },
+    { v: '16SrRNA', t: '16SrRNA' },
+    { v: '21SrRNA', t: '21SrRNA' },
+    { v: '23SrRNA', t: '23SrRNA' },
+    { v: '25SrRNA', t: '25SrRNA' },
+    { v: '28SrRNA', t: '28SrRNA' },
+    { v: '35SrRNA', t: '35SrRNA' },
+  ]
   return (
     <Grid item xs={12}>
       <List style={{ outline: "1px solid gray", borderRadius: "5px" }}>
@@ -281,29 +264,40 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
           <FormControl className={styles.sub1}>
             <InputLabel >RNA Class</InputLabel>
             <Select
-              labelId  = "demo-simple-select-label"
-              id       = "demo-simple-select"
-              value    = {curRna}
-              onChange = {(event: any) => { setCurRna(event.target.value)}}>
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={curRna}
+              onChange={(event: any) => {
+
+                setCurRna(event.target.value)
+                dispatch(rna_change(event.target.value, curRnaParent))
+
+              }}>
               {rnaClasses.map((i) => <MenuItem value={i.v}>{i.t}</MenuItem>)}
             </Select>
           </FormControl>
 
           <FormControl className={styles.sub2}>
             <Autocomplete
-            //@ts-ignore
-              styles         = {{ marginRight: "10px", outline: "none" }}
-              options        = {curRna === null ? [] : parents[curRna as RNAClass]}
-              getOptionLabel = {(parent) => parent.parent_rcsb_id}
+
+              //@ts-ignore
+              styles={{ marginRight: "10px", outline: "none" }}
+              options={curRna === null ? [] : parents[curRna as RNAClass]}
+              getOptionLabel={(parent) => parent.parent_rcsb_id}
               // @ts-ignore
 
-              onChange     = {(event: any, newValue: any) => {
-                if (newValue!==null){
+              onChange={(event: any, newValue: any) => {
+                if (newValue !== null) {
                   getCifChainByClass(curRna as string, newValue.parent_rcsb_id)
+                  dispatch(rna_change(curRna, newValue.parent_rcsb_id))
+                  setRnaParent(newValue.parent_rcsb_id)
+                } else {
+                  dispatch(rna_change(curRna, null))
+                  setRnaParent(null)
                 }
               }}
-              renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.parent_rcsb_id}</b>  ::: <i>{option.src_organism_names}</i></div>)}
-              renderInput  = {(params) => <TextField {...params} style={{ fontSize: "8px" }} label="Parent Structure" variant="outlined" />}
+              renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.parent_rcsb_id}</b>  ::: <i>{option.src_organism_names}</i></div>)}
+              renderInput={(params) => <TextField {...params} style={{ fontSize: "8px" }} label="Parent Structure" variant="outlined" />}
             />
 
           </FormControl>
@@ -319,42 +313,131 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
 }
 
 
+
+interface DownloadElement_P { elemtype: 'rna' | 'protein' | 'structure', id: string | null, parent?: string }
+const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
+
+
+  const download_elem = () => {
+    if ( elemtype === 'structure' ){
+
+      getNeo4jData('static_files', {endpoint: "download_structure", params:{
+        struct_id:id as string
+      }}).then(
+      resp => {
+        fileDownload(resp.data, `${id}.cif`);
+      },
+      error => {
+        alert(
+          "Structure is unavailable." +
+            error
+        );
+      }
+    );
+
+    
+  
+  }else{
+
+      getNeo4jData('static_files', {
+        endpoint: "cif_chain_by_class", params: {
+          "classid": id as string,
+          "struct": parent as string
+        }}).then(
+      resp => {
+        fileDownload(resp.data, `${id}_${parent}.cif`);
+      },
+      error => {
+        alert(
+          "This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" +
+            error
+        );
+      }
+    );
+
+  }
+
+
+}
+
+  return (
+    <Paper style={{ width: "100%" }}>
+      <Grid>
+        {
+          (() => {
+            if (id === null) {
+              return <Button disabled={true}> Download Selected </Button>
+            }
+            else {
+              switch (elemtype) {
+                case 'protein':
+                  return <Button fullWidth size="small" color='primary' style={{ marginRight: "5px" }} onClick={() => download_elem()} >
+
+          <FileDownloadIcon />
+                      <Typography>Protein {id} in {parent} </Typography>
+                    </Button>
+                case 'rna':
+                  return <Button fullWidth size="small" color='primary' style={{ marginRight: "5px" }} onClick={() => download_elem()} >
+          <FileDownloadIcon />
+
+                    <Typography>RNA {id} in {parent}</Typography>
+                  </Button>
+                case 'structure':
+
+                  return <Button fullWidth size="small" color='primary' style={{ marginRight: "5px" }} onClick={() => download_elem()} >
+
+          <FileDownloadIcon />
+                    <Typography>Structure {id} </Typography>
+                  </Button>
+              }
+            }
+          })()
+        }
+      </Grid>
+    </Paper>
+  )
+}
+
+
+
+
+
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
 // @ts-ignore
 // const viewerInstance2 = new PDBeMolstarPlugin() as any;
 const VisualizationPage = (props: any) => {
-  const [lastViewed, setLastViewed] = useState   <Array<string | null>>([null, null])
-  const history   : any             = useHistory ();
-  const params                      = history    .location.state;
-  const dispatch                    = useDispatch();
-  const {addToast}                  = useToasts();
+  const [lastViewed, setLastViewed] = useState<Array<string | null>>([null, null])
+  const history: any = useHistory();
+  const params = history.location.state;
+  const dispatch = useDispatch();
+  const { addToast } = useToasts();
 
   useEffect(() => {
     if (params === undefined || Object.keys(params).length < 1) { return }
     else if ((params as { struct: string }).struct) {
 
-      getNeo4jData('neo4j',{endpoint:"get_struct",params:{pdbid:params.struct}}).then(r=>{
+      getNeo4jData('neo4j', { endpoint: "get_struct", params: { pdbid: params.struct } }).then(r => {
 
-        if (r.data.length < 1){
-        dispatch(struct_change(null,null))
+        if (r.data.length < 1) {
+          dispatch(struct_change(null, null))
         }
-        else{
+        else {
 
-          var x:any ={}
-          x[ 'ligands' ] = r.data[0].ligands  .map(( _:any ) =>_.chemicalId)
-          x[ 'struct'  ] = r.data[0].structure
-          x[ 'rps'     ] = r.data[0].rps      .map(( _:any)=> ( {strands:_.entity_poly_strand_id, nomenclature:_.nomenclature} ))
-          x[ 'rnas'    ] = r.data[0].rnas     .map(( _ :any)=> ( {strands:_.entity_poly_strand_id, nomenclature:_.nomenclature} ))
+          var x: any = {}
+          x['ligands'] = r.data[0].ligands.map((_: any) => _.chemicalId)
+          x['struct'] = r.data[0].structure
+          x['rps'] = r.data[0].rps.map((_: any) => ({ strands: _.entity_poly_strand_id, nomenclature: _.nomenclature }))
+          x['rnas'] = r.data[0].rnas.map((_: any) => ({ strands: _.entity_poly_strand_id, nomenclature: _.nomenclature }))
 
-          dispatch(struct_change(null,x))
+          dispatch(struct_change(null, x))
 
-      addToast(`Structure ${x.struct.rcsb_id} is being fetched.`, {
-        appearance: 'info',
-        autoDismiss: true,
-      })
+          addToast(`Structure ${x.struct.rcsb_id} is being fetched.`, {
+            appearance: 'info',
+            autoDismiss: true,
+          })
         }
-          
+
       })
       // setstruct(params.struct)
       // selectStruct(params.struct)
@@ -366,12 +449,9 @@ const VisualizationPage = (props: any) => {
     [
       params
     ]
-    )
+  )
 
   const [inView, setInView] = useState<any>({});
-  // const [inViewData, setInViewData] = useState<any>({});
-  // const [structdata, setstruct] = useState<RibosomeStructure>({} as RibosomeStructure);
-  // const [protClassInfo, setProtClassInfo] = useState<any>({});
 
   useEffect(() => {
     var options = {
@@ -459,12 +539,12 @@ const VisualizationPage = (props: any) => {
   }, [inView])
 
   const RenderInViewInfo = ({ type, structdata, protClassInfo }: {
-    type         : string ,
-     structdata   : RibosomeStructure,
-     protClassInfo: {
-     class        : string ,
-     comments     : string[][],
-     members      : { parent: string , chain: string }[]
+    type: string,
+    structdata: RibosomeStructure,
+    protClassInfo: {
+      class: string,
+      comments: string[][],
+      members: { parent: string, chain: string }[]
     }
   }) => {
     switch (type) {
@@ -485,7 +565,7 @@ const VisualizationPage = (props: any) => {
           <Card className={classes.card}>
             <CardHeader
               title={`${structdata.rcsb_id}`}
-              subheader={ structdata.src_organism_ids.length> 0 ? structdata.src_organism_names[0] : ""}
+              subheader={structdata.src_organism_ids.length > 0 ? structdata.src_organism_names[0] : ""}
             />
             <CardActionArea>
               <CardMedia
@@ -496,7 +576,7 @@ const VisualizationPage = (props: any) => {
               />
             </CardActionArea>
             <List>
-              <CardBodyAnnotation keyname="Species" value={ structdata.src_organism_ids.length> 0 ? structdata.src_organism_names[0] : ""} />
+              <CardBodyAnnotation keyname="Species" value={structdata.src_organism_ids.length > 0 ? structdata.src_organism_names[0] : ""} />
               <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
               < CardBodyAnnotation keyname="Experimental Method" value={structdata.expMethod} />
               < CardBodyAnnotation keyname="Title" value={structdata.citation_title} />
@@ -575,11 +655,10 @@ const VisualizationPage = (props: any) => {
     }
   })();
 
-  const [current_tab, set_current_tab] = useState<string>('struct')
-  const handleTabClick = (tab: string) => {
-
-    set_current_tab(tab)
-
+  const current_tab = useSelector((state: AppState) => state.visualization.component_tab)
+  const vis_state = useSelector((state: AppState) => state.visualization)
+  const handleTabClick = (tab: VisualizationTabs) => {
+    dispatch({ type: COMPONENT_TAB_CHANGE, tab });
   }
 
 
@@ -619,18 +698,18 @@ const VisualizationPage = (props: any) => {
           <ListSubheader>Select Item Category</ListSubheader>
           <ListItem style={{ display: "flex", flexDirection: "row" }}>
 
-            <Button size="small" color={current_tab === 'struct' ? "primary" : "default"} onClick={() => { handleTabClick('struct') }} variant="outlined" style={{ marginRight: "5px" }} >Structures</Button>
-            <Button size="small" color={current_tab === 'rp' ? "primary" : "default"} onClick={() => { handleTabClick("rp") }} variant="outlined" style={{ marginRight: "5px" }} >Proteins  </Button>
-            <Button size="small" color={current_tab === 'rna' ? "primary" : "default"} onClick={() => { handleTabClick('rna') }} variant="outlined" style={{ marginRight: "5px" }} >RNA       </Button>
+            <Button size="small" color={current_tab === 'structure_tab' ? "primary" : "default"} onClick={() => { handleTabClick('structure_tab') }} variant="outlined" style={{ marginRight: "5px" }} >Structures</Button>
+            <Button size="small" color={current_tab === 'protein_tab' ? "primary" : "default"} onClick={() => { handleTabClick("protein_tab") }} variant="outlined" style={{ marginRight: "5px" }} >Proteins  </Button>
+            <Button size="small" color={current_tab === 'rna_tab' ? "primary" : "default"} onClick={() => { handleTabClick('rna_tab') }} variant="outlined" style={{ marginRight: "5px" }} >RNA       </Button>
           </ListItem>
           <ListItem>
             {(() => {
               switch (current_tab) {
-                case 'rp':
+                case 'protein_tab':
                   return <SelectProtein proteins={prot_classes} getCifChainByClass={getCifChainByClass} />
-                case 'struct':
+                case 'structure_tab':
                   return <SelectStruct items={structures} selectStruct={selectStruct} />
-                case 'rna':
+                case 'rna_tab':
                   return <SelectRna items={[]} getCifChainByClass={getCifChainByClass} />
                 default:
                   return "Null"
@@ -639,7 +718,7 @@ const VisualizationPage = (props: any) => {
 
           </ListItem>
 
-          {current_tab === 'struct' ?
+          {current_tab === 'structure_tab' ?
             <ListItem>
               <Button fullWidth variant="outlined" color="primary" onClick={
                 () => {
@@ -652,6 +731,28 @@ const VisualizationPage = (props: any) => {
             : null
 
           }
+
+
+          <ListItem>
+            {
+              (() => {
+                switch (current_tab) {
+                  case 'protein_tab':
+                    return <DownloadElement elemtype={'protein'} id={vis_state.protein_tab.class} parent={vis_state.protein_tab.parent as string} />
+                  case 'rna_tab':
+                    return <DownloadElement elemtype={'rna'} id={vis_state.rna_tab.class} parent={vis_state.rna_tab.parent as string} />
+                  case 'structure_tab':
+                    return <DownloadElement elemtype={'structure'} id={vis_state.structure_tab.struct === null ? null : vis_state.structure_tab.struct?.struct.rcsb_id as string} />
+                }
+              })()
+            }
+
+
+
+
+
+          </ListItem>
+
 
           <ListItem>
             <DashboardButton />

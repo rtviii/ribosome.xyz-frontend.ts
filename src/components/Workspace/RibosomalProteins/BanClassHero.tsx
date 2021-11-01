@@ -2,12 +2,10 @@
 import React, { MouseEventHandler } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import "./BanClassHero.css";
-import { BanPaperEntry } from './RPsCatalogue';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Popover from '@material-ui/core/Popover';
 import Paper from '@material-ui/core/Paper';
 import { ProteinClass, RibosomeStructure } from '../../../redux/RibosomeTypes';
 import _ from 'lodash';
@@ -83,12 +81,7 @@ const BanClassHero = ({ nom_class,  unique_organisms  , comments, structures}:
 
         >
 
-
-
-
         <Grid item container justify="space-between">
-
-
 
 
             <Typography

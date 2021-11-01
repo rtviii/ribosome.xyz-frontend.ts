@@ -7,9 +7,11 @@ export const PROTEIN_CHANGE       = "PROTEIN_CHANGE"
 export const RNA_CHANGE           = "RNA_CHANGE"
 export const COMPONENT_TAB_CHANGE = "COMPONENT_TAB_CHANGE"
 
+export type VisualizationTabs ='structure_tab' | 'protein_tab' | 'rna_tab';
+
 export interface componentTabChange {
 	type: typeof COMPONENT_TAB_CHANGE ,
-	tab: 'structure_tab' | 'protein_tab' | 'rna_tab',
+	tab: VisualizationTabs,
 }
 export interface structureChange {
 		type              : typeof STRUCTURE_CHANGE
@@ -38,16 +40,13 @@ export const rna_change = (rnaclass:RNAClass|null,parent:string|null):rnaChange 
 	class:rnaclass
 })
 export const struct_change = (chain:string|null,struct:NeoStruct|null):structureChange =>{
-	console.log("Dispatched struct vis change", struct);
-	
 	return {
-
-	type             : "STRUCTURE_CHANGE",
-	structure        : struct,
-	highlighted_chain: chain
+		type             : "STRUCTURE_CHANGE",
+		structure        : struct,
+		highlighted_chain: chain
 	}
 }
-export const tab_change = (tab:'protein_tab'|'rna_tab'|'structure_tab'):componentTabChange =>({
+export const tab_change = (tab:VisualizationTabs):componentTabChange =>({
 	type:"COMPONENT_TAB_CHANGE",
 	tab
 })
