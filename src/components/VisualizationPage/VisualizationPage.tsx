@@ -312,8 +312,6 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
   )
 }
 
-
-
 interface DownloadElement_P { elemtype: 'rna' | 'protein' | 'structure', id: string | null, parent?: string }
 const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
 
@@ -397,9 +395,6 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
     </Paper>
   )
 }
-
-
-
 
 
 // @ts-ignore

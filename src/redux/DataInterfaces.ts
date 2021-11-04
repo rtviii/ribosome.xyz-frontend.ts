@@ -5,8 +5,9 @@ import {  RibosomeStructure,  Protein, RNA, Ligand, ProteinClass, RNAClass} from
 // Preload for strucutrescatalogue.
 
 export interface PolymerMinimal{
-  nomenclature: string[];
-  auth_asym_id: string; 
+  nomenclature                   : string[];
+  auth_asym_id                   : string;
+  entity_poly_seq_one_letter_code: string;
 }
 
   export interface NeoStruct{
