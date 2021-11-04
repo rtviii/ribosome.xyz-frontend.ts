@@ -77,7 +77,7 @@ export const Cart= () => {
             selected_items.rps.push(`${it.parent_rcsb_id.toLowerCase()}.${it.entity_poly_strand_id}`)
           }
           if (isRNA(it)){
-            selected_items.rna.push(`${it.struct.toLowerCase()}.${it.strand}`)
+            selected_items.rna.push(`${it.parent_rcsb_id.toLowerCase()}.${it.parent_rcsb_id}`)
           }
           if (isStruct(it)){
             selected_items.structs.push(`${it.rcsb_id.toLowerCase()}`)
@@ -103,7 +103,7 @@ export const Cart= () => {
             ,it.pdbx_keywords_text  ])
         }
         if(isRNA(it)){
-            summary.push(['riboxyz_workspace_rna', it.description,it.struct + "_" + it.strand,it.parent_method, it.parent_resolution+"Å", it.parent_citation,it.parent_year,it.seq])
+            summary.push(['riboxyz_workspace_rna', it.rcsb_pdbx_description,it.parent_rcsb_id + "_" + it.auth_asym_id,it.parent_method, it.parent_resolution+"Å", it.parent_year,it.entity_poly_seq_one_letter_code])
         }
         if(isProt(it)){
             summary.push(['riboxyz_workspace_protein', it.parent_rcsb_id +"_" + it.entity_poly_strand_id, it.nomenclature,it.pfam_descriptions, it.pfam_descriptions,it.uniprot_accession, it.entity_poly_seq_one_letter_code])
@@ -322,7 +322,7 @@ const RNAItem = ({selected,i}:{ selected:boolean,i:RNAProfile })=>{
 
 const dispatch = useDispatch();
 
-return     <ListItem key={i.description + i} role={undefined}  dense button style={{backgroundColor:"rgba(172,191,169,0.6)", marginBottom:"5px"}}>
+return     <ListItem  role={undefined}  dense button style={{backgroundColor:"rgba(172,191,169,0.6)", marginBottom:"5px"}}>
 
         <Checkbox
         checked={selected}
@@ -342,12 +342,12 @@ onClick={()=>{
                             
                             id={""} primary={<Typography>RNA Strand  </Typography>}
                             
-                            secondary={i.description}/>
+                            secondary={i.rcsb_pdbx_description}/>
                             <Grid container xs={12}>
 
 <Grid item>
 
-                           <ChainParentPill parent_id={i.struct} strand_id={i.strand}/> 
+                           <ChainParentPill parent_id={i.parent_rcsb_id} strand_id={i.auth_asym_id}/> 
 </Grid>
                             </Grid>
                            

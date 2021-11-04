@@ -150,7 +150,7 @@ export const FilterPredicates: Record<
     RNA: (value: any) => (item: ApplicationDataTypes) => {
       var rna = item as RNAProfile;
 
-      return rna.orgid.reduce(
+      return rna.src_organism_ids.reduce(
         (accumulator: boolean, taxid) =>
           accumulator || (value as number[]).includes(taxid),
         false

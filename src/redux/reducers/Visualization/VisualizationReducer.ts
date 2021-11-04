@@ -1,6 +1,5 @@
 import { NeoStruct } from '../../DataInterfaces'
-import { ProteinClass } from '../../RibosomeTypes'
-import { RnaClass } from '../RNA/RNAReducer'
+import { ProteinClass, RNAClass } from '../../RibosomeTypes'
 import { VisualizationActions } from './ActionTypes'
 
 
@@ -15,7 +14,7 @@ export interface VisualizationReducerState{
 		parent:string  |null
 	},
 	rna_tab:{
-		class :RnaClass| null,
+		class :RNAClass| null,
 		parent:string  | null
 	}
     

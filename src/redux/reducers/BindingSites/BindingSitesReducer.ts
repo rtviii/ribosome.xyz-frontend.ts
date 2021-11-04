@@ -11,14 +11,12 @@ export interface BindingSitesReducerState{
     errored_out   : boolean;
 
     visualization_tab: "origin" | 'prediction',
-
-    bsites        : BindingSite[],
+    bsites           : BindingSite[],
 
     factors    : LigandClass[],
     antibiotics: LigandClass[],
     mrna       : LigandClass[],
     trna       : LigandClass[],
-
 
     current_binding_site: BindingSite | null
     current_ligand_class: LigandClass | null,

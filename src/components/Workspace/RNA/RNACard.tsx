@@ -60,7 +60,7 @@ const useStyles = makeStyles({
 });
 
 interface OwnProps {
-  e: RNAProfile,
+  e          : RNAProfile,
   displayPill: boolean
 }
 type RNACardProps = OwnProps
@@ -133,13 +133,13 @@ export const RNACard: React.FC<RNACardProps> = (prop) => {
                 {prop.e.nomenclature.length> 0 ?
                 <Typography  onClick={()=>{history.push('/rnas/')}}>{prop.e.nomenclature}</Typography>
                 
-                 : `Unidentified(${prop.e.description })`}
+                 : `Unidentified(${prop.e.rcsb_pdbx_description })`}
               </Typography>
             </Grid>
             {
               prop.displayPill ?
                 <Grid item >
-                  <ChainParentPill parent_id = {prop.e.struct as string} strand_id = {prop.e.strand as string} />
+                  <ChainParentPill parent_id = {prop.e.parent_rcsb_id as string} strand_id = {prop.e.auth_asym_id as string} />
                 </Grid>: ""
             }
           </Grid>
@@ -158,7 +158,7 @@ export const RNACard: React.FC<RNACardProps> = (prop) => {
             variant="outlined"
             className={classes.actionButton}
             size="small" style={{ textTransform: "none" }} aria-describedby={id} onClick={handleClick}>
-              Sequence (<i>{(prop.e.seq as string).length} NTs</i>)
+              Sequence (<i>{(prop.e.entity_poly_seq_one_letter_code as string).length} NTs</i>)
             </Button>
                </Grid>
 
@@ -173,8 +173,8 @@ export const RNACard: React.FC<RNACardProps> = (prop) => {
               style={{ textTransform: "none" }}
               onClick={() =>
                 downloadChain(
-                  prop.e.struct as string,
-                  prop.e.strand as string
+                  prop.e.parent_rcsb_id as string,
+                  prop.e.auth_asym_id as string
                 )
               }
             >
@@ -194,8 +194,8 @@ export const RNACard: React.FC<RNACardProps> = (prop) => {
         onClick={() => {
 
 
-        var text = `>${prop.e.struct}_${prop.e.strand}  | ${prop.e.description} | rna`
-        fileDownload(text, `rRNA_${prop.e.struct}_${prop.e.strand}.fasta`)
+        var text = `>${prop.e.parent_rcsb_id}_${prop.e.auth_asym_id}  | ${prop.e.rcsb_pdbx_description} | rna`
+        fileDownload(text, `rRNA_${prop.e.parent_rcsb_id}_${prop.e.auth_asym_id}.fasta`)
         }}>
         Download Sequence (.fasta)
         <GetAppIcon />
@@ -245,7 +245,7 @@ export const RNACard: React.FC<RNACardProps> = (prop) => {
             variant="body2"
             className={classes.popover}
           >
-            {prop.e.seq}
+            {prop.e.entity_poly_seq_one_letter_code}
           </Typography>
 
         </Grid>

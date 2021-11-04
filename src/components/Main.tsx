@@ -11,8 +11,8 @@ import { TemporaryDrawer } from './../materialui/Dashboard/Dashboard'
 import { requestAllLigands } from "../redux/reducers/Ligands/ActionTypes";
 import { requestBanMetadata } from "../redux/reducers/Proteins/ActionTypes";
 import { requestRnaClass } from "../redux/reducers/RNA/ActionTypes";
-import { RnaClass } from "../redux/reducers/RNA/RNAReducer";
 import { request_all_bsites} from './../redux/reducers/BindingSites/ActionTypes'
+import { RNAClass } from "../redux/RibosomeTypes";
 
 
 interface OwnProps {}
@@ -42,9 +42,9 @@ const Main: React.FC<MainProps> = (prop:MainProps) => {
     dispatch(request_all_bsites())
 
 
-    for (var k of ["mrna" , "trna"  , "5.8" , "12" , "16", "21", "23" , "25" ,"28" ,"35" , 'other', "5"]){
+    for (var k of ["mRNA" , "tRNA"  , "5.8SrRNA" , "12SrRNA" , "16SrRNA", "21SrRNA", "23SrRNA" , "25SrRNA" ,"28SrRNA" ,"35SrRNA" , "5SrRNA"]){
 
-      dispatch(requestRnaClass(k as RnaClass))
+      dispatch(requestRnaClass(k as RNAClass))
     }
   }, [])
 

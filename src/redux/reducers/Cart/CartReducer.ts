@@ -10,7 +10,7 @@ export function isStruct(i:CartItem): i is RibosomeStructure{
     return (i as RibosomeStructure).rcsb_id !==undefined;
 }
 export function isRNA(i:CartItem): i is RNAProfile{
-    return (i as RNAProfile).strand !==undefined;
+    return (i as RNAProfile).auth_asym_id !==undefined;
 }
 
 interface CartReducerState {

@@ -195,10 +195,10 @@ export const _StructuresReducer = (
       return { ...state, Loading: false, Error: action.error };
     case "REQUEST_STRUCTS_SUCCESS":
         return { ...state,
-        neo_response : [...action.payload],
+        neo_response    : [...action.payload],
         derived_filtered: [...action.payload],
-        pages_total : Math.ceil(action.payload.length/20),
-        Loading : false };
+        pages_total     : Math.ceil(action.payload.length/20),
+        Loading         : false };
     case "NEXT_PAGE_STRUCTS":
       if (state.current_page+1 === state.pages_total){
         return state
@@ -278,7 +278,7 @@ export const requestAllStructuresDjango =  () => {
     getNeo4jData("neo4j", { endpoint: "get_all_structs", params: null }).then(
       response => {
         dispatch({
-          type: actions.REQUEST_STRUCTS_SUCCESS,
+          type   : actions.REQUEST_STRUCTS_SUCCESS,
           payload: flattenDeep( response.data ) as any,
         });
       },

@@ -37,12 +37,6 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 // Tinge of blue for origin #aad5ff
 // Tinge of green for prediction #fff8bd
 
-
-const origin_blue       = '#aad5ff'
-const prediction_yellow = 'fff8bd'
-
-
-
 const ChainAlignmentBlock = ({ src_struct, tgt_struct, nomenclature, tgt_aln, src_aln, aln_ids, tgt_strand, src_strand }: { src_struct: string, tgt_struct: string, nomenclature: string, tgt_strand: string, src_strand: string, tgt_aln: string, src_aln: string, aln_ids: number[] }) => {
 	const history = useHistory();
 	return <Paper
@@ -219,6 +213,8 @@ const BindingSites = () => {
 	const cur_ligclass              : LigandClass | null = useSelector ((state: AppState) => state.binding_sites.current_ligand_class       )
 	const cur_tgt              : NeoStruct   | null      = useSelector ((state: AppState) => state.binding_sites.current_target       )
 
+	const [cur_auth_asym_id, set_cur_auth_asym_id]       = useState<string|null>(null)
+
 
 	const  bsites                                             = useSelector                ((state: AppState) => state.binding_sites.bsites           )
 	const antibiotics = useSelector                ((state: AppState) => state.binding_sites.antibiotics   )
@@ -243,6 +239,11 @@ const BindingSites = () => {
 
 	const  interface_data                                     = useSelector                ((state: AppState) => state.binding_sites.binding_site_data)
 	const  prediction_data                                    = useSelector                ((state: AppState) => state.binding_sites.prediction_data  )
+
+
+	useEffect(() => {
+		console.log("Got interface data:",interface_data)
+	}, [interface_data])
 
 	const cur_vis_tab    = useSelector((state: AppState) => state.binding_sites.visualization_tab)
 	const target_structs = useSelector((state: AppState) => state.structures.neo_response)
@@ -343,12 +344,13 @@ const BindingSites = () => {
 		// )
 	}
 
-	const highlightInterface = () => {
+	const highlightInterface = (source_auth_asym_id:string|null) => {
 
 		if (interface_data === null || interface_data === undefined) {
 			alert("Select a binding site.")
 			return
 		}
+
 		interface MolStarResidue            { 
 			           entity_id                ?  : string,
 			           auth_asym_id              ? : string,
@@ -366,9 +368,10 @@ const BindingSites = () => {
 			           label_comp_id             ? : string,
 			           color                       : { r: number, g: number,b: number },
 			           focus                     ? : boolean,
-			           sideChain                 ? : boolean }
-		var vis_data: MolStarResidue[] = []
+			           sideChain                 ? : boolean 
+				}
 
+		var vis_data: MolStarResidue[] = []
 		for (var chain of Object.values(interface_data)) {
 			var reduced = chain.residues.reduce((x: MolStarResidue[], y: Residue) => {
 				if (y.residue_id > 0) {
@@ -406,18 +409,16 @@ const BindingSites = () => {
 			else{
 				by_chain[u.auth_asym_id as string] = [u]
 			}
-			
 		}
 		
+		viewerInstance.visual.select({ data: [{auth_asym_id: source_auth_asym_id, color:{r: 255, g:100, b:0}, focus:true}], nonSelectedColor: {r:255,g:255,b:255} })
 
 		for (var chain_ress of Object.values(by_chain)){
 			viewerInstance.visual.select(
 				{ data            : chain_ress,
 				nonSelectedColor: { r: 240, g: 240, b: 240 }, }
 			)
-
 		}
-		
 	}
 
 
@@ -449,16 +450,21 @@ const BindingSites = () => {
 	} 
 
 
-
-
 	const currentBindingSiteChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: BindingSite) => {
 		if (newvalue === null) {
 			dispatch(action.current_struct_change(null))
+				set_cur_auth_asym_id(null)
 		} else {
+			if (newvalue.auth_asym_id !== undefined){
+				set_cur_auth_asym_id(newvalue.auth_asym_id)
+			}
 			dispatch(action.current_struct_change(newvalue))
 		}
 	}
 	const currentLigandClassChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: LigandClass) => {
+		
+		console.log(cur_ligclass === newvalue);
+		
 		if (newvalue === null) {
 			dispatch(action.current_ligand_change(null))
 		}
@@ -731,7 +737,8 @@ const BindingSites = () => {
 						variant={"outlined"}
 						style={[current_binding_site, cur_ligclass].includes(null) ? { color: "gray", textTransform:"none" } : {textTransform:"none"}}
 						onClick={() => {
-							highlightInterface()
+							highlightInterface(cur_auth_asym_id as string)
+
 						}}>
 						Visualize Binding Site
 					</Button>
@@ -778,7 +785,6 @@ const BindingSites = () => {
 					renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title} </div>)}
 					renderInput={(params) => <TextField {...params}
 						label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
-
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
 						disabled={[cur_ligclass, current_binding_site].includes(null)}
@@ -792,7 +798,6 @@ const BindingSites = () => {
 						fullWidth
 						variant="outlined"> Visualize Prediction</Button>
 				</Grid>
-
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
 						color="primary"
@@ -805,7 +810,6 @@ const BindingSites = () => {
 						variant="outlined"> Inspect Prediction </Button>
 
 				</Grid>
-
 				<Grid item style={{ marginBottom: "10px" }}>
 					<CSVLink
 						data={[]}
@@ -823,8 +827,6 @@ const BindingSites = () => {
 
 					</CSVLink>
 				</Grid>
-
-
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button color="primary"
 						style={{textTransform:"none"}}
@@ -837,7 +839,6 @@ const BindingSites = () => {
 						fullWidth
 						variant="outlined"> Reset</Button>
 				</Grid>
-
 				<Grid item style={{ marginBottom: "10px" }}>
 
 					<Dialogue
@@ -850,11 +851,9 @@ const BindingSites = () => {
 						aln_obj    ={                         prediction_data                                                                                                   } />
 
 				</Grid>
-
 				<Grid item xs={4} justify={"center"} >
 					<DashboardButton />
 				</Grid>
-
 			</Grid>
 			<Grid item container spacing={2} direction="row" xs={10} style={{ height: "100%" }} alignContent="flex-start">
 				<Grid item container xs={12} spacing={2} alignContent="flex-start" alignItems="flex-start" justify="flex-start" >

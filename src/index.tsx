@@ -10,23 +10,42 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-app-polyfill/ie11'  
 import 'react-app-polyfill/stable'
 import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
 import { ToastProvider } from "react-toast-notifications";
 
-const theme = createMuiTheme({
+
+
+const origin_blue       = '#aad5ff'
+const prediction_yellow = 'fff8bd'
+
+let theme = createTheme({
+
   palette: {
     primary: {
-      main: purple[500],
+      main: '#0052cc',
     },
     secondary: {
-      main: green[500],
+      main: '#edf2ff',
     },
   },
 
-  transitions:{
+  typography: {
+    fontFamily: "'Montserrat', sans-serif",
+      button:{
+    fontSize:'4rem'
   }
+  },
 
+});
+
+export const DefaultTheme = createTheme(theme,{
+ palette: {
+    info: {
+      main: theme.palette.secondary.main,
+    },
+  },
 });
 
 
@@ -36,11 +55,13 @@ ReactDOM.render(
     <Router>
       <React.StrictMode>
         <ToastProvider
-        placement         ={'bottom-left'}
-        autoDismiss       ={true         }
-        autoDismissTimeout={6000         }
+          placement         ={'bottom-left'}
+          autoDismiss       ={true}
+          autoDismissTimeout={6000}
         >
+          <ThemeProvider theme={DefaultTheme}>
           <Main/>
+          </ThemeProvider>
         </ToastProvider>
       </React.StrictMode>
     </Router>
