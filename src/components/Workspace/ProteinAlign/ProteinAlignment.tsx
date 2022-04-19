@@ -270,16 +270,10 @@ export default function ProteinAlignment() {
      for further processing and structural analyses."}
 
 
-<<<<<<< Updated upstream
-const minDistance = 20;
- const [rangeSlider1, setRangeSlider1] = React.useState<number[]>([0, minDistance]);
- const [rangeSlider2, setRangeSlider2] = React.useState<number[]>([0, minDistance]);
-=======
   const minDistance = 10;
   const [rangeSlider1, setRangeSlider1] = useState<number[]>([0, minDistance]);
   const [rangeSlider2, setRangeSlider2] = useState<number[]>([0, minDistance]);
 
->>>>>>> Stashed changes
 
 
   const handleChange2 = (
