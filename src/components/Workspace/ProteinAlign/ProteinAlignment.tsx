@@ -16,28 +16,28 @@ import { NeoStruct, PolymerMinimal } from '../../../redux/DataInterfaces';
 import Slider from '@mui/material/Slider';
 
 
-   export const nomenclatureCompareFn = (a: PolymerMinimal, b: PolymerMinimal) => {
-    //  console.log("Got two to sort" , a, b);
-     
-    if (a.nomenclature.length < 1 && b.nomenclature.length > 0) {
-      return -1
-    }
-    else if (b.nomenclature.length < 1 && a.nomenclature.length > 0) {
-      return 1
-    }
-    else if (b.nomenclature.length < 1 && a.nomenclature.length < 1) {
-      return 0
-    }
-    else if (a.nomenclature[0] > b.nomenclature[0]) {
-      return 1
-    }
-    else if (a.nomenclature[0] < b.nomenclature[0]) {
-      return -1
-    }
-    else {
-      return 0
-    }
+export const nomenclatureCompareFn = (a: PolymerMinimal, b: PolymerMinimal) => {
+  //  console.log("Got two to sort" , a, b);
+
+  if (a.nomenclature.length < 1 && b.nomenclature.length > 0) {
+    return -1
   }
+  else if (b.nomenclature.length < 1 && a.nomenclature.length > 0) {
+    return 1
+  }
+  else if (b.nomenclature.length < 1 && a.nomenclature.length < 1) {
+    return 0
+  }
+  else if (a.nomenclature[0] > b.nomenclature[0]) {
+    return 1
+  }
+  else if (a.nomenclature[0] < b.nomenclature[0]) {
+    return -1
+  }
+  else {
+    return 0
+  }
+}
 
 
 // @ts-ignore
@@ -132,34 +132,50 @@ export default function ProteinAlignment() {
 
 
   const visualizeAlignment = (
-  )=>{
-        console.log("Got:",        struct1,struct2,auth_asym_id1,auth_asym_id2);
+  ) => {
+    console.log("Got:", struct1, struct2, auth_asym_id1, auth_asym_id2);
 
-      if ( chainStructPair1.includes(null) || chainStructPair2.includes(null) ){
-        alert("Please select a chain in both structures to align.")
-      }
-              viewerInstance.visual.update({
-                customData: {
-                  url   : `${process.env.REACT_APP_DJANGO_URL}/static_files/align_3d/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&auth_asym_id1=${chainStructPair1[0]?.auth_asym_id}&auth_asym_id2=${chainStructPair2[0]?.auth_asym_id}`,
-                  format: "pdb",
-                  binary: false,
-                },
-              });
+    if (chainStructPair1.includes(null) || chainStructPair2.includes(null)) {
+      alert("Please select a chain in both structures to align.")
+    }
+    viewerInstance.visual.update({
+      customData: {
+        url   : `${process.env.REACT_APP_DJANGO_URL}/static_files/align_3d/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&auth_asym_id1=${chainStructPair1[0]?.auth_asym_id}&auth_asym_id2=${chainStructPair2[0]?.auth_asym_id}`,
+        format: "pdb",
+        binary: false,
+      },
+    });
   }
- const visualizeRangedAlignment = (
-  )=>{
-        console.log("Got:", struct1,struct2,auth_asym_id1,auth_asym_id2, rangeSlider1[0], rangeSlider2[1]);
 
-      if ( chainStructPair1.includes(null) || chainStructPair2.includes(null) ){
-        alert("Please select a chain in both structures to align and a residue range.")
-      }
-              viewerInstance.visual.update({
-                customData: {
-                  url   : `${process.env.REACT_APP_DJANGO_URL}/static_files/ranged_align/?rstart=${rangeSlider1[0]}&rend=${[rangeSlider1[1]]}&struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&auth_asym_id1=${chainStructPair1[0]?.auth_asym_id}&auth_asym_id2=${chainStructPair2[0]?.auth_asym_id}`,
-                  format: "pdb",
-                  binary: false,
-                },
-              });
+  const visualizeRangedAlignment = (
+  ) => {
+
+    console.log("Ranged alignment. Sending request to " +
+    `${process.env.REACT_APP_DJANGO_URL}/static_files/ranged_align/?rstart=${rangeSlider1[0]}&rend=${[rangeSlider1[1]]}&struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&auth_asym_id1=${chainStructPair1[0]?.auth_asym_id}&auth_asym_id2=${chainStructPair2[0]?.auth_asym_id}`);
+    
+    
+    
+    console.log("Got:", struct1, struct2, auth_asym_id1, auth_asym_id2, rangeSlider1[0], rangeSlider2[1]);
+
+    if (chainStructPair1.includes(null) || chainStructPair2.includes(null)) {
+      alert("Please select a chain in both structures to align and a residue range.")
+    }
+    viewerInstance.visual.update({
+      customData: {
+        url   : 
+        `${process.env.REACT_APP_DJANGO_URL}/static_files/ranged_align/?`+
+       `r1start=${rangeSlider1[0]}`+
+       `&r1end=${[rangeSlider1[1]]}` +
+       `&r2start=${[rangeSlider2[0]]}` +
+       `&r2end=${[rangeSlider2[1]]}` +
+       `&struct1=${chainStructPair1[1]}`+
+       `&struct2=${chainStructPair2[1]}`+
+       `&auth_asym_id1=${chainStructPair1[0]?.auth_asym_id}`+
+       `&auth_asym_id2=${chainStructPair2[0]?.auth_asym_id}`,
+        format: "pdb",
+        binary: false,
+      },
+    });
   }
 
 
@@ -198,7 +214,7 @@ export default function ProteinAlignment() {
         setstruct1(newvalue)
 
         setChainStructPair1([chainStructPair1[0], newvalue.struct.rcsb_id])
-        setChains1([ ...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas])
+        setChains1([...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas])
         set_auth_asym_id1(null)
 
       }
@@ -212,7 +228,7 @@ export default function ProteinAlignment() {
       } else {
         setstruct2(newvalue)
         setChainStructPair2([chainStructPair2[0], newvalue.struct.rcsb_id])
-        setChains2( [ ...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas ])
+        setChains2([...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas])
         set_auth_asym_id2(null)
       }
     }
@@ -225,12 +241,12 @@ export default function ProteinAlignment() {
       if (newvalue === null) {
         set_auth_asym_id1(null)
         setChainStructPair1([null, chainStructPair1[1]])
-        
-        setRangeSlider2([0,minDistance])
+
+        setRangeSlider2([0, minDistance])
       } else {
         set_auth_asym_id1(newvalue)
         setChainStructPair1([newvalue, chainStructPair1[1]])
-        setRangeSlider1([0,newvalue.entity_poly_seq_one_letter_code.length-1])
+        setRangeSlider1([0, newvalue.entity_poly_seq_one_letter_code.length - 1])
       }
     }
 
@@ -238,11 +254,11 @@ export default function ProteinAlignment() {
       if (newvalue === null) {
         set_auth_asym_id2(null)
         setChainStructPair2([null, chainStructPair2[1]])
-        setRangeSlider2([0,minDistance])
+        setRangeSlider2([0, minDistance])
       } else {
         set_auth_asym_id2(newvalue)
         setChainStructPair2([newvalue, chainStructPair2[1]])
-        setRangeSlider2([0,newvalue.entity_poly_seq_one_letter_code.length-1])
+        setRangeSlider2([0, newvalue.entity_poly_seq_one_letter_code.length - 1])
       }
     }
   }
@@ -254,14 +270,21 @@ export default function ProteinAlignment() {
      for further processing and structural analyses."}
 
 
+<<<<<<< Updated upstream
 const minDistance = 20;
  const [rangeSlider1, setRangeSlider1] = React.useState<number[]>([0, minDistance]);
  const [rangeSlider2, setRangeSlider2] = React.useState<number[]>([0, minDistance]);
+=======
+  const minDistance = 10;
+  const [rangeSlider1, setRangeSlider1] = useState<number[]>([0, minDistance]);
+  const [rangeSlider2, setRangeSlider2] = useState<number[]>([0, minDistance]);
+
+>>>>>>> Stashed changes
 
 
   const handleChange2 = (
-    event      : Event,
-    newValue   : number | number[],
+    event: Event,
+    newValue: number | number[],
     activeThumb: number,
   ) => {
     if (!Array.isArray(newValue)) {
@@ -314,73 +337,84 @@ const minDistance = 20;
             renderInput={(params) => <TextField {...params} label={`Structure 1`} variant="outlined" />}
           />
           <Autocomplete
-            value          = {auth_asym_id1}
-            className      = {classes.autocomplete}
-            options        = {chains1}
-            getOptionLabel = {(chain: PolymerMinimal) => { 
+            value={auth_asym_id1}
+            className={classes.autocomplete}
+            options={chains1}
+            getOptionLabel={(chain: PolymerMinimal) => {
               // if (chain.nomenclature === null)
 
-              
-              return chain.nomenclature && chain.nomenclature.length > 0 ? chain.nomenclature[0] : chain.auth_asym_id }}
+
+              return chain.nomenclature && chain.nomenclature.length > 0 ? chain.nomenclature[0] : chain.auth_asym_id
+            }}
             // @ts-ignore
-            onChange     = {handleChainChange(1)}
-            renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.nomenclature.length > 0 ? option.nomenclature[0] : " "}</b> {option.auth_asym_id}  </div>)}
-            renderInput  = {(params) => <TextField {...params} label={`Chain 1`} variant="outlined" />}
+            onChange={handleChainChange(1)}
+            renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.nomenclature.length > 0 ? option.nomenclature[0] : " "}</b> {option.auth_asym_id}  </div>)}
+            renderInput={(params) => <TextField {...params} label={`Chain 1`} variant="outlined" />}
           />
 
+
+          <Slider
+            getAriaLabel={() => 'Minimum distance'}
+            value={rangeSlider1}
+            min={0}
+            max={chainStructPair1[0] !== null ? chainStructPair1[0].entity_poly_seq_one_letter_code.length : minDistance}
+            onChange={handleChange1}
+            valueLabelDisplay="auto"
+            // getAriaValueText={valuetext}
+            disabled={chainStructPair1[0] === null}
+            disableSwap
+          />
+          range : {rangeSlider1[0]} - {rangeSlider1[1]}
         </Grid>
 
         <Grid item style={{ marginBottom: "40px" }}>
 
           <Autocomplete
-            value          = {struct2}
-            className      = {classes.autocomplete}
-            options        = {structs}
-            getOptionLabel = {(parent: NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
+            value={struct2}
+            className={classes.autocomplete}
+            options={structs}
+            getOptionLabel={(parent: NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
             // @ts-ignore
-            onChange     = {handleStructChange(2)}
-            renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
-            renderInput  = {(params) => <TextField {...params} label={`Structure 2`} variant="outlined" />}
+            onChange={handleStructChange(2)}
+            renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title}  </div>)}
+            renderInput={(params) => <TextField {...params} label={`Structure 2`} variant="outlined" />}
           />
 
           <Autocomplete
             value={auth_asym_id2}
             className={classes.autocomplete}
             options={chains2}
-            getOptionLabel={(chain: PolymerMinimal) => { 
-              if (chain.nomenclature !== null){
+            getOptionLabel={(chain: PolymerMinimal) => {
+              if (chain.nomenclature !== null) {
                 return chain.nomenclature.length > 0 ? chain.nomenclature[0] : chain.auth_asym_id
               }
-              else{
+              else {
                 return "Undefined Class"
 
               }
             }}
             // @ts-ignore
             onChange={handleChainChange(2)}
-            renderOption={(option) => { 
-              return <div style={{ fontSize: "10px", width: "400px" }}><b>{ option.nomenclature && option.auth_asym_id ? option.nomenclature.length > 0 ? option.nomenclature[0] : " " : " "}</b> {option.auth_asym_id}  </div> }}
+            renderOption={(option) => {
+              return <div style={{ fontSize: "10px", width: "400px" }}><b>{option.nomenclature && option.auth_asym_id ? option.nomenclature.length > 0 ? option.nomenclature[0] : " " : " "}</b> {option.auth_asym_id}  </div>
+            }}
             renderInput={(params) => <TextField {...params} label={`Chain 2`} variant="outlined" />}
           />
 
+
+          <Slider
+            getAriaLabel={() => 'Minimum distance'}
+            value={rangeSlider2}
+            min={0}
+            max={chainStructPair2[0] !== null ? chainStructPair2[0].entity_poly_seq_one_letter_code.length : minDistance}
+            onChange={handleChange2}
+            valueLabelDisplay="auto"
+            // getAriaValueText={valuetext}
+            disabled={chainStructPair2[0] === null}
+            disableSwap
+          />
+          range : {rangeSlider2[0]} - {rangeSlider2[1]}
         </Grid>
-
-        <Grid item>
-<Slider
-  getAriaLabel={() => 'Minimum distance'}
-  value={rangeSlider1}
-
-  min={0}
-  max={chainStructPair1[0] !== null ? chainStructPair1[0].entity_poly_seq_one_letter_code.length :  minDistance}
-  onChange={handleChange1}
-  valueLabelDisplay="auto"
-  // getAriaValueText={valuetext}
-  disabled={chainStructPair1[0] === null}
-  disableSwap
-/>
-        </Grid>
-
-
 
         <Grid item>
 
@@ -389,7 +423,7 @@ const minDistance = 20;
         <Grid item>
 
           <Button
-            style={{ marginBottom: "10px",textTransform:"none" }}
+            style={{ marginBottom: "10px", textTransform: "none" }}
             fullWidth
             variant="outlined"
             onClick={() => {
@@ -399,7 +433,7 @@ const minDistance = 20;
           </Button>
 
           <Button
-            style={{ marginBottom: "10px",textTransform:"none" }}
+            style={{ marginBottom: "10px", textTransform: "none" }}
             fullWidth
             variant="outlined"
             onClick={() => {
@@ -412,7 +446,7 @@ const minDistance = 20;
 
 
           <Button
-            style={{ marginBottom: "10px" , textTransform:"none"}}
+            style={{ marginBottom: "10px", textTransform: "none" }}
             fullWidth
             variant="outlined"
             onClick={() => {
@@ -441,7 +475,7 @@ const minDistance = 20;
           </Button>
         </Grid>
 
-      
+
         <Grid item>
           <DashboardButton />
         </Grid>
@@ -452,11 +486,11 @@ const minDistance = 20;
 
       <Grid item container xs={10}>
 
-				<Grid item xs={12} >
-					<Paper variant="outlined" style={{ position: "relative", padding: "10px", height: "80vh" }} >
-						<div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
-					</Paper>
-				</Grid >
+        <Grid item xs={12} >
+          <Paper variant="outlined" style={{ position: "relative", padding: "10px", height: "80vh" }} >
+            <div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
+          </Paper>
+        </Grid >
 
       </Grid>
 
