@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Grid from "@material-ui/core/Grid";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import Popover from "@material-ui/core/Popover";
@@ -18,7 +17,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { AppState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { BanClassMetadata, NeoStruct, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces';
+import { BanClassMetadata, NeoStruct, PolymerMinimal, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces';
 import ListSubheader from '@material-ui/core/ListSubheader/ListSubheader';
 import { CardBodyAnnotation } from './../Workspace/StructurePage/StructurePage'
 import { requestBanClass } from '../../redux/reducers/Proteins/ActionTypes';
@@ -31,11 +30,19 @@ import { chain, flattenDeep, uniq } from 'lodash';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { useHistory, useParams } from 'react-router';
 import _ from 'lodash'
-import { COMPONENT_TAB_CHANGE, protein_change, rna_change, struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
+import { COMPONENT_TAB_CHANGE, protein_change, rna_change, structureChange, struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
 import { ToastProvider, useToasts } from 'react-toast-notifications';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
 import { RNACard } from '../Workspace/RNA/RNACard';
 import fileDownload from 'js-file-download';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Slider from '@mui/material/Slider';
+import MuiInput from '@mui/material/Input';
+import VolumeUp from '@mui/icons-material/VolumeUp';
+import StructHero from '../Workspace/StructureHero/StructHero';
+import { current_target_change } from '../../redux/reducers/BindingSites/ActionTypes';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -97,7 +104,9 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
 
-    dispatch(struct_change(newvalue.props.children, current_struct))
+    // dispatch(struct_change(newvalue.props.children, current_struct))
+    dispatch(struct_change(newvalue.props.value, current_struct))
+
     viewerInstance.visual.select(
       {
         data: [{
@@ -107,6 +116,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
         , nonSelectedColor: { r: 180, g: 180, b: 180 }
       }
     )
+
 
   }
 
@@ -161,11 +171,16 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
             }}
           >
             {/* {useSelector(( state:AppState ) => state.visualization.structure_tab.struct?.struct) === null ? null : <MenuItem value="f">{}</MenuItem>} */}
-            {current_struct !== null && current_struct !== undefined ? [...current_struct?.rnas, ...current_struct?.rps.sort(nomenclatureCompareFn),]
-              .map((i) => <MenuItem value={i.auth_asym_id}>{i.nomenclature.length > 0 ? i.nomenclature[0] : "Unclassified Polymer"}</MenuItem>) : null}
+            {current_struct !== null && current_struct !== undefined
+              ? [...current_struct?.rnas, ...current_struct?.rps.sort(nomenclatureCompareFn),].map((i) => <MenuItem value={i.auth_asym_id}>{i.nomenclature.length > 0 ? i.nomenclature[0] : "Unclassified Polymer"}</MenuItem>)
+              : null}
           </Select>
         </FormControl>
+
+
+
       </ListItem>
+
     </>
   )
 }
@@ -317,46 +332,49 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
 
 
   const download_elem = () => {
-    if ( elemtype === 'structure' ){
+    if (elemtype === 'structure') {
 
-      getNeo4jData('static_files', {endpoint: "download_structure", params:{
-        struct_id:id as string
-      }}).then(
-      resp => {
-        fileDownload(resp.data, `${id}.cif`);
-      },
-      error => {
-        alert(
-          "Structure is unavailable." +
+      getNeo4jData('static_files', {
+        endpoint: "download_structure", params: {
+          struct_id: id as string
+        }
+      }).then(
+        resp => {
+          fileDownload(resp.data, `${id}.cif`);
+        },
+        error => {
+          alert(
+            "Structure is unavailable." +
             error
-        );
-      }
-    );
+          );
+        }
+      );
 
-    
-  
-  }else{
+
+
+    } else {
 
       getNeo4jData('static_files', {
         endpoint: "cif_chain_by_class", params: {
           "classid": id as string,
           "struct": parent as string
-        }}).then(
-      resp => {
-        fileDownload(resp.data, `${id}_${parent}.cif`);
-      },
-      error => {
-        alert(
-          "This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" +
+        }
+      }).then(
+        resp => {
+          fileDownload(resp.data, `${id}_${parent}.cif`);
+        },
+        error => {
+          alert(
+            "This chain is unavailable. This is likely an issue with parsing the given struct.\nTry another struct!" +
             error
-        );
-      }
-    );
+          );
+        }
+      );
+
+    }
+
 
   }
-
-
-}
 
   return (
     <Paper style={{ width: "100%" }}>
@@ -371,12 +389,12 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
                 case 'protein':
                   return <Button fullWidth size="small" color='primary' style={{ marginRight: "5px" }} onClick={() => download_elem()} >
 
-          <FileDownloadIcon />
-                      <Typography>Protein {id} in {parent} </Typography>
-                    </Button>
+                    <FileDownloadIcon />
+                    <Typography>Protein {id} in {parent} </Typography>
+                  </Button>
                 case 'rna':
                   return <Button fullWidth size="small" color='primary' style={{ marginRight: "5px" }} onClick={() => download_elem()} >
-          <FileDownloadIcon />
+                    <FileDownloadIcon />
 
                     <Typography>RNA {id} in {parent}</Typography>
                   </Button>
@@ -384,7 +402,7 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
 
                   return <Button fullWidth size="small" color='primary' style={{ marginRight: "5px" }} onClick={() => download_elem()} >
 
-          <FileDownloadIcon />
+                    <FileDownloadIcon />
                     <Typography>Structure {id} </Typography>
                   </Button>
               }
@@ -397,6 +415,82 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
 }
 
 
+
+const ChainHighlightSlider = ({ }) => {
+  const Input = styled(MuiInput)`width: 42px;`;
+
+  const [value, setValue] = React.useState<number | string | Array<number | string>>(
+    30,
+  );
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    setValue(newValue);
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value === '' ? '' : Number(event.target.value));
+  };
+
+  const handleBlur = () => {
+    if (value < 0) {
+      setValue(0);
+    } else if (value > 100) {
+      setValue(100);
+    }
+  };
+
+
+  // const currentHighlightedChain = useSelector((state: AppState) => )
+  // const currentStructId = useSelector((state: AppState) => state.visualization.structure_tab.struct?.struct.rcsb_id)
+  // useEffect(() => {
+  //   console.log('id or chain chagned', currentHighlightedChain);
+
+  //   if (currentHighlightedChain === null) { return }
+  //   else {
+  //     getNeo4jData('neo4j', { endpoint: 'get_struct', params: { pdbid: currentStructId as string } })
+  //     .then(r => { console.log("got corresponding struct", r.data) })
+  //   }
+  // }, [currentHighlightedChain, currentStructId])
+
+
+
+  // const find_chain_by_auth_asym_id = (struct:NeoStruct):PolymerMinimal =>{
+  //   let x = struct.rps[0]
+  // }
+
+
+  return (
+    <Box sx={{ width: 600 }}>
+
+      <Typography id="input-slider" gutterBottom>Chain {currentHighlightedChain}</Typography>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs>
+          <Slider
+            value={typeof value === 'number' ? value : 0}
+            onChange={handleSliderChange}
+            aria-labelledby="input-slider"
+          />
+        </Grid>
+        <Grid item>
+          <Input
+            value={value}
+            size="small"
+            onChange={handleInputChange}
+            onBlur={handleBlur}
+            inputProps={{
+              step: 10,
+              min: 0,
+              max: 100,
+              type: 'number',
+              'aria-labelledby': 'input-slider',
+            }}
+          />
+        </Grid>
+      </Grid>
+    </Box>
+  );
+}
+
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
 // @ts-ignore
@@ -407,6 +501,14 @@ const VisualizationPage = (props: any) => {
   const params = history.location.state;
   const dispatch = useDispatch();
   const { addToast } = useToasts();
+
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Selectors to get the currently selected item and provide info on it, further selections (residues for chainsw)
+  const current_struct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.struct)
+  const chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
   useEffect(() => {
     if (params === undefined || Object.keys(params).length < 1) { return }
@@ -506,7 +608,7 @@ const VisualizationPage = (props: any) => {
 
   useEffect(() => {
 
-    if (inView.type == "struct") {
+    if (inView.type === "struct") {
       getNeo4jData("neo4j", {
         endpoint: "get_struct",
         params: { pdbid: inView.id },
@@ -522,8 +624,7 @@ const VisualizationPage = (props: any) => {
         }
       );
     }
-    else if (inView.type == "chain") {
-
+    else if (inView.type === "chain") {
       getNeo4jData("neo4j", { endpoint: "nomclass_visualize", params: { ban: inView.id } }).then(r => {
         // setInViewData({ type: "chain", data: r.data })
         // setProtClassInfo(r.data[0])
@@ -618,6 +719,18 @@ const VisualizationPage = (props: any) => {
     }
   }
 
+  const coerce_neo_struct_to_struct_hero = (_: NeoStruct): {
+    struct: RibosomeStructure;
+    ligands: string[];
+    rps: Array<{ nomenclature: string[]; auth_asym_id: string }>;
+    rnas: string[];
+  } => ({
+
+    struct: _.struct,
+    ligands: _.ligands,
+    rps: _.rps.map(rp => { return { nomenclature: rp.nomenclature, auth_asym_id: rp.auth_asym_id } }),
+    rnas: _.rnas.map(rna => rna.auth_asym_id)
+  })
 
   const classes = makeStyles({
     pageDescription: {
@@ -690,7 +803,18 @@ const VisualizationPage = (props: any) => {
           }
           )()}
 
-          <ListSubheader>Select Item Category</ListSubheader>
+
+          <ListSubheader>Select Item Category: {(() => {
+            switch (current_tab) {
+              case 'protein_tab':
+                return 'Proteins'
+              case 'structure_tab':
+                return 'Structures'
+              case 'rna_tab':
+                return 'RNA'
+            }
+
+          })()} </ListSubheader>
           <ListItem style={{ display: "flex", flexDirection: "row" }}>
 
             <Button size="small" color={current_tab === 'structure_tab' ? "primary" : "default"} onClick={() => { handleTabClick('structure_tab') }} variant="outlined" style={{ marginRight: "5px" }} >Structures</Button>
@@ -741,11 +865,28 @@ const VisualizationPage = (props: any) => {
                 }
               })()
             }
+          </ListItem>
 
 
+          <ListItem>
+            {/* Currently selected */}
+            {
+              (() => {
+                switch (current_tab) {
+                  case 'structure_tab':
 
-
-
+                    return <div>
+                      {current_struct === null ? null : <StructHero  {...coerce_neo_struct_to_struct_hero(current_struct)} />}
+                      {chain_to_highlight === null ?
+                        null : <ChainHighlightSlider />}
+                    </div>
+                  case 'protein_tab':
+                    return 'protein chain x'
+                  case 'rna_tab':
+                    return 'rna x'
+                }
+              })()
+            }
           </ListItem>
 
 
