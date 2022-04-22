@@ -10,12 +10,12 @@ export interface PolymerMinimal{
   entity_poly_seq_one_letter_code: string;
 }
 
-  export interface NeoStruct{
+export interface NeoStruct{
   struct  : RibosomeStructure;
   ligands : string[];
   rps     : Array<PolymerMinimal>;
   rnas    : Array<PolymerMinimal>
-  }
+}
 
 
 export interface Residue{

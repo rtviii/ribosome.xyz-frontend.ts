@@ -34,6 +34,13 @@ interface download_structure {
   }
 }
 
+interface get_full_structure{
+  endpoint:"get_full_struct",
+  params:{
+    pdbid:string
+  }
+}
+
 interface cif_chain_by_class {
   endpoint: "cif_chain_by_class",
   params: {
@@ -98,6 +105,7 @@ type Neo4jEndpoints =
   | banclass_annotation
   | proteins_number
   | get_all_ligandlike
+  | get_full_structure
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
 
