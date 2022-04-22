@@ -8,8 +8,8 @@ export interface VisualizationReducerState {
 	component_tab: "rna_tab" | "protein_tab" | "structure_tab",
 	structure_tab: {
 		fullStructProfile: RibosomeStructure | null,
-		fullChainProfile: Protein | RNA | null,
-		struct: NeoStruct | null,
+		// fullChainProfile : Protein | RNA | null,
+		// struct: NeoStruct | null,
 		highlighted_chain: string | null
 	},
 	protein_tab: {
@@ -27,10 +27,9 @@ const init: VisualizationReducerState = {
 	component_tab: "structure_tab",
 	structure_tab: {
 
-		fullChainProfile: null,
+		// fullChainProfile: null,
 		fullStructProfile: null,
 		highlighted_chain: null,
-		struct: null
 	},
 	protein_tab: {
 		class: null,
@@ -43,10 +42,31 @@ const init: VisualizationReducerState = {
 
 }
 
-export const VisualizationReducer = async (
+
+export const coerce_full_structure_to_neostruct = (_: RibosomeStructure| null): NeoStruct |null => (_ === null ? null :{
+	ligands: _.ligands !== null ? _.ligands.map(l => l.chemicalId) : [],
+	rnas   : _.rnas    !== null ? _.rnas   .map(r => {
+		return {
+			auth_asym_id                   : r.auth_asym_id                   ,
+			entity_poly_seq_one_letter_code: r.entity_poly_seq_one_letter_code,
+			nomenclature                   : r.nomenclature}}) : [],
+	rps: _.proteins !== null ? _.proteins.map(rp => {
+		return {
+			'auth_asym_id': rp.auth_asym_id,
+			'entity_poly_seq_one_letter_code': rp.entity_poly_seq_one_letter_code,
+			'nomenclature': rp.nomenclature
+		}
+	}) : [],
+	struct: {
+		..._
+	}
+})
+
+
+export const VisualizationReducer = (
 	state: VisualizationReducerState = init,
 	action: VisualizationActions
-): Promise<VisualizationReducerState> => {
+): VisualizationReducerState => {
 	switch (action.type) {
 
 		case "COMPONENT_TAB_CHANGE":
@@ -69,33 +89,49 @@ export const VisualizationReducer = async (
 				}
 			}
 
-		case "STRUCTURE_CHANGE":
-
-			if (action.structure === null) {
-				return {
-					...state,
-					structure_tab: {
-						highlighted_chain: null,
-						struct: null,
-						fullChainProfile: null,
-						fullStructProfile: null
-
-					}
-
+		// this one is for the bigger state (with full rp & rna profiles). Dx yeah i know
+		// TODO <----------------- set structutre etc.
+		case "FETCH_FULL_STRUCT_ERR":
+			return state
+		case "FETCH_FULL_STRUCT_GO":
+			return state
+		case "FETCH_FULL_STRUCT_SUCCESS":
+			return {
+				...state,
+				structure_tab: {
+					fullStructProfile: action.struct,
+					highlighted_chain: state.structure_tab.highlighted_chain,
+					// struct           : coerce_full_structure_to_neostruct( action.struct )
 				}
 			}
-			else {
 
-				return {
-					...state,
-					structure_tab: {
-						highlighted_chain: action.highlighted_chain,
-						struct           : action.structure,
-						fullChainProfile : null,                       // <-------
-						fullStructProfile: null                        // <-------
-					}
-				}
-			}
+		// case "STRUCTURE_CHANGE":  // this one is for selected...
+
+		// 	if (action.structure === null) {
+		// 		return {
+		// 			...state,
+		// 			structure_tab: {
+		// 				highlighted_chain: null,
+		// 				// struct: null,
+		// 				// fullChainProfile: null,
+		// 				fullStructProfile: null
+
+		// 			}
+
+		// 		}
+		// 	}
+		// 	else {
+
+		// 		return {
+		// 			...state,
+		// 			structure_tab: {
+		// 				highlighted_chain: action.highlighted_chain,
+		// 				struct: action.structure,
+		// 				// fullChainProfile : null,                       // <-------
+		// 				fullStructProfile: null                        // <-------
+		// 			}
+		// 		}
+		// 	}
 		default:
 			return state
 	};
