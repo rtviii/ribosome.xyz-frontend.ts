@@ -30,7 +30,7 @@ import { chain, flattenDeep, uniq } from 'lodash';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { useHistory, useParams } from 'react-router';
 import _ from 'lodash'
-import { COMPONENT_TAB_CHANGE, protein_change, rna_change, structureChange, struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
+import { COMPONENT_TAB_CHANGE, protein_change, rna_change, fullStructureChange, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
 import { ToastProvider, useToasts } from 'react-toast-notifications';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
 import { RNACard } from '../Workspace/RNA/RNACard';
@@ -43,6 +43,7 @@ import MuiInput from '@mui/material/Input';
 import VolumeUp from '@mui/icons-material/VolumeUp';
 import StructHero from '../Workspace/StructureHero/StructHero';
 import { current_target_change } from '../../redux/reducers/BindingSites/ActionTypes';
+import { coerce_full_structure_to_neostruct } from '../../redux/reducers/Visualization/VisualizationReducer';
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -77,21 +78,21 @@ interface StructSnip {
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
 
   const dispatch = useDispatch()
-  const selectStructStyles = (makeStyles({
-    autocomoplete: {
-      width: "100%"
-    }
-  }))()
-  const current_struct = useSelector((state: AppState) => state.visualization.structure_tab.struct)
+  const selectStructStyles = (makeStyles({ autocomoplete: { width: "100%" } }))()
+
+  const current_full_struct: RibosomeStructure | null = useSelector((state: AppState) => state.visualization.structure_tab.fullStructProfile)
+  // const current_neo_struct: NeoStruct | null = useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))
   const chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
   const structs = useSelector((state: AppState) => state.structures.derived_filtered)
   const { addToast } = useToasts();
 
   const paintStructure = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
     if (newvalue === null) {
-      dispatch(struct_change(chain_to_highlight, null))
+      dispatch(fullStructureChange(null, chain_to_highlight))
     } else {
-      dispatch(struct_change(null, newvalue))
+      console.log('---got new value from dropdown', newvalue);
+      
+      dispatch(fullStructureChange(newvalue.struct.rcsb_id, null))
       addToast(`Structure ${newvalue.struct.rcsb_id} is being fetched.`, {
         appearance: 'info',
         autoDismiss: true,
@@ -105,7 +106,8 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
 
     // dispatch(struct_change(newvalue.props.children, current_struct))
-    dispatch(struct_change(newvalue.props.value, current_struct))
+    // dispatch(struct_change(newvalue.props.value, current_struct))
+    dispatch(fullStructureChange(current_neo_struct?.struct.rcsb_id as string, newvalue.props.value))
 
     viewerInstance.visual.select(
       {
@@ -136,7 +138,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
       <Autocomplete
         className={selectStructStyles.autocomoplete}
         // value={current_struct}
-        value={useSelector((state: AppState) => state.visualization.structure_tab.struct)}
+        value={useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))}
         options={structs}
         getOptionLabel={(parent) => {
           if (parent.struct === undefined) {
@@ -171,11 +173,24 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
             }}
           >
             {/* {useSelector(( state:AppState ) => state.visualization.structure_tab.struct?.struct) === null ? null : <MenuItem value="f">{}</MenuItem>} */}
-            {current_struct !== null && current_struct !== undefined
-              ? [...current_struct?.rnas, ...current_struct?.rps.sort(nomenclatureCompareFn),].map((i) => <MenuItem value={i.auth_asym_id}>{i.nomenclature.length > 0 ? i.nomenclature[0] : "Unclassified Polymer"}</MenuItem>)
+            {current_neo_struct !== null && current_neo_struct !== undefined
+              ? [...current_neo_struct?.rnas, ...current_neo_struct?.rps.sort(nomenclatureCompareFn),].map((i) => <MenuItem value={i.auth_asym_id}>{i.nomenclature.length > 0 ? i.nomenclature[0] : "Unclassified Polymer"}</MenuItem>)
               : null}
           </Select>
         </FormControl>
+        <div>
+          {current_full_struct === null ? null : <StructHero {
+            ...{
+              struct: current_full_struct, ligands: current_full_struct.ligands === null ? [] : current_full_struct.ligands.map(l => l.chemicalId), rnas: current_full_struct.rnas === null ? [] : current_full_struct.rnas.map(rna => { return rna.auth_asym_id }),
+              rps: current_full_struct.proteins.map(rp => ({ auth_asym_id: rp.auth_asym_id, nomenclature: rp.nomenclature }))
+
+
+            }
+          } />}
+          {chain_to_highlight === null ?
+            null : <ChainHighlightSlider />}
+        </div>
+
 
 
 
@@ -462,7 +477,7 @@ const ChainHighlightSlider = ({ }) => {
   return (
     <Box sx={{ width: 600 }}>
 
-      <Typography id="input-slider" gutterBottom>Chain {currentHighlightedChain}</Typography>
+      <Typography id="input-slider" gutterBottom>Chain { }</Typography>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs>
           <Slider
@@ -496,18 +511,13 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 // @ts-ignore
 // const viewerInstance2 = new PDBeMolstarPlugin() as any;
 const VisualizationPage = (props: any) => {
+
   const [lastViewed, setLastViewed] = useState<Array<string | null>>([null, null])
   const history: any = useHistory();
   const params = history.location.state;
   const dispatch = useDispatch();
   const { addToast } = useToasts();
 
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Selectors to get the currently selected item and provide info on it, further selections (residues for chainsw)
-  const current_struct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.struct)
-  const chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
   useEffect(() => {
@@ -517,7 +527,7 @@ const VisualizationPage = (props: any) => {
       getNeo4jData('neo4j', { endpoint: "get_struct", params: { pdbid: params.struct } }).then(r => {
 
         if (r.data.length < 1) {
-          dispatch(struct_change(null, null))
+          dispatch(fullStructureChange(null, null))
         }
         else {
 
@@ -527,8 +537,7 @@ const VisualizationPage = (props: any) => {
           x['rps'] = r.data[0].rps.map((_: any) => ({ strands: _.entity_poly_strand_id, nomenclature: _.nomenclature }))
           x['rnas'] = r.data[0].rnas.map((_: any) => ({ strands: _.entity_poly_strand_id, nomenclature: _.nomenclature }))
 
-          dispatch(struct_change(null, x))
-
+          dispatch(fullStructureChange(x['struct'].rcsb_id, null))
           addToast(`Structure ${x.struct.rcsb_id} is being fetched.`, {
             appearance: 'info',
             autoDismiss: true,
@@ -861,7 +870,7 @@ const VisualizationPage = (props: any) => {
                   case 'rna_tab':
                     return <DownloadElement elemtype={'rna'} id={vis_state.rna_tab.class} parent={vis_state.rna_tab.parent as string} />
                   case 'structure_tab':
-                    return <DownloadElement elemtype={'structure'} id={vis_state.structure_tab.struct === null ? null : vis_state.structure_tab.struct?.struct.rcsb_id as string} />
+                    return <DownloadElement elemtype={'structure'} id={vis_state.structure_tab.fullStructProfile?.rcsb_id === null ? null : vis_state.structure_tab.fullStructProfile?.rcsb_id as string} />
                 }
               })()
             }
@@ -875,11 +884,8 @@ const VisualizationPage = (props: any) => {
                 switch (current_tab) {
                   case 'structure_tab':
 
-                    return <div>
-                      {current_struct === null ? null : <StructHero  {...coerce_neo_struct_to_struct_hero(current_struct)} />}
-                      {chain_to_highlight === null ?
-                        null : <ChainHighlightSlider />}
-                    </div>
+                    return 'this should be in the custom component'
+
                   case 'protein_tab':
                     return 'protein chain x'
                   case 'rna_tab':
