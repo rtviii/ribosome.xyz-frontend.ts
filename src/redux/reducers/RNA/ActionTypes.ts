@@ -26,7 +26,6 @@ export type RnaFilter         = "SPECIES" | "SEARCH" | "YEAR"  | "EXPERIMENTAL_M
 export interface requestRnaClassGo      { type: typeof REQUEST_RNA_CLASS_GO     ; rna_class: RNAClass                        }
 export interface requestRnaClassSuccess { type: typeof REQUEST_RNA_CLASS_SUCCESS; payload: RNAProfile[], rna_class: RNAClass }
 export interface requestRnaClassError   { type: typeof REQUEST_RNA_CLASS_ERR    ; error: Error;                              }
-export interface requestRnaClassError   { type: typeof REQUEST_RNA_CLASS_ERR    ; error: Error;                              }
 
 export interface RNASortChange { type: typeof RNA_SORT_CHANGE, sorttype:RnaSortType}
 export interface sortBySequenceLength { type: typeof SORT_BY_SEQLEN}
