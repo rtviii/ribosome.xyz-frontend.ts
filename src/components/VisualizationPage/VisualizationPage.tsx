@@ -29,7 +29,7 @@ import { NeoStruct } from '../../redux/DataInterfaces';
 import { cache_full_struct, COMPONENT_TAB_CHANGE, struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
 import { AppState, store } from '../../redux/store';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
-import StructHero from "./../../materialui/StructHero";
+import { StructHeroVertical } from "./../../materialui/StructHero";
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -842,7 +842,7 @@ const VisualizationPage = (props: any) => {
 
           {current_neostruct === null 
           ? null 
-          :<ListItem> <StructHero d={current_neostruct} inCart={false} topless={true}/></ListItem>}
+          :<ListItem> <StructHeroVertical d={current_neostruct} inCart={false} topless={true}/></ListItem>}
 
 
           {current_tab === 'structure_tab' ?
