@@ -39,10 +39,6 @@ const useStyles = makeStyles({  card: {
 });
 
 
-
-
-
-
 const CardBodyAnnotation =({ keyname,value }:{keyname:string, value:string|number})=>{
   const classes=useStyles()
   return   <Grid
@@ -69,27 +65,9 @@ className={classes.annotation}
 
 
 export const StructHero=({d,inCart}:{ d:NeoStruct, inCart:boolean })=> {
-  const classes = useStyles();
-  const history = useHistory();
-
-
-
-
-
+  const classes  = useStyles();
+  const history  = useHistory();
   const dispatch = useDispatch()
-
-
-
-  const tryRequire = (path:string) => {
-  try {
-    if  ( require(`${path}`) ){
-
-      return true
-    }
-    } catch (err) {
-   return false
-  }
-};
 
   return (
     <Card className={classes.card} >
@@ -97,7 +75,6 @@ export const StructHero=({d,inCart}:{ d:NeoStruct, inCart:boolean })=> {
       
       <CardActionArea >
         <CardContent 
-        
             onClick={()=>{history.push(`/structs/${d.struct.rcsb_id}`)}}
         >
           <CardMedia

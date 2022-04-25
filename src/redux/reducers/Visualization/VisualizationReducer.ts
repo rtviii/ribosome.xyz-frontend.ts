@@ -70,14 +70,13 @@ export const VisualizationReducer = (
 	switch (action.type) {
 
 		case "UPDATE_CACHED_FULLSTRUCT":
-			return {...state, full_structure_cache:action.nextcache}
+			return { ...state, full_structure_cache: action.nextcache }
 
 		case "STRUCTURE_CHANGE":  // this one is for selected...
 			if (action.structure === null) { return state }
 			else return {
-
 				...state,
-				structure_tab:{
+				structure_tab: {
 					highlighted_chain: action.highlighted_chain,
 					structure        : action.structure
 				}
@@ -89,7 +88,7 @@ export const VisualizationReducer = (
 		case "PROTEIN_CHANGE":
 			return {
 				...state, protein_tab: {
-					class: action.class,
+					class : action.class,
 					parent: action.parent
 				}
 			}
@@ -97,7 +96,7 @@ export const VisualizationReducer = (
 		case "RNA_CHANGE":
 			return {
 				...state, rna_tab: {
-					class: action.class,
+					class : action.class,
 					parent: action.parent
 				}
 			}

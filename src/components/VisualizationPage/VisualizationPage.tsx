@@ -1,48 +1,35 @@
-import React, { useEffect, useState } from 'react'
-import Grid from "@material-ui/core/Grid";
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
-import Popover from "@material-ui/core/Popover";
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActionArea from '@material-ui/core/CardActionArea';
+import FormControl from '@material-ui/core/FormControl';
+import Grid from "@material-ui/core/Grid";
+import InputLabel from '@material-ui/core/InputLabel';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
+import ListSubheader from '@material-ui/core/ListSubheader/ListSubheader';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
+import Paper from '@material-ui/core/Paper/Paper';
 import Select from '@material-ui/core/Select';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { AppState } from '../../redux/store';
-import { useDispatch, useSelector } from 'react-redux';
-import { BanClassMetadata, NeoStruct, PolymerMinimal, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces';
-import ListSubheader from '@material-ui/core/ListSubheader/ListSubheader';
-import { CardBodyAnnotation } from '../Workspace/StructurePage/StructurePage'
-import { requestBanClass } from '../../redux/reducers/Proteins/ActionTypes';
-import { getNeo4jData } from '../../redux/AsyncActions/getNeo4jData';
-import Paper from '@material-ui/core/Paper/Paper';
-import CardHeader from '@material-ui/core/CardHeader/CardHeader';
-import Card from '@material-ui/core/Card/Card';
-import { ProteinClass, RibosomeStructure, RNAClass } from '../../redux/RibosomeTypes';
-import { chain, flattenDeep, uniq } from 'lodash';
-import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
-import { useHistory, useParams } from 'react-router';
-import _ from 'lodash'
-import { cache_full_struct, COMPONENT_TAB_CHANGE, protein_change, rna_change,  struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
-import { ToastProvider, useToasts } from 'react-toast-notifications';
-import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
-import { RNACard } from '../Workspace/RNA/RNACard';
-import fileDownload from 'js-file-download';
-import { styled } from '@mui/material/styles';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Slider from '@mui/material/Slider';
 import MuiInput from '@mui/material/Input';
-import VolumeUp from '@mui/icons-material/VolumeUp';
-import StructHero from '../Workspace/StructureHero/StructHero';
-import { current_target_change } from '../../redux/reducers/BindingSites/ActionTypes';
+import Slider from '@mui/material/Slider';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import fileDownload from 'js-file-download';
+import Tooltip from "@mui/material/Tooltip";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
+import { useToasts } from 'react-toast-notifications';
+import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
+import { getNeo4jData } from '../../redux/AsyncActions/getNeo4jData';
+import { NeoStruct } from '../../redux/DataInterfaces';
+import { cache_full_struct, COMPONENT_TAB_CHANGE, struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
+import { AppState, store } from '../../redux/store';
+import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
+import StructHero from "./../../materialui/StructHero";
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -82,13 +69,13 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   // const current_full_struct: RibosomeStructure | null = useSelector((state: AppState) => state.visualization.structure_tab.fullStructProfile)
   // const current_neo_struct: NeoStruct | null = useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))
-  // const chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
 
   // useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))
 
-  const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
-  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
-  const { addToast } = useToasts();
+  const current_neostruct: NeoStruct | null       = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
+  const structs                                   = useSelector((state: AppState) => state.structures.derived_filtered)
+  const { addToast }                              = useToasts();
 
 
 
@@ -110,20 +97,23 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
       viewerInstance.visual.update({ moleculeId: selected_neostruct.struct.rcsb_id.toLowerCase() });
 
     }
-
-
   };
 
-  const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
+  const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, selected_chain: any) => {
 
-    // dispatch(struct_change(newvalue.props.children, current_struct))
-    // dispatch(struct_change(newvalue.props.value, current_struct))
-    // dispatch(fullStructureChange(current_neo_struct?.struct.rcsb_id as string, newvalue.props.value))
+
+    console.log("handle select chain: ", selected_chain); 
+    
+    // get current structure because arguments and functions here are poorly written.
+    const curstate  = store.getState()
+    const curstruct = curstate.visualization.structure_tab.structure
+    dispatch(struct_change(selected_chain, curstruct))
+
 
     viewerInstance.visual.select(
       {
         data: [{
-          auth_asym_id: newvalue.props.value,
+          auth_asym_id: selected_chain.props.value,
           color: { r: 50, g: 50, b: 255 }, focus: true
         }]
         , nonSelectedColor: { r: 180, g: 180, b: 180 }
@@ -159,42 +149,57 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
       {/* list item for highlighted_chain */}
       <ListItem>
 
-        {/* <FormControl
+
+
+<Tooltip  disableHoverListener={current_chain_to_highlight===null} title={
+  <>
+  <div>"chain x" </div>
+ <div>"nasym_id y"</div>
+ </>
+ }>
+
+        <FormControl
           // className={classes.formControl} 
           style={{ width: "100%" }}>
-          <InputLabel> Highlight Chain</InputLabel>
+          <InputLabel> {current_neostruct ===null ? "Select a structure.." :"Highlight Chain"}</InputLabel>
           <Select
-            value={chain_to_highlight}
+            value={current_chain_to_highlight}
             onChange={handleSelectHighlightChain}
+            disabled={current_neostruct === null }
             // @ts-ignore
-            renderValue={(value) => {
+            renderValue={(value:undefined) => {
+              console.log("Render got value :: ", value);
+              
               if (value === null) {
                 return "null"
               }
               else {
-                return <div>{`${value}`}</div>
+                // @ts-ignore
+                return <div>{ value.props.value }</div>
               }
             }}>
-            {useSelector(( state:AppState ) => state.visualization.structure_tab.struct?.struct) === null ? null : <MenuItem value="f">{}</MenuItem>}
-              {current_neo_struct !== null && current_neo_struct !== undefined
-              ? [...current_neo_struct?.rnas, ...current_neo_struct?.rps.sort(nomenclatureCompareFn),].map((i) => <MenuItem value={i.auth_asym_id}>{i.nomenclature.length > 0 ? i.nomenclature[0] : "Unclassified Polymer"}</MenuItem>)
-              : null}
-          </Select>
-        </FormControl> */}
-        {/* <div>
-          {current_full_struct === null ? null : <StructHero {
-            ...{
-              struct: current_full_struct, ligands: current_full_struct.ligands === null ? [] : current_full_struct.ligands.map(l => l.chemicalId), rnas: current_full_struct.rnas === null ? [] : current_full_struct.rnas.map(rna => { return rna.auth_asym_id }),
-              rps: current_full_struct.proteins.map(rp => ({ auth_asym_id: rp.auth_asym_id, nomenclature: rp.nomenclature }))
 
+            {current_neostruct === null || current_neostruct === undefined 
+            ? null  
+            : [...current_neostruct.rnas, ...current_neostruct.rps.sort(nomenclatureCompareFn),]
+            .map((chain) => 
 
+            {console.log(`[${current_neostruct.struct.rcsb_id}] Received chain ${JSON.stringify(chain)}`);
+            return <MenuItem value={chain.auth_asym_id}>{chain.nomenclature.length > 0 ? chain.nomenclature[0] : "Unclassified Polymer"}</MenuItem> })
             }
-          } />}
-          {chain_to_highlight === null ?
-            null : <ChainHighlightSlider />}
-        </div> */}
+          </Select>
+        </FormControl>
 
-        list item
+</Tooltip>
+
+
+        <div>
+          {current_neostruct === null 
+          ? null 
+          : <StructHero d={current_neostruct} inCart={false} />}
+          {current_chain_to_highlight === null ?null : <ChainHighlightSlider />}
+        </div>
+
 
 
 
