@@ -154,7 +154,7 @@ const classes = useRxztheme();
             .slice(( prop.current_page-1 ) * 20, prop.current_page * 20 )
             .map((x, i) => (
               <Grid item>
-                <StructHero d={x} inCart={ cartStructs.includes(x.struct.rcsb_id) } key={i} />
+                <StructHero d={x} inCart={ cartStructs.includes(x.struct.rcsb_id) } key={i} topless={false}/>
               </Grid>
             ))}
         </Grid>

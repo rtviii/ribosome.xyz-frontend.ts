@@ -21,7 +21,9 @@ import   GetApp                                 from '@material-ui/icons/GetApp'
 import { getNeo4jData       }                   from '../redux/AsyncActions/getNeo4jData' ;
 import   Tooltip                                from '@material-ui/core/Tooltip'          ;
 
-const useStyles = makeStyles({  card: {
+const useStyles = makeStyles({  
+  
+  card: {
     width:300
   },
   title:{
@@ -37,7 +39,6 @@ const useStyles = makeStyles({  card: {
   },
 
 });
-
 
 const CardBodyAnnotation =({ keyname,value }:{keyname:string, value:string|number})=>{
   const classes=useStyles()
@@ -62,9 +63,7 @@ className={classes.annotation}
 </Grid>
 }
 
-
-
-export const StructHero=({d,inCart}:{ d:NeoStruct, inCart:boolean })=> {
+export const StructHero=({d,inCart, topless}:{ d:NeoStruct, inCart:boolean, topless:boolean })=> {
   const classes  = useStyles();
   const history  = useHistory();
   const dispatch = useDispatch()
@@ -74,16 +73,13 @@ export const StructHero=({d,inCart}:{ d:NeoStruct, inCart:boolean })=> {
       
       
       <CardActionArea >
-        <CardContent 
-            onClick={()=>{history.push(`/structs/${d.struct.rcsb_id}`)}}
-        >
-          <CardMedia
-            component="img"
-            alt={""}
-            height="150"
-            image={process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`
-          }
+        <CardContent onClick={()=>{history.push(`/structs/${d.struct.rcsb_id}`)}}>
 
+          <CardMedia
+            component = "img"
+            alt       = {""}
+            height    = "150"
+            image     = {process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`}
 
           />
           <Grid
@@ -128,13 +124,13 @@ export const StructHero=({d,inCart}:{ d:NeoStruct, inCart:boolean })=> {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button href={`https://www.rcsb.org/structure/${d.struct.rcsb_id}`} size="small" color="primary">
+        <Button target='_blank' href={`https://www.rcsb.org/structure/${d.struct.rcsb_id}`} size="small" color="primary">
           PDB
         </Button>
-        <Button href={`https://doi.org/${d.struct.citation_pdbx_doi}`} size="small" color="primary">
+        <Button target='_blank' href={`https://doi.org/${d.struct.citation_pdbx_doi}`} size="small" color="primary">
           DOI
         </Button>
-        <Button href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
+        <Button target='_blank' href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
           EMDB
         </Button>
     <Tooltip title={ `${inCart ? "Delete From": "Add To"} Workspace` } arrow>

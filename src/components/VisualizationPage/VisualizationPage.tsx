@@ -193,17 +193,13 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 </Tooltip>
 
 
-        <div>
-          {current_neostruct === null 
-          ? null 
-          : <StructHero d={current_neostruct} inCart={false} />}
+        
           {current_chain_to_highlight === null ?null : <ChainHighlightSlider />}
-        </div>
+        </ListItem>
 
 
 
-
-      </ListItem>
+      
 
 
     </>
@@ -771,6 +767,7 @@ const VisualizationPage = (props: any) => {
   const vis_state = useSelector((state: AppState) => state.visualization)
   const handleTabClick = (tab: VisualizationTabs) => { dispatch({ type: COMPONENT_TAB_CHANGE, tab }); }
 
+  const current_neostruct =  useSelector((state: AppState) => state.visualization.structure_tab.structure)
 
 
   return (
@@ -841,6 +838,12 @@ const VisualizationPage = (props: any) => {
             })()}
 
           </ListItem>
+
+
+          {current_neostruct === null 
+          ? null 
+          :<ListItem> <StructHero d={current_neostruct} inCart={false} topless={true}/></ListItem>}
+
 
           {current_tab === 'structure_tab' ?
             <ListItem>
