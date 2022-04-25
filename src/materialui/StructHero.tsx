@@ -184,6 +184,9 @@ const horizontalStyle = makeStyles({
   card: {
     width:"maxWidth"
   },
+  actionButton:{
+    fontSize:"0.6em"
+  },
   title:{
     fontSize:14,
     height:60
@@ -204,66 +207,24 @@ export const StructHeroVertical=({d,inCart, topless}:{ d:NeoStruct, inCart:boole
   const dispatch = useDispatch()
 
   return (
-    <Card className={classes.card} style={{display:"flex", flexDirection:"row"}}>
+    <Card className={classes.card} style={{display:"flex", flexDirection:"row"}} variant='outlined'>
       
+      <div>
           <CardMedia
+           style={{padding:"10px"}}
             component = "img"
-            alt       = {""}
+            alt       = {"image_of_the_ribosome"}
             height    = "150"
             image     = {process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`}/>
 
-      <CardActionArea >
-        <CardContent onClick={()=>{history.push(`/structs/${d.struct.rcsb_id}`)}}>
-
-          <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="center"
-            component="div"
-            className={classes.heading}
-          >
-            <Typography variant="body2" color="textSecondary" component="p" >
-              {d.struct.rcsb_id}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p"  >
-              {d.struct.resolution} Å
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p" >
-              {d.struct.citation_year}
-            </Typography>
-          </Grid>
-          <Typography variant="body2" component="p" color="primary" className={classes.title}>
-            {truncate(d.struct.citation_title,70, 70)}
-          </Typography>
-
-
-          <Grid
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="flex-start"
-            component="div"
-          >
-
-          <CardBodyAnnotation keyname={"Organism"} value={truncate( d.struct.src_organism_names[0], 20,20)}/>
-          <CardBodyAnnotation keyname={"Method"} value={d.struct.expMethod}/>
-          <CardBodyAnnotation keyname={"Proteins"} value={d.rps.length}/>
-          <CardBodyAnnotation keyname={"RNA"} value={d.rnas.length}/>
-          <CardBodyAnnotation keyname={"Ligands"} value={d.ligands.length} />
-          <CardBodyAnnotation keyname={"Author"} value={`${d.struct.citation_rcsb_authors[0]} et al.`} />
-          </Grid>
-
-        </CardContent>
-      </CardActionArea>
-      <CardActions>
-        <Button target='_blank' href={`https://www.rcsb.org/structure/${d.struct.rcsb_id}`} size="small" color="primary">
+      <CardActions style={{display:"flex", flexDirection:"column"}}>
+        <Button className={classes.actionButton} target='_blank' href={`https://www.rcsb.org/structure/${d.struct.rcsb_id}`} size="small" color="primary">
           PDB
         </Button>
-        <Button target='_blank' href={`https://doi.org/${d.struct.citation_pdbx_doi}`} size="small" color="primary">
+        <Button className={classes.actionButton} target='_blank' href={`https://doi.org/${d.struct.citation_pdbx_doi}`} size="small" color="primary">
           DOI
         </Button>
-        <Button target='_blank' href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
+        <Button className={classes.actionButton} target='_blank' href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
           EMDB
         </Button>
     <Tooltip title={ `${inCart ? "Delete From": "Add To"} Workspace` } arrow>
@@ -310,6 +271,53 @@ dispatch(cart_add_item(d.struct))
     </Tooltip>
         
       </CardActions>
+</div>
+      <CardActionArea >
+        <CardContent onClick={()=>{history.push(`/structs/${d.struct.rcsb_id}`)}}>
+
+          <Grid
+            container
+            direction  = "row"
+            justify    = "space-between"
+            alignItems = "center"
+            component  = "div"
+            className  = {classes.heading}
+          >
+            <Typography variant="body2" color="textSecondary" component="p" >
+              {d.struct.rcsb_id}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p"  >
+              {Math.round(d.struct.resolution*10)/10 } Å
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p" >
+              {d.struct.citation_year}
+            </Typography>
+          </Grid>
+
+          <Typography variant="body2" component="p" color="primary" className={classes.title}>
+            {truncate(d.struct.citation_title,90, 90)}
+          </Typography>
+
+
+          <Grid
+            container
+            direction  = "column"
+            justify    = "flex-start"
+            alignItems = "flex-start"
+            component  = "div"
+          >
+
+          <CardBodyAnnotation keyname={"Organism"} value={truncate( d.struct.src_organism_names[0], 20,20)}/>
+          <CardBodyAnnotation keyname={"Method"} value={d.struct.expMethod}/>
+          <CardBodyAnnotation keyname={"Proteins"} value={d.rps.length}/>
+          <CardBodyAnnotation keyname={"RNA"} value={d.rnas.length}/>
+          <CardBodyAnnotation keyname={"Ligands"} value={d.ligands.length} />
+          <CardBodyAnnotation keyname={"Author"} value={`${d.struct.citation_rcsb_authors[0]} et al.`} />
+          </Grid>
+
+        </CardContent>
+      </CardActionArea>
+
     </Card>
   );
 }
