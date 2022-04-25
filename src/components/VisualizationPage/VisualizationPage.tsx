@@ -30,7 +30,7 @@ import { chain, flattenDeep, uniq } from 'lodash';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { useHistory, useParams } from 'react-router';
 import _ from 'lodash'
-import { COMPONENT_TAB_CHANGE, protein_change, rna_change, fullStructureChange, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
+import { cache_full_struct, COMPONENT_TAB_CHANGE, protein_change, rna_change,  struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
 import { ToastProvider, useToasts } from 'react-toast-notifications';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
 import { RNACard } from '../Workspace/RNA/RNACard';
@@ -70,8 +70,8 @@ const useSelectStyles = makeStyles((theme: Theme) =>
 
 interface StructSnip {
   rcsb_id: string,
-  title  : string,
-  any?   : any
+  title: string,
+  any?: any
 }
 
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
@@ -86,21 +86,32 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   // useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))
 
+  const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const structs = useSelector((state: AppState) => state.structures.derived_filtered)
   const { addToast } = useToasts();
 
-  const paintStructure = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
-    // if (newvalue === null) {
-    //   dispatch(fullStructureChange(null, chain_to_highlight))
-    // } else {
-    //   console.log('---got new value from dropdown', newvalue);
-    //   dispatch(fullStructureChange(newvalue.struct.rcsb_id, null))
-    //   addToast(`Structure ${newvalue.struct.rcsb_id} is being fetched.`, {
-    //     appearance : 'info',
-    //     autoDismiss: true,
-    //   })
-    //   viewerInstance.visual.update({moleculeId: newvalue.struct.rcsb_id.toLowerCase()});
-    // }
+
+
+
+  const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {
+    console.log("Received new value ", selected_neostruct);
+    dispatch(cache_full_struct(selected_neostruct && selected_neostruct?.struct.rcsb_id))
+    dispatch(struct_change(null, selected_neostruct))
+
+    if (selected_neostruct !== null) {
+      console.log('---got new value from dropdown', selected_neostruct);
+
+      addToast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`,
+        {
+          appearance: 'info',
+          autoDismiss: true,
+        })
+
+      viewerInstance.visual.update({ moleculeId: selected_neostruct.struct.rcsb_id.toLowerCase() });
+
+    }
+
+
   };
 
   const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
@@ -125,24 +136,27 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   return (
     <>
-      {/* <Autocomplete
+      <Autocomplete
         className={selectStructStyles.autocomoplete}
-        // value={current_struct}
-        value          = { }
-        options        = {structs}
-        getOptionLabel = {(parent) => {
+        value={current_neostruct}
+        options={structs}
+        getOptionLabel={(parent) => {
           if (parent.struct === undefined) {
             return "null"
           }
-            else { return parent.struct.rcsb_id }
-          }
+          else { return parent.struct.rcsb_id }
+        }
         }
 
         // @ts-ignore
-        onChange={paintStructure}
+        onChange={structure_tab_select}
         renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> ({option.struct.citation_title} ) </div>)}
         renderInput={(params) => <TextField {...params} label="Structure" variant="outlined" />}
-      /> */}
+      />
+
+
+
+      {/* list item for highlighted_chain */}
       <ListItem>
 
         {/* <FormControl
@@ -180,11 +194,13 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
             null : <ChainHighlightSlider />}
         </div> */}
 
-list item
+        list item
 
 
 
       </ListItem>
+
+
     </>
   )
 }
@@ -423,8 +439,8 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
 const ChainHighlightSlider = ({ }) => {
   const Input = styled(MuiInput)`width: 42px;`;
 
-  const [value, setValue]  = React.useState<number | string | Array<number | string>>(30);
-  const handleSliderChange = (event: Event, newValue: number | number[]) => {setValue(newValue);};
+  const [value, setValue] = React.useState<number | string | Array<number | string>>(30);
+  const handleSliderChange = (event: Event, newValue: number | number[]) => { setValue(newValue); };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value === '' ? '' : Number(event.target.value));
@@ -495,28 +511,23 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 // @ts-ignore
 // const viewerInstance2 = new PDBeMolstarPlugin() as any;
 const VisualizationPage = (props: any) => {
-  const dispatch                    = useDispatch();
-  const { addToast }                = useToasts();
+  const dispatch = useDispatch();
+  const { addToast } = useToasts();
   // ? Get uri parametrs ----------------------------
-  const history: any                = useHistory();
-  const params                      = history.location.state;
+  const history: any = useHistory();
+  const params = history.location.state;
   //? Get uri parametrs ----------------------------
 
   const [lastViewed, setLastViewed] = useState<Array<string | null>>([null, null])
 
 
   // structure titles for populating the dropdown
-  const all_structures:StructSnip[] = useSelector((state: AppState) => state.structures.neo_response.map(
+  const all_structures: StructSnip[] = useSelector((state: AppState) => state.structures.neo_response.map(
     r => { return { rcsb_id: r.struct.rcsb_id, title: r.struct.citation_title } }))
 
-  useEffect(()=>{
-    console.log("Got structures: ", all_structures.length);
-    console.log("Got structures: ", all_structures);
-  }, [all_structures])
 
-  ////////////////////////////////    <<<<<>>>>>>>>>>   /////////////   <<<<<>>>>>>>>>>     /////////////////////////////// <<<<<>>>>>>>>>>
 
-  // ----------- This one, i think is for fetching struct on uri parmas pass. Should be able to do in 
+  // ----------- This one, i think is for fetching struct on uri parmas pass. Should be able to do in redux
   // useEffect(() => {
   //   if (params === undefined || Object.keys(params).length < 1) { return }
   //   else if ((params as { struct: string }).struct) {
@@ -551,29 +562,32 @@ const VisualizationPage = (props: any) => {
 
   const [inView, setInView] = useState<any>({});
 
+  ////////////////////////////////    <<<<<>>>>>>>>>>   /////////////   <<<<<>>>>>>>>>>     /////////////////////////////// <<<<<>>>>>>>>>>
+
   useEffect(() => {
+
     var options = {
       moleculeId: 'Element to visualize can be selected above.',
       hideControls: true,
       layoutIsExpanded: false,
     }
+
+
     var viewerContainer = document.getElementById('molstar-viewer');
+
     viewerInstance.render(viewerContainer, options);
 
     if (params === undefined || Object.keys(params).length < 1) { return }
-
     if ((params as { banClass: string, parent: string }).parent) {
-
       getCifChainByClass(params.banClass, params.parent)
     }
     else
       if ((params as { struct: string }).struct) {
-        // dispatch(struct_change(null, params.struct))
         selectStruct(params.struct)
       }
   }, [])
 
-  const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => _.flattenDeep(Object.values(state.proteins.ban_classes)))
+  // const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => _.flattenDeep(Object.values(state.proteins.ban_classes)))
 
   const selectStruct = (rcsb_id: string) => {
     viewerInstance.visual.update({
@@ -599,137 +613,123 @@ const VisualizationPage = (props: any) => {
     setLastViewed([`protein.${banclass}`, parent_struct])
 
   }
-  const selectRna = (strand: string, parent_struct: string) => {
-    setLastViewed([`rna.${strand}`, parent_struct])
 
-  }
+  // const selectRna = (strand: string, parent_struct: string) => { setLastViewed([`rna.${strand}`, parent_struct]) }
+  // useEffect(() => {
+  //   if (inView.type === "struct") {
+  //     getNeo4jData("neo4j", {
+  //       endpoint: "get_struct",
+  //       params: { pdbid: inView.id },
+  //     }).then(
+  //       resp => {
+  //         const respdata: RibosomeStructure = (flattenDeep(resp.data)[0] as any).structure;
+  //         // setstruct(respdata);
+  //         // setInViewData({ type: "struct", data: respdata })
+  //       },
 
+  //       err => {
+  //         console.log("Got error on /neo request", err);
+  //       }
+  //     );
+  //   }
+  //   else if (inView.type === "chain") {getNeo4jData("neo4j", { endpoint: "nomclass_visualize", params: { ban: inView.id } }).then(r => { }) } }, [inView])
 
-  useEffect(() => {
+  // const RenderInViewInfo = ({ type, structdata, protClassInfo }: {
+  //   type: string,
+  //   structdata: RibosomeStructure,
+  //   protClassInfo: {
+  //     class: string,
+  //     comments: string[][],
+  //     members: { parent: string, chain: string }[]
+  //   }
+  // }) => {
+  //   switch (type) {
+  //     case "chain":
+  //       return protClassInfo.class ? <List>
+  //         <ListSubheader>Ribosomal Protein Class {protClassInfo.class}</ListSubheader>
+  //         {
+  //           uniq(flattenDeep(protClassInfo.comments)).filter(r => r !== "NULL").map(r =>
+  //             <ListItem>
+  //               <Typography className={"s"}>{r}</Typography>
+  //             </ListItem>
+  //           )
+  //         }
 
-    if (inView.type === "struct") {
-      getNeo4jData("neo4j", {
-        endpoint: "get_struct",
-        params: { pdbid: inView.id },
-      }).then(
-        resp => {
-          const respdata: RibosomeStructure = (flattenDeep(resp.data)[0] as any).structure;
-          // setstruct(respdata);
-          // setInViewData({ type: "struct", data: respdata })
-        },
-
-        err => {
-          console.log("Got error on /neo request", err);
-        }
-      );
-    }
-    else if (inView.type === "chain") {
-      getNeo4jData("neo4j", { endpoint: "nomclass_visualize", params: { ban: inView.id } }).then(r => {
-        // setInViewData({ type: "chain", data: r.data })
-        // setProtClassInfo(r.data[0])
-      })
-    }
-
-
-  }, [inView])
-
-  const RenderInViewInfo = ({ type, structdata, protClassInfo }: {
-    type: string,
-    structdata: RibosomeStructure,
-    protClassInfo: {
-      class: string,
-      comments: string[][],
-      members: { parent: string, chain: string }[]
-    }
-  }) => {
-    switch (type) {
-      case "chain":
-        return protClassInfo.class ? <List>
-          <ListSubheader>Ribosomal Protein Class {protClassInfo.class}</ListSubheader>
-          {
-            uniq(flattenDeep(protClassInfo.comments)).filter(r => r !== "NULL").map(r =>
-              <ListItem>
-                <Typography className={"s"}>{r}</Typography>
-              </ListItem>
-            )
-          }
-
-        </List> : <div>Not Found</div>
-      case "struct":
-        return structdata?.rcsb_id ?
-          <Card className={classes.card}>
-            <CardHeader
-              title={`${structdata.rcsb_id}`}
-              subheader={structdata.src_organism_ids.length > 0 ? structdata.src_organism_names[0] : ""}
-            />
-            <CardActionArea>
-              <CardMedia
-                onClick={() => { history.push(`/structs/${structdata.rcsb_id.toUpperCase()}`) }}
-                image={process.env.PUBLIC_URL + `/ray_templates/_ray_${structdata.rcsb_id.toUpperCase()}.png`}
-                title={`${structdata.rcsb_id}\n${structdata.citation_title}`}
-                className={classes.title}
-              />
-            </CardActionArea>
-            <List>
-              <CardBodyAnnotation keyname="Species" value={structdata.src_organism_ids.length > 0 ? structdata.src_organism_names[0] : ""} />
-              <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
-              < CardBodyAnnotation keyname="Experimental Method" value={structdata.expMethod} />
-              < CardBodyAnnotation keyname="Title" value={structdata.citation_title} />
+  //       </List> : <div>Not Found</div>
+  //     case "struct":
+  //       return structdata?.rcsb_id ?
+  //         <Card className={classes.card}>
+  //           <CardHeader
+  //             title={`${structdata.rcsb_id}`}
+  //             subheader={structdata.src_organism_ids.length > 0 ? structdata.src_organism_names[0] : ""}
+  //           />
+  //           <CardActionArea>
+  //             <CardMedia
+  //               onClick={() => { history.push(`/structs/${structdata.rcsb_id.toUpperCase()}`) }}
+  //               image={process.env.PUBLIC_URL + `/ray_templates/_ray_${structdata.rcsb_id.toUpperCase()}.png`}
+  //               title={`${structdata.rcsb_id}\n${structdata.citation_title}`}
+  //               className={classes.title}
+  //             />
+  //           </CardActionArea>
+  //           <List>
+  //             <CardBodyAnnotation keyname="Species" value={structdata.src_organism_ids.length > 0 ? structdata.src_organism_names[0] : ""} />
+  //             <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
+  //             < CardBodyAnnotation keyname="Experimental Method" value={structdata.expMethod} />
+  //             < CardBodyAnnotation keyname="Title" value={structdata.citation_title} />
 
 
-              < CardBodyAnnotation keyname="Year" value={structdata.citation_year} />
-            </List>
-            <CardActions>
-              <Grid container justify="space-evenly" direction="row">
+  //             < CardBodyAnnotation keyname="Year" value={structdata.citation_year} />
+  //           </List>
+  //           <CardActions>
+  //             <Grid container justify="space-evenly" direction="row">
 
-                <Grid item>
+  //               <Grid item>
 
-                  <Button size="small" color="primary">
-                    <a href={`https://www.rcsb.org/structure/${structdata.rcsb_id}`}>
-                      PDB
-                    </a>
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button size="small" color="primary">
-                    <a href={
+  //                 <Button size="small" color="primary">
+  //                   <a href={`https://www.rcsb.org/structure/${structdata.rcsb_id}`}>
+  //                     PDB
+  //                   </a>
+  //                 </Button>
+  //               </Grid>
+  //               <Grid item>
+  //                 <Button size="small" color="primary">
+  //                   <a href={
 
-                      structdata.rcsb_external_ref_link[0]
-                    }>
-                      EMD
-                    </a>
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button size="small" color="primary">
-                    <a href={
-                      `https://doi.org/${structdata.citation_pdbx_doi}`
-                    }>
-                      DOI
-                    </a>
-                  </Button>
-                </Grid>
-              </Grid>
-            </CardActions>
-          </Card>
-          : <div>"Loading"</div>
-      default:
-        return <div></div>
-    }
-  }
+  //                     structdata.rcsb_external_ref_link[0]
+  //                   }>
+  //                     EMD
+  //                   </a>
+  //                 </Button>
+  //               </Grid>
+  //               <Grid item>
+  //                 <Button size="small" color="primary">
+  //                   <a href={
+  //                     `https://doi.org/${structdata.citation_pdbx_doi}`
+  //                   }>
+  //                     DOI
+  //                   </a>
+  //                 </Button>
+  //               </Grid>
+  //             </Grid>
+  //           </CardActions>
+  //         </Card>
+  //         : <div>"Loading"</div>
+  //     default:
+  //       return <div></div>
+  //   }
+  // }
 
-  const coerce_neo_struct_to_struct_hero = (_: NeoStruct): {
-    struct: RibosomeStructure;
-    ligands: string[];
-    rps: Array<{ nomenclature: string[]; auth_asym_id: string }>;
-    rnas: string[];
-  } => ({
-
-    struct: _.struct,
-    ligands: _.ligands,
-    rps: _.rps.map(rp => { return { nomenclature: rp.nomenclature, auth_asym_id: rp.auth_asym_id } }),
-    rnas: _.rnas.map(rna => rna.auth_asym_id)
-  })
+  // const coerce_neo_struct_to_struct_hero = (_: NeoStruct): {
+  //   struct: RibosomeStructure;
+  //   ligands: string[];
+  //   rps: Array<{ nomenclature: string[]; auth_asym_id: string }>;
+  //   rnas: string[];
+  // } => ({
+  //   struct : _.struct,
+  //   ligands: _.ligands,
+  //   rps    : _.rps.map(rp => { return { nomenclature: rp.nomenclature, auth_asym_id: rp.auth_asym_id } }),
+  //   rnas   : _.rnas.map(rna => rna.auth_asym_id)
+  // })
 
   const classes = makeStyles({
     pageDescription: {
@@ -764,15 +764,12 @@ const VisualizationPage = (props: any) => {
 
   const current_tab = useSelector((state: AppState) => state.visualization.component_tab)
   const vis_state = useSelector((state: AppState) => state.visualization)
-  const handleTabClick = (tab: VisualizationTabs) => {
-    dispatch({ type: COMPONENT_TAB_CHANGE, tab });
-  }
+  const handleTabClick = (tab: VisualizationTabs) => { dispatch({ type: COMPONENT_TAB_CHANGE, tab }); }
 
 
 
   return (
     <Grid container xs={12} spacing={1} alignContent="flex-start">
-
       <Grid item xs={12} style={{ padding: "10px" }}>
         <Paper variant="outlined" className={classes.pageDescription}>
           <Typography variant="h4">
@@ -796,7 +793,7 @@ const VisualizationPage = (props: any) => {
             }
             else {
               return <ListItem>
-                Last Item Viewed: {lastViewed[0]?.split('.')[0] == 'protein' ? 'Protein' : 'RNA'} {lastViewed[0]?.split('.')[1]} in Structure {lastViewed[1]}
+                Last Item Viewed: {lastViewed[0]?.split('.')[0] === 'protein' ? 'Protein' : 'RNA'} {lastViewed[0]?.split('.')[1]} in Structure {lastViewed[1]}
               </ListItem>
             }
           }
@@ -816,10 +813,12 @@ const VisualizationPage = (props: any) => {
           })()} </ListSubheader>
           <ListItem style={{ display: "flex", flexDirection: "row" }}>
 
-            <Button size="small" color={current_tab === 'structure_tab' ? "primary" : "default"} onClick={() => { handleTabClick('structure_tab') }} variant="outlined" style={{ marginRight: "5px" }} >Structures</Button>
-            <Button size="small" color={current_tab === 'protein_tab' ? "primary" : "default"} onClick={() => { handleTabClick("protein_tab") }} variant="outlined" style={{ marginRight: "5px" }} >Proteins  </Button>
-            <Button size="small" color={current_tab === 'rna_tab' ? "primary" : "default"} onClick={() => { handleTabClick('rna_tab') }} variant="outlined" style={{ marginRight: "5px" }} >RNA       </Button>
+            <Button size="small" color={current_tab === 'structure_tab' ? "primary" : "default"} onClick={() => { handleTabClick('structure_tab') }} variant="outlined" style={{ marginRight: "5px" }} >Structures </Button>
+            <Button size="small" color={current_tab === 'protein_tab' ? "primary" : "default"} onClick={() => { handleTabClick("protein_tab") }} variant="outlined" style={{ marginRight: "5px" }} >Proteins   </Button>
+            <Button size="small" color={current_tab === 'rna_tab' ? "primary" : "default"} onClick={() => { handleTabClick('rna_tab') }} variant="outlined" style={{ marginRight: "5px" }} >RNA        </Button>
+
           </ListItem>
+
           <ListItem>
             {(() => {
               switch (current_tab) {
@@ -861,8 +860,9 @@ const VisualizationPage = (props: any) => {
                     return <DownloadElement elemtype={'protein'} id={vis_state.protein_tab.class} parent={vis_state.protein_tab.parent as string} />
                   case 'rna_tab':
                     return <DownloadElement elemtype={'rna'} id={vis_state.rna_tab.class} parent={vis_state.rna_tab.parent as string} />
+
                   case 'structure_tab':
-                    return <DownloadElement elemtype={'structure'} id={vis_state.structure_tab.fullStructProfile?.rcsb_id === null ? null : vis_state.structure_tab.fullStructProfile?.rcsb_id as string} />
+                    return <DownloadElement elemtype={'structure'} id={vis_state.structure_tab.structure?.struct.rcsb_id === null ? null : vis_state.structure_tab.structure?.struct.rcsb_id as string} />
                 }
               })()
             }
