@@ -9,6 +9,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper/Paper';
 import Select from '@material-ui/core/Select';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -30,6 +35,7 @@ import { cache_full_struct, COMPONENT_TAB_CHANGE, struct_change, VisualizationTa
 import { AppState, store } from '../../redux/store';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
 import { StructHeroVertical } from "./../../materialui/StructHero";
+import { Protein, RNA } from "../../redux/RibosomeTypes";
 
 
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -72,22 +78,19 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   // useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))
 
-  const current_neostruct: NeoStruct | null       = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
-  const structs                                   = useSelector((state: AppState) => state.structures.derived_filtered)
-  const { addToast }                              = useToasts();
+  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
+  const { addToast } = useToasts();
 
 
 
 
   const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {
-    console.log("Received new value ", selected_neostruct);
     dispatch(cache_full_struct(selected_neostruct && selected_neostruct?.struct.rcsb_id))
     dispatch(struct_change(null, selected_neostruct))
 
     if (selected_neostruct !== null) {
-      console.log('---got new value from dropdown', selected_neostruct);
-
       addToast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`,
         {
           appearance: 'info',
@@ -102,12 +105,11 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, selected_chain: any) => {
 
 
-    console.log("handle select chain: ", selected_chain); 
-    
+
     // get current structure because arguments and functions here are poorly written.
-    const curstate  = store.getState()
+    const curstate = store.getState()
     const curstruct = curstate.visualization.structure_tab.structure
-    dispatch(struct_change(selected_chain, curstruct))
+    dispatch(struct_change(selected_chain.props.value, curstruct))
 
 
     viewerInstance.visual.select(
@@ -151,55 +153,51 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
 
 
-<Tooltip  disableHoverListener={current_chain_to_highlight===null} title={
-  <>
-  <div>"chain x" </div>
- <div>"nasym_id y"</div>
- </>
- }>
+        <Tooltip disableHoverListener={current_chain_to_highlight === null} title={
+          <>
+            <div>"chain x" </div>
+            <div>"nasym_id y"</div>
+          </>
+        }>
 
-        <FormControl
-          // className={classes.formControl} 
-          style={{ width: "100%" }}>
-          <InputLabel> {current_neostruct ===null ? "Select a structure.." :"Highlight Chain"}</InputLabel>
-          <Select
-            value={current_chain_to_highlight}
-            onChange={handleSelectHighlightChain}
-            disabled={current_neostruct === null }
-            // @ts-ignore
-            renderValue={(value:undefined) => {
-              console.log("Render got value :: ", value);
-              
-              if (value === null) {
-                return "null"
+          <FormControl
+            // className={classes.formControl} 
+            style={{ width: "100%" }}>
+            <InputLabel> {current_neostruct === null ? "Select a structure.." : "Highlight Chain"}</InputLabel>
+            <Select
+              value={current_chain_to_highlight}
+              onChange={handleSelectHighlightChain}
+              disabled={current_neostruct === null}
+              // @ts-ignore
+              renderValue={(value: undefined) => {
+
+                if (value === null) {
+                  return "null"
+                }
+                else {
+                  // @ts-ignore
+                  return <div>{value}</div>
+                }
+              }}>
+
+              {current_neostruct === null || current_neostruct === undefined
+                ? null
+                : [...current_neostruct.rnas, ...current_neostruct.rps.sort(nomenclatureCompareFn),]
+                  .map((chain) =>
+                    <MenuItem value={chain.auth_asym_id}>{chain.nomenclature.length > 0 ? chain.nomenclature[0] : "Unclassified Polymer"}</MenuItem>)
               }
-              else {
-                // @ts-ignore
-                return <div>{ value.props.value }</div>
-              }
-            }}>
+            </Select>
+          </FormControl>
 
-            {current_neostruct === null || current_neostruct === undefined 
-            ? null  
-            : [...current_neostruct.rnas, ...current_neostruct.rps.sort(nomenclatureCompareFn),]
-            .map((chain) => 
-
-            {console.log(`[${current_neostruct.struct.rcsb_id}] Received chain ${JSON.stringify(chain)}`);
-            return <MenuItem value={chain.auth_asym_id}>{chain.nomenclature.length > 0 ? chain.nomenclature[0] : "Unclassified Polymer"}</MenuItem> })
-            }
-          </Select>
-        </FormControl>
-
-</Tooltip>
-
-
-        
-          {current_chain_to_highlight === null ?null : <ChainHighlightSlider />}
-        </ListItem>
+        </Tooltip>
 
 
 
-      
+      </ListItem>
+
+
+
+
 
 
     </>
@@ -437,57 +435,90 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
 
 
 
-const ChainHighlightSlider = ({ }) => {
-  const Input = styled(MuiInput)`width: 42px;`;
 
-  const [value, setValue] = React.useState<number | string | Array<number | string>>(30);
-  const handleSliderChange = (event: Event, newValue: number | number[]) => { setValue(newValue); };
+const ChainHighlightSlider = () => {
+  // takes in a full protein or rna
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value === '' ? '' : Number(event.target.value));
-  };
 
-  const handleBlur = () => {
-    if (value < 0) {
-      setValue(0);
-    } else if (value > 100) {
-      setValue(100);
+  const current_chain_to_highlight = useSelector((appstate: AppState) => appstate.visualization.structure_tab.highlighted_chain)
+  const fullstruct_cache = useSelector((appstate: AppState) => appstate.visualization.full_structure_cache)
+
+  useEffect(() => {
+
+    if (fullstruct_cache && current_chain_to_highlight ) {
+       const allchains = [...fullstruct_cache.proteins,  ...(() => {
+        if (fullstruct_cache.rnas === undefined || fullstruct_cache.rnas === null) {
+          return []
+        } else {
+          return fullstruct_cache.rnas
+
+        }
+      })()]
+      console.log("Allchains: ", allchains);
+      console.log("Allchains length: ", allchains.length);
+    console.log("props changed in slideR:", fullstruct_cache);
+    console.log("props changed in slideR:", current_chain_to_highlight);
+      // console.log("picked full chain", pickFullChain);
+      
     }
+
+
+
+
+  }, [
+
+    current_chain_to_highlight,
+    fullstruct_cache
+  ])
+
+
+  const [value, setValue] = React.useState<number[]>([20, 37]);
+  const handleChange = (event: Event, newValue: number | number[]) => {
+    setValue(newValue as number[]);
   };
 
-
-  // const currentHighlightedChain = useSelector((state: AppState) => )
-  // const currentStructId = useSelector((state: AppState) => state.visualization.structure_tab.struct?.struct.rcsb_id)
-  // useEffect(() => {
-  //   console.log('id or chain chagned', currentHighlightedChain);
-
-  //   if (currentHighlightedChain === null) { return }
-  //   else {
-  //     getNeo4jData('neo4j', { endpoint: 'get_struct', params: { pdbid: currentStructId as string } })
-  //     .then(r => { console.log("got corresponding struct", r.data) })
-  //   }
-  // }, [currentHighlightedChain, currentStructId])
-
-
-
-  // const find_chain_by_auth_asym_id = (struct:NeoStruct):PolymerMinimal =>{
-  //   let x = struct.rps[0]
-  // }
 
 
   return (
-    <Box sx={{ width: 600 }}>
+    <Card variant="outlined" style={{ display: "flex", flexDirection: "row", width: "maxWidth" }}>
 
-      <Typography id="input-slider" gutterBottom>Chain { }</Typography>
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs>
-          <Slider
-            value={typeof value === 'number' ? value : 0}
-            onChange={handleSliderChange}
-            aria-labelledby="input-slider"
-          />
-        </Grid>
-        <Grid item>
+      <CardMedia
+        style={{ padding: "10px" }}
+        component="img"
+        alt={"image_of_the_ribosome"}
+        // height    = "150"
+        image={require('./../../static/protein_icon.png')} />
+      {/* Things to annotate here:
+            
+                      asym_ids: (2) ['ED', 'FD']
+          auth_asym_id: "Z6"
+          entity_poly_entity_type: "polyribonucleotide"
+          entity_poly_polymer_type: "RNA"
+          entity_poly_seq_length: 3
+          entity_poly_seq_one_letter_code: "CC(PPU)"
+          entity_poly_seq_one_letter_code_can: "CCA"
+          entity_poly_strand_id: "Z6,Z8"
+          host_organism_ids: []
+          host_organism_names: []
+          ligand_like: false
+          nomenclature: []
+          parent_rcsb_id: "1VVJ"
+          rcsb_pdbx_description: "RNA (5'-R(*CP*CP*(PPU))-3')"
+          src_organism_ids: [32630]
+          src_organism_names: ['Synthetic']
+            
+            
+            */}
+
+      <Slider
+        style={{ width: "200px" }}
+        getAriaLabel={() => 'Chain XXX'}
+        value={value}
+        onChange={handleChange}
+        valueLabelDisplay="auto"
+      // getAriaValueText  = {valuetext}
+      />
+      {/* <Grid item>
           <Input
             value={value}
             size="small"
@@ -501,9 +532,8 @@ const ChainHighlightSlider = ({ }) => {
               'aria-labelledby': 'input-slider',
             }}
           />
-        </Grid>
-      </Grid>
-    </Box>
+        </Grid> */}
+    </Card>
   );
 }
 
@@ -767,7 +797,8 @@ const VisualizationPage = (props: any) => {
   const vis_state = useSelector((state: AppState) => state.visualization)
   const handleTabClick = (tab: VisualizationTabs) => { dispatch({ type: COMPONENT_TAB_CHANGE, tab }); }
 
-  const current_neostruct =  useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const current_neostruct = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const current_chain_to_highlight = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
 
 
   return (
@@ -840,10 +871,19 @@ const VisualizationPage = (props: any) => {
           </ListItem>
 
 
-          {current_neostruct === null 
-          ? null 
-          :<ListItem> <StructHeroVertical d={current_neostruct} inCart={false} topless={true}/></ListItem>}
+          {current_neostruct === null
+            ? null
+            : <ListItem> <StructHeroVertical d={current_neostruct} inCart={false} topless={true} /></ListItem>}
 
+          {current_chain_to_highlight === null ? null :
+
+
+            <ListItem style={{ width: "maxWidth" }}>
+
+              <ChainHighlightSlider />
+
+            </ListItem>
+          }
 
           {current_tab === 'structure_tab' ?
             <ListItem>

@@ -40,6 +40,12 @@ interface get_full_structure{
     pdbid:string
   }
 }
+interface get_RibosomeStructure{
+  endpoint:"get_RibosomeStructure",
+  params:{
+    pdbid:string
+  }
+}
 
 interface cif_chain_by_class {
   endpoint: "cif_chain_by_class",
@@ -106,6 +112,7 @@ type Neo4jEndpoints =
   | proteins_number
   | get_all_ligandlike
   | get_full_structure
+  | get_RibosomeStructure
 type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
 
 

@@ -111,7 +111,7 @@ export const cache_full_struct = (
 		// getNeo4jData('neo4j', { endpoint: 'get_full_struct', params: { pdbid: struct_id_to_cache } })
 
 		getNeo4jData("neo4j", {
-			endpoint: "get_struct",
+			endpoint: "get_RibosomeStructure",
 			params: { pdbid: struct_id_to_cache }
 		}).then(
 			response => {
