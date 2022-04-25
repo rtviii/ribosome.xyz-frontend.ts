@@ -12,7 +12,7 @@ import { Home2 } from                                    './../../Home2'
 import WorkInProgress from                          './../WorkInProgress'
 import ProteinAlignment from                        './../ProteinAlign/ProteinAlignment'
 // import RPClassification from                        './../RPClassification/RPClassification'
-import VisualizationPage from                       './../../VisualizationPage/VisualizationPage'
+import VisualizationPage from                       '../../VisualizationPage/VisualizationPage'
 import BindingSites from '../BindingSites/BindingSites'
 import Nomenclature from "../Nomenclature";
 
