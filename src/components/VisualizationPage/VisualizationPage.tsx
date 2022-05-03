@@ -24,6 +24,7 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import fileDownload from 'js-file-download';
 import Tooltip from "@mui/material/Tooltip";
+import VolumeUp from '@mui/icons-material/VolumeUp';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -34,9 +35,13 @@ import { NeoStruct } from '../../redux/DataInterfaces';
 import { cache_full_struct, COMPONENT_TAB_CHANGE, struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
 import { AppState, store } from '../../redux/store';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
-import { StructHeroVertical } from "./../../materialui/StructHero";
+import { StructHeroVertical, CardBodyAnnotation } from "./../../materialui/StructHero";
+import nucleotide from './../../static/nucleotide.png'
 import { Protein, RNA } from "../../redux/RibosomeTypes";
+import _ from "lodash";
+import { truncate } from "../Main";
 
+// viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
 
 const useSelectStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -184,7 +189,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
                 ? null
                 : [...current_neostruct.rnas, ...current_neostruct.rps.sort(nomenclatureCompareFn),]
                   .map((chain) =>
-                    <MenuItem value={chain.auth_asym_id}>{chain.nomenclature.length > 0 ? chain.nomenclature[0] : "Unclassified Polymer"}</MenuItem>)
+                    <MenuItem value={chain.auth_asym_id}>{chain.nomenclature && chain.nomenclature.length > 0 ? chain.nomenclature[0] : "Unclassified Polymer"}</MenuItem>)
               }
             </Select>
           </FormControl>
@@ -433,6 +438,8 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
   )
 }
 
+// --------------------------------------------------------------------------------------------------
+
 
 
 
@@ -442,100 +449,251 @@ const ChainHighlightSlider = () => {
 
   const current_chain_to_highlight = useSelector((appstate: AppState) => appstate.visualization.structure_tab.highlighted_chain)
   const fullstruct_cache = useSelector((appstate: AppState) => appstate.visualization.full_structure_cache)
+  const [currentChainFull, setCurrentChainFull] = React.useState<Protein | RNA | null>(null)
+
+  // const [inFocus, setInFocus] = React.useState<Protein | RNA | null>(null)
+  const [residueRange, setResidueRange] = React.useState<number[]>([0, 1]);
+  const setResidueRange__debounced = _.debounce(setResidueRange, 2000)
+
 
   useEffect(() => {
-
-    if (fullstruct_cache && current_chain_to_highlight ) {
-       const allchains = [...fullstruct_cache.proteins,  ...(() => {
+    if (fullstruct_cache && current_chain_to_highlight) {
+      const pickFullChain = [...fullstruct_cache.proteins, ...(() => {
         if (fullstruct_cache.rnas === undefined || fullstruct_cache.rnas === null) {
           return []
         } else {
           return fullstruct_cache.rnas
-
         }
-      })()]
-      console.log("Allchains: ", allchains);
-      console.log("Allchains length: ", allchains.length);
-    console.log("props changed in slideR:", fullstruct_cache);
-    console.log("props changed in slideR:", current_chain_to_highlight);
-      // console.log("picked full chain", pickFullChain);
-      
+      })()].filter(c => c.auth_asym_id === current_chain_to_highlight)
+
+      if (pickFullChain.length < 1) {
+        console.log("Haven't found chain with this asym_id on the full structure. Something went terribly wrong.");
+      } else {
+        console.log("Got full chain with length ", pickFullChain[0].entity_poly_seq_length);
+        console.log("UPDATING RANGE");
+        setCurrentChainFull(pickFullChain[0])
+        setResidueRange([0, pickFullChain[0].entity_poly_seq_length])
+      }
+    }
+    if (fullstruct_cache === null) {
+      setCurrentChainFull(null)
     }
 
-
-
+    else if (current_chain_to_highlight === null) {
+      // setInFocus(null)
+    }
 
   }, [
-
     current_chain_to_highlight,
     fullstruct_cache
   ])
 
 
-  const [value, setValue] = React.useState<number[]>([20, 37]);
-  const handleChange = (event: Event, newValue: number | number[]) => {
-    setValue(newValue as number[]);
+  useEffect(() => {
+    paintMolstarCanvas__debounced(residueRange)
+  }, [residueRange])
+
+  const paintMolstarCanvas = (resRange: number[]) => {
+    var selectSections = [
+      {
+        struct_asym_id: current_chain_to_highlight,
+        start_residue_number: resRange[0],
+        end_residue_number: resRange[1],
+        color: { r: 255, g: 0, b: 255 },
+        sideChain: true
+      },
+    ]
+    viewerInstance.visual.select({ data: selectSections, nonSelectedColor: { r: 180, g: 180, b: 180 } })
+  };
+  const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 2000)
+
+
+  const handleSliderChange = (event: Event, newvalue: number[]) => {
+    setResidueRange(newvalue as number[]);
+  }
+
+
+  const handleResRangeStart = (endVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setResidueRange([event.target.value === '' ? residueRange[9] : Number(event.target.value), endVal])
+  };
+
+  const handleResRangeEnd = (startVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setResidueRange([startVal, event.target.value === '' ? residueRange[1] : Number(event.target.value)])
   };
 
 
 
-  return (
-    <Card variant="outlined" style={{ display: "flex", flexDirection: "row", width: "maxWidth" }}>
-
-      <CardMedia
-        style={{ padding: "10px" }}
-        component="img"
-        alt={"image_of_the_ribosome"}
-        // height    = "150"
-        image={require('./../../static/protein_icon.png')} />
-      {/* Things to annotate here:
+  // @eslint-ignore
+  {/* Things to annotate here:
             
-                      asym_ids: (2) ['ED', 'FD']
-          auth_asym_id: "Z6"
-          entity_poly_entity_type: "polyribonucleotide"
-          entity_poly_polymer_type: "RNA"
-          entity_poly_seq_length: 3
-          entity_poly_seq_one_letter_code: "CC(PPU)"
-          entity_poly_seq_one_letter_code_can: "CCA"
-          entity_poly_strand_id: "Z6,Z8"
-          host_organism_ids: []
-          host_organism_names: []
-          ligand_like: false
-          nomenclature: []
-          parent_rcsb_id: "1VVJ"
-          rcsb_pdbx_description: "RNA (5'-R(*CP*CP*(PPU))-3')"
-          src_organism_ids: [32630]
-          src_organism_names: ['Synthetic']
-            
-            
+                      asym_ids                           : (2) ['ED', 'FD']
+                      auth_asym_id                       : "Z6"
+                      entity_poly_entity_type            : "polyribonucleotide"
+                      entity_poly_polymer_type           : "RNA"
+                      entity_poly_seq_length             : 3
+                      entity_poly_seq_one_letter_code    : "CC(PPU)"
+                      entity_poly_seq_one_letter_code_can: "CCA"
+                      entity_poly_strand_id              : "Z6,Z8"
+                      host_organism_ids                  : []
+                      host_organism_names                : []
+                      ligand_like                        : false
+                      nomenclature                       : []
+                      parent_rcsb_id                     : "1VVJ"
+                      rcsb_pdbx_description              : "RNA (5'-R(*CP*CP*(PPU))-3')"
+                      src_organism_ids                   : [32630]
+                      src_organism_names                 : ['Synthetic']
             */}
 
-      <Slider
-        style={{ width: "200px" }}
-        getAriaLabel={() => 'Chain XXX'}
-        value={value}
-        onChange={handleChange}
-        valueLabelDisplay="auto"
-      // getAriaValueText  = {valuetext}
+  return (
+    <Card variant="outlined" style={{ minWidth: "100%", height: "200px", display: "flex", flexDirection: "row" }}>
+
+      {/* 
+    
+      <CardMedia
+        style={{ margin:"10px", display:"flex",flexDirection:"column", alignItems:"center" }}
+        component="img"
+        alt={"subchain_icon"}
+        height="40px"
+        // width="60px"
+        image={nucleotide}
+
+      /> */}
+      <Box
+        component="img"
+        style={{ padding: "10px" }}
+        sx={{ height: "50%", }}
+        alt="Chain icon."
+        src={nucleotide}
       />
-      {/* <Grid item>
-          <Input
-            value={value}
-            size="small"
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            inputProps={{
-              step: 10,
-              min: 0,
-              max: 100,
-              type: 'number',
-              'aria-labelledby': 'input-slider',
+
+
+      <Grid
+
+        container
+        xs={12}
+        style={{ height: "100%", width: "100%" }}>
+        <Grid xs={12} item >
+
+          <Grid
+            container
+            direction  = "row"
+            justify    = "space-between"
+            alignItems = "center"
+            component  = "div"
+            style      = {{
+              fontSize: "12",
+              padding: "5px",
             }}
-          />
-        </Grid> */}
+          >
+            <Typography variant="body2" color="textSecondary" component="p" >
+              {currentChainFull?.entity_poly_polymer_type || " "}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p"  >
+              {currentChainFull?.nomenclature[0] as string || ""}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p" >
+              Chain {currentChainFull?.auth_asym_id || " "}
+            </Typography>
+          </Grid>
+
+          <Grid
+            container
+            style={{padding:"5px"}}
+            direction  = "column"
+            justify    = "flex-start"
+            alignItems = "flex-start"
+            component  = "div"
+          >
+            <CardBodyAnnotation keyname = {"Source Organism"} value = {truncate(currentChainFull?.src_organism_names[0]|| " ",50,50) } />
+            <CardBodyAnnotation keyname = {"Host Organism"} value   = {truncate(currentChainFull?.host_organism_names[0]|| " ",50,50) } />
+            <CardBodyAnnotation keyname = {"Description"} value     = {currentChainFull?.rcsb_pdbx_description || ""} />
+          </Grid>
+
+        </Grid>
+
+
+        <Grid xs={12} item
+        >
+          <Paper variant="outlined"
+            style={{
+              height: "70px", width: "100%", paddingBottom: "5px", paddingTop: "5px", paddingLeft: "10px", paddingRight: "10px"
+            }}>
+
+            <Grid container direction="row" xs={12} spacing={1} style={{ width: "100%", height: "50px" }} >
+              <Grid item xs={2}>
+                <TextField
+                  // style    = {{width:"50px"}}
+                  value={residueRange[0]}
+                  onChange={handleResRangeStart(residueRange[1])}
+                  id="outlined-number"
+                  label="StartResidue"
+                  fullWidth
+                  disabled={currentChainFull === null}
+                  type="number"
+                  InputLabelProps={{ style: { fontSize: 16 } }}
+                />
+              </Grid>
+
+              <Grid item xs={5} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Slider
+                  style={{ width: "100%" }}
+                  getAriaLabel={() => 'Chain XXX'}
+                  value={residueRange}
+                  disabled={currentChainFull === null}
+                  min={0}
+                  max={currentChainFull?.entity_poly_seq_length}
+                  // @ts-ignore
+                  onChange={handleSliderChange}
+                  valueLabelDisplay="auto"
+                // getAriaValueText  = {valuetext}
+                />
+              </Grid>
+
+              <Grid item xs={2}>
+                <TextField
+                  // style    = {{width:"50px"}}
+                  disabled={currentChainFull === null}
+                  value={residueRange[1]}
+                  onChange={handleResRangeEnd(residueRange[0])}
+                  id="outlined-number"
+                  fullWidth
+                  label="EndResidue"
+                  type="number"
+                  InputLabelProps={{
+                    shrink: true,
+                    style: { fontSize: 16 }
+                  }}
+                />
+
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+
+      </Grid>
+      {/* <Button
+       onClick={() => {
+        console.log(currentChainFull);
+        console.log("Trying to select ", currentChainFull?.auth_asym_id);
+
+        viewerInstance.visual.select({
+          data:
+            [{ struct_asym_id: currentChainFull?.auth_asym_id, color: { r: 255, g: 255, b: 0 }, focus: true }],
+          nonSelectedColor: { r: 180, g: 180, b: 180 }
+        })
+      }}> Focus</Button> */}
     </Card>
   );
 }
+
+
+
+
+
+
+
+
+
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
@@ -917,14 +1075,13 @@ const VisualizationPage = (props: any) => {
           </ListItem>
 
 
-          <ListItem>
-            {/* Currently selected */}
+          {/* <ListItem>
             {
               (() => {
                 switch (current_tab) {
                   case 'structure_tab':
 
-                    return 'this should be in the custom component'
+
 
                   case 'protein_tab':
                     return 'protein chain x'
@@ -933,7 +1090,7 @@ const VisualizationPage = (props: any) => {
                 }
               })()
             }
-          </ListItem>
+          </ListItem> */}
 
 
           <ListItem>
