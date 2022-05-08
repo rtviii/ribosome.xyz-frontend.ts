@@ -8,7 +8,7 @@ import Slider from                                                              
 import { connect, useDispatch, useSelector, useStore } from                                    "react-redux"                                                ;
 import { AppState } from                                                                       "../../../redux/store"                                       ;
 import { AppActions } from                                                                     "../../../redux/AppActions"                                  ;import LoadingSpinner from '../../Other/LoadingSpinner'
-import StructHero from                                                                         './../../../materialui/StructHero'
+import { StructHero } from                                                                         './../../../materialui/StructHero'
 import List from                                                                               '@material-ui/core/List'                                     ;
 import Typography from                                                                         '@material-ui/core/Typography'                               ;
 import ListItem from                                                                           '@material-ui/core/ListItem'                                 ;
@@ -154,7 +154,7 @@ const classes = useRxztheme();
             .slice(( prop.current_page-1 ) * 20, prop.current_page * 20 )
             .map((x, i) => (
               <Grid item>
-                <StructHero d={x} inCart={ cartStructs.includes(x.struct.rcsb_id) } key={i} />
+                <StructHero d={x} inCart={ cartStructs.includes(x.struct.rcsb_id) } key={i} topless={false}/>
               </Grid>
             ))}
         </Grid>

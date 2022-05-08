@@ -27,7 +27,6 @@ export interface RibosomeStructure {
   proteins : Protein[]       ;
   rnas     : RNA            [] | null;
   ligands  : Ligand          [] | null;
-
 }
 
 

@@ -4,12 +4,13 @@ import { Protein, ProteinClass, RibosomeStructure, RNA, RNAClass } from '../../R
 import { VisualizationActions } from './ActionTypes'
 
 
+// Each structure ought to have full chains represented
+
 export interface VisualizationReducerState {
 	component_tab: "rna_tab" | "protein_tab" | "structure_tab",
+	full_structure_cache: RibosomeStructure | null
 	structure_tab: {
-		fullStructProfile: RibosomeStructure | null,
-		// fullChainProfile : Protein | RNA | null,
-		// struct: NeoStruct | null,
+		structure: NeoStruct | null,
 		highlighted_chain: string | null
 	},
 	protein_tab: {
@@ -20,16 +21,14 @@ export interface VisualizationReducerState {
 		class: RNAClass | null,
 		parent: string | null
 	}
-
 }
 
 const init: VisualizationReducerState = {
 	component_tab: "structure_tab",
+	full_structure_cache: null,
 	structure_tab: {
-
-		// fullChainProfile: null,
-		fullStructProfile: null,
-		highlighted_chain: null,
+		structure: null,
+		highlighted_chain: null
 	},
 	protein_tab: {
 		class: null,
@@ -39,17 +38,17 @@ const init: VisualizationReducerState = {
 		class: null,
 		parent: null
 	}
-
 }
 
-
-export const coerce_full_structure_to_neostruct = (_: RibosomeStructure| null): NeoStruct |null => (_ === null ? null :{
+export const coerce_full_structure_to_neostruct = (_: RibosomeStructure | null): NeoStruct | null => (_ === null ? null : {
 	ligands: _.ligands !== null ? _.ligands.map(l => l.chemicalId) : [],
-	rnas   : _.rnas    !== null ? _.rnas   .map(r => {
+	rnas: _.rnas !== null ? _.rnas.map(r => {
 		return {
-			auth_asym_id                   : r.auth_asym_id                   ,
+			auth_asym_id: r.auth_asym_id,
 			entity_poly_seq_one_letter_code: r.entity_poly_seq_one_letter_code,
-			nomenclature                   : r.nomenclature}}) : [],
+			nomenclature: r.nomenclature
+		}
+	}) : [],
 	rps: _.proteins !== null ? _.proteins.map(rp => {
 		return {
 			'auth_asym_id': rp.auth_asym_id,
@@ -66,17 +65,30 @@ export const coerce_full_structure_to_neostruct = (_: RibosomeStructure| null): 
 export const VisualizationReducer = (
 	state: VisualizationReducerState = init,
 	action: VisualizationActions
+
 ): VisualizationReducerState => {
 	switch (action.type) {
 
-		case "COMPONENT_TAB_CHANGE":
+		case "UPDATE_CACHED_FULLSTRUCT":
+			return { ...state, full_structure_cache: action.nextcache }
 
+		case "STRUCTURE_CHANGE":  // this one is for selected...
+			if (action.structure === null) { return state }
+			else return {
+				...state,
+				structure_tab: {
+					highlighted_chain: action.highlighted_chain,
+					structure        : action.structure
+				}
+			}
+
+		case "COMPONENT_TAB_CHANGE":
 			return { ...state, component_tab: action.tab }
 
 		case "PROTEIN_CHANGE":
 			return {
 				...state, protein_tab: {
-					class: action.class,
+					class : action.class,
 					parent: action.parent
 				}
 			}
@@ -84,54 +96,17 @@ export const VisualizationReducer = (
 		case "RNA_CHANGE":
 			return {
 				...state, rna_tab: {
-					class: action.class,
+					class : action.class,
 					parent: action.parent
 				}
 			}
 
 		// this one is for the bigger state (with full rp & rna profiles). Dx yeah i know
-		// TODO <----------------- set structutre etc.
 		case "FETCH_FULL_STRUCT_ERR":
 			return state
 		case "FETCH_FULL_STRUCT_GO":
 			return state
-		case "FETCH_FULL_STRUCT_SUCCESS":
-			return {
-				...state,
-				structure_tab: {
-					fullStructProfile: action.struct,
-					highlighted_chain: state.structure_tab.highlighted_chain,
-					// struct           : coerce_full_structure_to_neostruct( action.struct )
-				}
-			}
 
-		// case "STRUCTURE_CHANGE":  // this one is for selected...
-
-		// 	if (action.structure === null) {
-		// 		return {
-		// 			...state,
-		// 			structure_tab: {
-		// 				highlighted_chain: null,
-		// 				// struct: null,
-		// 				// fullChainProfile: null,
-		// 				fullStructProfile: null
-
-		// 			}
-
-		// 		}
-		// 	}
-		// 	else {
-
-		// 		return {
-		// 			...state,
-		// 			structure_tab: {
-		// 				highlighted_chain: action.highlighted_chain,
-		// 				struct: action.structure,
-		// 				// fullChainProfile : null,                       // <-------
-		// 				fullStructProfile: null                        // <-------
-		// 			}
-		// 		}
-		// 	}
 		default:
 			return state
 	};

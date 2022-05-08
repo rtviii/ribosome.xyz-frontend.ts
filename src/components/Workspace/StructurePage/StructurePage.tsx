@@ -44,6 +44,7 @@ import { cart_add_item } from "../../../redux/reducers/Cart/ActionTypes";
 import { RNAProfile } from "../../../redux/DataInterfaces";
 import { Cart } from "../Cart/Cart";
 import { _StructuresReducer } from "../../../redux/reducers/StructuresReducer/StructuresReducer";
+import { log } from "console";
 
 export const CardBodyAnnotation = ({ keyname, value, onClick }: { keyname: string, onClick?: any, value: string | string[] | number }) => {
 
@@ -315,7 +316,7 @@ export type GetStructResponseShape = {
   structure: RibosomeStructure;
   ligands  : Ligand[];
   rnas     : RNA[];
-  rps      : Protein[];
+  proteins      : Protein[];
 };
 const StructurePage = () => {
 
@@ -335,29 +336,28 @@ const StructurePage = () => {
   useEffect(() => {
     getNeo4jData("neo4j", {
       endpoint: "get_struct",
-      params: { pdbid: pdbid },
+      params  : { pdbid: pdbid },
     }).then(
       resp => {
-        const respdat: GetStructResponseShape = flattenDeep(
-          resp.data
-        )[0] as GetStructResponseShape;
+
+        const respdat: GetStructResponseShape = flattenDeep(resp.data)[0] as GetStructResponseShape;
+        console.log("indeed received response", respdat)
         if (respdat === undefined) {
           history.push('/structs')
           return
         }
         setstruct(respdat.structure);
-        setprots(respdat.rps);
+        setprots(respdat.proteins);
         setrrnas(respdat.rnas);
         setligands(respdat.ligands);
 
       },
-
       err => {
         console.log("Got error on /neo request", err);
       }
     );
 
-  }, [pdbid]);
+  }, [pdbid, history]);
 
   const [lsu, setlsu] = useState<Protein[]>([])
   const [ssu, setssu] = useState<Protein[]>([])
@@ -367,6 +367,8 @@ const StructurePage = () => {
 
   useEffect(() => {
 
+    console.log("Filtering protdata ", protdata);
+    
     var lsu = protdata.filter(x => x.nomenclature.length === 1 && flattenDeep(x.nomenclature.map(name => { return name.match(/L/) })).includes('L'))
     var ssu = protdata.filter(x => x.nomenclature.length === 1 && flattenDeep(x.nomenclature.map(name => { return name.match(/S/) })).includes('S'))
     var other = protdata.filter(x => ![...lsu, ...ssu].includes(x))
