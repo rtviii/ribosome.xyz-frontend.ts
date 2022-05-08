@@ -153,7 +153,6 @@ export const ChainParentPill = ({ strand_id, parent_id }: { strand_id: string, p
           structdata ?
             <Card className={classes.card}
               onMouseLeave={handlePopoverClose}
-
             >
               <CardHeader
                 style={{ cursor: "pointer" }}
@@ -405,13 +404,13 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
             <Grid item>
 
             <Button
-              variant="outlined"
-            className={classes.actionButton}
-
-              style={{ textTransform: "none" }}
-              aria-describedby={id} onClick={handleClick}>
+              variant          = "outlined"
+              className        = {classes.actionButton}
+              style            = {{ textTransform: "none" }}
+              aria-describedby = {id} onClick = {handleClick}>
               Sequence ({prop.protein.entity_poly_seq_length}AAs)
             </Button>
+
             </Grid>
             <Grid item>
 

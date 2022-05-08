@@ -15,8 +15,10 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
+import ExtensionIcon from '@mui/icons-material/Extension';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { SvgIcon } from "@material-ui/core";
 import Box from '@mui/material/Box';
 import MuiInput from '@mui/material/Input';
 import Slider from '@mui/material/Slider';
@@ -37,9 +39,14 @@ import { AppState, store } from '../../redux/store';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
 import { StructHeroVertical, CardBodyAnnotation } from "./../../materialui/StructHero";
 import nucleotide from './../../static/nucleotide.png'
+import ContentCutIcon from '@mui/icons-material/ContentCut';
+import SearchIcon from '@mui/icons-material/Search';
 import { Protein, RNA } from "../../redux/RibosomeTypes";
 import _ from "lodash";
 import { truncate } from "../Main";
+import cut from './../../static/cut.svg'
+import search from './../../static/search.svg'
+import sequence from './../../static/sequence.svg'
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
 
@@ -401,46 +408,45 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
   }
 
   return (
-    <Paper style={{ width: "100%" }}>
-      <Grid>
-        {
-          (() => {
-            if (id === null) {
-              return <Button disabled={true}> Download Selected </Button>
+    // <Paper style={{ width: "100%" }}>
+    <Grid style={{ width: "100%" }}>
+      {
+        (() => {
+          if (id === null) {
+            return <Button disabled={true}> Download Selected </Button>
+          }
+          else {
+            switch (elemtype) {
+              case 'protein':
+                return <Button fullWidth size="small" variant="outlined" color='primary' style={{ marginRight: "5px" }} onClick={() => download_elem()} >
+
+                  <FileDownloadIcon />
+                  <Typography>Protein {id} in {parent} </Typography>
+                </Button>
+              case 'rna':
+                return <Button fullWidth size="small" variant="outlined" color='primary' style={{ marginRight: "5px" }} onClick={() => download_elem()} >
+                  <FileDownloadIcon />
+
+                  <Typography>RNA {id} in {parent}</Typography>
+                </Button>
+              case 'structure':
+                return null
+
+              // return <Button fullWidth size="small" variant="outlined" color='primary' style={{ marginRight: "5px" }} onClick={() => download_elem()} >
+
+              //   <FileDownloadIcon />
+              //   <Typography>Structure {id} </Typography>
+              // </Button>
             }
-            else {
-              switch (elemtype) {
-                case 'protein':
-                  return <Button fullWidth size="small" color='primary' style={{ marginRight: "5px" }} onClick={() => download_elem()} >
-
-                    <FileDownloadIcon />
-                    <Typography>Protein {id} in {parent} </Typography>
-                  </Button>
-                case 'rna':
-                  return <Button fullWidth size="small" color='primary' style={{ marginRight: "5px" }} onClick={() => download_elem()} >
-                    <FileDownloadIcon />
-
-                    <Typography>RNA {id} in {parent}</Typography>
-                  </Button>
-                case 'structure':
-
-                  return <Button fullWidth size="small" color='primary' style={{ marginRight: "5px" }} onClick={() => download_elem()} >
-
-                    <FileDownloadIcon />
-                    <Typography>Structure {id} </Typography>
-                  </Button>
-              }
-            }
-          })()
-        }
-      </Grid>
-    </Paper>
+          }
+        })()
+      }
+    </Grid>
+    // </Paper>
   )
 }
 
 // --------------------------------------------------------------------------------------------------
-
-
 
 
 const ChainHighlightSlider = () => {
@@ -489,10 +495,6 @@ const ChainHighlightSlider = () => {
   ])
 
 
-  useEffect(() => {
-    paintMolstarCanvas__debounced(residueRange)
-  }, [residueRange])
-
   const paintMolstarCanvas = (resRange: number[]) => {
     var selectSections = [
       {
@@ -500,12 +502,14 @@ const ChainHighlightSlider = () => {
         start_residue_number: resRange[0],
         end_residue_number: resRange[1],
         color: { r: 255, g: 0, b: 255 },
-        sideChain: true
+        sideChain: true,
+        focus:true
       },
+
     ]
     viewerInstance.visual.select({ data: selectSections, nonSelectedColor: { r: 180, g: 180, b: 180 } })
   };
-  const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 2000)
+  const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 300)
 
 
   const handleSliderChange = (event: Event, newvalue: number[]) => {
@@ -514,183 +518,169 @@ const ChainHighlightSlider = () => {
 
 
   const handleResRangeStart = (endVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setResidueRange([event.target.value === '' ? residueRange[9] : Number(event.target.value), endVal])
+    const numeric = event.target.value.replace( /^\D+/g, '');
+    setResidueRange([numeric.toString() === '' ? residueRange[9] : Number(numeric), endVal])
   };
 
   const handleResRangeEnd = (startVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setResidueRange([startVal, event.target.value === '' ? residueRange[1] : Number(event.target.value)])
+    const numeric = event.target.value.replace( /^\D+/g, '');
+    setResidueRange([startVal, numeric.toString()  === '' ? residueRange[1] : Number(numeric)])
   };
 
 
+  const handleSearchRange = () => {
 
-  // @eslint-ignore
-  {/* Things to annotate here:
-            
-                      asym_ids                           : (2) ['ED', 'FD']
-                      auth_asym_id                       : "Z6"
-                      entity_poly_entity_type            : "polyribonucleotide"
-                      entity_poly_polymer_type           : "RNA"
-                      entity_poly_seq_length             : 3
-                      entity_poly_seq_one_letter_code    : "CC(PPU)"
-                      entity_poly_seq_one_letter_code_can: "CCA"
-                      entity_poly_strand_id              : "Z6,Z8"
-                      host_organism_ids                  : []
-                      host_organism_names                : []
-                      ligand_like                        : false
-                      nomenclature                       : []
-                      parent_rcsb_id                     : "1VVJ"
-                      rcsb_pdbx_description              : "RNA (5'-R(*CP*CP*(PPU))-3')"
-                      src_organism_ids                   : [32630]
-                      src_organism_names                 : ['Synthetic']
-            */}
+    paintMolstarCanvas__debounced(residueRange)
+    console.log("Searching range");
 
+  }
   return (
-    <Card variant="outlined" style={{ minWidth: "100%", height: "200px", display: "flex", flexDirection: "row" }}>
-
-      {/* 
-    
-      <CardMedia
-        style={{ margin:"10px", display:"flex",flexDirection:"column", alignItems:"center" }}
-        component="img"
-        alt={"subchain_icon"}
-        height="40px"
-        // width="60px"
-        image={nucleotide}
-
-      /> */}
-      <Box
-        component="img"
-        style={{ padding: "10px" }}
-        sx={{ height: "50%", }}
-        alt="Chain icon."
-        src={nucleotide}
-      />
+    <Card variant="outlined" style={{ minWidth: "100%", height: "maxContent", display: "flex", flexDirection: "row" }}>
 
 
-      <Grid
+      <Grid container >
 
-        container
-        xs={12}
-        style={{ height: "100%", width: "100%" }}>
-        <Grid xs={12} item >
+        <Grid container direction={"column"} item spacing={2} xs={3} style={{ padding: "10px" }} >
 
-          <Grid
-            container
-            direction  = "row"
-            justify    = "space-between"
-            alignItems = "center"
-            component  = "div"
-            style      = {{
-              fontSize: "12",
-              padding: "5px",
-            }}
-          >
-            <Typography variant="body2" color="textSecondary" component="p" >
-              {currentChainFull?.entity_poly_polymer_type || " "}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p"  >
-              {currentChainFull?.nomenclature[0] as string || ""}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p" >
-              Chain {currentChainFull?.auth_asym_id || " "}
-            </Typography>
+          <Grid item xs={4}>
+            <Paper variant="elevation" elevation={2}
+
+              id="dashboard-icon"
+              style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
+              <ExtensionIcon style={{ width: "50px", height: "50px" }} />
+            </Paper>
           </Grid>
 
-          <Grid
-            container
-            style={{padding:"5px"}}
-            direction  = "column"
-            justify    = "flex-start"
-            alignItems = "flex-start"
-            component  = "div"
-          >
-            <CardBodyAnnotation keyname = {"Source Organism"} value = {truncate(currentChainFull?.src_organism_names[0]|| " ",50,50) } />
-            <CardBodyAnnotation keyname = {"Host Organism"} value   = {truncate(currentChainFull?.host_organism_names[0]|| " ",50,50) } />
-            <CardBodyAnnotation keyname = {"Description"} value     = {currentChainFull?.rcsb_pdbx_description || ""} />
+          <Grid item xs={4}>
+            <Paper variant="elevation" elevation={2}
+
+              id="dashboard-icon"
+              style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
+
+              <SearchIcon onClick={handleSearchRange} style={{ width: "50px", height: "50px" }} />
+
+            </Paper>
           </Grid>
+
+          <Grid item xs={4}>
+            <Paper variant="elevation" elevation={2}
+
+              id="dashboard-icon"
+              style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
+              <ContentCutIcon
+                style={{ width: "50px", height: "50px" }}
+              />
+            </Paper>
+          </Grid>
+
 
         </Grid>
 
+        <Grid container xs={9} style={{ height: "100%", width: "100%" }}>
 
-        <Grid xs={12} item
-        >
-          <Paper variant="outlined"
-            style={{
-              height: "70px", width: "100%", paddingBottom: "5px", paddingTop: "5px", paddingLeft: "10px", paddingRight: "10px"
-            }}>
+          <Grid xs={12} item >
 
-            <Grid container direction="row" xs={12} spacing={1} style={{ width: "100%", height: "50px" }} >
-              <Grid item xs={2}>
-                <TextField
-                  // style    = {{width:"50px"}}
-                  value={residueRange[0]}
-                  onChange={handleResRangeStart(residueRange[1])}
-                  id="outlined-number"
-                  label="StartResidue"
-                  fullWidth
-                  disabled={currentChainFull === null}
-                  type="number"
-                  InputLabelProps={{ style: { fontSize: 16 } }}
-                />
-              </Grid>
-
-              <Grid item xs={5} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Slider
-                  style={{ width: "100%" }}
-                  getAriaLabel={() => 'Chain XXX'}
-                  value={residueRange}
-                  disabled={currentChainFull === null}
-                  min={0}
-                  max={currentChainFull?.entity_poly_seq_length}
-                  // @ts-ignore
-                  onChange={handleSliderChange}
-                  valueLabelDisplay="auto"
-                // getAriaValueText  = {valuetext}
-                />
-              </Grid>
-
-              <Grid item xs={2}>
-                <TextField
-                  // style    = {{width:"50px"}}
-                  disabled={currentChainFull === null}
-                  value={residueRange[1]}
-                  onChange={handleResRangeEnd(residueRange[0])}
-                  id="outlined-number"
-                  fullWidth
-                  label="EndResidue"
-                  type="number"
-                  InputLabelProps={{
-                    shrink: true,
-                    style: { fontSize: 16 }
-                  }}
-                />
-
-              </Grid>
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
+              component="div"
+              style={{
+                fontSize: "12",
+                padding: "5px",
+              }}
+            >
+              <Typography variant="body2" color="textSecondary" component="p" >
+                {currentChainFull?.entity_poly_polymer_type || " "}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p"  >
+                {currentChainFull?.nomenclature[0] as string || ""}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p" >
+                Chain {currentChainFull?.auth_asym_id || " "}
+              </Typography>
             </Grid>
-          </Paper>
+
+            <Grid
+              container
+              style={{ padding: "5px" }}
+              direction="column"
+              justify="flex-start"
+              alignItems="flex-start"
+              component="div"
+            >
+              <CardBodyAnnotation keyname={"Source Organism"} value={truncate(currentChainFull?.src_organism_names[0] || " ", 50, 50)} />
+              <CardBodyAnnotation keyname={"Host Organism"} value={truncate(currentChainFull?.host_organism_names[0] || " ", 50, 50)} />
+              <CardBodyAnnotation keyname={"Description"} value={currentChainFull?.rcsb_pdbx_description || ""} />
+            </Grid>
+
+          </Grid>
+
+
+          <Grid xs={12} item
+          >
+            <Paper variant="outlined"
+              style={{
+                height: "70px", width: "100%", paddingBottom: "5px", paddingTop: "5px", paddingLeft: "10px", paddingRight: "10px"
+              }}>
+
+              <Grid container direction="row" xs={12} spacing={1} style={{ width: "100%", height: "50px" }} >
+                <Grid item xs={3}>
+                  <TextField
+                    // style    = {{width:"50px"}}
+                    value={residueRange[0]}
+                    onChange={handleResRangeStart(residueRange[1])}
+                    id="outlined-number"
+                    label           = { `Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}` }
+                    fullWidth
+                    disabled={currentChainFull === null}
+                    type="number"
+                    InputLabelProps={{ style: { fontSize: 16 } }}
+                  />
+                </Grid>
+
+                <Grid item xs={6} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "10px", }}>
+                  <Slider
+                    style={{ width: "100%" }}
+                    getAriaLabel={() => 'Chain XXX'}
+                    value={residueRange}
+                    disabled={currentChainFull === null}
+                    min={0}
+                    max={currentChainFull?.entity_poly_seq_length}
+                    // @ts-ignore
+                    onChange={handleSliderChange}
+                    valueLabelDisplay="auto"
+                  // getAriaValueText  = {valuetext}
+                  />
+                </Grid>
+
+                <Grid item xs={3}>
+                  <TextField
+                    // style    = {{width:"50px"}}
+                    disabled = {currentChainFull === null}
+                    value    = {residueRange[1]}
+                    onChange = {handleResRangeEnd(residueRange[0])}
+                    id       = "ou2tlined-number"
+                    fullWidth
+                    label           = { `Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[1]-1]}` }
+                    type            = "number"
+                    InputLabelProps = {{
+                      shrink: true,
+                      style: { fontSize: 16 }
+                    }}
+                  />
+
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+
         </Grid>
-
       </Grid>
-      {/* <Button
-       onClick={() => {
-        console.log(currentChainFull);
-        console.log("Trying to select ", currentChainFull?.auth_asym_id);
-
-        viewerInstance.visual.select({
-          data:
-            [{ struct_asym_id: currentChainFull?.auth_asym_id, color: { r: 255, g: 255, b: 0 }, focus: true }],
-          nonSelectedColor: { r: 180, g: 180, b: 180 }
-        })
-      }}> Focus</Button> */}
     </Card>
   );
 }
-
-
-
-
-
-
 
 
 

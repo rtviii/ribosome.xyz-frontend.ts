@@ -23,7 +23,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 const verticalStyle = makeStyles({
   card: {
-    width: 300
+    width: 300,
+    "&:hover, &:focus": {
+      outline: '1px solid black'
+    },
   },
   title: {
     fontSize: 14,
@@ -68,10 +71,10 @@ export const StructHero = ({ d, inCart, topless }: { d: NeoStruct, inCart: boole
   const dispatch = useDispatch()
 
   return (
-    <Card className={classes.card} >
-
+    <Card className={classes.card} id={`struct-hero-${d.struct.rcsb_id}`}variant='outlined' style={{}}>
       <CardActionArea >
         <CardContent onClick={() => { history.push(`/structs/${d.struct.rcsb_id}`) }}>
+
 
           <CardMedia
             component="img"
