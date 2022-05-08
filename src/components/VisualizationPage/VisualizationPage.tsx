@@ -42,11 +42,12 @@ import nucleotide from './../../static/nucleotide.png'
 import ContentCutIcon from '@mui/icons-material/ContentCut';
 import SearchIcon from '@mui/icons-material/Search';
 import { Protein, RNA } from "../../redux/RibosomeTypes";
-import _ from "lodash";
+import _, { chain } from "lodash";
 import { truncate } from "../Main";
 import cut from './../../static/cut.svg'
 import search from './../../static/search.svg'
 import sequence from './../../static/sequence.svg'
+import { log } from "console";
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
 
@@ -90,10 +91,10 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   // useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))
 
-  const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const current_neostruct: NeoStruct | null       = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
-  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
-  const { addToast } = useToasts();
+  const structs                                   = useSelector((state: AppState) => state.structures.derived_filtered)
+  const { addToast }                              = useToasts();
 
 
 
@@ -116,27 +117,25 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, selected_chain: any) => {
 
-
-
     // get current structure because arguments and functions here are poorly written.
-    const curstate = store.getState()
+    const curstate  = store.getState()
     const curstruct = curstate.visualization.structure_tab.structure
-    dispatch(struct_change(selected_chain.props.value, curstruct))
+    console.log("Passing args to struct_change dispatch", selected_chain.props.value, curstruct);
+    
 
+    dispatch(struct_change(selected_chain.props.value, curstruct))
 
     viewerInstance.visual.select(
       {
         data: [{
           auth_asym_id: selected_chain.props.value,
-          color: { r: 50, g: 50, b: 255 }, focus: true
-        }]
-        , nonSelectedColor: { r: 180, g: 180, b: 180 }
+          color:
+ { r: 50, g: 50, b: 255 }, 
+          focus: true
+        }], nonSelectedColor: { r: 180, g: 180, b: 180 }
       }
     )
-
-
   }
-
 
   return (
     <>
@@ -162,13 +161,10 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
       {/* list item for highlighted_chain */}
       <ListItem>
-
-
-
         <Tooltip disableHoverListener={current_chain_to_highlight === null} title={
           <>
-            <div>"chain x" </div>
-            <div>"nasym_id y"</div>
+            <div> auth_asym_id : {current_chain_to_highlight} </div>
+            <div> chain_id    : {                          } </div>
           </>
         }>
 
@@ -177,9 +173,9 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
             style={{ width: "100%" }}>
             <InputLabel> {current_neostruct === null ? "Select a structure.." : "Highlight Chain"}</InputLabel>
             <Select
-              value={current_chain_to_highlight}
-              onChange={handleSelectHighlightChain}
-              disabled={current_neostruct === null}
+              value   ={current_chain_to_highlight         }
+              onChange={handleSelectHighlightChain         }
+              disabled={current_neostruct          === null}
               // @ts-ignore
               renderValue={(value: undefined) => {
 
@@ -196,7 +192,9 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
                 ? null
                 : [...current_neostruct.rnas, ...current_neostruct.rps.sort(nomenclatureCompareFn),]
                   .map((chain) =>
-                    <MenuItem value={chain.auth_asym_id}>{chain.nomenclature && chain.nomenclature.length > 0 ? chain.nomenclature[0] : "Unclassified Polymer"}</MenuItem>)
+                    <MenuItem value={chain.auth_asym_id}>
+                      {chain.nomenclature && chain.nomenclature.length > 0 ? chain.nomenclature[0] : "Unclassified Polymer"}
+                    </MenuItem>)
               }
             </Select>
           </FormControl>
@@ -459,7 +457,7 @@ const ChainHighlightSlider = () => {
 
   // const [inFocus, setInFocus] = React.useState<Protein | RNA | null>(null)
   const [residueRange, setResidueRange] = React.useState<number[]>([0, 1]);
-  const setResidueRange__debounced = _.debounce(setResidueRange, 2000)
+  // const setResidueRange__debounced = _.debounce(setResidueRange, 2000)
 
 
   useEffect(() => {
@@ -495,22 +493,32 @@ const ChainHighlightSlider = () => {
   ])
 
 
-  const paintMolstarCanvas = (resRange: number[]) => {
-    var selectSections = [
+  const paintMolstarCanvas = (resRange: number[], chain_to_highlight:string) => {
+    var selectSections = 
       {
-        struct_asym_id: current_chain_to_highlight,
+        instance_id         : 'ASM_1',
+        auth_asym_id        : chain_to_highlight,
         start_residue_number: resRange[0],
-        end_residue_number: resRange[1],
-        color: { r: 255, g: 0, b: 255 },
-        sideChain: true,
-        focus:true
-      },
-
-    ]
-    viewerInstance.visual.select({ data: selectSections, nonSelectedColor: { r: 180, g: 180, b: 180 } })
+        end_residue_number  : resRange[1],
+        color               : { r: 255, g: 255, b: 255 },
+        focus               : true
+      }
+      // console.log("got select params options", selectSections);
+      
+    // viewerInstance.visual.select({ data: selectSections, nonSelectedColor: { r: 180, g: 180, b: 180 } })
+    // { data: [{ struct_asym_id: 'B', start_residue_number: 1, end_residue_number: 6, color:{r:255,g:255,b:0}, focus: true }]}
+    viewerInstance.visual.select({ data: [selectSections], nonSelectedColor: { r: 50, g: 50, b: 50 } 
+    })
   };
-  const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 300)
 
+  // const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 300)
+
+  const handleSearchRange = () => {
+    if ( current_chain_to_highlight === null ) {window.alert('Chain to highlight is null. Provide asym_id to paint.'); return} 
+    paintMolstarCanvas(residueRange, current_chain_to_highlight)
+    console.log(`Target asym_id: ${current_chain_to_highlight}. Searching range: [${residueRange}]`)
+
+  }
 
   const handleSliderChange = (event: Event, newvalue: number[]) => {
     setResidueRange(newvalue as number[]);
@@ -528,12 +536,7 @@ const ChainHighlightSlider = () => {
   };
 
 
-  const handleSearchRange = () => {
 
-    paintMolstarCanvas__debounced(residueRange)
-    console.log("Searching range");
-
-  }
   return (
     <Card variant="outlined" style={{ minWidth: "100%", height: "maxContent", display: "flex", flexDirection: "row" }}>
 
