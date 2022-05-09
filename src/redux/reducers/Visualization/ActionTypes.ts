@@ -102,12 +102,7 @@ export const cache_full_struct = (
 
 
 	return async (dispatch: Dispatch<VisualizationActions>) => {
-		console.log(`Executing async cache. got structid :${struct_id_to_cache} `)
-		console.log("requesting a new full struct", struct_id_to_cache);
-
 		dispatch({ type: FETCH_FULL_STRUCT_GO })
-
-
 		// getNeo4jData('neo4j', { endpoint: 'get_full_struct', params: { pdbid: struct_id_to_cache } })
 
 		getNeo4jData("neo4j", {

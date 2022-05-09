@@ -41,6 +41,7 @@ import { StructHeroVertical, CardBodyAnnotation } from "./../../materialui/Struc
 import nucleotide from './../../static/nucleotide.png'
 import ContentCutIcon from '@mui/icons-material/ContentCut';
 import SearchIcon from '@mui/icons-material/Search';
+import AutofpsSelectIcon from '@mui/icons-material/AutofpsSelect';
 import { Protein, RNA } from "../../redux/RibosomeTypes";
 import _, { chain } from "lodash";
 import { truncate } from "../Main";
@@ -48,6 +49,7 @@ import cut from './../../static/cut.svg'
 import search from './../../static/search.svg'
 import sequence from './../../static/sequence.svg'
 import { log } from "console";
+import './VisualizationPage.css'
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
 
@@ -91,10 +93,10 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   // useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))
 
-  const current_neostruct: NeoStruct | null       = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
-  const structs                                   = useSelector((state: AppState) => state.structures.derived_filtered)
-  const { addToast }                              = useToasts();
+  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
+  const { addToast } = useToasts();
 
 
 
@@ -103,14 +105,20 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     dispatch(cache_full_struct(selected_neostruct && selected_neostruct?.struct.rcsb_id))
     dispatch(struct_change(null, selected_neostruct))
 
-    if (selected_neostruct !== null) {
-      addToast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`,
-        {
-          appearance: 'info',
-          autoDismiss: true,
-        })
 
-      viewerInstance.visual.update({ moleculeId: selected_neostruct.struct.rcsb_id.toLowerCase() });
+
+
+    if (selected_neostruct !== null) {
+      addToast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`, { appearance: 'info', autoDismiss: true, })
+
+
+      // viewer params : https://github.com/molstar/pdbe-molstar/wiki/1.-PDBe-Molstar-as-JS-plugin#plugin-parameters-options
+      const viewerParams = {
+        moleculeId: selected_neostruct.struct.rcsb_id.toLowerCase(),
+        assemblyId: "1"
+      }
+
+      viewerInstance.visual.update(viewerParams);
 
     }
   };
@@ -118,10 +126,10 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, selected_chain: any) => {
 
     // get current structure because arguments and functions here are poorly written.
-    const curstate  = store.getState()
+    const curstate = store.getState()
     const curstruct = curstate.visualization.structure_tab.structure
     console.log("Passing args to struct_change dispatch", selected_chain.props.value, curstruct);
-    
+
 
     dispatch(struct_change(selected_chain.props.value, curstruct))
 
@@ -130,7 +138,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
         data: [{
           auth_asym_id: selected_chain.props.value,
           color:
- { r: 50, g: 50, b: 255 }, 
+            { r: 50, g: 50, b: 255 },
           focus: true
         }], nonSelectedColor: { r: 180, g: 180, b: 180 }
       }
@@ -164,7 +172,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
         <Tooltip disableHoverListener={current_chain_to_highlight === null} title={
           <>
             <div> auth_asym_id : {current_chain_to_highlight} </div>
-            <div> chain_id    : {                          } </div>
+            <div> chain_id    : { } </div>
           </>
         }>
 
@@ -173,9 +181,9 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
             style={{ width: "100%" }}>
             <InputLabel> {current_neostruct === null ? "Select a structure.." : "Highlight Chain"}</InputLabel>
             <Select
-              value   ={current_chain_to_highlight         }
-              onChange={handleSelectHighlightChain         }
-              disabled={current_neostruct          === null}
+              value={current_chain_to_highlight}
+              onChange={handleSelectHighlightChain}
+              disabled={current_neostruct === null}
               // @ts-ignore
               renderValue={(value: undefined) => {
 
@@ -493,28 +501,29 @@ const ChainHighlightSlider = () => {
   ])
 
 
-  const paintMolstarCanvas = (resRange: number[], chain_to_highlight:string) => {
-    var selectSections = 
-      {
-        instance_id         : 'ASM_1',
-        auth_asym_id        : chain_to_highlight,
-        start_residue_number: resRange[0],
-        end_residue_number  : resRange[1],
-        color               : { r: 255, g: 255, b: 255 },
-        focus               : true
-      }
-      // console.log("got select params options", selectSections);
-      
+  const paintMolstarCanvas = (resRange: number[], chain_to_highlight: string) => {
+    var selectSections =
+    {
+      instance_id: 'ASM_1',
+      auth_asym_id: chain_to_highlight,
+      start_residue_number: resRange[0],
+      end_residue_number: resRange[1],
+      color: { r: 255, g: 255, b: 255 },
+      focus: true
+    }
+    // console.log("got select params options", selectSections);
+
     // viewerInstance.visual.select({ data: selectSections, nonSelectedColor: { r: 180, g: 180, b: 180 } })
     // { data: [{ struct_asym_id: 'B', start_residue_number: 1, end_residue_number: 6, color:{r:255,g:255,b:0}, focus: true }]}
-    viewerInstance.visual.select({ data: [selectSections], nonSelectedColor: { r: 50, g: 50, b: 50 } 
+    viewerInstance.visual.select({
+      data: [selectSections], nonSelectedColor: { r: 50, g: 50, b: 50 }
     })
   };
 
   // const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 300)
 
   const handleSearchRange = () => {
-    if ( current_chain_to_highlight === null ) {window.alert('Chain to highlight is null. Provide asym_id to paint.'); return} 
+    if (current_chain_to_highlight === null) { window.alert('Chain to highlight is null. Provide asym_id to paint.'); return }
     paintMolstarCanvas(residueRange, current_chain_to_highlight)
     console.log(`Target asym_id: ${current_chain_to_highlight}. Searching range: [${residueRange}]`)
 
@@ -526,13 +535,13 @@ const ChainHighlightSlider = () => {
 
 
   const handleResRangeStart = (endVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const numeric = event.target.value.replace( /^\D+/g, '');
+    const numeric = event.target.value.replace(/^\D+/g, '');
     setResidueRange([numeric.toString() === '' ? residueRange[9] : Number(numeric), endVal])
   };
 
   const handleResRangeEnd = (startVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const numeric = event.target.value.replace( /^\D+/g, '');
-    setResidueRange([startVal, numeric.toString()  === '' ? residueRange[1] : Number(numeric)])
+    const numeric = event.target.value.replace(/^\D+/g, '');
+    setResidueRange([startVal, numeric.toString() === '' ? residueRange[1] : Number(numeric)])
   };
 
 
@@ -546,29 +555,23 @@ const ChainHighlightSlider = () => {
         <Grid container direction={"column"} item spacing={2} xs={3} style={{ padding: "10px" }} >
 
           <Grid item xs={4}>
-            <Paper variant="elevation" elevation={2}
-
-              id="dashboard-icon"
+            <Paper variant="outlined" elevation={2}
+              id='outlined-interact'
               style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
-              <ExtensionIcon style={{ width: "50px", height: "50px" }} />
+              {/* <ExtensionIcon style={{ width: "50px", height: "50px" }} /> */}
+              <AutofpsSelectIcon style={{ width: "50px", height: "50px" }} />
             </Paper>
           </Grid>
 
-          <Grid item xs={4}>
-            <Paper variant="elevation" elevation={2}
-
-              id="dashboard-icon"
-              style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
-
+          <Grid item xs={4} >
+            <Paper variant="outlined" elevation={2} id='outlined-interact' style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
               <SearchIcon onClick={handleSearchRange} style={{ width: "50px", height: "50px" }} />
-
             </Paper>
           </Grid>
 
           <Grid item xs={4}>
-            <Paper variant="elevation" elevation={2}
-
-              id="dashboard-icon"
+            <Paper variant="outlined" elevation={2}
+              id='outlined-interact'
               style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
               <ContentCutIcon
                 style={{ width: "50px", height: "50px" }}
@@ -635,7 +638,7 @@ const ChainHighlightSlider = () => {
                     value={residueRange[0]}
                     onChange={handleResRangeStart(residueRange[1])}
                     id="outlined-number"
-                    label           = { `Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}` }
+                    label={`Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}`}
                     fullWidth
                     disabled={currentChainFull === null}
                     type="number"
@@ -661,14 +664,14 @@ const ChainHighlightSlider = () => {
                 <Grid item xs={3}>
                   <TextField
                     // style    = {{width:"50px"}}
-                    disabled = {currentChainFull === null}
-                    value    = {residueRange[1]}
-                    onChange = {handleResRangeEnd(residueRange[0])}
-                    id       = "ou2tlined-number"
+                    disabled={currentChainFull === null}
+                    value={residueRange[1]}
+                    onChange={handleResRangeEnd(residueRange[0])}
+                    id="ou2tlined-number"
                     fullWidth
-                    label           = { `Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[1]-1]}` }
-                    type            = "number"
-                    InputLabelProps = {{
+                    label={`Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[1] - 1]}`}
+                    type="number"
+                    InputLabelProps={{
                       shrink: true,
                       style: { fontSize: 16 }
                     }}
@@ -772,9 +775,15 @@ const VisualizationPage = (props: any) => {
   // const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => _.flattenDeep(Object.values(state.proteins.ban_classes)))
 
   const selectStruct = (rcsb_id: string) => {
-    viewerInstance.visual.update({
-      moleculeId: rcsb_id.toLowerCase()
-    });
+    // https://github.com/molstar/pdbe-molstar/wiki/1.-PDBe-Molstar-as-JS-plugin#plugin-parameters-options
+    console.log("Selecting struct with params");
+
+    const viewerParams = {
+      moleculeId: rcsb_id.toLowerCase(),
+      assemblyId: 'ASM_1'
+    }
+
+    viewerInstance.visual.update(viewerParams);
 
   }
   const getCifChainByClass = (banclass: string, parent_struct: string) => {
