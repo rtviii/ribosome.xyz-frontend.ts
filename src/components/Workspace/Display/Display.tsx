@@ -5,11 +5,10 @@ import WorkspaceCatalogue from                      "./StructuresCatalogue"     
 import StructurePage from                           "./../StructurePage/StructurePage"           ;
 import RPPage from                                  "./../RibosomalProteins/RPPage"              ;
 import RPsCatalogue from                            "./../RibosomalProteins/RPsCatalogue"        ;
-import LigandCatalogue from                         "./../Ligand/LigandCatalogue"                ;
+// import LigandCatalogue from                         "./../Ligand/LigandCatalogue"                ;
 import RNACatalogue from                            './../RNA/RNACatalogue'
 // import Home from                                    './../../Home'
 import { Home2 } from                                    './../../Home2'
-import WorkInProgress from                          './../WorkInProgress'
 import ProteinAlignment from                        './../ProteinAlign/ProteinAlignment'
 // import RPClassification from                        './../RPClassification/RPClassification'
 import VisualizationPage from                       '../../VisualizationPage/VisualizationPage'
@@ -31,8 +30,8 @@ const Display = () => {
         <Route exact path = "/structs/:pdbid"                 component = {StructurePage      } />
         <Route exact path = "/rps"                            component = {RPsCatalogue       } />
         <Route exact path = "/rps/:nom"                       component = {RPPage             } />
-        <Route exact path = "/ligands"                        component = {LigandCatalogue    } />
-        <Route exact path = "/ligands/:lig"                   component = {LigandCatalogue    } />
+        {/* <Route exact path = "/ligands"                        component = {LigandCatalogue    } />
+        <Route exact path = "/ligands/:lig"                   component = {LigandCatalogue    } /> */}
         <Route exact path = "/rnas/:rnaclass"                 component = {RNACatalogue       } />
         <Route exact path = "/rnas"                           component = {RNACatalogue       } />
         <Route exact path = "/bindingsites"                   component = {BindingSites         } />

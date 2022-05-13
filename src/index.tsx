@@ -13,7 +13,6 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
-import { ToastProvider } from "react-toast-notifications";
 
 
 
@@ -54,15 +53,9 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
       <React.StrictMode>
-        <ToastProvider
-          placement         ={'bottom-left'}
-          autoDismiss       ={true}
-          autoDismissTimeout={6000}
-        >
           <ThemeProvider theme={DefaultTheme}>
           <Main/>
           </ThemeProvider>
-        </ToastProvider>
       </React.StrictMode>
     </Router>
   </Provider>,

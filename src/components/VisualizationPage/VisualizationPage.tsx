@@ -30,7 +30,6 @@ import VolumeUp from '@mui/icons-material/VolumeUp';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { useToasts } from 'react-toast-notifications';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { getNeo4jData } from '../../redux/AsyncActions/getNeo4jData';
 import { NeoStruct } from '../../redux/DataInterfaces';
@@ -46,10 +45,9 @@ import { Protein, RNA } from "../../redux/RibosomeTypes";
 import _, { chain } from "lodash";
 import { truncate } from "../Main";
 import cut from './../../static/cut.svg'
-import search from './../../static/search.svg'
-import sequence from './../../static/sequence.svg'
-import { log } from "console";
 import './VisualizationPage.css'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
 
@@ -96,7 +94,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   const   current_neostruct         : NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure        )
   const   current_chain_to_highlight: string | null    = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
   const   structs                                      = useSelector((state: AppState) => state.structures.derived_filtered                  )
-  const { addToast                   }                 = useToasts  (                                                                        );
+  // const { addToast                   }                 = useToasts  (                                                                        );
 
 
   const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {
@@ -106,7 +104,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     dispatch(cache_full_struct(selected_neostruct && selected_neostruct?.struct.rcsb_id))
     if (selected_neostruct !== null) {
       dispatch(struct_change(null, selected_neostruct))
-      addToast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`, { appearance: 'info', autoDismiss: true, })
+      // addToast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`, { appearance: 'info', autoDismiss: true, })
 
       // viewer params : https://github.com/molstar/pdbe-molstar/wiki/1.-PDBe-Molstar-as-JS-plugin#plugin-parameters-options
       const viewerParams = {
@@ -703,7 +701,7 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 // const viewerInstance2 = new PDBeMolstarPlugin() as any;
 const VisualizationPage = (props: any) => {
   const dispatch = useDispatch();
-  const { addToast } = useToasts();
+  // const { addToast } = useToasts();
   // ? Get uri parametrs ----------------------------
   const history: any = useHistory();
   const params = history.location.state;

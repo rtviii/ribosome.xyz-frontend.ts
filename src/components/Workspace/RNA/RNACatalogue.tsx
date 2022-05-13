@@ -17,7 +17,7 @@ import { Dispatch } from                                               "redux"  
 import { DashboardButton } from                                        "../../../materialui/Dashboard/Dashboard"               ;
 import makeStyles from                                                 "@material-ui/core/styles/makeStyles"                   ;
 import Typography from                                                 "@material-ui/core/Typography"                          ;
-import { Button } from                                                 "@material-ui/core"                                     ;
+import { Button, Theme } from                                                 "@material-ui/core"                                     ;
 import TextField from                                                  "@material-ui/core/TextField/TextField"                 ;
 import { AppState } from                                               "../../../redux/store"                                  ;
 import { RNACard } from                                                    "./RNACard"                                             ;
@@ -38,7 +38,6 @@ import { Spinner } from "react-bootstrap";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import { useRxztheme } from "../../../theme";
 import _ from "lodash";
-import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import { RNAClass } from "../../../redux/RibosomeTypes";
 
 const pageData = {
@@ -270,7 +269,7 @@ const [, forceUpdate] = useReducer(x => x + 1, 0);
           </ListItem>
 
           <ListItem>
-            <DropdownTreeSelect data={data} onChange={onChange} keepOpenOnSelect={true} keepTreeOnSearch={true} keepChildrenOnSearch={true} />
+            {/* <DropdownTreeSelect data={data} onChange={onChange} keepOpenOnSelect={true} keepTreeOnSearch={true} keepChildrenOnSearch={true} /> */}
           </ListItem>
           <ListItem>
             <BulkDownloadMenu />
@@ -427,9 +426,7 @@ return (
     {...other}
   >
     {value === index && (
-      <Box p={3}>
         <Typography>{children}</Typography>
-      </Box>
     )}
   </div>
 );
@@ -544,9 +541,7 @@ return (
     {...other}
   >
     {value === index && (
-      <Box p={3}>
         <Typography>{children}</Typography>
-      </Box>
     )}
   </div>
 );

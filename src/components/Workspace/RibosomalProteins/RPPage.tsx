@@ -272,12 +272,12 @@ const classes = useRxztheme();
 </ListItem>
             <ListItem>
 
-              <DropdownTreeSelect data={data}
+              {/* <DropdownTreeSelect data={data}
                 onChange={onChange}
                 keepOpenOnSelect={true}
                 keepTreeOnSearch={true}
                 keepChildrenOnSearch={true}
-              />
+              /> */}
 
             </ListItem>
             <ListItem>

@@ -25,7 +25,7 @@ import { ChainParentPill } from '../RibosomalProteins/RibosomalProteinCard';
 import { useHistory } from 'react-router-dom';
 import * as action from './../../../redux/reducers/BindingSites/ActionTypes'
 import _ from 'lodash';
-import { useToasts } from 'react-toast-notifications';
+// import { useToasts } from 'react-toast-notifications';
 import { loadingIndicatorCSS } from 'react-select/src/components/indicators';
 import { Protein } from '../../../redux/RibosomeTypes';
 
@@ -529,11 +529,14 @@ const BindingSites = () => {
 			}
 
 			if (cur_vis_tab === 'origin') {
-				addToast(`Structure ${current_binding_site?.rcsb_id} is being loaded.`,
-					{
-						appearance: 'info',
-						autoDismiss: true,
-					})
+
+				// addToast(`Structure ${current_binding_site?.rcsb_id} is being loaded.`,
+
+				// 	{
+				// 		appearance: 'info',
+				// 		autoDismiss: true,
+				// 	})
+
 				viewerInstance.visual.update({
 					moleculeId: current_binding_site?.rcsb_id.toLowerCase()
 				});
@@ -586,34 +589,35 @@ const BindingSites = () => {
 
 		if (cur_tgt != null && cur_vis_tab === 'prediction') {
 
-								addToast(`Switched into PREDICTION view.`,
-													{
-							appearance: 'warning',
-							autoDismiss: true,
-						})
+						// 		addToast(`Switched into PREDICTION view.`,
+						// 							{
+						// 	appearance: 'warning',
+						// 	autoDismiss: true,
+						// })
+
 			viewerInstance.visual.update({
 				moleculeId: cur_tgt?.struct.rcsb_id.toLowerCase()
 			});
-								addToast(`Structure ${cur_tgt?.struct.rcsb_id} is being loaded.`,
-													{
-							appearance: 'info',
-							autoDismiss: true,
-						})
+						// 		addToast(`Structure ${cur_tgt?.struct.rcsb_id} is being loaded.`,
+						// 							{
+						// 	appearance: 'info',
+						// 	autoDismiss: true,
+						// })
 
 		}
 
 		if (current_binding_site != null && cur_vis_tab === 'origin') {
 
-								addToast(`Switched into ORIGINAL STRUCTURE view.`,
-													{
-							appearance: 'warning',
-							autoDismiss: true,
-						})
-								addToast(`Structure ${current_binding_site?.rcsb_id} is being loaded.`,
-													{
-							appearance: 'info',
-							autoDismiss: true,
-						})
+						// 		addToast(`Switched into ORIGINAL STRUCTURE view.`,
+						// 							{
+						// 	appearance: 'warning',
+						// 	autoDismiss: true,
+						// })
+						// 		addToast(`Structure ${current_binding_site?.rcsb_id} is being loaded.`,
+						// 							{
+						// 	appearance: 'info',
+						// 	autoDismiss: true,
+						// })
 			viewerInstance.visual.update({
 				moleculeId: current_binding_site?.rcsb_id.toLowerCase()
 			});
@@ -624,7 +628,7 @@ const BindingSites = () => {
 	const handleopen = () => { setMsaOpen(true) }
 	const handleclose = () => { setMsaOpen(false) }
 
-	const { addToast } = 								useToasts();
+	// const { addToast } = 								useToasts();
 
 
 	const generatePredictionCSV = () => {
