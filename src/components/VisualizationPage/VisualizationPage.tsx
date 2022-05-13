@@ -10,10 +10,7 @@ import Paper from '@material-ui/core/Paper/Paper';
 import Select from '@material-ui/core/Select';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
+import Popover from '@mui/material/Popover';
 import TextField from '@material-ui/core/TextField';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -50,6 +47,7 @@ import search from './../../static/search.svg'
 import sequence from './../../static/sequence.svg'
 import { log } from "console";
 import './VisualizationPage.css'
+import DownloadIcon from '@mui/icons-material/Download';
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
 
@@ -552,6 +550,15 @@ const ChainHighlightSlider = () => {
 
 
 
+  // Donwload Popover
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const handleClick             = (event: any) => {setAnchorEl(event.currentTarget);};
+  const handleClose             = () => {setAnchorEl(null);};
+  const open                    = Boolean(anchorEl);
+  const id                      = open ? 'simple-popover' : undefined;
+
+
+
   return (
     <Card variant="outlined" style={{ minWidth: "100%", height: "maxContent", display: "flex", flexDirection: "row" }}>
 
@@ -560,14 +567,26 @@ const ChainHighlightSlider = () => {
 
         <Grid container direction={"column"} item spacing={2} xs={3} style={{ padding: "10px" }} >
 
-          <Grid item xs={4}>
-            <Paper variant="outlined" elevation={2}
+          <Grid item   xs={4}>
+            <Paper  variant="outlined" elevation={2}
               id='outlined-interact'
               style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
-              {/* <ExtensionIcon style={{ width: "50px", height: "50px" }} /> */}
-              <AutofpsSelectIcon style={{ width: "50px", height: "50px" }} />
+            <DownloadIcon onClick={handleClick}  style={{ width: "50px", height: "50px" }} />
             </Paper>
           </Grid>
+
+    <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+      </Popover>
 
           <Grid item xs={4} >
             <Paper variant="outlined" elevation={2} id='outlined-interact' style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
