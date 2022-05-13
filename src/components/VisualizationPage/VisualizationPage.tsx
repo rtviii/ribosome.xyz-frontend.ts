@@ -10,23 +10,13 @@ import Paper from '@material-ui/core/Paper/Paper';
 import Select from '@material-ui/core/Select';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
-import ExtensionIcon from '@mui/icons-material/Extension';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { SvgIcon } from "@material-ui/core";
-import Box from '@mui/material/Box';
-import MuiInput from '@mui/material/Input';
 import Slider from '@mui/material/Slider';
-import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import fileDownload from 'js-file-download';
 import Tooltip from "@mui/material/Tooltip";
-import VolumeUp from '@mui/icons-material/VolumeUp';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -37,17 +27,17 @@ import { cache_full_struct, COMPONENT_TAB_CHANGE, struct_change, VisualizationTa
 import { AppState, store } from '../../redux/store';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
 import { StructHeroVertical, CardBodyAnnotation } from "./../../materialui/StructHero";
-import nucleotide from './../../static/nucleotide.png'
 import ContentCutIcon from '@mui/icons-material/ContentCut';
 import SearchIcon from '@mui/icons-material/Search';
 import AutofpsSelectIcon from '@mui/icons-material/AutofpsSelect';
 import { Protein, RNA } from "../../redux/RibosomeTypes";
 import _, { chain } from "lodash";
 import { truncate } from "../Main";
-import cut from './../../static/cut.svg'
 import './VisualizationPage.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { SeqViz } from "seqviz";
+
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
 
@@ -104,7 +94,10 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     dispatch(cache_full_struct(selected_neostruct && selected_neostruct?.struct.rcsb_id))
     if (selected_neostruct !== null) {
       dispatch(struct_change(null, selected_neostruct))
+
+    const notify = () => toast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`);
       // addToast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`, { appearance: 'info', autoDismiss: true, })
+      notify()
 
       // viewer params : https://github.com/molstar/pdbe-molstar/wiki/1.-PDBe-Molstar-as-JS-plugin#plugin-parameters-options
       const viewerParams = {
@@ -577,14 +570,19 @@ const ChainHighlightSlider = () => {
             <Paper variant="outlined" elevation={2}
               id='outlined-interact'
               style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
-              <ContentCutIcon
-                style={{ width: "50px", height: "50px" }}
+              <ContentCutIcon style={{ width: "50px", height: "50px" }}
               />
             </Paper>
           </Grid>
 
 
         </Grid>
+
+<SeqViz
+ viewer="linear"
+          name            = "J23100"
+          seq             = {currentChainFull?.entity_poly_seq_one_letter_code}
+          showAnnotations = {false}/>
 
         <Grid container xs={9} style={{ height: "100%", width: "100%" }}>
 
