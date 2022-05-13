@@ -63,6 +63,8 @@ export const rna_change = (rnaclass: RNAClass | null, parent: string | null): rn
 	class: rnaclass
 })
 export const struct_change = (highlighted_chain: string | null, struct: NeoStruct | null): structureChange => {
+	console.log("dispatching struct change with struct :", struct);
+	
 	return {
 		type             : "STRUCTURE_CHANGE",
 		structure        : struct,
@@ -84,44 +86,52 @@ export const cache_full_struct = (
 	struct_id_to_cache: string | null,
 ) => {
 
+	console.log("Changing struct cache: ", struct_id_to_cache);
+
 	// 1.check if the current structure is the same
 	// if yes --> return
 	// if no:
 	// 	 		2.request struct from server
 	// 	 				- if successful : update struct cache
 
-	const currentstruct = store.getState().visualization.structure_tab.structure
-	// if neither is null and they are equal
-	if ((struct_id_to_cache && currentstruct) && struct_id_to_cache === currentstruct?.struct.rcsb_id) {
-		console.log("They are one and the same.");
-		return
-	}
-	if (struct_id_to_cache === null) {
-		return
-	}
+
 
 
 	return async (dispatch: Dispatch<VisualizationActions>) => {
-		dispatch({ type: FETCH_FULL_STRUCT_GO })
-		// getNeo4jData('neo4j', { endpoint: 'get_full_struct', params: { pdbid: struct_id_to_cache } })
 
-		getNeo4jData("neo4j", {
-			endpoint: "get_RibosomeStructure",
-			params: { pdbid: struct_id_to_cache }
-		}).then(
-			response => {
-				console.log("fetched fullstruct successfully. response:", response)
-				dispatch(fullstructCache_change(response.data[0]));
-			},
-			error => {
-				dispatch({
-					type: "FETCH_FULL_STRUCT_ERR", err: error
-				});
-			}
-		)
+		const currentstruct = store.getState().visualization.structure_tab.structure
+		// if neither is null and they are equal
+		if ((struct_id_to_cache && currentstruct) && struct_id_to_cache === currentstruct?.struct.rcsb_id) {
+			console.log("They are one and the same.");
+			dispatch({type:"NOOP"})
+		}
+		else if (struct_id_to_cache === null) {
+			console.log("Updated to null");
+			fullstructCache_change(null)
+		}
+		else {
+
+			dispatch({ type: FETCH_FULL_STRUCT_GO })
+			// getNeo4jData('neo4j', { endpoint: 'get_full_struct', params: { pdbid: struct_id_to_cache } })
+			getNeo4jData("neo4j", {
+				endpoint: "get_RibosomeStructure",
+				params: { pdbid: struct_id_to_cache }
+			}).then(
+				response => {
+					console.log("fetched fullstruct successfully. response:", response)
+					dispatch(fullstructCache_change(response.data[0]));
+				},
+				error => {
+					dispatch({
+						type: "FETCH_FULL_STRUCT_ERR", err: error
+					});
+				}
+			)
+
+		}
 	};
 }
 
 
 export type VisualizationActions = structureChange | rnaChange | proteinChange | componentTabChange |
-	fetchFullStructError | fetchFullStructGo | updateCachedFullstruct;
+	fetchFullStructError | fetchFullStructGo | updateCachedFullstruct | {type:"NOOP"};

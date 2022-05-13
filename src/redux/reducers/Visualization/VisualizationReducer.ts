@@ -73,9 +73,16 @@ export const VisualizationReducer = (
 			return { ...state, full_structure_cache: action.nextcache }
 
 		case "STRUCTURE_CHANGE":  // this one is for selected...
-			if (action.structure === null) { return state }
+			if (action.structure === null) { return {
+				...state,
+				structure_tab: {
+					highlighted_chain: null,
+					structure        : null
+				}
+			} }
 			else return {
 				...state,
+
 				structure_tab: {
 					highlighted_chain: action.highlighted_chain,
 					structure        : action.structure

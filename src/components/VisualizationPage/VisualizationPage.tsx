@@ -93,24 +93,20 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   // useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))
 
-  const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
-  const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
-  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
-  const { addToast } = useToasts();
-
-
+  const   current_neostruct         : NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure        )
+  const   current_chain_to_highlight: string | null    = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
+  const   structs                                      = useSelector((state: AppState) => state.structures.derived_filtered                  )
+  const { addToast                   }                 = useToasts  (                                                                        );
 
 
   const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {
+
+
+
     dispatch(cache_full_struct(selected_neostruct && selected_neostruct?.struct.rcsb_id))
-    dispatch(struct_change(null, selected_neostruct))
-
-
-
-
     if (selected_neostruct !== null) {
+      dispatch(struct_change(null, selected_neostruct))
       addToast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`, { appearance: 'info', autoDismiss: true, })
-
 
       // viewer params : https://github.com/molstar/pdbe-molstar/wiki/1.-PDBe-Molstar-as-JS-plugin#plugin-parameters-options
       const viewerParams = {
@@ -120,8 +116,18 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
       viewerInstance.visual.update(viewerParams);
 
+    } else {
+
+      console.log("Dispatched with null");
+      
+      dispatch(struct_change(null, null))
     }
   };
+
+  useEffect(()=>{
+    console.log("current neostruct changed:" ,current_neostruct);
+
+  },[current_neostruct])
 
   const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, selected_chain: any) => {
 
@@ -1001,9 +1007,8 @@ const VisualizationPage = (props: any) => {
                 return 'Structures'
               case 'rna_tab':
                 return 'RNA'
-            }
+            }})()} </ListSubheader>
 
-          })()} </ListSubheader>
           <ListItem style={{ display: "flex", flexDirection: "row" }}>
 
             <Button size="small" color={current_tab === 'structure_tab' ? "primary" : "default"} onClick={() => { handleTabClick('structure_tab') }} variant="outlined" style={{ marginRight: "5px" }} >Structures </Button>
@@ -1031,9 +1036,7 @@ const VisualizationPage = (props: any) => {
           </ListItem>
 
 
-          {current_neostruct === null
-            ? null
-            : <ListItem> <StructHeroVertical d={current_neostruct} inCart={false} topless={true} /></ListItem>}
+          { current_neostruct === null ? null : <ListItem> <StructHeroVertical d={current_neostruct} inCart={false} topless={true} /></ListItem>}
 
           {current_chain_to_highlight === null ? null :
 
