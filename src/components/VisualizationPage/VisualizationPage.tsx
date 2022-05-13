@@ -36,11 +36,8 @@ import _, { chain } from "lodash";
 import { truncate } from "../Main";
 import './VisualizationPage.css'
 import DownloadIcon from '@mui/icons-material/Download';
-<<<<<<< HEAD
 import { SeqViz } from "seqviz";
 
-=======
->>>>>>> master
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
 
@@ -69,8 +66,8 @@ const useSelectStyles = makeStyles((theme: Theme) =>
 
 interface StructSnip {
   rcsb_id: string,
-  title: string,
-  any?: any
+  title  : string,
+  any?   : any
 }
 
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
@@ -451,7 +448,6 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
 
 // --------------------------------------------------------------------------------------------------
 
-
 const ChainHighlightSlider = () => {
   // takes in a full protein or rna
 
@@ -578,9 +574,12 @@ const ChainHighlightSlider = () => {
           horizontal: 'left',
         }}
       >
-        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
-      </Popover>
 
+
+        <Grid container xs={12} style={{width:"600px" ,height:"400px"}}>
+  <SeqViz viewer="linear"name = "J23100" seq = {currentChainFull?.entity_poly_seq_one_letter_code} showAnnotations = {false}/>-
+        </Grid>
+      </Popover>
           <Grid item xs={4} >
             <Paper variant="outlined" elevation={2} id='outlined-interact' style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
               <SearchIcon onClick={handleSearchRange} style={{ width: "50px", height: "50px" }} />
@@ -595,15 +594,7 @@ const ChainHighlightSlider = () => {
               />
             </Paper>
           </Grid>
-
-
         </Grid>
-
-<SeqViz
-    viewer="linear"
-            name            = "J23100"
-          seq             = {currentChainFull?.entity_poly_seq_one_letter_code}
-          showAnnotations = {false}/>
 
         <Grid container xs={9} style={{ height: "100%", width: "100%" }}>
 
@@ -710,9 +701,6 @@ const ChainHighlightSlider = () => {
     </Card>
   );
 }
-
-
-
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;

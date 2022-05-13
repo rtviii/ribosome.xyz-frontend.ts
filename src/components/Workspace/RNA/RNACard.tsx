@@ -234,10 +234,7 @@ export const RNACard: React.FC<RNACardProps> = (prop) => {
           vertical: "bottom",
           horizontal: "center",
         }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}>
+        transformOrigin={{vertical: "top",horizontal: "center",}}>
 
         <Grid container xs={12}>
           <Typography
