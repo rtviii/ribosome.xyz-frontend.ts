@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper/Paper';
 import Select from '@material-ui/core/Select';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
+import Popover from '@mui/material/Popover';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -34,8 +35,7 @@ import { Protein, RNA } from "../../redux/RibosomeTypes";
 import _, { chain } from "lodash";
 import { truncate } from "../Main";
 import './VisualizationPage.css'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import DownloadIcon from '@mui/icons-material/Download';
 import { SeqViz } from "seqviz";
 
 
@@ -95,10 +95,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     if (selected_neostruct !== null) {
       dispatch(struct_change(null, selected_neostruct))
 
-    const notify = () => toast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`);
       // addToast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`, { appearance: 'info', autoDismiss: true, })
-      notify()
-
       // viewer params : https://github.com/molstar/pdbe-molstar/wiki/1.-PDBe-Molstar-as-JS-plugin#plugin-parameters-options
       const viewerParams = {
         moleculeId: selected_neostruct.struct.rcsb_id.toLowerCase(),
@@ -543,6 +540,15 @@ const ChainHighlightSlider = () => {
 
 
 
+  // Donwload Popover
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const handleClick             = (event: any) => {setAnchorEl(event.currentTarget);};
+  const handleClose             = () => {setAnchorEl(null);};
+  const open                    = Boolean(anchorEl);
+  const id                      = open ? 'simple-popover' : undefined;
+
+
+
   return (
     <Card variant="outlined" style={{ minWidth: "100%", height: "maxContent", display: "flex", flexDirection: "row" }}>
 
@@ -551,14 +557,26 @@ const ChainHighlightSlider = () => {
 
         <Grid container direction={"column"} item spacing={2} xs={3} style={{ padding: "10px" }} >
 
-          <Grid item xs={4}>
-            <Paper variant="outlined" elevation={2}
+          <Grid item   xs={4}>
+            <Paper  variant="outlined" elevation={2}
               id='outlined-interact'
               style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
-              {/* <ExtensionIcon style={{ width: "50px", height: "50px" }} /> */}
-              <AutofpsSelectIcon style={{ width: "50px", height: "50px" }} />
+            <DownloadIcon onClick={handleClick}  style={{ width: "50px", height: "50px" }} />
             </Paper>
           </Grid>
+
+    <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+      </Popover>
 
           <Grid item xs={4} >
             <Paper variant="outlined" elevation={2} id='outlined-interact' style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
@@ -579,8 +597,8 @@ const ChainHighlightSlider = () => {
         </Grid>
 
 <SeqViz
- viewer="linear"
-          name            = "J23100"
+    viewer="linear"
+            name            = "J23100"
           seq             = {currentChainFull?.entity_poly_seq_one_letter_code}
           showAnnotations = {false}/>
 
