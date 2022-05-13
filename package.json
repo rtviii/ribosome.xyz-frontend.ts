@@ -42,7 +42,10 @@
     "react-dropdown-select": "^4.4.2",
     "react-dropdown-tree-select": "^2.5.1",
     "react-highlight-words": "^0.18.0",
+<<<<<<< HEAD
     "react-image-lightbox": "^5.1.4",
+=======
+>>>>>>> master
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",

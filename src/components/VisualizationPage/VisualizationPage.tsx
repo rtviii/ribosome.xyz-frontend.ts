@@ -36,8 +36,11 @@ import _, { chain } from "lodash";
 import { truncate } from "../Main";
 import './VisualizationPage.css'
 import DownloadIcon from '@mui/icons-material/Download';
+<<<<<<< HEAD
 import { SeqViz } from "seqviz";
 
+=======
+>>>>>>> master
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
 
