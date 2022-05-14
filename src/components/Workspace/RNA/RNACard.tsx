@@ -231,7 +231,7 @@ export const RNACard: React.FC<RNACardProps> = (prop) => {
         onClose={handleClose}
         className={classes.popover}
         anchorOrigin={{
-          vertical: "bottom",
+          vertical  : "bottom",
           horizontal: "center",
         }}
         transformOrigin={{vertical: "top",horizontal: "center",}}>
