@@ -30,13 +30,17 @@ import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignmen
 import { StructHeroVertical, CardBodyAnnotation } from "./../../materialui/StructHero";
 import ContentCutIcon from '@mui/icons-material/ContentCut';
 import SearchIcon from '@mui/icons-material/Search';
-import AutofpsSelectIcon from '@mui/icons-material/AutofpsSelect';
 import { Protein, RNA } from "../../redux/RibosomeTypes";
-import _, { chain } from "lodash";
+import _, { chain, StringNullableChain } from "lodash";
 import { truncate } from "../Main";
 import './VisualizationPage.css'
 import DownloadIcon from '@mui/icons-material/Download';
-import { SeqViz } from "seqviz";
+import { SeqViz, Viewer } from "seqviz";
+import Dialog, { DialogProps } from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
@@ -66,8 +70,8 @@ const useSelectStyles = makeStyles((theme: Theme) =>
 
 interface StructSnip {
   rcsb_id: string,
-  title  : string,
-  any?   : any
+  title: string,
+  any?: any
 }
 
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
@@ -81,9 +85,9 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   // useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))
 
-  const   current_neostruct         : NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure        )
-  const   current_chain_to_highlight: string | null    = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
-  const   structs                                      = useSelector((state: AppState) => state.structures.derived_filtered                  )
+  const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
+  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
   // const { addToast                   }                 = useToasts  (                                                                        );
 
 
@@ -107,15 +111,15 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     } else {
 
       console.log("Dispatched with null");
-      
+
       dispatch(struct_change(null, null))
     }
   };
 
-  useEffect(()=>{
-    console.log("current neostruct changed:" ,current_neostruct);
+  useEffect(() => {
+    console.log("current neostruct changed:", current_neostruct);
 
-  },[current_neostruct])
+  }, [current_neostruct])
 
   const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, selected_chain: any) => {
 
@@ -456,13 +460,14 @@ const ChainHighlightSlider = () => {
   const fullstruct_cache = useSelector((appstate: AppState) => appstate.visualization.full_structure_cache)
   const [currentChainFull, setCurrentChainFull] = React.useState<Protein | RNA | null>(null)
 
-  // const [inFocus, setInFocus] = React.useState<Protein | RNA | null>(null)
-  const [residueRange, setResidueRange] = React.useState<number[]>([0, 1]);
-  // const setResidueRange__debounced = _.debounce(setResidueRange, 2000)
+  const [residueRange, setResidueRange] = React.useState<number[]>([0, 0]);  // current slider value
+  const [MaxRes, setMaxRes] = React.useState<number>(0);         // keep track of what's the max residue range
 
 
   useEffect(() => {
     if (fullstruct_cache && current_chain_to_highlight) {
+
+      // pluck the chain off the full structure
       const pickFullChain = [...fullstruct_cache.proteins, ...(() => {
         if (fullstruct_cache.rnas === undefined || fullstruct_cache.rnas === null) {
           return []
@@ -474,14 +479,14 @@ const ChainHighlightSlider = () => {
       if (pickFullChain.length < 1) {
         console.log("Haven't found chain with this asym_id on the full structure. Something went terribly wrong.");
       } else {
-        console.log("Got full chain with length ", pickFullChain[0].entity_poly_seq_length);
-        console.log("UPDATING RANGE");
         setCurrentChainFull(pickFullChain[0])
         setResidueRange([0, pickFullChain[0].entity_poly_seq_length])
+        setMaxRes(pickFullChain[0].entity_poly_seq_length)
       }
     }
     if (fullstruct_cache === null) {
       setCurrentChainFull(null)
+      setMaxRes(0)
     }
 
     else if (current_chain_to_highlight === null) {
@@ -499,7 +504,7 @@ const ChainHighlightSlider = () => {
     {
       instance_id: 'ASM_1',
       auth_asym_id: chain_to_highlight,
-      start_residue_number: resRange[0],
+      start_residue_number: resRange[0] === 0 ? 1 : resRange[0],
       end_residue_number: resRange[1],
       color: { r: 255, g: 255, b: 255 },
       focus: true
@@ -523,29 +528,86 @@ const ChainHighlightSlider = () => {
   }
 
   const handleSliderChange = (event: Event, newvalue: number[]) => {
-    setResidueRange(newvalue as number[]);
+    let _: number[] = newvalue;
+    if (newvalue[1] > MaxRes) { _[1] = MaxRes }
+    if (newvalue[0] < 0) { _[0] = 0 }
+    if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] =_[1]; _[1]=t  }
+    setResidueRange(_);
+
+    if (_[0]===_[1]){return}
+    paintMolstarCanvas(_, current_chain_to_highlight as string);
   }
 
 
   const handleResRangeStart = (endVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const numeric = event.target.value.replace(/^\D+/g, '');
-    setResidueRange([numeric.toString() === '' ? residueRange[9] : Number(numeric), endVal])
+
+    let  numeric                  = Number(event.target.value.replace(/^\D+/g, ''));
+    if ( numeric >MaxRes ){numeric= MaxRes}
+    if ( numeric < 0) { numeric   = 0 }
+    setResidueRange([numeric.toString() === '' ? 0 : numeric, endVal])
+    paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
   };
 
   const handleResRangeEnd = (startVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const numeric = event.target.value.replace(/^\D+/g, '');
-    setResidueRange([startVal, numeric.toString() === '' ? residueRange[1] : Number(numeric)])
+    console.log(`Max res is ${MaxRes} res range 0 is ${residueRange[0]}    resrange 1 is ${residueRange[1]}`);
+    let numeric = Number(event.target.value.replace(/^\D+/g, ''));
+    if (numeric > MaxRes) {
+      numeric = MaxRes
+    }
+    if (numeric < 0){
+      numeric = 0
+    }
+    setResidueRange([startVal, numeric.toString() === '' ? MaxRes : Number(numeric)])
+    paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
   };
 
 
 
   // Donwload Popover
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const handleClick             = (event: any) => {setAnchorEl(event.currentTarget);};
-  const handleClose             = () => {setAnchorEl(null);};
-  const open                    = Boolean(anchorEl);
-  const id                      = open ? 'simple-popover' : undefined;
+  const handlePopoverClick = (event: any) => { setAnchorEl(event.currentTarget); };
+  const handlePopoverClose = () => { setAnchorEl(null); };
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
+
+  // Dialgoue sequence
+  const [dialogueOpen, setDialogueOpen] = React.useState(false);
+  const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
+
+  const handleDialogueClickOpen = (scrollType: DialogProps['scroll']) => () => {
+    setDialogueOpen(true);
+    setScroll(scrollType);
+  };
+
+  const handleDialogueClose = () => {
+    setDialogueOpen(false);
+  };
+
+  const descriptionElementRef = React.useRef<HTMLElement>(null);
+  React.useEffect(() => {
+    if (open) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [open]);
+
+
+  type SeqVizSelection = {
+    clockwise: boolean
+    element: any
+    end: number
+    gc: number
+    length: number
+    name: string
+    ref: string
+    seq: string
+    start: number
+    tm: number
+    type: string
+  }
 
 
   return (
@@ -556,30 +618,122 @@ const ChainHighlightSlider = () => {
 
         <Grid container direction={"column"} item spacing={2} xs={3} style={{ padding: "10px" }} >
 
-          <Grid item   xs={4}>
-            <Paper  variant="outlined" elevation={2}
+          <Grid item xs={4}>
+            <Paper variant="outlined" elevation={2}
               id='outlined-interact'
               style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
-            <DownloadIcon onClick={handleClick}  style={{ width: "50px", height: "50px" }} />
+              <DownloadIcon onClick={handlePopoverClick} style={{ width: "50px", height: "50px" }} />
             </Paper>
           </Grid>
 
-    <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
+
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handlePopoverClose}
+            style={{ padding: "20px" }}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            transformOrigin={{ vertical: "top", horizontal: "center", }}>
+
+            <Grid container direction="column">
+
+              <Grid item xs={10}>
+
+                <SeqViz
+                  style={{ padding: "10px", margin: "10px", fontSize: "8px", size: '8px', width: "800px", height: "200px" }}
+                  onSelection={(e) => { 
+                    console.log("Got range : ", e.start, " --> ", e.end);
+                    console.log(e);
+                    if (e.start === e.end){
+                      return
+                    }
+                    
+                    if (e.start > e.end){
+                      setResidueRange([e.end,e.start])
+                    }
+                    else{
+                      setResidueRange([e.start,e.end])
+                    }
+
+                    paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
+                   }}
+                  showIndex={true}
+                  viewer="linear"
+                  annotations={[{
+                    color    : "blue",
+                    direction: 1,
+                    end      : residueRange[1],
+                    start    : residueRange[0],
+                    name     : 'selected',
+                    id       : "none",
+                    // @ts-ignore
+                    type: ""
+                  }]}
+                  seq={currentChainFull?.entity_poly_seq_one_letter_code_can} showAnnotations={false} />
+              </Grid>
+              
+              <div style={{display:"flex", justifyContent:"center", justifyItems:"center"}}>
+
+<Button fullWidth>Select</Button>
+<Button fullWidth>Download seq</Button>
+<Button fullWidth>Download cif</Button>
+              </div>
+              {/* <Grid direction="row"  container xs={2} style={{ display:"flex",  outline:"1px solid black", width: "100%" }}>
+
+                <Grid item xs={3}></Grid>
+
+                <Grid item xs={3}><Button fullWidth>Download seq</Button></Grid>
+
+                <Grid item xs={3}></Grid>
+              </Grid> */}
+
+            </Grid>
+
+          </Popover>
+          {/* <Dialog
+        open={dialogueOpen}
+        onClose={handleDialogueClose}
+        scroll={scroll}
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
       >
+        <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
+        <DialogContent dividers={scroll === 'paper'} style={{height:"20vh", width:"70vw", padding:"10px", margin:"5px", display:"flex", justifyContent:"center"}}>
+            <SeqViz
+            style={{padding:"20px"}}
+              onSelection = {(e) => { console.log(e) }}
+              showIndex   = {true}
+              viewer      = "linear"
+              seq         = {currentChainFull?.entity_poly_seq_one_letter_code_can} showAnnotations = {false} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>Subscribe</Button>
+        </DialogActions>
+      </Dialog> */}
+
+          {/* <Popover
+            // id           = {id}
+            open         = {open}
+            anchorEl     = {anchorEl}
+            onClose      = {handleClose}
+            anchorOrigin = {{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
 
 
-        <Grid container xs={12} style={{width:"600px" ,height:"400px"}}>
-  <SeqViz viewer="linear"name = "J23100" seq = {currentChainFull?.entity_poly_seq_one_letter_code} showAnnotations = {false}/>-
-        </Grid>
-      </Popover>
+            >
+              <Paper style={{outline:"1px solid black"}}>
+
+
+              </Paper>
+          </Popover> */}
+
           <Grid item xs={4} >
             <Paper variant="outlined" elevation={2} id='outlined-interact' style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
               <SearchIcon onClick={handleSearchRange} style={{ width: "50px", height: "50px" }} />
@@ -698,6 +852,7 @@ const ChainHighlightSlider = () => {
 
         </Grid>
       </Grid>
+
     </Card>
   );
 }
@@ -1012,7 +1167,8 @@ const VisualizationPage = (props: any) => {
                 return 'Structures'
               case 'rna_tab':
                 return 'RNA'
-            }})()} </ListSubheader>
+            }
+          })()} </ListSubheader>
 
           <ListItem style={{ display: "flex", flexDirection: "row" }}>
 
@@ -1041,7 +1197,7 @@ const VisualizationPage = (props: any) => {
           </ListItem>
 
 
-          { current_neostruct === null ? null : <ListItem> <StructHeroVertical d={current_neostruct} inCart={false} topless={true} /></ListItem>}
+          {current_neostruct === null ? null : <ListItem> <StructHeroVertical d={current_neostruct} inCart={false} topless={true} /></ListItem>}
 
           {current_chain_to_highlight === null ? null :
 

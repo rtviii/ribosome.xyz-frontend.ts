@@ -8,15 +8,15 @@ import { Filter, filterChange, FilterPredicates, FilterRegistry } from "../Filte
 import { StructFilterType, StructSortType } from "./ActionTypes";
 
 export interface StructReducerState {
-  neo_response     : NeoStruct[]
-  derived_filtered : NeoStruct[],
-  Loading          : boolean;
-  Error            : null | Error;
-  current_page     : number;
-  pages_total      : number
-  filter_registry  : FilterRegistry<StructFilterType, NeoStruct>
-  last_sort_set    : StructSortType,
-  sorts_registry   : Record<StructSortType, {
+  neo_response    : NeoStruct[]
+  derived_filtered: NeoStruct[],
+  Loading         : boolean;
+  Error           : null | Error;
+  current_page    : number;
+  pages_total     : number
+  filter_registry : FilterRegistry<StructFilterType, NeoStruct>
+  last_sort_set   : StructSortType,
+  sorts_registry  : Record<StructSortType,           {
   reverse          : boolean,
   compareFn        : (a:NeoStruct, b:NeoStruct) => 1 | 0 | -1
 }>

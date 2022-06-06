@@ -3,3 +3,20 @@
   transition: 150ms;
   outline   : 1px solid black;
 }
+
+
+#seqviz-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  min-height: 724px;
+}
+
+#seqviewer {
+  /* height is 100% of the viewport height less the header height */
+  height: calc(100% - 64px);
+  width: 100%;
+  margin: 0px;
+  flex: 1 1 0;
+}
