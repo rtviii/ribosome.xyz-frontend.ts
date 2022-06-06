@@ -18,12 +18,12 @@ import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import fileDownload from 'js-file-download';
 import Tooltip from "@mui/material/Tooltip";
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { getNeo4jData } from '../../redux/AsyncActions/getNeo4jData';
-import { NeoStruct } from '../../redux/DataInterfaces';
+import { NeoStruct, PolymerMinimal } from '../../redux/DataInterfaces';
 import { cache_full_struct, COMPONENT_TAB_CHANGE, struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
 import { AppState, store } from '../../redux/store';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
@@ -86,14 +86,12 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   // useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))
 
-  const current_neostruct: NeoStruct | null       = useSelector((state: AppState) => state.visualization.structure_tab.structure)
-  const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
-  const structs                                   = useSelector((state: AppState) => state.structures.derived_filtered)
+  const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const current_chain_to_highlight: PolymerMinimal | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
+  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
   // const { addToast                   }                 = useToasts  (                                                                        );
 
   const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {
-
-
 
     dispatch(cache_full_struct(selected_neostruct && selected_neostruct?.struct.rcsb_id))
     if (selected_neostruct !== null) {
@@ -126,10 +124,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     // get current structure because arguments and functions here are poorly written.
     const curstate = store.getState()
     const curstruct = curstate.visualization.structure_tab.structure
-    console.log("Passing args to struct_change dispatch", selected_chain.props.value, curstruct);
-
     dispatch(struct_change(selected_chain.props.value, curstruct))
-
     viewerInstance.visual.select(
       {
         data: [{
@@ -179,27 +174,30 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
             <InputLabel> {current_neostruct === null ? "Select a structure.." : "Highlight Chain"}</InputLabel>
 
             <Select
-              value={current_chain_to_highlight}
-              onChange={handleSelectHighlightChain}
-              disabled={current_neostruct === null}
-              // @ts-ignore
-              renderValue={(value: undefined) => {
-
+              value       = {current_chain_to_highlight}
+              onChange    = {handleSelectHighlightChain}
+              disabled    = {current_neostruct === null}
+              renderValue = {(value: unknown): ReactNode => {
+                const val = value as string
                 console.log("Got value:", value)
+
                 if (value === null) {
-                  return "null"
+                  return <div>"null"</div>
                 }
                 else {
-                  // @ts-ignore
-                  return <div> val: {value}</div>
+                  console.log("Got value:", value);
+                  return <div> newvale: {val}  </div>
                 }
               }}>
 
               {current_neostruct === null || current_neostruct === undefined
                 ? null
                 : [...current_neostruct.rnas, ...current_neostruct.rps.sort(nomenclatureCompareFn),]
-                  .map((chain) => { 
-                    return <MenuItem value={chain.auth_asym_id}>{chain.nomenclature && chain.nomenclature.length > 0 ? <><b>{chain.nomenclature[0]}</b>({chain.auth_asym_id})</> : <>auth_asym_id: <b>{chain.auth_asym_id}</b></>}</MenuItem> }
+                  .map((chain) => {
+                    return <MenuItem value={chain.auth_asym_id}>
+                      {chain.nomenclature && chain.nomenclature.length > 0 ? <><b>{chain.nomenclature[0]}</b>({chain.auth_asym_id})</> : <>auth_asym_id: <b>{chain.auth_asym_id}</b></>}
+                    </MenuItem>
+                  }
                   )
               }
             </Select>
@@ -474,7 +472,7 @@ const ChainHighlightSlider = () => {
         } else {
           return fullstruct_cache.rnas
         }
-      })()].filter(c => c.auth_asym_id === current_chain_to_highlight)
+      })()].filter(c => c.auth_asym_id === current_chain_to_highlight.auth_asym_id)
 
       if (pickFullChain.length < 1) {
         console.log("Haven't found chain with this asym_id on the full structure. Something went terribly wrong.");
@@ -522,7 +520,7 @@ const ChainHighlightSlider = () => {
 
   const handleSearchRange = () => {
     if (current_chain_to_highlight === null) { window.alert('Chain to highlight is null. Provide asym_id to paint.'); return }
-    paintMolstarCanvas(residueRange, current_chain_to_highlight)
+    paintMolstarCanvas(residueRange, current_chain_to_highlight.auth_asym_id)
     console.log(`Target asym_id: ${current_chain_to_highlight}. Searching range: [${residueRange}]`)
 
   }
@@ -535,7 +533,7 @@ const ChainHighlightSlider = () => {
     setResidueRange(_);
 
     if (_[0] === _[1]) { return }
-    paintMolstarCanvas(_, current_chain_to_highlight as string);
+    paintMolstarCanvas(_, current_chain_to_highlight?.auth_asym_id as string);
   }
 
 
@@ -545,7 +543,7 @@ const ChainHighlightSlider = () => {
     if (numeric > MaxRes) { numeric = MaxRes }
     if (numeric < 0) { numeric = 0 }
     setResidueRange([numeric.toString() === '' ? 0 : numeric, endVal])
-    paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
+    paintMolstarCanvas(residueRange, current_chain_to_highlight?.auth_asym_id as string)
   };
 
   const handleResRangeEnd = (startVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -558,7 +556,7 @@ const ChainHighlightSlider = () => {
       numeric = 0
     }
     setResidueRange([startVal, numeric.toString() === '' ? MaxRes : Number(numeric)])
-    paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
+    paintMolstarCanvas(residueRange, current_chain_to_highlight?.auth_asym_id as string)
   };
 
 
@@ -659,7 +657,7 @@ const ChainHighlightSlider = () => {
                       setResidueRange([e.start, e.end])
                     }
 
-                    paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
+                    paintMolstarCanvas(residueRange, current_chain_to_highlight?.auth_asym_id as string)
                   }}
                   showIndex={true}
                   viewer="linear"

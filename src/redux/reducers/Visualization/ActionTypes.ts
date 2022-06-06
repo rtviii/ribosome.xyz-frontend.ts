@@ -36,7 +36,7 @@ export interface componentTabChange {
 export interface structureChange {
 	type: typeof STRUCTURE_CHANGE
 	structure: NeoStruct | null,
-	highlighted_chain: string | null,
+	highlighted_chain: PolymerMinimal | null,
 }
 export interface proteinChange {
 	type: typeof PROTEIN_CHANGE
@@ -62,7 +62,7 @@ export const rna_change = (rnaclass: RNAClass | null, parent: string | null): rn
 	parent,
 	class: rnaclass
 })
-export const struct_change = (highlighted_chain: string | null, struct: NeoStruct | null): structureChange => {
+export const struct_change = (highlighted_chain: PolymerMinimal | null, struct: NeoStruct | null): structureChange => {
 	console.log("dispatching struct change with struct :", struct);
 	
 	return {

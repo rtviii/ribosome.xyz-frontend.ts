@@ -1,5 +1,5 @@
 import { getNeo4jData } from '../../AsyncActions/getNeo4jData'
-import { NeoStruct } from '../../DataInterfaces'
+import { NeoStruct, PolymerMinimal } from '../../DataInterfaces'
 import { Protein, ProteinClass, RibosomeStructure, RNA, RNAClass } from '../../RibosomeTypes'
 import { VisualizationActions } from './ActionTypes'
 
@@ -11,7 +11,7 @@ export interface VisualizationReducerState {
 	full_structure_cache: RibosomeStructure | null
 	structure_tab: {
 		structure        : NeoStruct | null,
-		highlighted_chain: string | null
+		highlighted_chain: PolymerMinimal | null
 	},
 	protein_tab: {
 		class: ProteinClass | null,
@@ -82,7 +82,6 @@ export const VisualizationReducer = (
 			} }
 			else return {
 				...state,
-
 				structure_tab: {
 					highlighted_chain: action.highlighted_chain,
 					structure        : action.structure
