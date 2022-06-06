@@ -1,0 +1,69 @@
+ next state 
+Object { visualization: {…}, filters: {…}, structures: {…}, proteins: {…}, rna: {…}, ligands: {…}, utils: {…}, Interface: {…}, cart: {…}, binding_sites: {…} }
+​
+Interface: Object { dashboardHidden: false, structure_page: {…} }
+​
+binding_sites: Object { is_loading: false, errored_out: false, visualization_tab: "origin", … }
+​
+cart: Object { structs: [], open: false, items: [], … }
+​
+filters: Object { applied_filters: [], filters: {…} }
+​
+ligands: Object { current_page: 1, pages_total: 37, is_loading: true, … }
+​
+proteins: Object { sort_state: {…}, ban_class: [], ban_class_derived: [], … }
+​
+rna: Object { seq_sort_applied: false, current_rna_class: "5SrRNA", current_page: 1, … }
+​
+structures: Object { Loading: false, current_page: 1, pages_total: 46, … }
+​​
+Error: null
+​​
+Loading: false
+​​
+current_page: 1
+​​
+derived_filtered: Array(908) [ {…}, {…}, {…}, … ]
+​​
+filter_registry: Object { filtstate: {…}, applied: [] }
+​​
+last_sort_set: "PDB_CODENAME"
+​​
+neo_response: Array(908) [ {…}, {…}, {…}, … ]
+​​​
+[0…99]
+​​​
+[100…199]
+​​​
+[200…299]
+​​​
+[300…399]
+​​​
+[400…499]
+​​​
+[500…599]
+​​​
+[600…699]
+​​​
+[700…799]
+​​​
+[800…899]
+​​​
+[900…907]
+​​​
+length: 908
+​​​
+<prototype>: Array []
+​​
+pages_total: 46
+​​
+sorts_registry: Object { PDB_CODENAME: {…}, NUMBER_OF_PROTEINS: {…}, RESOLUTION: {…}, … }
+​​
+<prototype>: Object { … }
+​
+utils: Object { static_catalogue: [], ligand_by_struct: {}, struct_by_ligand: {} }
+​
+visualization: Object { component_tab: "structure_tab", full_structure_cache: {…}, structure_tab: {…}, … }
+​
+<prototype>: Object { … }
+1.chunk.js:177059:13

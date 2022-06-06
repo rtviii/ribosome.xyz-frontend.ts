@@ -10,7 +10,7 @@ export interface VisualizationReducerState {
 	component_tab: "rna_tab" | "protein_tab" | "structure_tab",
 	full_structure_cache: RibosomeStructure | null
 	structure_tab: {
-		structure: NeoStruct | null,
+		structure        : NeoStruct | null,
 		highlighted_chain: string | null
 	},
 	protein_tab: {

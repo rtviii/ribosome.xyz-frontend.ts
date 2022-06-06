@@ -41,6 +41,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { log } from "console";
 
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
@@ -85,11 +86,10 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   // useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))
 
-  const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const current_neostruct: NeoStruct | null       = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
-  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
+  const structs                                   = useSelector((state: AppState) => state.structures.derived_filtered)
   // const { addToast                   }                 = useToasts  (                                                                        );
-
 
   const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {
 
@@ -127,7 +127,6 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     const curstate = store.getState()
     const curstruct = curstate.visualization.structure_tab.structure
     console.log("Passing args to struct_change dispatch", selected_chain.props.value, curstruct);
-
 
     dispatch(struct_change(selected_chain.props.value, curstruct))
 
@@ -178,6 +177,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
             // className={classes.formControl} 
             style={{ width: "100%" }}>
             <InputLabel> {current_neostruct === null ? "Select a structure.." : "Highlight Chain"}</InputLabel>
+
             <Select
               value={current_chain_to_highlight}
               onChange={handleSelectHighlightChain}
@@ -185,22 +185,22 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
               // @ts-ignore
               renderValue={(value: undefined) => {
 
+                console.log("Got value:", value)
                 if (value === null) {
                   return "null"
                 }
                 else {
                   // @ts-ignore
-                  return <div>{value}</div>
+                  return <div> val: {value}</div>
                 }
               }}>
 
               {current_neostruct === null || current_neostruct === undefined
                 ? null
                 : [...current_neostruct.rnas, ...current_neostruct.rps.sort(nomenclatureCompareFn),]
-                  .map((chain) =>
-                    <MenuItem value={chain.auth_asym_id}>
-                      {chain.nomenclature && chain.nomenclature.length > 0 ? chain.nomenclature[0] : "Unclassified Polymer"}
-                    </MenuItem>)
+                  .map((chain) => { 
+                    return <MenuItem value={chain.auth_asym_id}>{chain.nomenclature && chain.nomenclature.length > 0 ? <><b>{chain.nomenclature[0]}</b>({chain.auth_asym_id})</> : <>auth_asym_id: <b>{chain.auth_asym_id}</b></>}</MenuItem> }
+                  )
               }
             </Select>
           </FormControl>
@@ -531,19 +531,19 @@ const ChainHighlightSlider = () => {
     let _: number[] = newvalue;
     if (newvalue[1] > MaxRes) { _[1] = MaxRes }
     if (newvalue[0] < 0) { _[0] = 0 }
-    if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] =_[1]; _[1]=t  }
+    if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
     setResidueRange(_);
 
-    if (_[0]===_[1]){return}
+    if (_[0] === _[1]) { return }
     paintMolstarCanvas(_, current_chain_to_highlight as string);
   }
 
 
   const handleResRangeStart = (endVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
 
-    let  numeric                  = Number(event.target.value.replace(/^\D+/g, ''));
-    if ( numeric >MaxRes ){numeric= MaxRes}
-    if ( numeric < 0) { numeric   = 0 }
+    let numeric = Number(event.target.value.replace(/^\D+/g, ''));
+    if (numeric > MaxRes) { numeric = MaxRes }
+    if (numeric < 0) { numeric = 0 }
     setResidueRange([numeric.toString() === '' ? 0 : numeric, endVal])
     paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
   };
@@ -554,7 +554,7 @@ const ChainHighlightSlider = () => {
     if (numeric > MaxRes) {
       numeric = MaxRes
     }
-    if (numeric < 0){
+    if (numeric < 0) {
       numeric = 0
     }
     setResidueRange([startVal, numeric.toString() === '' ? MaxRes : Number(numeric)])
@@ -645,42 +645,42 @@ const ChainHighlightSlider = () => {
 
                 <SeqViz
                   style={{ padding: "10px", margin: "10px", fontSize: "8px", size: '8px', width: "800px", height: "200px" }}
-                  onSelection={(e) => { 
+                  onSelection={(e) => {
                     console.log("Got range : ", e.start, " --> ", e.end);
                     console.log(e);
-                    if (e.start === e.end){
+                    if (e.start === e.end) {
                       return
                     }
-                    
-                    if (e.start > e.end){
-                      setResidueRange([e.end,e.start])
+
+                    if (e.start > e.end) {
+                      setResidueRange([e.end, e.start])
                     }
-                    else{
-                      setResidueRange([e.start,e.end])
+                    else {
+                      setResidueRange([e.start, e.end])
                     }
 
                     paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
-                   }}
+                  }}
                   showIndex={true}
                   viewer="linear"
                   annotations={[{
-                    color    : "blue",
+                    color: "blue",
                     direction: 1,
-                    end      : residueRange[1],
-                    start    : residueRange[0],
-                    name     : 'selected',
-                    id       : "none",
+                    end: residueRange[1],
+                    start: residueRange[0],
+                    name: 'selected',
+                    id: "none",
                     // @ts-ignore
                     type: ""
                   }]}
                   seq={currentChainFull?.entity_poly_seq_one_letter_code_can} showAnnotations={false} />
               </Grid>
-              
-              <div style={{display:"flex", justifyContent:"center", justifyItems:"center"}}>
 
-<Button fullWidth>Select</Button>
-<Button fullWidth>Download seq</Button>
-<Button fullWidth>Download cif</Button>
+              <div style={{ display: "flex", justifyContent: "center", justifyItems: "center" }}>
+
+                <Button fullWidth>Select</Button>
+                <Button fullWidth>Download seq</Button>
+                <Button fullWidth>Download cif</Button>
               </div>
               {/* <Grid direction="row"  container xs={2} style={{ display:"flex",  outline:"1px solid black", width: "100%" }}>
 
