@@ -167,12 +167,12 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
       {/* list item for highlighted_chain */}
       <ListItem>
-        <Tooltip disableHoverListener={current_chain_to_highlight === null} title={
+        {/* <Tooltip disableHoverListener={current_chain_to_highlight === null} title={
           <>
             <div> auth_asym_id : {current_chain_to_highlight} </div>
-            <div> chain_id    : { } </div>
+            <div> Duplicate chains of the same class imply an X-RAY structure with multiple models. You can alternate between models in Molstar viewer: Structure {`->`} Asm Id </div> 
           </>
-        }>
+        }> */}
 
           <FormControl
             // className={classes.formControl} 
@@ -199,13 +199,13 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
                 : [...current_neostruct.rnas, ...current_neostruct.rps.sort(nomenclatureCompareFn),]
                   .map((chain) =>
                     <MenuItem value={chain.auth_asym_id}>
-                      {chain.nomenclature && chain.nomenclature.length > 0 ? chain.nomenclature[0] : "Unclassified Polymer"}
+                      {chain.nomenclature && chain.nomenclature.length > 0 ? <b>{ chain.nomenclature[0] }</b> : <>{ chain.auth_asym_id }</>}
                     </MenuItem>)
               }
             </Select>
           </FormControl>
 
-        </Tooltip>
+        {/* </Tooltip> */}
 
 
 
