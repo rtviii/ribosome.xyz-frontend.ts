@@ -11,7 +11,8 @@ import        { InterfaceReducer                                      } from "./
 import        { CartReducer                                           } from "./reducers/Cart/CartReducer"
 import        { VisualizationReducer                                           } from "./reducers/Visualization/VisualizationReducer"
 import        { BindingSitesReducer                                   } from "./reducers/BindingSites/BindingSitesReducer"
-import        { AppActions                                            } from "./AppActions"                                  ;
+import        { AppActions    , RESET_ACTION                                        } from "./AppActions"                                  ;
+
 import { REQUEST_STRUCTS_GO, REQUEST_STRUCTS_SUCCESS, STRUCTS_SORT_CHANGE } from "./reducers/StructuresReducer/ActionTypes";
 import { CURRENT_LIGAND_CHANGE, CURRENT_PREDICTION_CHANGE, CURRENT_STRUCTURE_CHANGE, LIGAND_BINDING_SITE_SUCCESS, LIGAND_PREDICTION_SUCCESS, PARTIAL_STATE_CHANGE, REQUEST_ALL_BSITES_GO, REQUEST_ALL_BSITES_SUCCESS, REQUEST_LIGAND_BINDING_SITE, REQUEST_LIGAND_PREDICTION } from "./reducers/BindingSites/ActionTypes";
 import { REQUEST_ALL_LIGANDS_GO, REQUEST_ALL_LIGANDS_SUCCESS } from "./reducers/Ligands/ActionTypes";
@@ -52,6 +53,7 @@ const logger = createLogger({
   STRUCTS_SORT_CHANGE          ,
   REQUEST_RNA_CLASS_SUCCESS    ,
   REQUEST_RNA_CLASS_ERR        ,
+  RESET_ACTION,
   "ANY"
 ].includes( action.type ) ,
    collapsed: collapseFilter });

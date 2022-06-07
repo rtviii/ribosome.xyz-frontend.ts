@@ -1,5 +1,7 @@
+import { log } from "console";
 import { useSelector } from "react-redux";
 import { Dispatch } from "redux";
+import { resetAction } from "../../AppActions";
 import { getNeo4jData } from "../../AsyncActions/getNeo4jData";
 import { NeoStruct, PolymerMinimal } from "../../DataInterfaces";
 import { RibosomeStructure } from "../../RibosomeTypes";
@@ -16,10 +18,15 @@ export const UPDATE_CACHED_FULLSTRUCT = "UPDATE_CACHED_FULLSTRUCT"
 
 
 
-export const STRUCTURE_CHANGE = "STRUCTURE_CHANGE"
-export const PROTEIN_CHANGE = "PROTEIN_CHANGE"
-export const RNA_CHANGE = "RNA_CHANGE"
-export const COMPONENT_TAB_CHANGE = "COMPONENT_TAB_CHANGE"
+export const STRUCTURE_CHANGE            = "STRUCTURE_CHANGE"
+
+export const PROTEIN_CHANGE              = "PROTEIN_CHANGE"
+export const PROTEIN_UPDATE_AUTH_ASYM_ID = "PROTEIN_UPDATE_AUTH_ASYM_ID"
+
+export const RNA_CHANGE                  = "RNA_CHANGE"
+export const RNA_UPDATE_AUTH_ASYM_ID     = "RNA_UPDATE_AUTH_ASYM_ID"
+
+export const COMPONENT_TAB_CHANGE        = "COMPONENT_TAB_CHANGE"
 
 export type VisualizationTabs = 'structure_tab' | 'protein_tab' | 'rna_tab';
 
@@ -38,10 +45,18 @@ export interface structureChange {
 	structure: NeoStruct | null,
 	highlighted_chain: string | null,
 }
+export interface proteinUpdateAuthAsymId {
+	type: typeof PROTEIN_UPDATE_AUTH_ASYM_ID,
+	next_auth_asym_id: string | null
+}
+export interface rnaUpdateAuthAsymId {
+	type:typeof RNA_UPDATE_AUTH_ASYM_ID,
+	next_auth_asym_id: string | null
+}
 export interface proteinChange {
-	type: typeof PROTEIN_CHANGE
-	class: ProteinClass | null,
-	parent: string | null
+	type        : typeof PROTEIN_CHANGE
+	class       : ProteinClass | null,
+	parent      : string | null
 }
 export interface rnaChange {
 	type: typeof RNA_CHANGE
@@ -52,7 +67,15 @@ export interface rnaChange {
 // export const struct_and_component_change = (struct: RibosomeStructure | null, chain: string | null) :structAndComponentChange => 
 // ({type: 'STRUCT_AND_COMPONENT_CHANGE', struct, chain })
 
-export const protein_change = (protclass: ProteinClass | null, parent: string | null): proteinChange => ({
+export const protein_update_auth_asym_id = (next_auth_asym_id : string|null): proteinUpdateAuthAsymId => ({
+	type: "PROTEIN_UPDATE_AUTH_ASYM_ID",
+	next_auth_asym_id
+})
+export const rna_update_auth_asym_id = (next_auth_asym_id : string|null): rnaUpdateAuthAsymId => ({
+	type: "RNA_UPDATE_AUTH_ASYM_ID",
+	next_auth_asym_id
+})
+export const protein_change = (protclass: ProteinClass | null, parent: string | null ): proteinChange => ({
 	type: "PROTEIN_CHANGE",
 	parent,
 	class: protclass
@@ -95,10 +118,7 @@ export const cache_full_struct = (
 	// 	 				- if successful : update struct cache
 
 
-
-
 	return async (dispatch: Dispatch<VisualizationActions>) => {
-
 		const currentstruct = store.getState().visualization.structure_tab.structure
 		// if neither is null and they are equal
 		if ((struct_id_to_cache && currentstruct) && struct_id_to_cache === currentstruct?.struct.rcsb_id) {
@@ -122,6 +142,8 @@ export const cache_full_struct = (
 					dispatch(fullstructCache_change(response.data[0]));
 				},
 				error => {
+					console.log("couldnt fetch with error: ", error);
+					
 					dispatch({
 						type: "FETCH_FULL_STRUCT_ERR", err: error
 					});
@@ -133,5 +155,5 @@ export const cache_full_struct = (
 }
 
 
-export type VisualizationActions = structureChange | rnaChange | proteinChange | componentTabChange |
-	fetchFullStructError | fetchFullStructGo | updateCachedFullstruct | {type:"NOOP"};
+export type VisualizationActions = resetAction|  structureChange | rnaChange | proteinChange | componentTabChange |
+	fetchFullStructError | fetchFullStructGo | updateCachedFullstruct | {type:"NOOP"}| proteinUpdateAuthAsymId | rnaUpdateAuthAsymId;

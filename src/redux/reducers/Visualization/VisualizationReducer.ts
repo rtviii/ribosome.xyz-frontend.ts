@@ -7,17 +7,19 @@ import { VisualizationActions } from './ActionTypes'
 // Each structure ought to have full chains represented
 
 export interface VisualizationReducerState {
-	component_tab: "rna_tab" | "protein_tab" | "structure_tab",
+	component_tab       : "rna_tab" | "protein_tab" | "structure_tab",
 	full_structure_cache: RibosomeStructure | null
-	structure_tab: {
+	structure_tab       : {
 		structure: NeoStruct | null,
 		highlighted_chain: string | null
 	},
 	protein_tab: {
-		class: ProteinClass | null,
+		auth_asym_id : string | null,
+		class:   ProteinClass | null,
 		parent: string | null
 	},
 	rna_tab: {
+		auth_asym_id : string | null,
 		class: RNAClass | null,
 		parent: string | null
 	}
@@ -31,10 +33,12 @@ const init: VisualizationReducerState = {
 		highlighted_chain: null
 	},
 	protein_tab: {
+		auth_asym_id: null,
 		class: null,
 		parent: null
 	},
 	rna_tab: {
+		auth_asym_id: null,
 		class: null,
 		parent: null
 	}
@@ -63,12 +67,12 @@ export const coerce_full_structure_to_neostruct = (_: RibosomeStructure | null):
 
 
 export const VisualizationReducer = (
-	state: VisualizationReducerState = init,
+	state : VisualizationReducerState = init,
 	action: VisualizationActions
-
 ): VisualizationReducerState => {
 	switch (action.type) {
-
+		case "RESET_ACTION":
+			return init
 		case "UPDATE_CACHED_FULLSTRUCT":
 			return { ...state, full_structure_cache: action.nextcache }
 
@@ -95,16 +99,18 @@ export const VisualizationReducer = (
 		case "PROTEIN_CHANGE":
 			return {
 				...state, protein_tab: {
-					class : action.class,
-					parent: action.parent
+					auth_asym_id: state.protein_tab.auth_asym_id,
+					class       : action.class,
+					parent      : action.parent
 				}
 			}
 
 		case "RNA_CHANGE":
 			return {
 				...state, rna_tab: {
-					class : action.class,
-					parent: action.parent
+					auth_asym_id: state.rna_tab.auth_asym_id,
+					class       : action.class,
+					parent      : action.parent
 				}
 			}
 
@@ -114,6 +120,16 @@ export const VisualizationReducer = (
 		case "FETCH_FULL_STRUCT_GO":
 			return state
 
+			case "PROTEIN_UPDATE_AUTH_ASYM_ID":
+				return {...state, protein_tab: {
+					...state.protein_tab,
+					auth_asym_id: action.next_auth_asym_id
+				}}
+			case "RNA_UPDATE_AUTH_ASYM_ID":
+				return {...state, rna_tab: {
+					...state.rna_tab,
+					auth_asym_id: action.next_auth_asym_id
+				}}
 		default:
 			return state
 	};

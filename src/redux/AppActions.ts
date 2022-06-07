@@ -7,6 +7,13 @@ import { UtilitiesActions } from "./reducers/Utilities/ActionTypes"
 import { InterfaceActions } from "./reducers/Interface/ActionTypes";
 import { CartActions } from "./reducers/Cart/ActionTypes";
 
+
+
+export const RESET_ACTION = "RESET_ACTION"
+export interface resetAction {
+  type: typeof RESET_ACTION
+}
+
 export type AppActions =
   | StructActionTypes
   | FiltersActionTypes
@@ -16,3 +23,4 @@ export type AppActions =
   | UtilitiesActions
   | InterfaceActions
   | CartActions
+  | resetAction

@@ -23,24 +23,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { getNeo4jData } from '../../redux/AsyncActions/getNeo4jData';
-import { NeoStruct } from '../../redux/DataInterfaces';
-import { cache_full_struct, COMPONENT_TAB_CHANGE, struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
+import { BanClassMetadata, NeoStruct, ProteinProfile } from '../../redux/DataInterfaces';
+import { cache_full_struct, COMPONENT_TAB_CHANGE, fullstructCache_change, protein_change, protein_update_auth_asym_id, struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
 import { AppState, store } from '../../redux/store';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
 import { StructHeroVertical, CardBodyAnnotation } from "./../../materialui/StructHero";
 import ContentCutIcon from '@mui/icons-material/ContentCut';
 import SearchIcon from '@mui/icons-material/Search';
-import { Protein, RNA } from "../../redux/RibosomeTypes";
+import { Protein, ProteinClass, RibosomeStructure, RNA } from "../../redux/RibosomeTypes";
 import _, { chain, StringNullableChain } from "lodash";
 import { truncate } from "../Main";
 import './VisualizationPage.css'
 import DownloadIcon from '@mui/icons-material/Download';
-import { SeqViz, Viewer } from "seqviz";
-import Dialog, { DialogProps } from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { SeqViz } from "seqviz";
+import  { DialogProps } from '@mui/material/Dialog';
+import { requestBanClass } from "../../redux/reducers/Proteins/ActionTypes";
 
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
@@ -88,6 +85,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
   const structs = useSelector((state: AppState) => state.structures.derived_filtered)
+  const cached_struct = useSelector((state: AppState) => state.visualization.full_structure_cache)
   // const { addToast                   }                 = useToasts  (                                                                        );
 
 
@@ -145,6 +143,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   return (
     <>
+
       <Autocomplete
         className={selectStructStyles.autocomoplete}
         value={current_neostruct}
@@ -163,8 +162,6 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
         renderInput={(params) => <TextField {...params} label="Structure" variant="outlined" />}
       />
 
-
-
       {/* list item for highlighted_chain */}
       <ListItem>
         {/* <Tooltip disableHoverListener={current_chain_to_highlight === null} title={
@@ -174,36 +171,36 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
           </>
         }> */}
 
-          <FormControl
-            // className={classes.formControl} 
-            style={{ width: "100%" }}>
-            <InputLabel> {current_neostruct === null ? "Select a structure.." : "Highlight Chain"}</InputLabel>
-            <Select
-              value={current_chain_to_highlight}
-              onChange={handleSelectHighlightChain}
-              disabled={current_neostruct === null}
-              // @ts-ignore
-              renderValue={(value: undefined) => {
+        <FormControl
+          // className={classes.formControl} 
+          style={{ width: "100%" }}>
+          <InputLabel> {current_neostruct === null ? "Select a structure.." : "Highlight Chain"}</InputLabel>
+          <Select
+            value={current_chain_to_highlight}
+            onChange={handleSelectHighlightChain}
+            disabled={current_neostruct === null}
+            // @ts-ignore
+            renderValue={(value: undefined) => {
 
-                if (value === null) {
-                  return "null"
-                }
-                else {
-                  // @ts-ignore
-                  return <div>{value}</div>
-                }
-              }}>
-
-              {current_neostruct === null || current_neostruct === undefined
-                ? null
-                : [...current_neostruct.rnas, ...current_neostruct.rps.sort(nomenclatureCompareFn),]
-                  .map((chain) =>
-                    <MenuItem value={chain.auth_asym_id}>
-                      {chain.nomenclature && chain.nomenclature.length > 0 ? <b>{ chain.nomenclature[0] }</b> : <>{ chain.auth_asym_id }</>}
-                    </MenuItem>)
+              if (value === null) {
+                return "null"
               }
-            </Select>
-          </FormControl>
+              else {
+                // @ts-ignore
+                return <div>{value}</div>
+              }
+            }}>
+
+            {current_neostruct === null || current_neostruct === undefined
+              ? null
+              : [...current_neostruct.rnas, ...current_neostruct.rps.sort(nomenclatureCompareFn),]
+                .map((chain) =>
+                  <MenuItem value={chain.auth_asym_id}>
+                    {chain.nomenclature && chain.nomenclature.length > 0 ? <b>{chain.nomenclature[0]}</b> : <>{chain.auth_asym_id}</>}
+                  </MenuItem>)
+            }
+          </Select>
+        </FormControl>
 
         {/* </Tooltip> */}
 
@@ -211,75 +208,73 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
       </ListItem>
 
-
-
-
-
-
     </>
   )
 }
 
-// const SelectProtein = ({ proteins, getCifChainByClass }: { proteins: BanClassMetadata[], getCifChainByClass: (strand: string, parent: string) => void }) => {
+const SelectProtein = ({ proteins, getCifChainByClass }:
+  { proteins: BanClassMetadata[], getCifChainByClass: (strand: string, parent: string) => void }) => {
 
-//   const styles = useSelectStyles();
-//   const dispatch = useDispatch();
+  const styles   = useSelectStyles();
+  const dispatch = useDispatch();
 
-//   const [curProtClass, setProtClass] = React.useState<ProteinClass | null>(null);
-//   const [curProtParent, setProtParent] = React.useState('');
-//   const availablestructs = useSelector((state: AppState) => state.proteins.ban_class)
+  const [curProtClass, setProtClass]   = React.useState<ProteinClass | null>(null);
+  const [curProtParent, setProtParent] = React.useState<string|null>(null);
+  const availablestructs               = useSelector((state: AppState) => state.proteins.ban_class)
 
-//   const chooseProtein = (event: React.ChangeEvent<{ value: unknown }>) => {
-//     let item = event.target.value as string
-//     dispatch(requestBanClass(item, false))
-//     setProtClass(item as ProteinClass);
-//     dispatch(protein_change(event.target.value as ProteinClass, curProtParent))
-//   };
-//   const chooseProtParent = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
-//     if (newvalue === null || newvalue.parent_rcsb_id === "Choose a protein class.") {
-//       protein_change(curProtClass, null)
-//       return
-//     }
+  const chooseProtein = (event: React.ChangeEvent<{ value: unknown }>) => {
+    let item = event.target.value as string
+    dispatch(requestBanClass(item, false))
+    setProtClass(item as ProteinClass);
+    dispatch(protein_change(event.target.value as ProteinClass, curProtParent))
+  };
 
-//     setProtParent(newvalue.parent_rcsb_id);
-//     getCifChainByClass(curProtClass as ProteinClass, newvalue.parent_rcsb_id)
-//     dispatch(protein_change(curProtClass, newvalue.parent_rcsb_id))
+  const chooseProtParent = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
+    if (newvalue === null || newvalue.parent_rcsb_id === "Choose a protein class.") {
+      setProtParent(null);
+      dispatch(protein_change(curProtClass, null))
+      return
+    }
 
-//   };
-//   return (
-//     <Grid item xs={12}>
-//       <List style={{ outline: "1px solid gray", borderRadius: "5px" }}>
-//         <ListItem>
-//           <FormControl className={styles.sub1}>
-//             <InputLabel>Protein Class</InputLabel>
-//             <Select
-//               labelId="demo-simple-select-label"
-//               id="demo-simple-select"
-//               value={curProtClass}
-//               onChange={chooseProtein}>
-//               {proteins.map((i) => <MenuItem value={i.banClass}>{i.banClass}
-//               </MenuItem>)}
-//             </Select>
-//           </FormControl>
+    setProtParent(newvalue.parent_rcsb_id);
+    dispatch(cache_full_struct(newvalue.parent_rcsb_id))
+    getCifChainByClass(curProtClass as ProteinClass, newvalue.parent_rcsb_id)
+    dispatch(protein_change(curProtClass, newvalue.parent_rcsb_id ))
 
-//           <FormControl className={styles.sub2}>
-//             <Autocomplete
-//               styles={{ marginRight: "9px", outline: "none" }}
-//               options={availablestructs.length > -1 ? availablestructs : [{ parent_rcsb_id: "Choose a protein class." } as ProteinProfile]}
-//               getOptionLabel={(parent) => parent.parent_rcsb_id}
-//               // @ts-ignore
-//               onChange={chooseProtParent}
-//               renderOption={(option) => (<div style={{ fontSize: "9px", width: "400px" }}><b>{option.parent_rcsb_id}</b> ({option.pfam_descriptions} ) </div>)}
-//               renderInput={(params) => <TextField {...params} style={{ fontSize: "7px" }} label="Parent Structure" variant="outlined" />}
+  };
+  return (
+    <Grid item xs={12}>
+      <List style={{ outline: "1px solid gray", borderRadius: "5px" }}>
+        <ListItem>
+          <FormControl className={styles.sub1}>
+            <InputLabel>Protein Class</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={curProtClass}
+              onChange={chooseProtein}>
+              {proteins.map((i) => <MenuItem value={i.banClass}>{i.banClass}
+              </MenuItem>)}
+            </Select>
+          </FormControl>
 
-//             />
-//           </FormControl>
+          <FormControl className={styles.sub2}>
+            <Autocomplete
+              styles={{ marginRight: "9px", outline: "none" }}
+              options={availablestructs.length > -1 ? availablestructs : [{ parent_rcsb_id: "Choose a protein class." } as ProteinProfile]}
+              getOptionLabel={(parent) => parent.parent_rcsb_id}
+              // @ts-ignore
+              onChange={chooseProtParent}
+              renderOption={(option) => (<div style={{ fontSize: "9px", width: "400px" }}><b>{option.parent_rcsb_id}</b> ({option.pfam_descriptions} ) </div>)}
+              renderInput={(params) => <TextField {...params} style={{ fontSize: "7px" }} label="Parent Structure" variant="outlined" />}
+            />
+          </FormControl>
 
-//         </ListItem>
-//       </List>
-//     </Grid>
-//   )
-// }
+        </ListItem>
+      </List>
+    </Grid>
+  )
+}
 
 // const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifChainByClass: (strand: string, parent: string) => void }) => {
 
@@ -452,12 +447,8 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
 
 // --------------------------------------------------------------------------------------------------
 
-const ChainHighlightSlider = () => {
+const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asym_id: string | null, full_structure_cache: RibosomeStructure | null }) => {
   // takes in a full protein or rna
-
-
-  const current_chain_to_highlight = useSelector((appstate: AppState) => appstate.visualization.structure_tab.highlighted_chain)
-  const fullstruct_cache = useSelector((appstate: AppState) => appstate.visualization.full_structure_cache)
   const [currentChainFull, setCurrentChainFull] = React.useState<Protein | RNA | null>(null)
 
   const [residueRange, setResidueRange] = React.useState<number[]>([0, 0]);  // current slider value
@@ -465,16 +456,15 @@ const ChainHighlightSlider = () => {
 
 
   useEffect(() => {
-    if (fullstruct_cache && current_chain_to_highlight) {
-
+    if (full_structure_cache && auth_asym_id) {
       // pluck the chain off the full structure
-      const pickFullChain = [...fullstruct_cache.proteins, ...(() => {
-        if (fullstruct_cache.rnas === undefined || fullstruct_cache.rnas === null) {
+      const pickFullChain = [...full_structure_cache.proteins, ...(() => {
+        if (full_structure_cache.rnas === undefined || full_structure_cache.rnas === null) {
           return []
         } else {
-          return fullstruct_cache.rnas
+          return full_structure_cache.rnas
         }
-      })()].filter(c => c.auth_asym_id === current_chain_to_highlight)
+      })()].filter(c => c.auth_asym_id === auth_asym_id)
 
       if (pickFullChain.length < 1) {
         console.log("Haven't found chain with this asym_id on the full structure. Something went terribly wrong.");
@@ -484,18 +474,18 @@ const ChainHighlightSlider = () => {
         setMaxRes(pickFullChain[0].entity_poly_seq_length)
       }
     }
-    if (fullstruct_cache === null) {
+    if (full_structure_cache === null) {
       setCurrentChainFull(null)
       setMaxRes(0)
     }
 
-    else if (current_chain_to_highlight === null) {
+    else if (auth_asym_id === null) {
       // setInFocus(null)
     }
 
   }, [
-    current_chain_to_highlight,
-    fullstruct_cache
+    auth_asym_id,
+    full_structure_cache
   ])
 
 
@@ -521,9 +511,9 @@ const ChainHighlightSlider = () => {
   // const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 300)
 
   const handleSearchRange = () => {
-    if (current_chain_to_highlight === null) { window.alert('Chain to highlight is null. Provide asym_id to paint.'); return }
-    paintMolstarCanvas(residueRange, current_chain_to_highlight)
-    console.log(`Target asym_id: ${current_chain_to_highlight}. Searching range: [${residueRange}]`)
+    if (auth_asym_id === null) { window.alert('Chain to highlight is null. Provide asym_id to paint.'); return }
+    paintMolstarCanvas(residueRange, auth_asym_id)
+    console.log(`Target asym_id: ${auth_asym_id}. Searching range: [${residueRange}]`)
 
   }
 
@@ -531,21 +521,21 @@ const ChainHighlightSlider = () => {
     let _: number[] = newvalue;
     if (newvalue[1] > MaxRes) { _[1] = MaxRes }
     if (newvalue[0] < 0) { _[0] = 0 }
-    if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] =_[1]; _[1]=t  }
+    if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
     setResidueRange(_);
 
-    if (_[0]===_[1]){return}
-    paintMolstarCanvas(_, current_chain_to_highlight as string);
+    if (_[0] === _[1]) { return }
+    paintMolstarCanvas(_, auth_asym_id as string);
   }
 
 
   const handleResRangeStart = (endVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
 
-    let  numeric                  = Number(event.target.value.replace(/^\D+/g, ''));
-    if ( numeric >MaxRes ){numeric= MaxRes}
-    if ( numeric < 0) { numeric   = 0 }
+    let numeric = Number(event.target.value.replace(/^\D+/g, ''));
+    if (numeric > MaxRes) { numeric = MaxRes }
+    if (numeric < 0) { numeric = 0 }
     setResidueRange([numeric.toString() === '' ? 0 : numeric, endVal])
-    paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
+    paintMolstarCanvas(residueRange, auth_asym_id as string)
   };
 
   const handleResRangeEnd = (startVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -554,21 +544,21 @@ const ChainHighlightSlider = () => {
     if (numeric > MaxRes) {
       numeric = MaxRes
     }
-    if (numeric < 0){
+    if (numeric < 0) {
       numeric = 0
     }
     setResidueRange([startVal, numeric.toString() === '' ? MaxRes : Number(numeric)])
-    paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
+    paintMolstarCanvas(residueRange, auth_asym_id as string)
   };
 
 
 
   // Donwload Popover
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const handlePopoverClick = (event: any) => { setAnchorEl(event.currentTarget); };
-  const handlePopoverClose = () => { setAnchorEl(null); };
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const handlePopoverClick      = (event: any) => { setAnchorEl(event.currentTarget); };
+  const handlePopoverClose      = () => { setAnchorEl(null); };
+  const open                    = Boolean(anchorEl);
+  const id                      = open ? 'simple-popover' : undefined;
 
 
   // Dialgoue sequence
@@ -645,42 +635,42 @@ const ChainHighlightSlider = () => {
 
                 <SeqViz
                   style={{ padding: "10px", margin: "10px", fontSize: "8px", size: '8px', width: "800px", height: "200px" }}
-                  onSelection={(e) => { 
+                  onSelection={(e) => {
                     console.log("Got range : ", e.start, " --> ", e.end);
                     console.log(e);
-                    if (e.start === e.end){
+                    if (e.start === e.end) {
                       return
                     }
-                    
-                    if (e.start > e.end){
-                      setResidueRange([e.end,e.start])
+
+                    if (e.start > e.end) {
+                      setResidueRange([e.end, e.start])
                     }
-                    else{
-                      setResidueRange([e.start,e.end])
+                    else {
+                      setResidueRange([e.start, e.end])
                     }
 
-                    paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
-                   }}
+                    paintMolstarCanvas(residueRange, auth_asym_id as string)
+                  }}
                   showIndex={true}
                   viewer="linear"
                   annotations={[{
-                    color    : "blue",
+                    color: "blue",
                     direction: 1,
-                    end      : residueRange[1],
-                    start    : residueRange[0],
-                    name     : 'selected',
-                    id       : "none",
+                    end: residueRange[1],
+                    start: residueRange[0],
+                    name: 'selected',
+                    id: "none",
                     // @ts-ignore
                     type: ""
                   }]}
                   seq={currentChainFull?.entity_poly_seq_one_letter_code_can} showAnnotations={false} />
               </Grid>
-              
-              <div style={{display:"flex", justifyContent:"center", justifyItems:"center"}}>
 
-<Button fullWidth>Select</Button>
-<Button fullWidth>Download seq</Button>
-<Button fullWidth>Download cif</Button>
+              <div style={{ display: "flex", justifyContent: "center", justifyItems: "center" }}>
+
+                <Button fullWidth>Select</Button>
+                <Button fullWidth>Download seq</Button>
+                <Button fullWidth>Download cif</Button>
               </div>
               {/* <Grid direction="row"  container xs={2} style={{ display:"flex",  outline:"1px solid black", width: "100%" }}>
 
@@ -857,6 +847,412 @@ const ChainHighlightSlider = () => {
   );
 }
 
+
+
+// const ChainHighlightSlider = () => {
+
+//   // takes in a full protein or rna
+//   const current_chain_to_highlight              = useSelector((appstate: AppState) => appstate.visualization.structure_tab.highlighted_chain)
+//   const fullstruct_cache                        = useSelector((appstate: AppState) => appstate.visualization.full_structure_cache)
+
+//   const [currentChainFull, setCurrentChainFull] = React.useState<Protein | RNA | null>(null)
+
+//   const [residueRange, setResidueRange] = React.useState<number[]>([0, 0]);  // current slider value
+//   const [MaxRes, setMaxRes] = React.useState<number>(0);         // keep track of what's the max residue range
+
+
+//   useEffect(() => {
+//     if (fullstruct_cache && current_chain_to_highlight) {
+//       // pluck the chain off the full structure
+//       const pickFullChain = [...fullstruct_cache.proteins, ...(() => {
+//         if (fullstruct_cache.rnas === undefined || fullstruct_cache.rnas === null) {
+//           return []
+//         } else {
+//           return fullstruct_cache.rnas
+//         }
+//       })()].filter(c => c.auth_asym_id === current_chain_to_highlight)
+
+//       if (pickFullChain.length < 1) {
+//         console.log("Haven't found chain with this asym_id on the full structure. Something went terribly wrong.");
+//       } else {
+//         setCurrentChainFull(pickFullChain[0])
+//         setResidueRange([0, pickFullChain[0].entity_poly_seq_length])
+//         setMaxRes(pickFullChain[0].entity_poly_seq_length)
+//       }
+//     }
+//     if (fullstruct_cache === null) {
+//       setCurrentChainFull(null)
+//       setMaxRes(0)
+//     }
+
+//     else if (current_chain_to_highlight === null) {
+//       // setInFocus(null)
+//     }
+
+//   }, [
+//     current_chain_to_highlight,
+//     fullstruct_cache
+//   ])
+
+
+//   const paintMolstarCanvas = (resRange: number[], chain_to_highlight: string) => {
+//     var selectSections =
+//     {
+//       instance_id: 'ASM_1',
+//       auth_asym_id: chain_to_highlight,
+//       start_residue_number: resRange[0] === 0 ? 1 : resRange[0],
+//       end_residue_number: resRange[1],
+//       color: { r: 255, g: 255, b: 255 },
+//       focus: true
+//     }
+//     // console.log("got select params options", selectSections);
+
+//     // viewerInstance.visual.select({ data: selectSections, nonSelectedColor: { r: 180, g: 180, b: 180 } })
+//     // { data: [{ struct_asym_id: 'B', start_residue_number: 1, end_residue_number: 6, color:{r:255,g:255,b:0}, focus: true }]}
+//     viewerInstance.visual.select({
+//       data: [selectSections], nonSelectedColor: { r: 50, g: 50, b: 50 }
+//     })
+//   };
+
+//   // const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 300)
+
+//   const handleSearchRange = () => {
+//     if (current_chain_to_highlight === null) { window.alert('Chain to highlight is null. Provide asym_id to paint.'); return }
+//     paintMolstarCanvas(residueRange, current_chain_to_highlight)
+//     console.log(`Target asym_id: ${current_chain_to_highlight}. Searching range: [${residueRange}]`)
+
+//   }
+
+//   const handleSliderChange = (event: Event, newvalue: number[]) => {
+//     let _: number[] = newvalue;
+//     if (newvalue[1] > MaxRes) { _[1] = MaxRes }
+//     if (newvalue[0] < 0) { _[0] = 0 }
+//     if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
+//     setResidueRange(_);
+
+//     if (_[0] === _[1]) { return }
+//     paintMolstarCanvas(_, current_chain_to_highlight as string);
+//   }
+
+
+//   const handleResRangeStart = (endVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+
+//     let numeric = Number(event.target.value.replace(/^\D+/g, ''));
+//     if (numeric > MaxRes) { numeric = MaxRes }
+//     if (numeric < 0) { numeric = 0 }
+//     setResidueRange([numeric.toString() === '' ? 0 : numeric, endVal])
+//     paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
+//   };
+
+//   const handleResRangeEnd = (startVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+//     console.log(`Max res is ${MaxRes} res range 0 is ${residueRange[0]}    resrange 1 is ${residueRange[1]}`);
+//     let numeric = Number(event.target.value.replace(/^\D+/g, ''));
+//     if (numeric > MaxRes) {
+//       numeric = MaxRes
+//     }
+//     if (numeric < 0) {
+//       numeric = 0
+//     }
+//     setResidueRange([startVal, numeric.toString() === '' ? MaxRes : Number(numeric)])
+//     paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
+//   };
+
+
+
+//   // Donwload Popover
+//   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+//   const handlePopoverClick = (event: any) => { setAnchorEl(event.currentTarget); };
+//   const handlePopoverClose = () => { setAnchorEl(null); };
+//   const open = Boolean(anchorEl);
+//   const id = open ? 'simple-popover' : undefined;
+
+
+//   // Dialgoue sequence
+//   const [dialogueOpen, setDialogueOpen] = React.useState(false);
+//   const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
+
+//   const handleDialogueClickOpen = (scrollType: DialogProps['scroll']) => () => {
+//     setDialogueOpen(true);
+//     setScroll(scrollType);
+//   };
+
+//   const handleDialogueClose = () => {
+//     setDialogueOpen(false);
+//   };
+
+//   const descriptionElementRef = React.useRef<HTMLElement>(null);
+//   React.useEffect(() => {
+//     if (open) {
+//       const { current: descriptionElement } = descriptionElementRef;
+//       if (descriptionElement !== null) {
+//         descriptionElement.focus();
+//       }
+//     }
+//   }, [open]);
+
+
+//   type SeqVizSelection = {
+//     clockwise: boolean
+//     element: any
+//     end: number
+//     gc: number
+//     length: number
+//     name: string
+//     ref: string
+//     seq: string
+//     start: number
+//     tm: number
+//     type: string
+//   }
+
+
+//   return (
+//     <Card variant="outlined" style={{ minWidth: "100%", height: "maxContent", display: "flex", flexDirection: "row" }}>
+
+
+//       <Grid container >
+
+//         <Grid container direction={"column"} item spacing={2} xs={3} style={{ padding: "10px" }} >
+
+//           <Grid item xs={4}>
+//             <Paper variant="outlined" elevation={2}
+//               id='outlined-interact'
+//               style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
+//               <DownloadIcon onClick={handlePopoverClick} style={{ width: "50px", height: "50px" }} />
+//             </Paper>
+//           </Grid>
+
+
+//           <Popover
+//             id={id}
+//             open={open}
+//             anchorEl={anchorEl}
+//             onClose={handlePopoverClose}
+//             style={{ padding: "20px" }}
+//             anchorOrigin={{
+//               vertical: "bottom",
+//               horizontal: "center",
+//             }}
+//             transformOrigin={{ vertical: "top", horizontal: "center", }}>
+
+//             <Grid container direction="column">
+
+//               <Grid item xs={10}>
+
+//                 <SeqViz
+//                   style={{ padding: "10px", margin: "10px", fontSize: "8px", size: '8px', width: "800px", height: "200px" }}
+//                   onSelection={(e) => {
+//                     console.log("Got range : ", e.start, " --> ", e.end);
+//                     console.log(e);
+//                     if (e.start === e.end) {
+//                       return
+//                     }
+
+//                     if (e.start > e.end) {
+//                       setResidueRange([e.end, e.start])
+//                     }
+//                     else {
+//                       setResidueRange([e.start, e.end])
+//                     }
+
+//                     paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
+//                   }}
+//                   showIndex={true}
+//                   viewer="linear"
+//                   annotations={[{
+//                     color: "blue",
+//                     direction: 1,
+//                     end: residueRange[1],
+//                     start: residueRange[0],
+//                     name: 'selected',
+//                     id: "none",
+//                     // @ts-ignore
+//                     type: ""
+//                   }]}
+//                   seq={currentChainFull?.entity_poly_seq_one_letter_code_can} showAnnotations={false} />
+//               </Grid>
+
+//               <div style={{ display: "flex", justifyContent: "center", justifyItems: "center" }}>
+
+//                 <Button fullWidth>Select</Button>
+//                 <Button fullWidth>Download seq</Button>
+//                 <Button fullWidth>Download cif</Button>
+//               </div>
+//               {/* <Grid direction="row"  container xs={2} style={{ display:"flex",  outline:"1px solid black", width: "100%" }}>
+
+//                 <Grid item xs={3}></Grid>
+
+//                 <Grid item xs={3}><Button fullWidth>Download seq</Button></Grid>
+
+//                 <Grid item xs={3}></Grid>
+//               </Grid> */}
+
+//             </Grid>
+
+//           </Popover>
+//           {/* <Dialog
+//         open={dialogueOpen}
+//         onClose={handleDialogueClose}
+//         scroll={scroll}
+//         aria-labelledby="scroll-dialog-title"
+//         aria-describedby="scroll-dialog-description"
+//       >
+//         <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
+//         <DialogContent dividers={scroll === 'paper'} style={{height:"20vh", width:"70vw", padding:"10px", margin:"5px", display:"flex", justifyContent:"center"}}>
+//             <SeqViz
+//             style={{padding:"20px"}}
+//               onSelection = {(e) => { console.log(e) }}
+//               showIndex   = {true}
+//               viewer      = "linear"
+//               seq         = {currentChainFull?.entity_poly_seq_one_letter_code_can} showAnnotations = {false} />
+//         </DialogContent>
+//         <DialogActions>
+//           <Button onClick={handleClose}>Cancel</Button>
+//           <Button onClick={handleClose}>Subscribe</Button>
+//         </DialogActions>
+//       </Dialog> */}
+
+//           {/* <Popover
+//             // id           = {id}
+//             open         = {open}
+//             anchorEl     = {anchorEl}
+//             onClose      = {handleClose}
+//             anchorOrigin = {{
+//               vertical: 'bottom',
+//               horizontal: 'left',
+//             }}
+
+
+//             >
+//               <Paper style={{outline:"1px solid black"}}>
+
+
+//               </Paper>
+//           </Popover> */}
+
+//           <Grid item xs={4} >
+//             <Paper variant="outlined" elevation={2} id='outlined-interact' style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
+//               <SearchIcon onClick={handleSearchRange} style={{ width: "50px", height: "50px" }} />
+//             </Paper>
+//           </Grid>
+
+//           <Grid item xs={4}>
+//             <Paper variant="outlined" elevation={2}
+//               id='outlined-interact'
+//               style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
+//               <ContentCutIcon style={{ width: "50px", height: "50px" }}
+//               />
+//             </Paper>
+//           </Grid>
+//         </Grid>
+
+//         <Grid container xs={9} style={{ height: "100%", width: "100%" }}>
+
+//           <Grid xs={12} item >
+
+//             <Grid
+//               container
+//               direction="row"
+//               justify="space-between"
+//               alignItems="center"
+//               component="div"
+//               style={{
+//                 fontSize: "12",
+//                 padding: "5px",
+//               }}
+//             >
+//               <Typography variant="body2" color="textSecondary" component="p" >
+//                 {currentChainFull?.entity_poly_polymer_type || " "}
+//               </Typography>
+//               <Typography variant="body2" color="textSecondary" component="p"  >
+//                 {currentChainFull?.nomenclature[0] as string || ""}
+//               </Typography>
+//               <Typography variant="body2" color="textSecondary" component="p" >
+//                 Chain {currentChainFull?.auth_asym_id || " "}
+//               </Typography>
+//             </Grid>
+
+//             <Grid
+//               container
+//               style={{ padding: "5px" }}
+//               direction="column"
+//               justify="flex-start"
+//               alignItems="flex-start"
+//               component="div"
+//             >
+//               <CardBodyAnnotation keyname={"Source Organism"} value={truncate(currentChainFull?.src_organism_names[0] || " ", 50, 50)} />
+//               <CardBodyAnnotation keyname={"Host Organism"} value={truncate(currentChainFull?.host_organism_names[0] || " ", 50, 50)} />
+//               <CardBodyAnnotation keyname={"Description"} value={currentChainFull?.rcsb_pdbx_description || ""} />
+//             </Grid>
+
+//           </Grid>
+
+
+//           <Grid xs={12} item
+//           >
+//             <Paper variant="outlined"
+//               style={{
+//                 height: "70px", width: "100%", paddingBottom: "5px", paddingTop: "5px", paddingLeft: "10px", paddingRight: "10px"
+//               }}>
+
+//               <Grid container direction="row" xs={12} spacing={1} style={{ width: "100%", height: "50px" }} >
+//                 <Grid item xs={3}>
+//                   <TextField
+//                     // style    = {{width:"50px"}}
+//                     value={residueRange[0]}
+//                     onChange={handleResRangeStart(residueRange[1])}
+//                     id="outlined-number"
+//                     label={`Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}`}
+//                     fullWidth
+//                     disabled={currentChainFull === null}
+//                     type="number"
+//                     InputLabelProps={{ style: { fontSize: 16 } }}
+//                   />
+//                 </Grid>
+
+//                 <Grid item xs={6} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "10px", }}>
+//                   <Slider
+//                     style={{ width: "100%" }}
+//                     getAriaLabel={() => 'Chain XXX'}
+//                     value={residueRange}
+//                     disabled={currentChainFull === null}
+//                     min={0}
+//                     max={currentChainFull?.entity_poly_seq_length}
+//                     // @ts-ignore
+//                     onChange={handleSliderChange}
+//                     valueLabelDisplay="auto"
+//                   // getAriaValueText  = {valuetext}
+//                   />
+//                 </Grid>
+
+//                 <Grid item xs={3}>
+//                   <TextField
+//                     // style    = {{width:"50px"}}
+//                     disabled={currentChainFull === null}
+//                     value={residueRange[1]}
+//                     onChange={handleResRangeEnd(residueRange[0])}
+//                     id="ou2tlined-number"
+//                     fullWidth
+//                     label={`Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[1] - 1]}`}
+//                     type="number"
+//                     InputLabelProps={{
+//                       shrink: true,
+//                       style: { fontSize: 16 }
+//                     }}
+//                   />
+
+//                 </Grid>
+//               </Grid>
+//             </Paper>
+//           </Grid>
+
+//         </Grid>
+//       </Grid>
+
+//     </Card>
+//   );
+// }
+
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
 // @ts-ignore
@@ -938,7 +1334,7 @@ const VisualizationPage = (props: any) => {
       }
   }, [])
 
-  // const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => _.flattenDeep(Object.values(state.proteins.ban_classes)))
+  const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => _.flattenDeep(Object.values(state.proteins.ban_classes)))
 
   const selectStruct = (rcsb_id: string) => {
     // https://github.com/molstar/pdbe-molstar/wiki/1.-PDBe-Molstar-as-JS-plugin#plugin-parameters-options
@@ -1119,12 +1515,45 @@ const VisualizationPage = (props: any) => {
     }
   })();
 
-  const current_tab = useSelector((state: AppState) => state.visualization.component_tab)
-  const vis_state = useSelector((state: AppState) => state.visualization)
-  const handleTabClick = (tab: VisualizationTabs) => { dispatch({ type: COMPONENT_TAB_CHANGE, tab }); }
+
+
+
+
+  const current_tab    = useSelector((state: AppState) => state.visualization.component_tab)
+  const vis_state      = useSelector((state: AppState) => state.visualization)
+  const handleTabClick = (tab: VisualizationTabs) => { 
+    dispatch({ type: "RESET_ACTION" }); 
+    dispatch({ type: COMPONENT_TAB_CHANGE, tab }); 
+  }
+  const cached_struct  = useSelector((state: AppState) => state.visualization.full_structure_cache)
 
   const current_neostruct = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+
   const current_chain_to_highlight = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
+
+  const current_protein_class: ProteinClass | null = useSelector((state: AppState) => state.visualization.protein_tab.class)
+  const current_protein_parent: string | null      = useSelector((state: AppState) => state.visualization.protein_tab.parent)
+  const current_protein_auth_asym_id: string | null        = useSelector((state: AppState) => state.visualization.protein_tab.auth_asym_id)
+
+  useEffect(() => {
+    if (current_protein_class && current_protein_parent) {
+      // identify the asym_id of the given class in the parent (the cached version should be available)
+      if (cached_struct === null) {
+        console.log("We have a problem! cahched struct not here");
+      } else {
+        const found = cached_struct.proteins.filter(c => c.nomenclature.includes(current_protein_class))
+        if (found.length < 1) {
+          alert("Could not find protein class " + current_protein_class + ` in the cached structure ${cached_struct === null ? "null" :cached_struct.rcsb_id}. This is a bug, please report it.`);
+        }
+
+        dispatch(protein_update_auth_asym_id(found[0].auth_asym_id))
+
+      }
+    } else {
+        dispatch(protein_update_auth_asym_id(null))
+    }
+  }, [current_protein_class, current_protein_parent, cached_struct])
+
 
 
   return (
@@ -1182,8 +1611,7 @@ const VisualizationPage = (props: any) => {
             {(() => {
               switch (current_tab) {
                 case 'protein_tab':
-                  return "Select protein "
-                // return <SelectProtein proteins={prot_classes} getCifChainByClass={getCifChainByClass} />
+                  return <SelectProtein proteins={prot_classes} getCifChainByClass={getCifChainByClass} />
                 case 'structure_tab':
                   return <SelectStruct items={all_structures} selectStruct={selectStruct} />
                 case 'rna_tab':
@@ -1196,32 +1624,27 @@ const VisualizationPage = (props: any) => {
 
           </ListItem>
 
-
           {current_neostruct === null ? null : <ListItem> <StructHeroVertical d={current_neostruct} inCart={false} topless={true} /></ListItem>}
 
-          {current_chain_to_highlight === null ? null :
 
 
-            <ListItem style={{ width: "maxWidth" }}>
+          {/* Chain Selector  */}
+          {(() => {
+            switch (current_tab) {
+              case 'protein_tab':
+                return current_protein_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_protein_auth_asym_id} full_structure_cache={cached_struct} /></ListItem>
+              case 'structure_tab':
+                return current_chain_to_highlight === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_chain_to_highlight} full_structure_cache={cached_struct} /></ListItem>
+              case 'rna_tab':
+                return "Select rna"
+              // return <SelectRna items={[]} getCifChainByClass={getCifChainByClass} />
+              default:
+                return "Null"
+            }
+          })()}
 
-              <ChainHighlightSlider />
 
-            </ListItem>
-          }
 
-          {current_tab === 'structure_tab' ?
-            <ListItem>
-              <Button fullWidth variant="outlined" color="primary" onClick={
-                () => {
-                  viewerInstance.visual.reset({ camera: true, theme: true })
-                }
-              }>
-                Reset
-              </Button>
-            </ListItem>
-            : null
-
-          }
 
 
           <ListItem>
@@ -1232,7 +1655,6 @@ const VisualizationPage = (props: any) => {
                     return <DownloadElement elemtype={'protein'} id={vis_state.protein_tab.class} parent={vis_state.protein_tab.parent as string} />
                   case 'rna_tab':
                     return <DownloadElement elemtype={'rna'} id={vis_state.rna_tab.class} parent={vis_state.rna_tab.parent as string} />
-
                   case 'structure_tab':
                     return <DownloadElement elemtype={'structure'} id={vis_state.structure_tab.structure?.struct.rcsb_id === null ? null : vis_state.structure_tab.structure?.struct.rcsb_id as string} />
                 }
@@ -1258,12 +1680,9 @@ const VisualizationPage = (props: any) => {
             }
           </ListItem> */}
 
-
           <ListItem>
             <DashboardButton />
           </ListItem>
-
-
 
         </List>
       </Grid>
