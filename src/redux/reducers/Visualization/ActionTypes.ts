@@ -17,7 +17,6 @@ export const UPDATE_CACHED_FULLSTRUCT = "UPDATE_CACHED_FULLSTRUCT"
 
 
 
-
 export const STRUCTURE_CHANGE            = "STRUCTURE_CHANGE"
 
 export const PROTEIN_CHANGE              = "PROTEIN_CHANGE"

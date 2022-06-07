@@ -208,7 +208,6 @@ export const StructHeroVertical = ({ d, inCart, topless }: { d: NeoStruct | null
   const classes  = horizontalStyle();
   const history  = useHistory();
   const dispatch = useDispatch()
-  useEffect(() => {console.log("D changed : ", d)},[d])
 
   return (
     d === null ? <div>Nothing </div> :
