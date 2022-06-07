@@ -216,7 +216,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 const SelectProtein = ({ proteins, getCifChainByClass }:
   { proteins: BanClassMetadata[], getCifChainByClass: (strand: string, parent: string) => void }) => {
 
-  const styles = useSelectStyles();
+  const styles   = useSelectStyles();
   const dispatch = useDispatch();
 
   const [curProtClass, setProtClass] = React.useState<ProteinClass | null>(null);
@@ -279,16 +279,14 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
 
 const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifChainByClass: (strand: string, parent: string) => void }) => {
 
-  const styles = useSelectStyles();
+  const styles   = useSelectStyles();
   const dispatch = useDispatch();
 
-  const [curRna, setCurRna] = React.useState<RNAClass | null>(null);
+  const [curRna, setCurRna]          = React.useState<RNAClass | null>(null);
   const [curRnaParent, setRnaParent] = React.useState<string | null>(null);
 
-  const parents = useSelector((state: AppState) => state.rna.rna_classes_derived)
+  const parents                      = useSelector((state: AppState) => state.rna.rna_classes_derived)
 
-  useEffect(() => {
-  }, [curRna, curRnaParent])
 
   var rnaClasses: { v: string, t: RNAClass }[] = [
     { v: 'mRNA', t: 'mRNA' },
@@ -561,15 +559,6 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
   const [dialogueOpen, setDialogueOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
 
-  const handleDialogueClickOpen = (scrollType: DialogProps['scroll']) => () => {
-    setDialogueOpen(true);
-    setScroll(scrollType);
-  };
-
-  const handleDialogueClose = () => {
-    setDialogueOpen(false);
-  };
-
   const descriptionElementRef = React.useRef<HTMLElement>(null);
   React.useEffect(() => {
     if (open) {
@@ -668,57 +657,10 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
                 <Button fullWidth>Download seq</Button>
                 <Button fullWidth>Download cif</Button>
               </div>
-              {/* <Grid direction="row"  container xs={2} style={{ display:"flex",  outline:"1px solid black", width: "100%" }}>
-
-                <Grid item xs={3}></Grid>
-
-                <Grid item xs={3}><Button fullWidth>Download seq</Button></Grid>
-
-                <Grid item xs={3}></Grid>
-              </Grid> */}
 
             </Grid>
 
           </Popover>
-          {/* <Dialog
-        open={dialogueOpen}
-        onClose={handleDialogueClose}
-        scroll={scroll}
-        aria-labelledby="scroll-dialog-title"
-        aria-describedby="scroll-dialog-description"
-      >
-        <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
-        <DialogContent dividers={scroll === 'paper'} style={{height:"20vh", width:"70vw", padding:"10px", margin:"5px", display:"flex", justifyContent:"center"}}>
-            <SeqViz
-            style={{padding:"20px"}}
-              onSelection = {(e) => { console.log(e) }}
-              showIndex   = {true}
-              viewer      = "linear"
-              seq         = {currentChainFull?.entity_poly_seq_one_letter_code_can} showAnnotations = {false} />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
-        </DialogActions>
-      </Dialog> */}
-
-          {/* <Popover
-            // id           = {id}
-            open         = {open}
-            anchorEl     = {anchorEl}
-            onClose      = {handleClose}
-            anchorOrigin = {{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-
-
-            >
-              <Paper style={{outline:"1px solid black"}}>
-
-
-              </Paper>
-          </Popover> */}
 
           <Grid item xs={4} >
             <Paper variant="outlined" elevation={2} id='outlined-interact' style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
