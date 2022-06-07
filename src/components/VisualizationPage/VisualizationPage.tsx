@@ -36,8 +36,9 @@ import { truncate } from "../Main";
 import './VisualizationPage.css'
 import DownloadIcon from '@mui/icons-material/Download';
 import { SeqViz } from "seqviz";
-import  { DialogProps } from '@mui/material/Dialog';
+import { DialogProps } from '@mui/material/Dialog';
 import { requestBanClass } from "../../redux/reducers/Proteins/ActionTypes";
+import { coerce_full_structure_to_neostruct } from "../../redux/reducers/Visualization/VisualizationReducer";
 
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
@@ -215,12 +216,12 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 const SelectProtein = ({ proteins, getCifChainByClass }:
   { proteins: BanClassMetadata[], getCifChainByClass: (strand: string, parent: string) => void }) => {
 
-  const styles   = useSelectStyles();
+  const styles = useSelectStyles();
   const dispatch = useDispatch();
 
-  const [curProtClass, setProtClass]   = React.useState<ProteinClass | null>(null);
-  const [curProtParent, setProtParent] = React.useState<string|null>(null);
-  const availablestructs               = useSelector((state: AppState) => state.proteins.ban_class)
+  const [curProtClass, setProtClass] = React.useState<ProteinClass | null>(null);
+  const [curProtParent, setProtParent] = React.useState<string | null>(null);
+  const availablestructs = useSelector((state: AppState) => state.proteins.ban_class)
 
   const chooseProtein = (event: React.ChangeEvent<{ value: unknown }>) => {
     let item = event.target.value as string
@@ -239,7 +240,7 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
     setProtParent(newvalue.parent_rcsb_id);
     dispatch(cache_full_struct(newvalue.parent_rcsb_id))
     getCifChainByClass(curProtClass as ProteinClass, newvalue.parent_rcsb_id)
-    dispatch(protein_change(curProtClass, newvalue.parent_rcsb_id ))
+    dispatch(protein_change(curProtClass, newvalue.parent_rcsb_id))
 
   };
   return (
@@ -555,10 +556,10 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
 
   // Donwload Popover
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const handlePopoverClick      = (event: any) => { setAnchorEl(event.currentTarget); };
-  const handlePopoverClose      = () => { setAnchorEl(null); };
-  const open                    = Boolean(anchorEl);
-  const id                      = open ? 'simple-popover' : undefined;
+  const handlePopoverClick = (event: any) => { setAnchorEl(event.currentTarget); };
+  const handlePopoverClose = () => { setAnchorEl(null); };
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
 
   // Dialgoue sequence
@@ -1519,21 +1520,20 @@ const VisualizationPage = (props: any) => {
 
 
 
-  const current_tab    = useSelector((state: AppState) => state.visualization.component_tab)
-  const vis_state      = useSelector((state: AppState) => state.visualization)
-  const handleTabClick = (tab: VisualizationTabs) => { 
-    dispatch({ type: "RESET_ACTION" }); 
-    dispatch({ type: COMPONENT_TAB_CHANGE, tab }); 
+  const current_tab = useSelector((state: AppState) => state.visualization.component_tab)
+  const vis_state = useSelector((state: AppState) => state.visualization)
+  const handleTabClick = (tab: VisualizationTabs) => {
+    dispatch({ type: "RESET_ACTION" });
+    dispatch({ type: COMPONENT_TAB_CHANGE, tab });
   }
-  const cached_struct  = useSelector((state: AppState) => state.visualization.full_structure_cache)
-
-  const current_neostruct = useSelector((state: AppState) => state.visualization.structure_tab.structure)
-
+  const cached_struct              = useSelector((state: AppState) => state.visualization.full_structure_cache)
+  const current_neostruct          = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
 
   const current_protein_class: ProteinClass | null = useSelector((state: AppState) => state.visualization.protein_tab.class)
-  const current_protein_parent: string | null      = useSelector((state: AppState) => state.visualization.protein_tab.parent)
-  const current_protein_auth_asym_id: string | null        = useSelector((state: AppState) => state.visualization.protein_tab.auth_asym_id)
+  const current_protein_parent: string | null = useSelector((state: AppState) => state.visualization.protein_tab.parent)
+  const current_protein_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.protein_tab.auth_asym_id)
+  const current_protein_neostruct :NeoStruct | null = useSelector((state: AppState) => current_protein_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id===current_protein_parent)[0])
 
   useEffect(() => {
     if (current_protein_class && current_protein_parent) {
@@ -1543,14 +1543,12 @@ const VisualizationPage = (props: any) => {
       } else {
         const found = cached_struct.proteins.filter(c => c.nomenclature.includes(current_protein_class))
         if (found.length < 1) {
-          alert("Could not find protein class " + current_protein_class + ` in the cached structure ${cached_struct === null ? "null" :cached_struct.rcsb_id}. This is a bug, please report it.`);
+          alert("Could not find protein class " + current_protein_class + ` in the cached structure ${cached_struct === null ? "null" : cached_struct.rcsb_id}. This is a bug, please report it.`);
         }
-
         dispatch(protein_update_auth_asym_id(found[0].auth_asym_id))
-
       }
     } else {
-        dispatch(protein_update_auth_asym_id(null))
+      dispatch(protein_update_auth_asym_id(null))
     }
   }, [current_protein_class, current_protein_parent, cached_struct])
 
@@ -1607,13 +1605,18 @@ const VisualizationPage = (props: any) => {
 
           </ListItem>
 
+
+
+          {/* Tab Selectors */}
           <ListItem>
             {(() => {
               switch (current_tab) {
                 case 'protein_tab':
                   return <SelectProtein proteins={prot_classes} getCifChainByClass={getCifChainByClass} />
+
                 case 'structure_tab':
                   return <SelectStruct items={all_structures} selectStruct={selectStruct} />
+
                 case 'rna_tab':
                   return "Select rna"
                 // return <SelectRna items={[]} getCifChainByClass={getCifChainByClass} />
@@ -1621,10 +1624,30 @@ const VisualizationPage = (props: any) => {
                   return "Null"
               }
             })()}
-
           </ListItem>
 
-          {current_neostruct === null ? null : <ListItem> <StructHeroVertical d={current_neostruct} inCart={false} topless={true} /></ListItem>}
+{/*  */}
+          {(() => {
+            switch (current_tab) {
+              case 'protein_tab':
+                return current_protein_parent === null ? null : <ListItem> <StructHeroVertical d={current_protein_neostruct} inCart={false} topless={true} /></ListItem>
+
+              case 'structure_tab':
+                return current_neostruct === null ? null : <ListItem> <StructHeroVertical d={current_neostruct} inCart={false} topless={true} /></ListItem>
+
+              case 'rna_tab':
+                return "Select rna"
+
+              // return <SelectRna items={[]} getCifChainByClass={getCifChainByClass} />
+              default:
+                return "Null"
+            }
+          })()}
+
+          {/* {
+            coerce_full_structure_to_neostruct(cached_struct) === null ? null : <ListItem> <StructHeroVertical d={coerce_full_structure_to_neostruct(cached_struct) as NeoStruct} 
+            inCart={false} topless={true} /></ListItem>
+          } */}
 
 
 

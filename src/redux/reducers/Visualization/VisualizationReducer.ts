@@ -7,19 +7,19 @@ import { VisualizationActions } from './ActionTypes'
 // Each structure ought to have full chains represented
 
 export interface VisualizationReducerState {
-	component_tab       : "rna_tab" | "protein_tab" | "structure_tab",
+	component_tab: "rna_tab" | "protein_tab" | "structure_tab",
 	full_structure_cache: RibosomeStructure | null
-	structure_tab       : {
-		structure: NeoStruct | null,
+	structure_tab: {
+		structure        : NeoStruct | null,
 		highlighted_chain: string | null
 	},
 	protein_tab: {
-		auth_asym_id : string | null,
-		class:   ProteinClass | null,
+		auth_asym_id: string | null,
+		class: ProteinClass | null,
 		parent: string | null
 	},
 	rna_tab: {
-		auth_asym_id : string | null,
+		auth_asym_id: string | null,
 		class: RNAClass | null,
 		parent: string | null
 	}
@@ -44,30 +44,38 @@ const init: VisualizationReducerState = {
 	}
 }
 
-export const coerce_full_structure_to_neostruct = (_: RibosomeStructure | null): NeoStruct | null => (_ === null ? null : {
-	ligands: _.ligands !== null ? _.ligands.map(l => l.chemicalId) : [],
-	rnas: _.rnas !== null ? _.rnas.map(r => {
-		return {
-			auth_asym_id: r.auth_asym_id,
-			entity_poly_seq_one_letter_code: r.entity_poly_seq_one_letter_code,
-			nomenclature: r.nomenclature
+export const coerce_full_structure_to_neostruct = (_: RibosomeStructure | null): NeoStruct | null => {
+	console.log("Got fullstruct:" ,_);
+
+	const coerced = _ === null ? null : {
+		ligands: _.ligands !== null ? _.ligands.map(l => l.chemicalId) : [],
+		rnas: _.rnas !== null ? _.rnas.map(r => {
+			return {
+				auth_asym_id                   : r.auth_asym_id,
+				entity_poly_seq_one_letter_code: r.entity_poly_seq_one_letter_code,
+				nomenclature                   : r.nomenclature
+			}
+		}) : [],
+		rps: _.proteins !== null ? _.proteins.map(rp => {
+			return {
+				'auth_asym_id': rp.auth_asym_id,
+				'entity_poly_seq_one_letter_code': rp.entity_poly_seq_one_letter_code,
+				'nomenclature': rp.nomenclature
+			}
+		}) : [],
+		struct: {
+			..._
 		}
-	}) : [],
-	rps: _.proteins !== null ? _.proteins.map(rp => {
-		return {
-			'auth_asym_id': rp.auth_asym_id,
-			'entity_poly_seq_one_letter_code': rp.entity_poly_seq_one_letter_code,
-			'nomenclature': rp.nomenclature
-		}
-	}) : [],
-	struct: {
-		..._
 	}
-})
+
+	console.log("Coerced to neostruct:", coerced);
+
+	return coerced
+}
 
 
 export const VisualizationReducer = (
-	state : VisualizationReducerState = init,
+	state: VisualizationReducerState = init,
 	action: VisualizationActions
 ): VisualizationReducerState => {
 	switch (action.type) {
@@ -77,19 +85,21 @@ export const VisualizationReducer = (
 			return { ...state, full_structure_cache: action.nextcache }
 
 		case "STRUCTURE_CHANGE":  // this one is for selected...
-			if (action.structure === null) { return {
-				...state,
-				structure_tab: {
-					highlighted_chain: null,
-					structure        : null
+			if (action.structure === null) {
+				return {
+					...state,
+					structure_tab: {
+						highlighted_chain: null,
+						structure: null
+					}
 				}
-			} }
+			}
 			else return {
 				...state,
 
 				structure_tab: {
 					highlighted_chain: action.highlighted_chain,
-					structure        : action.structure
+					structure: action.structure
 				}
 			}
 
@@ -100,8 +110,8 @@ export const VisualizationReducer = (
 			return {
 				...state, protein_tab: {
 					auth_asym_id: state.protein_tab.auth_asym_id,
-					class       : action.class,
-					parent      : action.parent
+					class: action.class,
+					parent: action.parent
 				}
 			}
 
@@ -109,8 +119,8 @@ export const VisualizationReducer = (
 			return {
 				...state, rna_tab: {
 					auth_asym_id: state.rna_tab.auth_asym_id,
-					class       : action.class,
-					parent      : action.parent
+					class: action.class,
+					parent: action.parent
 				}
 			}
 
@@ -120,16 +130,20 @@ export const VisualizationReducer = (
 		case "FETCH_FULL_STRUCT_GO":
 			return state
 
-			case "PROTEIN_UPDATE_AUTH_ASYM_ID":
-				return {...state, protein_tab: {
+		case "PROTEIN_UPDATE_AUTH_ASYM_ID":
+			return {
+				...state, protein_tab: {
 					...state.protein_tab,
 					auth_asym_id: action.next_auth_asym_id
-				}}
-			case "RNA_UPDATE_AUTH_ASYM_ID":
-				return {...state, rna_tab: {
+				}
+			}
+		case "RNA_UPDATE_AUTH_ASYM_ID":
+			return {
+				...state, rna_tab: {
 					...state.rna_tab,
 					auth_asym_id: action.next_auth_asym_id
-				}}
+				}
+			}
 		default:
 			return state
 	};

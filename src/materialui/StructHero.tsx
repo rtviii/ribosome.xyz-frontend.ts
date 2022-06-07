@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -203,12 +203,15 @@ const horizontalStyle = makeStyles({
 
 });
 
-export const StructHeroVertical = ({ d, inCart, topless }: { d: NeoStruct, inCart: boolean, topless: boolean }) => {
-  const classes = horizontalStyle();
-  const history = useHistory();
+export const StructHeroVertical = ({ d, inCart, topless }: { d: NeoStruct | null, inCart: boolean, topless: boolean }) => {
+
+  const classes  = horizontalStyle();
+  const history  = useHistory();
   const dispatch = useDispatch()
+  useEffect(() => {console.log("D changed : ", d)},[d])
 
   return (
+    d === null ? <div>Nothing </div> :
     <Card className={classes.card} style={{ display: "flex", flexDirection: "row" }} variant='outlined'>
 
       <div>
