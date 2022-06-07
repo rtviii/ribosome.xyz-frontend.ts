@@ -448,7 +448,6 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
   const [residueRange, setResidueRange] = React.useState<number[]>([0, 0]);  // current slider value
   const [MaxRes, setMaxRes] = React.useState<number>(0);         // keep track of what's the max residue range
 
-
   useEffect(() => {
     if (full_structure_cache && auth_asym_id) {
       // pluck the chain off the full structure
@@ -706,11 +705,11 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
 
             <Grid
               container
-              style={{ padding: "5px" }}
-              direction="column"
-              justify="flex-start"
-              alignItems="flex-start"
-              component="div"
+              style      = {{ padding: "5px" }}
+              direction  = "column"
+              justify    = "flex-start"
+              alignItems = "flex-start"
+              component  = "div"
             >
               <CardBodyAnnotation keyname={"Source Organism"} value={truncate(currentChainFull?.src_organism_names[0] || " ", 50, 50)} />
               <CardBodyAnnotation keyname={"Host Organism"} value={truncate(currentChainFull?.host_organism_names[0] || " ", 50, 50)} />
@@ -720,8 +719,7 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
           </Grid>
 
 
-          <Grid xs={12} item
-          >
+          <Grid xs={12} item>
             <Paper variant="outlined"
               style={{
                 height: "70px", width: "100%", paddingBottom: "5px", paddingTop: "5px", paddingLeft: "10px", paddingRight: "10px"

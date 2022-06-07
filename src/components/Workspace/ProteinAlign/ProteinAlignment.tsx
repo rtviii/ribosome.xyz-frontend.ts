@@ -147,15 +147,24 @@ export default function ProteinAlignment() {
 
 
 
+  // const [residueRange1, setResidueRange1] = React.useState<number[]>([0, 0]);  // current slider value
+  // const [MaxRes1, setMaxRes1] = React.useState<number>(0);         // keep track of what's the max residue range
+
+
 
   useEffect(() =>{
     if (chainStructPair1.includes(null)){setRangeSlider1([0, minDistance])}
     if (chainStructPair1[1]===null){setChains1([])}
+    viewerInstance.visual.reset({ camera: true, theme: true })
+    viewerInstance.visual.update({      moleculeId: 'none'})
+
   },[chainStructPair1])
 
   useEffect(() =>{
     if (chainStructPair2.includes(null)){setRangeSlider2([0, minDistance])}
     if (chainStructPair2[1]===null){setChains1([])}
+
+    viewerInstance.visual.reset({ camera: true, theme: true })
   },[chainStructPair2])
 
   // const visualizeAlignment = (
@@ -177,10 +186,13 @@ export default function ProteinAlignment() {
   const visualizeRangedAlignment = (
   ) => {
 
-    console.log("Got:", struct1, struct2, auth_asym_id1, auth_asym_id2, rangeSlider1[0], rangeSlider2[1]);
-
+    
+    console.log("-----------------")
+    console.log("Requesting ranged alignment with values:")
+    console.log(`Struct 2: ${chainStructPair1[1]}, chain ${chainStructPair1[0]} [${rangeSlider1[0]}, ${rangeSlider1[1]}]`)
+    console.log(`Struct 1: ${chainStructPair2[1]}, chain ${chainStructPair2[0]} [${rangeSlider2[0]}, ${rangeSlider2[1]}]`)
+    console.log("-----------------")
     if (chainStructPair1.includes(null) || chainStructPair2.includes(null)) {alert("Please select a chain in both structures to align and a residue range.")}
-
     viewerInstance.visual.update({
       customData: {
         url   : 
@@ -363,7 +375,66 @@ export default function ProteinAlignment() {
             renderInput={(params) => <TextField {...params} label={`Chain 1`} variant="outlined" />}
           />
 
+{/* _____________________New slider */}
+          {/* <Grid xs={12} item>
+            <Paper variant="outlined"
+              style={{
+                height: "70px", width: "100%", paddingBottom: "5px", paddingTop: "5px", paddingLeft: "10px", paddingRight: "10px"
+              }}>
 
+              <Grid container direction="row" xs={12} spacing={1} style={{ width: "100%", height: "50px" }} >
+                <Grid item xs={3}>
+                  <TextField
+                    // style    = {{width:"50px"}}
+                    value={residueRange[0]}
+                    onChange={handleResRangeStart(residueRange[1])}
+                    id="outlined-number"
+                    label={`Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}`}
+                    fullWidth
+                    disabled={currentChainFull === null}
+                    type="number"
+                    InputLabelProps={{ style: { fontSize: 16 } }}
+                  />
+                </Grid>
+
+                <Grid item xs={6} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "10px", }}>
+                  <Slider
+                    style={{ width: "100%" }}
+                    getAriaLabel={() => 'Chain XXX'}
+                    value={residueRange}
+                    disabled={currentChainFull === null}
+                    min={0}
+                    max={currentChainFull?.entity_poly_seq_length}
+                    // @ts-ignore
+                    onChange={handleSliderChange}
+                    valueLabelDisplay="auto"
+                  // getAriaValueText  = {valuetext}
+                  />
+                </Grid>
+
+                <Grid item xs={3}>
+                  <TextField
+                    // style    = {{width:"50px"}}
+                    disabled={currentChainFull === null}
+                    value={residueRange[1]}
+                    onChange={handleResRangeEnd(residueRange[0])}
+                    id="ou2tlined-number"
+                    fullWidth
+                    label={`Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[1] - 1]}`}
+                    type="number"
+                    InputLabelProps={{
+                      shrink: true,
+                      style: { fontSize: 16 }
+                    }}
+                  />
+
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid> */}
+{/* _____________________New slider */}
+
+{/* Old slider 2 */}
           <Slider
             getAriaLabel={() => 'Minimum distance'}
             value={rangeSlider1}
@@ -375,7 +446,12 @@ export default function ProteinAlignment() {
             disabled={chainStructPair1[0] === null}
             disableSwap
           />
+
+{/* Old slider 2 */}
+
+
           range : {rangeSlider1[0]} - {rangeSlider1[1]}
+
         </Grid>
 
         <Grid item style={{ marginBottom: "40px" }}>
