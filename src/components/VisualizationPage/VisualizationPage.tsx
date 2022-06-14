@@ -75,7 +75,7 @@ interface StructSnip {
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
   //! This component controls the structure selection
 
-  const dispatch = useDispatch()
+  const dispatch           = useDispatch()
   const selectStructStyles = (makeStyles({ autocomoplete: { width: "100%" } }))()
 
   // const current_full_struct: RibosomeStructure | null = useSelector((state: AppState) => state.visualization.structure_tab.fullStructProfile)
@@ -116,8 +116,12 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   };
 
   useEffect(() => {
-    console.log("current neostruct changed:", current_neostruct);
 
+    if (current_neostruct===null){
+
+      viewerInstance.visual.reset({ camera: true, theme: true })
+      viewerInstance.visual.update({      moleculeId: 'none'})
+    }
   }, [current_neostruct])
 
   const handleSelectHighlightChain = (event: React.ChangeEvent<{ value: unknown }>, selected_chain: any) => {
@@ -219,9 +223,9 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
   const styles   = useSelectStyles();
   const dispatch = useDispatch();
 
-  const [curProtClass, setProtClass] = React.useState<ProteinClass | null>(null);
+  const [curProtClass, setProtClass]   = React.useState<ProteinClass | null>(null);
   const [curProtParent, setProtParent] = React.useState<string | null>(null);
-  const availablestructs = useSelector((state: AppState) => state.proteins.ban_class)
+  const availablestructs               = useSelector((state: AppState) => state.proteins.ban_class)
 
   const chooseProtein = (event: React.ChangeEvent<{ value: unknown }>) => {
     let item = event.target.value as string
@@ -232,6 +236,9 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
 
   const chooseProtParent = (event: React.ChangeEvent<{ value: unknown }>, newvalue: any) => {
     if (newvalue === null || newvalue.parent_rcsb_id === "Choose a protein class.") {
+
+      viewerInstance.visual.reset({ camera: true, theme: true })
+      viewerInstance.visual.update({      moleculeId: 'none'})
       setProtParent(null);
       dispatch(protein_change(curProtClass, null))
       return
@@ -331,12 +338,17 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
 
               onChange={(event: any, newValue: any) => {
                 if (newValue !== null) {
+
                   console.log("Got newvalue for rna select parent", newValue.parent_rcsb_id)
                   setRnaParent(newValue.parent_rcsb_id)
                   dispatch(cache_full_struct(newValue.parent_rcsb_id))
                   getCifChainByClass(curRna as string, newValue.parent_rcsb_id)
                   dispatch(rna_change(curRna, newValue.parent_rcsb_id))
+
+
                 } else {
+                viewerInstance.visual.reset({ camera: true, theme: true })
+                viewerInstance.visual.update({      moleculeId: 'none'})
                   dispatch(rna_change(curRna, null))
                   setRnaParent(null)
                 }
@@ -485,12 +497,12 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
   const paintMolstarCanvas = (resRange: number[], chain_to_highlight: string) => {
     var selectSections =
     {
-      instance_id: 'ASM_1',
-      auth_asym_id: chain_to_highlight,
-      start_residue_number: resRange[0] === 0 ? 1 : resRange[0],
-      end_residue_number: resRange[1],
-      color: { r: 255, g: 255, b: 255 },
-      focus: true
+      instance_id         : 'ASM_1',
+      auth_asym_id        : chain_to_highlight,
+      start_residue_number: resRange[0] === 0 ? 1     : resRange[0],
+      end_residue_number  : resRange[1],
+      color               : { r: 255, g: 255, b: 255 },
+      focus               : true
     }
     // console.log("got select params options", selectSections);
 
@@ -520,7 +532,6 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
     if (_[0] === _[1]) { return }
     paintMolstarCanvas(_, auth_asym_id as string);
   }
-
 
   const handleResRangeStart = (endVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -1195,14 +1206,12 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 // const viewerInstance2 = new PDBeMolstarPlugin() as any;
 const VisualizationPage = (props: any) => {
   const dispatch = useDispatch();
-  // const { addToast } = useToasts();
   // ? Get uri parametrs ----------------------------
   const history: any = useHistory();
   const params = history.location.state;
   //? Get uri parametrs ----------------------------
 
   const [lastViewed, setLastViewed] = useState<Array<string | null>>([null, null])
-
 
   // structure titles for populating the dropdown
   const all_structures: StructSnip[] = useSelector((state: AppState) => state.structures.neo_response.map(
@@ -1454,8 +1463,8 @@ const VisualizationPage = (props: any) => {
 
 
 
-  const current_tab = useSelector((state: AppState) => state.visualization.component_tab)
-  const vis_state = useSelector((state: AppState) => state.visualization)
+  const current_tab    = useSelector((state: AppState) => state.visualization.component_tab)
+  const vis_state      = useSelector((state: AppState) => state.visualization)
   const handleTabClick = (tab: VisualizationTabs) => {
     dispatch({ type: "RESET_ACTION" });
     dispatch({ type: COMPONENT_TAB_CHANGE, tab });
@@ -1464,13 +1473,13 @@ const VisualizationPage = (props: any) => {
   const current_neostruct = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
 
-  const current_protein_class: ProteinClass | null = useSelector((state: AppState) => state.visualization.protein_tab.class)
-  const current_protein_parent: string | null = useSelector((state: AppState) => state.visualization.protein_tab.parent)
+  const current_protein_class: ProteinClass | null  = useSelector((state: AppState) => state.visualization.protein_tab.class)
+  const current_protein_parent: string | null       = useSelector((state: AppState) => state.visualization.protein_tab.parent)
   const current_protein_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.protein_tab.auth_asym_id)
   const current_protein_neostruct: NeoStruct | null = useSelector((state: AppState) => current_protein_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id === current_protein_parent)[0])
 
-  const current_rna_class: RNAClass | null = useSelector((state: AppState) => state.visualization.rna_tab.class)
-  const current_rna_parent: string | null = useSelector((state: AppState) => state.visualization.rna_tab.parent)
+  const current_rna_class: RNAClass | null      = useSelector((state: AppState) => state.visualization.rna_tab.class)
+  const current_rna_parent: string | null       = useSelector((state: AppState) => state.visualization.rna_tab.parent)
   const current_rna_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.rna_tab.auth_asym_id)
   const current_rna_neostruct: NeoStruct | null = useSelector((state: AppState) => current_rna_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id === current_rna_parent)[0])
 
@@ -1491,6 +1500,14 @@ const VisualizationPage = (props: any) => {
     }
   }, [current_protein_class, current_protein_parent, cached_struct])
 
+  useEffect(()=>{
+    if (current_rna_parent === null){
+      cache_full_struct(null)
+    }else{
+      cache_full_struct(current_rna_parent)
+    }
+  },[current_rna_parent])
+
 
   useEffect(() => {
     if (current_rna_class && current_rna_parent) {
@@ -1498,15 +1515,16 @@ const VisualizationPage = (props: any) => {
       if (cached_struct === null) {
         console.log("We have a problem! cahched struct not here");
       } else {
-
         if (!cached_struct.rnas) {
           dispatch(rna_update_auth_asym_id(null))
+          console.log("This structure does not have RNA data. This is a bug, please report it.");
           return
         }
 
         const found = cached_struct.rnas.filter(c => c.nomenclature.includes(current_rna_class))
         if (found.length < 1) {
-          alert("Could not find rna class " + current_rna_class + ` in the cached structure ${cached_struct === null ? "null" : cached_struct.rcsb_id}. This is a bug, please report it.`);
+          // alert("Could not find rna class " + current_rna_class + ` in the cached structure ${cached_struct === null ? "null" : cached_struct.rcsb_id}. This is a bug, please report it.`);
+          return
         }
         dispatch(rna_update_auth_asym_id(found[0].auth_asym_id))
       }
@@ -1626,7 +1644,7 @@ const VisualizationPage = (props: any) => {
 
 
 
-
+{/* 
 
           <ListItem>
             {
@@ -1641,7 +1659,7 @@ const VisualizationPage = (props: any) => {
                 }
               })()
             }
-          </ListItem>
+          </ListItem> */}
 
 
           {/* <ListItem>

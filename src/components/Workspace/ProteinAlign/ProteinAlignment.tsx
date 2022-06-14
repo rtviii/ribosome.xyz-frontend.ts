@@ -165,6 +165,7 @@ export default function ProteinAlignment() {
     if (chainStructPair2[1]===null){setChains1([])}
 
     viewerInstance.visual.reset({ camera: true, theme: true })
+
   },[chainStructPair2])
 
   // const visualizeAlignment = (
