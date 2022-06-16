@@ -46,8 +46,6 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 
 
 
-
-
 export default function ProteinAlignment() {
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -118,7 +116,6 @@ export default function ProteinAlignment() {
 
   const structs = useSelector((state: AppState) => state.structures.derived_filtered)
 
-
   const [chainStructPair1, setChainStructPair1] = useState<[PolymerMinimal | null, string | null]>([null, null])
   const [chainStructPair2, setChainStructPair2] = useState<[PolymerMinimal | null, string | null]>([null, null])
 
@@ -130,7 +127,6 @@ export default function ProteinAlignment() {
 
   const [chains2, setChains2] = useState<PolymerMinimal[]>([])
   const [chains1, setChains1] = useState<PolymerMinimal[]>([])
-
 
   const minDistance = 10;
 
@@ -167,22 +163,6 @@ export default function ProteinAlignment() {
     viewerInstance.visual.reset({ camera: true, theme: true })
 
   },[chainStructPair2])
-
-  // const visualizeAlignment = (
-  // ) => {
-  //   console.log("Got:", struct1, struct2, auth_asym_id1, auth_asym_id2);
-
-  //   if (chainStructPair1.includes(null) || chainStructPair2.includes(null)) {
-  //     alert("Please select a chain in both structures to align.")
-  //   }
-  //   viewerInstance.visual.update({
-  //     customData: {
-  //       url   : `${process.env.REACT_APP_DJANGO_URL}/static_files/align_3d/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&auth_asym_id1=${chainStructPair1[0]?.auth_asym_id}&auth_asym_id2=${chainStructPair2[0]?.auth_asym_id}`,
-  //       format: "pdb",
-  //       binary: false,
-  //     },
-  //   });
-  // }
 
   const visualizeRangedAlignment = (
   ) => {

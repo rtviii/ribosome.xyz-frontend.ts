@@ -75,7 +75,7 @@ interface StructSnip {
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
   //! This component controls the structure selection
 
-  const dispatch           = useDispatch()
+  const dispatch = useDispatch()
   const selectStructStyles = (makeStyles({ autocomoplete: { width: "100%" } }))()
 
   // const current_full_struct: RibosomeStructure | null = useSelector((state: AppState) => state.visualization.structure_tab.fullStructProfile)
@@ -117,10 +117,10 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
   useEffect(() => {
 
-    if (current_neostruct===null){
+    if (current_neostruct === null) {
 
       viewerInstance.visual.reset({ camera: true, theme: true })
-      viewerInstance.visual.update({      moleculeId: 'none'})
+      viewerInstance.visual.update({ moleculeId: 'none' })
     }
   }, [current_neostruct])
 
@@ -220,12 +220,12 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 const SelectProtein = ({ proteins, getCifChainByClass }:
   { proteins: BanClassMetadata[], getCifChainByClass: (strand: string, parent: string) => void }) => {
 
-  const styles   = useSelectStyles();
+  const styles = useSelectStyles();
   const dispatch = useDispatch();
 
-  const [curProtClass, setProtClass]   = React.useState<ProteinClass | null>(null);
+  const [curProtClass, setProtClass] = React.useState<ProteinClass | null>(null);
   const [curProtParent, setProtParent] = React.useState<string | null>(null);
-  const availablestructs               = useSelector((state: AppState) => state.proteins.ban_class)
+  const availablestructs = useSelector((state: AppState) => state.proteins.ban_class)
 
   const chooseProtein = (event: React.ChangeEvent<{ value: unknown }>) => {
     let item = event.target.value as string
@@ -238,7 +238,7 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
     if (newvalue === null || newvalue.parent_rcsb_id === "Choose a protein class.") {
 
       viewerInstance.visual.reset({ camera: true, theme: true })
-      viewerInstance.visual.update({      moleculeId: 'none'})
+      viewerInstance.visual.update({ moleculeId: 'none' })
       setProtParent(null);
       dispatch(protein_change(curProtClass, null))
       return
@@ -291,7 +291,6 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
 
   const [curRna, setCurRna]          = React.useState<RNAClass | null>(null);
   const [curRnaParent, setRnaParent] = React.useState<string | null>(null);
-
   const parents                      = useSelector((state: AppState) => state.rna.rna_classes_derived)
 
 
@@ -311,10 +310,9 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
   return (
     <Grid item xs={12}>
       <List style={{ outline: "1px solid gray", borderRadius: "5px" }}>
-
         <ListItem>
           <FormControl className={styles.sub1}>
-            <InputLabel >RNA Class</InputLabel>
+            <InputLabel> RNA Class </InputLabel>
             <Select
               labelId  = "demo-simple-select-label"
               id       = "demo-simple-select"
@@ -347,8 +345,8 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
 
 
                 } else {
-                viewerInstance.visual.reset({ camera: true, theme: true })
-                viewerInstance.visual.update({      moleculeId: 'none'})
+                  viewerInstance.visual.reset({ camera: true, theme: true })
+                  viewerInstance.visual.update({ moleculeId: 'none' })
                   dispatch(rna_change(curRna, null))
                   setRnaParent(null)
                 }
@@ -365,7 +363,6 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
 
 interface DownloadElement_P { elemtype: 'rna' | 'protein' | 'structure', id: string | null, parent?: string }
 const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
-
 
   const download_elem = () => {
     if (elemtype === 'structure') {
@@ -497,12 +494,12 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
   const paintMolstarCanvas = (resRange: number[], chain_to_highlight: string) => {
     var selectSections =
     {
-      instance_id         : 'ASM_1',
-      auth_asym_id        : chain_to_highlight,
-      start_residue_number: resRange[0] === 0 ? 1     : resRange[0],
-      end_residue_number  : resRange[1],
-      color               : { r: 255, g: 255, b: 255 },
-      focus               : true
+      instance_id: 'ASM_1',
+      auth_asym_id: chain_to_highlight,
+      start_residue_number: resRange[0] === 0 ? 1 : resRange[0],
+      end_residue_number: resRange[1],
+      color: { r: 255, g: 255, b: 255 },
+      focus: true
     }
     // console.log("got select params options", selectSections);
 
@@ -716,11 +713,11 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
 
             <Grid
               container
-              style      = {{ padding: "5px" }}
-              direction  = "column"
-              justify    = "flex-start"
-              alignItems = "flex-start"
-              component  = "div"
+              style={{ padding: "5px" }}
+              direction="column"
+              justify="flex-start"
+              alignItems="flex-start"
+              component="div"
             >
               <CardBodyAnnotation keyname={"Source Organism"} value={truncate(currentChainFull?.src_organism_names[0] || " ", 50, 50)} />
               <CardBodyAnnotation keyname={"Host Organism"} value={truncate(currentChainFull?.host_organism_names[0] || " ", 50, 50)} />
@@ -1463,8 +1460,8 @@ const VisualizationPage = (props: any) => {
 
 
 
-  const current_tab    = useSelector((state: AppState) => state.visualization.component_tab)
-  const vis_state      = useSelector((state: AppState) => state.visualization)
+  const current_tab = useSelector((state: AppState) => state.visualization.component_tab)
+  const vis_state = useSelector((state: AppState) => state.visualization)
   const handleTabClick = (tab: VisualizationTabs) => {
     dispatch({ type: "RESET_ACTION" });
     dispatch({ type: COMPONENT_TAB_CHANGE, tab });
@@ -1473,13 +1470,13 @@ const VisualizationPage = (props: any) => {
   const current_neostruct = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
 
-  const current_protein_class: ProteinClass | null  = useSelector((state: AppState) => state.visualization.protein_tab.class)
-  const current_protein_parent: string | null       = useSelector((state: AppState) => state.visualization.protein_tab.parent)
+  const current_protein_class: ProteinClass | null = useSelector((state: AppState) => state.visualization.protein_tab.class)
+  const current_protein_parent: string | null = useSelector((state: AppState) => state.visualization.protein_tab.parent)
   const current_protein_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.protein_tab.auth_asym_id)
   const current_protein_neostruct: NeoStruct | null = useSelector((state: AppState) => current_protein_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id === current_protein_parent)[0])
 
-  const current_rna_class: RNAClass | null      = useSelector((state: AppState) => state.visualization.rna_tab.class)
-  const current_rna_parent: string | null       = useSelector((state: AppState) => state.visualization.rna_tab.parent)
+  const current_rna_class: RNAClass | null = useSelector((state: AppState) => state.visualization.rna_tab.class)
+  const current_rna_parent: string | null = useSelector((state: AppState) => state.visualization.rna_tab.parent)
   const current_rna_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.rna_tab.auth_asym_id)
   const current_rna_neostruct: NeoStruct | null = useSelector((state: AppState) => current_rna_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id === current_rna_parent)[0])
 
@@ -1500,13 +1497,13 @@ const VisualizationPage = (props: any) => {
     }
   }, [current_protein_class, current_protein_parent, cached_struct])
 
-  useEffect(()=>{
-    if (current_rna_parent === null){
+  useEffect(() => {
+    if (current_rna_parent === null) {
       cache_full_struct(null)
-    }else{
+    } else {
       cache_full_struct(current_rna_parent)
     }
-  },[current_rna_parent])
+  }, [current_rna_parent])
 
 
   useEffect(() => {
@@ -1641,43 +1638,6 @@ const VisualizationPage = (props: any) => {
                 return "Null"
             }
           })()}
-
-
-
-{/* 
-
-          <ListItem>
-            {
-              (() => {
-                switch (current_tab) {
-                  case 'protein_tab':
-                    return <DownloadElement elemtype={'protein'} id={vis_state.protein_tab.class} parent={vis_state.protein_tab.parent as string} />
-                  case 'rna_tab':
-                    return <DownloadElement elemtype={'rna'} id={vis_state.rna_tab.class} parent={vis_state.rna_tab.parent as string} />
-                  case 'structure_tab':
-                    return <DownloadElement elemtype={'structure'} id={vis_state.structure_tab.structure?.struct.rcsb_id === null ? null : vis_state.structure_tab.structure?.struct.rcsb_id as string} />
-                }
-              })()
-            }
-          </ListItem> */}
-
-
-          {/* <ListItem>
-            {
-              (() => {
-                switch (current_tab) {
-                  case 'structure_tab':
-
-
-
-                  case 'protein_tab':
-                    return 'protein chain x'
-                  case 'rna_tab':
-                    return 'rna x'
-                }
-              })()
-            }
-          </ListItem> */}
 
           <ListItem>
             <DashboardButton />
