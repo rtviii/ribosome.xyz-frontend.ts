@@ -8,9 +8,12 @@ import { VisualizationActions } from './ActionTypes'
 
 export interface VisualizationReducerState {
 	component_tab: "rna_tab" | "protein_tab" | "structure_tab",
-	full_structure_cache: RibosomeStructure | null
+	full_structure_cache: {
+		0: RibosomeStructure | null,
+		1: RibosomeStructure | null
+	},
 	structure_tab: {
-		structure        : NeoStruct | null,
+		structure: NeoStruct | null,
 		highlighted_chain: string | null
 	},
 	protein_tab: {
@@ -27,7 +30,10 @@ export interface VisualizationReducerState {
 
 const init: VisualizationReducerState = {
 	component_tab: "structure_tab",
-	full_structure_cache: null,
+	full_structure_cache: {
+		0: null,
+		1: null
+	},
 	structure_tab: {
 		structure: null,
 		highlighted_chain: null
@@ -45,15 +51,15 @@ const init: VisualizationReducerState = {
 }
 
 export const coerce_full_structure_to_neostruct = (_: RibosomeStructure | null): NeoStruct | null => {
-	console.log("Got fullstruct:" ,_);
+	console.log("Got fullstruct:", _);
 
 	const coerced = _ === null ? null : {
 		ligands: _.ligands !== null ? _.ligands.map(l => l.chemicalId) : [],
 		rnas: _.rnas !== null ? _.rnas.map(r => {
 			return {
-				auth_asym_id                   : r.auth_asym_id,
+				auth_asym_id: r.auth_asym_id,
 				entity_poly_seq_one_letter_code: r.entity_poly_seq_one_letter_code,
-				nomenclature                   : r.nomenclature
+				nomenclature: r.nomenclature
 			}
 		}) : [],
 		rps: _.proteins !== null ? _.proteins.map(rp => {
@@ -82,7 +88,12 @@ export const VisualizationReducer = (
 		case "RESET_ACTION":
 			return init
 		case "UPDATE_CACHED_FULLSTRUCT":
-			return { ...state, full_structure_cache: action.nextcache }
+			return {
+				...state, full_structure_cache: {
+					...state.full_structure_cache,
+					...{ [action.cache_slot_number]: action.nextcache }
+				}
+			}
 
 		case "STRUCTURE_CHANGE":  // this one is for selected...
 			if (action.structure === null) {

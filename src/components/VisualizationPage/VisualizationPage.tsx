@@ -86,7 +86,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
   const structs = useSelector((state: AppState) => state.structures.derived_filtered)
-  const cached_struct = useSelector((state: AppState) => state.visualization.full_structure_cache)
+  const cached_struct = useSelector((state: AppState) => state.visualization.full_structure_cache[0])
   // const { addToast                   }                 = useToasts  (                                                                        );
 
 
@@ -94,7 +94,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
 
 
-    dispatch(cache_full_struct(selected_neostruct && selected_neostruct?.struct.rcsb_id))
+    dispatch(cache_full_struct(selected_neostruct && selected_neostruct?.struct.rcsb_id, 0))
     if (selected_neostruct !== null) {
       dispatch(struct_change(null, selected_neostruct))
 
@@ -245,7 +245,7 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
     }
 
     setProtParent(newvalue.parent_rcsb_id);
-    dispatch(cache_full_struct(newvalue.parent_rcsb_id))
+    dispatch(cache_full_struct(newvalue.parent_rcsb_id,0))
     getCifChainByClass(curProtClass as ProteinClass, newvalue.parent_rcsb_id)
     dispatch(protein_change(curProtClass, newvalue.parent_rcsb_id))
 
@@ -257,10 +257,10 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
           <FormControl className={styles.sub1}>
             <InputLabel>Protein Class</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={curProtClass}
-              onChange={chooseProtein}>
+              labelId  = "demo-simple-select-label"
+              id       = "demo-simple-select"
+              value    = {curProtClass}
+              onChange = {chooseProtein}>
               {proteins.map((i) => <MenuItem value={i.banClass}>{i.banClass}
               </MenuItem>)}
             </Select>
@@ -268,9 +268,9 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
 
           <FormControl className={styles.sub2}>
             <Autocomplete
-              styles={{ marginRight: "9px", outline: "none" }}
-              options={availablestructs.length > -1 ? availablestructs : [{ parent_rcsb_id: "Choose a protein class." } as ProteinProfile]}
-              getOptionLabel={(parent) => parent.parent_rcsb_id}
+              styles         = {{ marginRight: "9px", outline: "none" }}
+              options        = {availablestructs.length > -1 ? availablestructs : [{ parent_rcsb_id: "Choose a protein class." } as ProteinProfile]}
+              getOptionLabel = {(parent) => parent.parent_rcsb_id}
               // @ts-ignore
               onChange={chooseProtParent}
               renderOption={(option) => (<div style={{ fontSize: "9px", width: "400px" }}><b>{option.parent_rcsb_id}</b> ({option.pfam_descriptions} ) </div>)}
@@ -339,7 +339,7 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
 
                   console.log("Got newvalue for rna select parent", newValue.parent_rcsb_id)
                   setRnaParent(newValue.parent_rcsb_id)
-                  dispatch(cache_full_struct(newValue.parent_rcsb_id))
+                  dispatch(cache_full_struct(newValue.parent_rcsb_id, 0))
                   getCifChainByClass(curRna as string, newValue.parent_rcsb_id)
                   dispatch(rna_change(curRna, newValue.parent_rcsb_id))
 
@@ -450,7 +450,7 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
 
 // --------------------------------------------------------------------------------------------------
 
-const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asym_id: string | null, full_structure_cache: RibosomeStructure | null }) => {
+export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asym_id: string | null, full_structure_cache: RibosomeStructure | null }) => {
   // takes in a full protein or rna
   const [currentChainFull, setCurrentChainFull] = React.useState<Protein | RNA | null>(null)
 
@@ -510,7 +510,7 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
     })
   };
 
-  // const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 300)
+  //const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 300)
 
   const handleSearchRange = () => {
     if (auth_asym_id === null) { window.alert('Chain to highlight is null. Provide asym_id to paint.'); return }
@@ -1214,8 +1214,6 @@ const VisualizationPage = (props: any) => {
   const all_structures: StructSnip[] = useSelector((state: AppState) => state.structures.neo_response.map(
     r => { return { rcsb_id: r.struct.rcsb_id, title: r.struct.citation_title } }))
 
-
-
   // ----------- This one, i think is for fetching struct on uri parmas pass. Should be able to do in redux
   // useEffect(() => {
   //   if (params === undefined || Object.keys(params).length < 1) { return }
@@ -1483,25 +1481,25 @@ const VisualizationPage = (props: any) => {
   useEffect(() => {
     if (current_protein_class && current_protein_parent) {
       // identify the asym_id of the given class in the parent (the cached version should be available)
-      if (cached_struct === null) {
+      if (cached_struct[0] === null) {
         console.log("We have a problem! cahched struct not here");
       } else {
-        const found = cached_struct.proteins.filter(c => c.nomenclature.includes(current_protein_class))
+        const found = cached_struct[0].proteins.filter(c => c.nomenclature.includes(current_protein_class))
         if (found.length < 1) {
-          alert("Could not find protein class " + current_protein_class + ` in the cached structure ${cached_struct === null ? "null" : cached_struct.rcsb_id}. This is a bug, please report it.`);
+          alert("Could not find protein class " + current_protein_class + ` in the cached structure ${cached_struct[0] === null ? "null" : cached_struct[0].rcsb_id}. This is a bug, please report it.`);
         }
         dispatch(protein_update_auth_asym_id(found[0].auth_asym_id))
       }
     } else {
       dispatch(protein_update_auth_asym_id(null))
     }
-  }, [current_protein_class, current_protein_parent, cached_struct])
+  }, [current_protein_class, current_protein_parent, cached_struct[0]])
 
   useEffect(() => {
     if (current_rna_parent === null) {
-      cache_full_struct(null)
+      cache_full_struct(null, 0)
     } else {
-      cache_full_struct(current_rna_parent)
+      cache_full_struct(current_rna_parent,0)
     }
   }, [current_rna_parent])
 
@@ -1509,18 +1507,18 @@ const VisualizationPage = (props: any) => {
   useEffect(() => {
     if (current_rna_class && current_rna_parent) {
       // identify the asym_id of the given class in the parent (the cached version should be available)
-      if (cached_struct === null) {
+      if (cached_struct[0] === null) {
         console.log("We have a problem! cahched struct not here");
       } else {
-        if (!cached_struct.rnas) {
+        if (!cached_struct[0].rnas) {
           dispatch(rna_update_auth_asym_id(null))
           console.log("This structure does not have RNA data. This is a bug, please report it.");
           return
         }
 
-        const found = cached_struct.rnas.filter(c => c.nomenclature.includes(current_rna_class))
+        const found = cached_struct[0].rnas.filter(c => c.nomenclature.includes(current_rna_class))
         if (found.length < 1) {
-          // alert("Could not find rna class " + current_rna_class + ` in the cached structure ${cached_struct === null ? "null" : cached_struct.rcsb_id}. This is a bug, please report it.`);
+          // alert("Could not find rna class " + current_rna_class + ` in the cached structure ${cached_struct[0] === null ? "null" : cached_struct[0].rcsb_id}. This is a bug, please report it.`);
           return
         }
         dispatch(rna_update_auth_asym_id(found[0].auth_asym_id))
@@ -1528,7 +1526,7 @@ const VisualizationPage = (props: any) => {
     } else {
       dispatch(rna_update_auth_asym_id(null))
     }
-  }, [current_rna_class, current_rna_parent, cached_struct])
+  }, [current_rna_class, current_rna_parent, cached_struct[0]])
 
   return (
     <Grid container xs={12} spacing={1} alignContent="flex-start">
@@ -1544,7 +1542,7 @@ const VisualizationPage = (props: any) => {
       <Grid item direction="column" xs={3} style={{ padding: "5px" }}>
         <List>
 
-          {(() => {
+          {/* {(() => {
             if (lastViewed[0] == null && lastViewed[1] != null) {
               return <ListItem>
                 Last Item Viewed:   Structure {lastViewed[1]}
@@ -1559,7 +1557,7 @@ const VisualizationPage = (props: any) => {
               </ListItem>
             }
           }
-          )()}
+          )()} */}
 
 
           <ListSubheader>Select Item Category: {(() => {
@@ -1617,7 +1615,7 @@ const VisualizationPage = (props: any) => {
           })()}
 
           {/* {
-            coerce_full_structure_to_neostruct(cached_struct) === null ? null : <ListItem> <StructHeroVertical d={coerce_full_structure_to_neostruct(cached_struct) as NeoStruct} 
+            coerce_full_structure_to_neostruct(cached_struct[0]) === null ? null : <ListItem> <StructHeroVertical d={coerce_full_structure_to_neostruct(cached_struct[0]) as NeoStruct} 
             inCart={false} topless={true} /></ListItem>
           } */}
 
@@ -1627,12 +1625,12 @@ const VisualizationPage = (props: any) => {
           {(() => {
             switch (current_tab) {
               case 'protein_tab':
-                return current_protein_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_protein_auth_asym_id} full_structure_cache={cached_struct} /></ListItem>
+                return current_protein_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_protein_auth_asym_id} full_structure_cache={cached_struct[0]} /></ListItem>
               case 'structure_tab':
-                return current_chain_to_highlight === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_chain_to_highlight} full_structure_cache={cached_struct} /></ListItem>
+                return current_chain_to_highlight === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_chain_to_highlight} full_structure_cache={cached_struct[0]} /></ListItem>
               case 'rna_tab':
                 // return "Select rna"
-                return current_rna_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_rna_auth_asym_id} full_structure_cache={cached_struct} /></ListItem>
+                return current_rna_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_rna_auth_asym_id} full_structure_cache={cached_struct[0]} /></ListItem>
                 return // <SelectRna items={[]} getCifChainByClass={getCifChainByClass} />
               default:
                 return "Null"

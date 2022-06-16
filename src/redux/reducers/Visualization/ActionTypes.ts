@@ -9,15 +9,12 @@ import { ProteinClass, RNAClass } from "../../RibosomeTypes";
 import { AppState, store } from "../../store";
 import { coerce_full_structure_to_neostruct } from "./VisualizationReducer";
 
-export const FETCH_FULL_STRUCT_GO = "FETCH_FULL_STRUCT_GO"
-export const FETCH_FULL_STRUCT_ERR = "FETCH_FULL_STRUCT_ERR"
+export const FETCH_FULL_STRUCT_GO      = "FETCH_FULL_STRUCT_GO"
+export const FETCH_FULL_STRUCT_ERR     = "FETCH_FULL_STRUCT_ERR"
 export const FETCH_FULL_STRUCT_SUCCESS = "FETCH_FULL_STRUCT_SUCCESS"
 
 export const UPDATE_CACHED_FULLSTRUCT = "UPDATE_CACHED_FULLSTRUCT"
-
-
-
-export const STRUCTURE_CHANGE            = "STRUCTURE_CHANGE"
+export const STRUCTURE_CHANGE         = "STRUCTURE_CHANGE"
 
 export const PROTEIN_CHANGE              = "PROTEIN_CHANGE"
 export const PROTEIN_UPDATE_AUTH_ASYM_ID = "PROTEIN_UPDATE_AUTH_ASYM_ID"
@@ -30,7 +27,11 @@ export const COMPONENT_TAB_CHANGE        = "COMPONENT_TAB_CHANGE"
 export type VisualizationTabs = 'structure_tab' | 'protein_tab' | 'rna_tab';
 
 export interface fetchFullStructGo { type: typeof FETCH_FULL_STRUCT_GO }
-export interface updateCachedFullstruct { type: typeof UPDATE_CACHED_FULLSTRUCT, nextcache: RibosomeStructure | null }
+export interface updateCachedFullstruct { 
+	type             : typeof UPDATE_CACHED_FULLSTRUCT,
+	nextcache        : RibosomeStructure | null
+	cache_slot_number: number
+	 }
 export interface fetchFullStructError { type: typeof FETCH_FULL_STRUCT_ERR, err: Error }
 
 
@@ -94,8 +95,9 @@ export const struct_change = (highlighted_chain: string | null, struct: NeoStruc
 	}
 }
 
-export const fullstructCache_change = (nextcache: RibosomeStructure | null): updateCachedFullstruct => ({
+export const fullstructCache_change = (nextcache: RibosomeStructure | null, cache_slot_number:number): updateCachedFullstruct => ({
 	nextcache,
+	cache_slot_number,
 	type: 'UPDATE_CACHED_FULLSTRUCT'
 })
 
@@ -106,10 +108,10 @@ export const tab_change = (tab: VisualizationTabs): componentTabChange => ({
 
 export const cache_full_struct = (
 	struct_id_to_cache: string | null,
+	cache_slot_number: number
 ) => {
 
 	console.log("Changing struct cache: ", struct_id_to_cache);
-
 	// 1.check if the current structure is the same
 	// if yes --> return
 	// if no:
@@ -126,7 +128,7 @@ export const cache_full_struct = (
 		}
 		else if (struct_id_to_cache === null) {
 			console.log("Updated to null");
-			fullstructCache_change(null)
+			fullstructCache_change(null,cache_slot_number)
 		}
 		else {
 
@@ -138,7 +140,7 @@ export const cache_full_struct = (
 			}).then(
 				response => {
 					console.log("fetched fullstruct successfully. response:", response)
-					dispatch(fullstructCache_change(response.data[0]));
+					dispatch(fullstructCache_change(response.data[0], cache_slot_number));
 				},
 				error => {
 					console.log("couldnt fetch with error: ", error);

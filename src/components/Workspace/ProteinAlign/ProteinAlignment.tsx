@@ -15,6 +15,7 @@ import Paper from '@material-ui/core/Paper/Paper';
 import { NeoStruct, PolymerMinimal } from '../../../redux/DataInterfaces';
 import Slider from '@mui/material/Slider';
 import { log } from 'console';
+import { ChainHighlightSlider } from '../../VisualizationPage/VisualizationPage';
 
 
 export const nomenclatureCompareFn = (a: PolymerMinimal, b: PolymerMinimal) => {
@@ -40,9 +41,13 @@ export const nomenclatureCompareFn = (a: PolymerMinimal, b: PolymerMinimal) => {
   }
 }
 
-
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
+
+
+
+const HighlightSlider = ChainHighlightSlider;
+
 
 
 
