@@ -4,7 +4,6 @@ import { Filter ,FilterRegistry } from '../Filters/ActionTypes';
 import _ from 'lodash';
 import { RNAClass } from '../../RibosomeTypes';
 
-// export type RnaClass  =  "mrna" | "trna" | "5" | "5.8" | "12" | "16"| "21" | "23" | "25" |"28" |"35" | 'other'
 
 
 export type RnaSortType = "PDB_CODENAME" | "RESOLUTION" | "YEAR" | "SEQLEN"

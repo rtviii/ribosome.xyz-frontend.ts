@@ -24,8 +24,6 @@ export type StructSortType =
 "YEAR"|"NUMBER_OF_PROTEINS"|"RESOLUTION" | "PDB_CODENAME"
 
 
-
-
 export interface gotopage {type: typeof GOTO_PAGE_STRUCTS; page_id:number}
 export interface nextpage {type: typeof NEXT_PAGE_STRUCTS}
 export interface prevpage {type: typeof PREV_PAGE_STRUCTS}

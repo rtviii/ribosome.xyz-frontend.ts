@@ -1,11 +1,10 @@
 import { getNeo4jData } from '../../AsyncActions/getNeo4jData'
-import { NeoStruct } from '../../DataInterfaces'
+import { NeoStruct, PolymerMinimal } from '../../DataInterfaces'
 import { Protein, ProteinClass, RibosomeStructure, RNA, RNAClass } from '../../RibosomeTypes'
 import { VisualizationActions } from './ActionTypes'
 
 
 // Each structure ought to have full chains represented
-
 export interface VisualizationReducerState {
 	component_tab: "rna_tab" | "protein_tab" | "structure_tab",
 	full_structure_cache: {
@@ -25,8 +24,18 @@ export interface VisualizationReducerState {
 		auth_asym_id: string | null,
 		class: RNAClass | null,
 		parent: string | null
+	},
+	superimpose:{
+		struct_1:SuperimposeStruct,
+		struct_2:SuperimposeStruct,
+
 	}
 }
+
+export type SuperimposeStruct = {
+			struct: NeoStruct|null,
+			chain  : PolymerMinimal|null,
+		};
 
 const init: VisualizationReducerState = {
 	component_tab: "structure_tab",
@@ -47,6 +56,16 @@ const init: VisualizationReducerState = {
 		auth_asym_id: null,
 		class: null,
 		parent: null
+	},
+	superimpose:{
+		struct_1:{
+			chain  : null,
+			struct: null
+		},		
+		struct_2:{
+			chain  : null,
+			struct: null
+		}
 	}
 }
 
@@ -87,6 +106,21 @@ export const VisualizationReducer = (
 	switch (action.type) {
 		case "RESET_ACTION":
 			return init
+
+		case "SUPERIMPOSE_SLOT_CHANGE":
+			const structn_to_change = action.slot === 1 ? "struct_1" : "struct_2";
+			const structn_to_leave = action.slot === 1  ? "struct_2" : "struct_1";
+
+			var in_place_change			= Object.assign({},state.superimpose[structn_to_change])
+			var in_place_leave			= Object.assign({},state.superimpose[structn_to_leave])
+
+			in_place_change = {...in_place_change, ...action.payload}
+
+			return {...state,superimpose:{
+				struct_1: action.slot ===1 ? in_place_change : in_place_leave,
+				struct_2: action.slot ===1 ? in_place_change : in_place_leave,
+			}} 
+
 		case "UPDATE_CACHED_FULLSTRUCT":
 			return {
 				...state, full_structure_cache: {

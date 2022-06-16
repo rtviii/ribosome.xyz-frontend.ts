@@ -7,7 +7,7 @@ import { NeoStruct, PolymerMinimal } from "../../DataInterfaces";
 import { RibosomeStructure } from "../../RibosomeTypes";
 import { ProteinClass, RNAClass } from "../../RibosomeTypes";
 import { AppState, store } from "../../store";
-import { coerce_full_structure_to_neostruct } from "./VisualizationReducer";
+import { coerce_full_structure_to_neostruct, SuperimposeStruct } from "./VisualizationReducer";
 
 export const FETCH_FULL_STRUCT_GO      = "FETCH_FULL_STRUCT_GO"
 export const FETCH_FULL_STRUCT_ERR     = "FETCH_FULL_STRUCT_ERR"
@@ -155,6 +155,22 @@ export const cache_full_struct = (
 	};
 }
 
+// Superimpose
+
+
+export const SUPERIMPOSE_SLOT_CHANGE = "SUPERIMPOSE_SLOT_CHANGE"
+export interface superimposeSlotChange { 
+	type   : typeof SUPERIMPOSE_SLOT_CHANGE,
+	payload: Partial<SuperimposeStruct>,
+	slot   : 1 | 2
+}
+
+export const superimpose_slot_change = (slot: 1 | 2, payload: Partial<SuperimposeStruct>): superimposeSlotChange => ({
+	payload,
+	slot,
+	type: SUPERIMPOSE_SLOT_CHANGE
+})
 
 export type VisualizationActions = resetAction|  structureChange | rnaChange | proteinChange | componentTabChange |
-	fetchFullStructError | fetchFullStructGo | updateCachedFullstruct | {type:"NOOP"}| proteinUpdateAuthAsymId | rnaUpdateAuthAsymId;
+	fetchFullStructError | fetchFullStructGo | updateCachedFullstruct | {type:"NOOP"}| proteinUpdateAuthAsymId | rnaUpdateAuthAsymId
+	| superimposeSlotChange;
