@@ -118,7 +118,7 @@ export const VisualizationReducer = (
 
 			return {...state,superimpose:{
 				struct_1: action.slot ===1 ? in_place_change : in_place_leave,
-				struct_2: action.slot ===1 ? in_place_change : in_place_leave,
+				struct_2: action.slot ===2 ? in_place_change : in_place_leave,
 			}} 
 
 		case "UPDATE_CACHED_FULLSTRUCT":

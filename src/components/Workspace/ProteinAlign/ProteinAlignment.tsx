@@ -123,6 +123,9 @@ export default function ProteinAlignment() {
   const struct_1 = useSelector((state: AppState) => state.visualization.superimpose.struct_1.struct)
   const struct_2 = useSelector((state: AppState) => state.visualization.superimpose.struct_2.struct)
 
+  const slot_1 = useSelector((state: AppState) => state.visualization.superimpose.struct_1)
+  const slot_2 = useSelector((state: AppState) => state.visualization.superimpose.struct_2)
+
   // | ------------------------------------------ NEW STATE ----------------------------------|
 
   // 
@@ -134,9 +137,6 @@ export default function ProteinAlignment() {
   // | ------------------------------------------ OLD STATE ----------------------------------|
   const [chainStructPair1, setChainStructPair1] = useState<[PolymerMinimal | null, string | null]>([null, null])
   const [chainStructPair2, setChainStructPair2] = useState<[PolymerMinimal | null, string | null]>([null, null])
-
-  const [struct1, setstruct1] = useState<NeoStruct | null>(null)
-  const [struct2, setstruct2] = useState<NeoStruct | null>(null)
 
 
   const [auth_asym_id1, set_auth_asym_id1] = useState<any>(null)
@@ -150,49 +150,42 @@ export default function ProteinAlignment() {
   const [rangeSlider1, setRangeSlider1] = useState<number[]>([0, minDistance]);
   const [rangeSlider2, setRangeSlider2] = useState<number[]>([0, minDistance]);
 
-  useEffect(() => {
-    console.log("auth asymid 1:", auth_asym_id1)
-    console.log("struct pair 1 :", chainStructPair1)
-    console.log("struct 1 :", struct1)
-
-  }, [chainStructPair1, struct1, rangeSlider1, auth_asym_id1])
-
 
 
   // const [residueRange1, setResidueRange1] = React.useState<number[]>([0, 0]);  // current slider value
   // const [MaxRes1, setMaxRes1] = React.useState<number>(0);         // keep track of what's the max residue range
 
 
-  useEffect(() => {
-    if (chainStructPair1.includes(null)) {
-      setRangeSlider1([0, minDistance])
-    }
-    if (chainStructPair1[1] === null) {
-      setChains1([])
-    }
+  // useEffect(() => {
+  //   if (chainStructPair1.includes(null)) {
+  //     setRangeSlider1([0, minDistance])
+  //   }
+  //   if (chainStructPair1[1] === null) {
+  //     setChains1([])
+  //   }
 
-    viewerInstance.visual.reset({ camera: true, theme: true })
-    viewerInstance.visual.update({ moleculeId: 'none' })
+  //   viewerInstance.visual.reset({ camera: true, theme: true })
+  //   viewerInstance.visual.update({ moleculeId: 'none' })
 
-  }, [chainStructPair1])
+  // }, [chainStructPair1])
 
-  useEffect(() => {
-    if (chainStructPair2.includes(null)) {
-      setRangeSlider2([0, minDistance])
-    }
-    if (chainStructPair2[1] === null) {
-      setChains1([])
-    }
+  // useEffect(() => {
+  //   if (chainStructPair2.includes(null)) {
+  //     setRangeSlider2([0, minDistance])
+  //   }
+  //   if (chainStructPair2[1] === null) {
+  //     setChains1([])
+  //   }
 
-    viewerInstance.visual.reset({ camera: true, theme: true })
-  }, [chainStructPair2])
+  //   viewerInstance.visual.reset({ camera: true, theme: true })
+  // }, [chainStructPair2])
 
   const visualizeRangedAlignment = (
   ) => {
     console.log("-----------------")
     console.log("Requesting ranged alignment with values:")
-    console.log(`Struct 2: ${chainStructPair1[1]}, chain ${chainStructPair1[0]} [${rangeSlider1[0]}, ${rangeSlider1[1]}]`)
-    console.log(`Struct 1: ${chainStructPair2[1]}, chain ${chainStructPair2[0]} [${rangeSlider2[0]}, ${rangeSlider2[1]}]`)
+    console.log(`Struct 1: ${slot_1.struct?.struct.rcsb_id}, chain ${slot_1.chain?.auth_asym_id} [${rangeSlider1[0]}, ${rangeSlider1[1]}]`)
+    console.log(`Struct 2: ${slot_2.struct?.struct.rcsb_id}, chain ${slot_2.chain?.auth_asym_id} [${rangeSlider2[0]}, ${rangeSlider2[1]}]`)
     console.log("-----------------")
     if (chainStructPair1.includes(null) || chainStructPair2.includes(null)) { alert("Please select a chain in both structures to align and a residue range.") }
     viewerInstance.visual.update({
@@ -241,44 +234,38 @@ export default function ProteinAlignment() {
     if (struct_number === 1) {
       if (newvalue === null) {
 
-        dispatch(superimpose_slot_change(1,{
+        dispatch(superimpose_slot_change(1, {
           struct: null,
-          chain : null
+          chain: null
         }))
-
-        // setstruct1(null)
-        // setChainStructPair1([null, null])
         set_auth_asym_id1(null)
 
 
 
       }
       else {
-
-        // setstruct1(newvalue)
-        dispatch(superimpose_slot_change(1,{
+        dispatch(superimpose_slot_change(1, {
           struct: newvalue,
         }))
-
-        // setChainStructPair1([chainStructPair1[0], newvalue.struct.rcsb_id])
         setChains1([...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas])
+
         set_auth_asym_id1(null)
-
-        console.log("struct 1:", struct1);
-        console.log("struct pair 1:", chainStructPair1);
-        
-
       }
     }
 
     if (struct_number === 2) {
       if (newvalue === null) {
-        setstruct2(null)
-        setChainStructPair2([chainStructPair2[0], null])
+        dispatch(superimpose_slot_change(2, {
+          struct: null,
+          chain: null
+        }))
         set_auth_asym_id2(null)
       } else {
-        setstruct2(newvalue)
-        setChainStructPair2([chainStructPair2[0], newvalue.struct.rcsb_id])
+
+        dispatch(superimpose_slot_change(2, {
+          struct: newvalue,
+        }))
+
         setChains2([...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas])
         set_auth_asym_id2(null)
       }
@@ -419,7 +406,7 @@ export default function ProteinAlignment() {
         <Grid item style={{ marginBottom: "40px" }}>
 
           <Autocomplete
-            value={struct2}
+            value={struct_2}
             className={classes.autocomplete}
             options={structs}
             getOptionLabel={(parent: NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
