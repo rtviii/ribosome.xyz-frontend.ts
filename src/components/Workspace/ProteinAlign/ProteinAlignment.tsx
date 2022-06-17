@@ -127,7 +127,7 @@ export default function ProteinAlignment() {
   const slot_2 = useSelector((state: AppState) => state.visualization.superimpose.struct_2)
 
   const struct_cache_1 =useSelector((state:AppState)=>state.visualization.full_structure_cache[0])
-  // const struct_cache_2 =useSelector((state:AppState)=>state.visualization.full_structure_cache[1])
+  const struct_cache_2 =useSelector((state:AppState)=>state.visualization.full_structure_cache[1])
   // | ------------------------------------------ NEW STATE ----------------------------------|
 
   // 
@@ -176,8 +176,8 @@ export default function ProteinAlignment() {
   ) => {
     console.log("-----------------")
     console.log("Requesting ranged alignment with values:")
-    console.log(`Struct 1: ${slot_1.struct?.struct.rcsb_id}, chain ${slot_1.chain?.auth_asym_id} [${rangeSlider1[0]}, ${rangeSlider1[1]}]`)
-    console.log(`Struct 2: ${slot_2.struct?.struct.rcsb_id}, chain ${slot_2.chain?.auth_asym_id} [${rangeSlider2[0]}, ${rangeSlider2[1]}]`)
+    // console.log(`Struct 1: ${slot_1.struct?.struct.rcsb_id}, chain ${slot_1.chain?.auth_asym_id} [${rangeSlider1[0]}, ${rangeSlider1[1]}]`)
+    // console.log(`Struct 2: ${slot_2.struct?.struct.rcsb_id}, chain ${slot_2.chain?.auth_asym_id} [${rangeSlider2[0]}, ${rangeSlider2[1]}]`)
     console.log("-----------------")
 
     if ([slot_1.chain, slot_1.struct, slot_2.chain, slot_2.struct].includes(null)) { alert("Please select a chain in both structures to align and a residue range.") }

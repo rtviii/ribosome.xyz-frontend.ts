@@ -18,13 +18,13 @@ import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import fileDownload from 'js-file-download';
 import Tooltip from "@mui/material/Tooltip";
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { getNeo4jData } from '../../redux/AsyncActions/getNeo4jData';
 import { BanClassMetadata, NeoStruct, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces';
-import { cache_full_struct, COMPONENT_TAB_CHANGE, fullstructCache_change, protein_change, protein_update_auth_asym_id, rna_change, rna_update_auth_asym_id, struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
+import { cache_full_struct, COMPONENT_TAB_CHANGE, fullstructCache_change, protein_change, protein_update_auth_asym_id, rna_change, rna_update_auth_asym_id, struct_change, superimpose_slot_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
 import { AppState, store } from '../../redux/store';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
 import { StructHeroVertical, CardBodyAnnotation } from "./../../materialui/StructHero";
@@ -39,10 +39,9 @@ import { SeqViz } from "seqviz";
 import { DialogProps } from '@mui/material/Dialog';
 import { requestBanClass } from "../../redux/reducers/Proteins/ActionTypes";
 import { coerce_full_structure_to_neostruct } from "../../redux/reducers/Visualization/VisualizationReducer";
-
+import {debounce} from 'lodash'
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
-
 const useSelectStyles = makeStyles((theme: Theme) =>
   createStyles({
     select: {
@@ -451,15 +450,43 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
 // --------------------------------------------------------------------------------------------------
 
 export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asym_id: string | null, full_structure_cache: RibosomeStructure | null }) => {
+
   // takes in a full protein or rna
   const [currentChainFull, setCurrentChainFull] = React.useState<Protein | RNA | null>(null)
   const [residueRange, setResidueRange]         = React.useState<number[]>([0, 0]);           // current slider value
   const [MaxRes, setMaxRes]                     = React.useState<number>(0);                  // keep track of what's the max residue range
+  const dispatch  = useDispatch();
+
+  let dispatch_range_change = (superimpose_struct_slot:1|2,redux_range:number[])=>{
+    dispatch(superimpose_slot_change(superimpose_struct_slot,{chain_range: redux_range}))
+  }
+
+  const debounedRangeChange__redux = useCallback(debounce(dispatch_range_change, 500), []);
+
+  const rangeChangeHandler1 = (event:any)=>{
+    let _: number[] = event.target.value;
+    if (_[1] > MaxRes) { _[1] = MaxRes }
+    if (_[0] < 0) { _[0] = 0 }
+    if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
+    setResidueRange(_)  
+    debounedRangeChange__redux(1,_)
+    if (_[0] === _[1]) { return }
+  }
+
+  // const rangeChangeHandler2= (event:any)=>{
+  //   let _: number[] = event.target.value;
+  //   if (_[1] > MaxRes) { _[1] = MaxRes }
+  //   if (_[0] < 0) { _[0] = 0 }
+  //   if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
+  //   setResidueRange(_)  
+  //   debounedRangeChange__redux(2,_)
+  //   if (_[0] === _[1]) { return }
+  // }
+
+
+
 
   useEffect(() => {
-    console.log("useEffect ChainHighlightSlider: got authasymid", auth_asym_id);
-    console.log("useEffect ChainHighlightSlider: got struct\t\t", full_structure_cache);
-
     if (full_structure_cache && auth_asym_id) {
       // pluck the chain off the full structure
       const pickFullChain = [...full_structure_cache.proteins, ...(() => {
@@ -511,61 +538,45 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { a
     })
   };
 
-  //const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 300)
 
   const handleSearchRange = () => {
     if (auth_asym_id === null) { window.alert('Chain to highlight is null. Provide asym_id to paint.'); return }
-    paintMolstarCanvas(residueRange, auth_asym_id)
-    console.log(`Target asym_id: ${auth_asym_id}. Searching range: [${residueRange}]`)
-
   }
 
-  const handleSliderChange = (event: Event, newvalue: number[]) => {
-    let _: number[] = newvalue;
-    if (newvalue[1] > MaxRes) { _[1] = MaxRes }
-    if (newvalue[0] < 0) { _[0] = 0 }
-    if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
-    setResidueRange(_);
-
-    if (_[0] === _[1]) { return }
-    paintMolstarCanvas(_, auth_asym_id as string);
-  }
+  // const handleSliderChange = (event: Event, newvalue: number[]) => {
+  //   let _: number[] = newvalue;
+  //   if (newvalue[1] > MaxRes) { _[1] = MaxRes }
+  //   if (newvalue[0] < 0) { _[0] = 0 }
+  //   if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
+  //   setResidueRange(_);
+  //   if (_[0] === _[1]) { return }
+  //   // paintMolstarCanvas(_, auth_asym_id as string);
+  // }
 
   const handleResRangeStart = (endVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-
     let numeric = Number(event.target.value.replace(/^\D+/g, ''));
     if (numeric > MaxRes) { numeric = MaxRes }
     if (numeric < 0) { numeric = 0 }
     setResidueRange([numeric.toString() === '' ? 0 : numeric, endVal])
-    paintMolstarCanvas(residueRange, auth_asym_id as string)
+    // paintMolstarCanvas(residueRange, auth_asym_id as string)
   };
 
   const handleResRangeEnd = (startVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(`Max res is ${MaxRes} res range 0 is ${residueRange[0]}    resrange 1 is ${residueRange[1]}`);
     let numeric = Number(event.target.value.replace(/^\D+/g, ''));
-    if (numeric > MaxRes) {
-      numeric = MaxRes
-    }
-    if (numeric < 0) {
-      numeric = 0
-    }
+    if (numeric > MaxRes) {numeric = MaxRes}
+    if (numeric < 0) {numeric = 0}
     setResidueRange([startVal, numeric.toString() === '' ? MaxRes : Number(numeric)])
-    paintMolstarCanvas(residueRange, auth_asym_id as string)
   };
-
-
 
   // Donwload Popover
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const handlePopoverClick = (event: any) => { setAnchorEl(event.currentTarget); };
-  const handlePopoverClose = () => { setAnchorEl(null); };
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const handlePopoverClick      = (event: any) => { setAnchorEl(event.currentTarget); };
+  const handlePopoverClose      = () => { setAnchorEl(null); };
+  const open                    = Boolean(anchorEl);
+  const id                      = open ? 'simple-popover' : undefined;
 
 
-  // Dialgoue sequence
-  const [dialogueOpen, setDialogueOpen] = React.useState(false);
-  const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
 
   const descriptionElementRef = React.useRef<HTMLElement>(null);
   React.useEffect(() => {
@@ -757,8 +768,7 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { a
                     disabled={currentChainFull === null}
                     min={0}
                     max={currentChainFull?.entity_poly_seq_length}
-                    // @ts-ignore
-                    onChange={handleSliderChange}
+                    onChange={rangeChangeHandler1}
                     valueLabelDisplay="auto"
                   // getAriaValueText  = {valuetext}
                   />
@@ -859,7 +869,6 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { a
 //     })
 //   };
 
-//   // const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 300)
 
 //   const handleSearchRange = () => {
 //     if (current_chain_to_highlight === null) { window.alert('Chain to highlight is null. Provide asym_id to paint.'); return }

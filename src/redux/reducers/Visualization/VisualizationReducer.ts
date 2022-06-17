@@ -33,8 +33,9 @@ export interface VisualizationReducerState {
 }
 
 export type SuperimposeStruct = {
-			struct: NeoStruct|null,
-			chain  : PolymerMinimal|null,
+			struct     : NeoStruct|null,
+			chain      : PolymerMinimal|null,
+			chain_range: number[]| null,
 		};
 
 const init: VisualizationReducerState = {
@@ -59,11 +60,13 @@ const init: VisualizationReducerState = {
 	},
 	superimpose:{
 		struct_1:{
-			chain  : null,
+			chain : null,
+			chain_range : null,
 			struct: null
 		},		
 		struct_2:{
 			chain  : null,
+			chain_range : null,
 			struct: null
 		}
 	}
