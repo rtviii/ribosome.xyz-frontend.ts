@@ -184,27 +184,27 @@ export default function ProteinAlignment() {
 
   }
 
-  const requestAlignment = (
-    struct1: string,
-    struct2: string,
-    asym_id1: string,
-    asym_id2: string,
-  ) => {
+  // const requestAlignment = (
+  //   struct1: string,
+  //   struct2: string,
+  //   asym_id1: string,
+  //   asym_id2: string,
+  // ) => {
 
-    getNeo4jData("static_files", {
-      endpoint: "align_3d",
-      params: {
-        struct1,
-        struct2,
-        auth_asym_id1: asym_id1,
-        auth_asym_id2: asym_id2
-      },
-    })
-      .then(
-        resp => { fileDownload(resp.data, `${struct1}-${asym_id1}_over_${struct2}-${asym_id2}.pdb`) },
-        e => console.log(e)
-      )
-  };
+  //   getNeo4jData("static_files", {
+  //     endpoint: "align_3d",
+  //     params: {
+  //       struct1,
+  //       struct2,
+  //       auth_asym_id1: asym_id1,
+  //       auth_asym_id2: asym_id2
+  //     },
+  //   })
+  //     .then(
+  //       resp => { fileDownload(resp.data, `${struct1}-${asym_id1}_over_${struct2}-${asym_id2}.pdb`) },
+  //       e => console.log(e)
+  //     )
+  // };
 
 
   const handleStructChange = (struct_number: number) => (event: React.ChangeEvent<{ value: unknown }>, newvalue: NeoStruct) => {
