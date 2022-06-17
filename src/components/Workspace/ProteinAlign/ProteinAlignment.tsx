@@ -135,12 +135,12 @@ export default function ProteinAlignment() {
   // 
 
   // | ------------------------------------------ OLD STATE ----------------------------------|
-  const [chainStructPair1, setChainStructPair1] = useState<[PolymerMinimal | null, string | null]>([null, null])
-  const [chainStructPair2, setChainStructPair2] = useState<[PolymerMinimal | null, string | null]>([null, null])
+  // const [chainStructPair1, setChainStructPair1] = useState<[PolymerMinimal | null, string | null]>([null, null])
+  // const [chainStructPair2, setChainStructPair2] = useState<[PolymerMinimal | null, string | null]>([null, null])
 
 
-  const [auth_asym_id1, set_auth_asym_id1] = useState<any>(null)
-  const [auth_asym_id2, set_auth_asym_id2] = useState<any>(null)
+  // const [auth_asym_id1, set_auth_asym_id1] = useState<any>(null)
+  // const [auth_asym_id2, set_auth_asym_id2] = useState<any>(null)
 
   const [chains2, setChains2] = useState<PolymerMinimal[]>([])
   const [chains1, setChains1] = useState<PolymerMinimal[]>([])
@@ -187,19 +187,20 @@ export default function ProteinAlignment() {
     console.log(`Struct 1: ${slot_1.struct?.struct.rcsb_id}, chain ${slot_1.chain?.auth_asym_id} [${rangeSlider1[0]}, ${rangeSlider1[1]}]`)
     console.log(`Struct 2: ${slot_2.struct?.struct.rcsb_id}, chain ${slot_2.chain?.auth_asym_id} [${rangeSlider2[0]}, ${rangeSlider2[1]}]`)
     console.log("-----------------")
-    if (chainStructPair1.includes(null) || chainStructPair2.includes(null)) { alert("Please select a chain in both structures to align and a residue range.") }
+
+    if ([slot_1.chain, slot_1.struct, slot_2.chain, slot_2.struct].includes(null)) { alert("Please select a chain in both structures to align and a residue range.") }
     viewerInstance.visual.update({
       customData: {
         url:
           `${process.env.REACT_APP_DJANGO_URL}/static_files/ranged_align/?` +
-          `r1start=${rangeSlider1[0]}` +
-          `&r1end=${[rangeSlider1[1]]}` +
-          `&r2start=${[rangeSlider2[0]]}` +
-          `&r2end=${[rangeSlider2[1]]}` +
-          `&struct1=${chainStructPair1[1]}` +
-          `&struct2=${chainStructPair2[1]}` +
-          `&auth_asym_id1=${chainStructPair1[0]?.auth_asym_id}` +
-          `&auth_asym_id2=${chainStructPair2[0]?.auth_asym_id}`,
+          `r1start=${0}` +
+          `&r1end=${0}` +
+          `&r2start=${100}` +
+          `&r2end=${100}` +
+          `&struct1=${slot_1.struct?.struct.rcsb_id}` +
+          `&struct2=${slot_2.struct?.struct.rcsb_id}` +
+          `&auth_asym_id1=${slot_1.chain?.auth_asym_id}` +
+          `&auth_asym_id2=${slot_2.chain?.auth_asym_id}`,
         format: "pdb",
         binary: false,
       },
@@ -210,8 +211,8 @@ export default function ProteinAlignment() {
   const requestAlignment = (
     struct1: string,
     struct2: string,
-    auth_asym_id1: string,
-    auth_asym_id2: string,
+    asym_id1: string,
+    asym_id2: string,
   ) => {
 
     getNeo4jData("static_files", {
@@ -219,12 +220,12 @@ export default function ProteinAlignment() {
       params: {
         struct1,
         struct2,
-        auth_asym_id1,
-        auth_asym_id2
+        auth_asym_id1: asym_id1,
+        auth_asym_id2: asym_id2
       },
     })
       .then(
-        resp => { fileDownload(resp.data, `${struct1}-${auth_asym_id1}_over_${struct2}-${auth_asym_id2}.pdb`) },
+        resp => { fileDownload(resp.data, `${struct1}-${asym_id1}_over_${struct2}-${asym_id2}.pdb`) },
         e => console.log(e)
       )
   };
@@ -233,41 +234,29 @@ export default function ProteinAlignment() {
   const handleStructChange = (struct_number: number) => (event: React.ChangeEvent<{ value: unknown }>, newvalue: NeoStruct) => {
     if (struct_number === 1) {
       if (newvalue === null) {
-
         dispatch(superimpose_slot_change(1, {
           struct: null,
           chain: null
         }))
-        set_auth_asym_id1(null)
-
-
-
       }
       else {
         dispatch(superimpose_slot_change(1, {
           struct: newvalue,
         }))
         setChains1([...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas])
-
-        set_auth_asym_id1(null)
       }
     }
-
     if (struct_number === 2) {
       if (newvalue === null) {
         dispatch(superimpose_slot_change(2, {
           struct: null,
           chain: null
         }))
-        set_auth_asym_id2(null)
       } else {
-
         dispatch(superimpose_slot_change(2, {
           struct: newvalue,
         }))
-
         setChains2([...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas])
-        set_auth_asym_id2(null)
       }
     }
   }
@@ -275,28 +264,46 @@ export default function ProteinAlignment() {
   const handleChainChange = (chain_number: number) => (event: React.ChangeEvent<{ value: unknown }>,
     newvalue: PolymerMinimal) => {
 
+    console.log("Changing chain. Newavalue: ", newvalue);
+
     if (chain_number === 1) {
       if (newvalue === null) {
-        set_auth_asym_id1(null)
-        setChainStructPair1([null, chainStructPair1[1]])
+        dispatch(superimpose_slot_change(1, {
+          chain: null
+        }))
+        // set_auth_asym_id1(null)
 
-        setRangeSlider2([0, minDistance])
+        // setChainStructPair1([null, chainStructPair1[1]])
+        // setRangeSlider2([0, minDistance])
+
       } else {
-        set_auth_asym_id1(newvalue)
-        setChainStructPair1([newvalue, chainStructPair1[1]])
-        setRangeSlider1([0, newvalue.entity_poly_seq_one_letter_code.length - 1])
+        dispatch(superimpose_slot_change(1, {
+          chain: newvalue
+        }))
+
+        // set_auth_asym_id1(newvalue)
+        // setChainStructPair1([newvalue, chainStructPair1[1]])
+        // setRangeSlider1([0, newvalue.entity_poly_seq_one_letter_code.length - 1])
+
       }
     }
 
     if (chain_number === 2) {
       if (newvalue === null) {
-        set_auth_asym_id2(null)
-        setChainStructPair2([null, chainStructPair2[1]])
-        setRangeSlider2([0, minDistance])
+
+        dispatch(superimpose_slot_change(2, {
+          chain: null
+        }))
+        // set_auth_asym_id2(null)
+        // setChainStructPair2([null, chainStructPair2[1]])
+        // setRangeSlider2([0, minDistance])
       } else {
-        set_auth_asym_id2(newvalue)
-        setChainStructPair2([newvalue, chainStructPair2[1]])
-        setRangeSlider2([0, newvalue.entity_poly_seq_one_letter_code.length - 1])
+        dispatch(superimpose_slot_change(2, {
+          chain: newvalue
+        }))
+        // set_auth_asym_id2(newvalue)
+        // setChainStructPair2([newvalue, chainStructPair2[1]])
+        // setRangeSlider2([0, newvalue.entity_poly_seq_one_letter_code.length - 1])
       }
     }
   }
@@ -364,7 +371,7 @@ export default function ProteinAlignment() {
             renderInput={(params) => <TextField {...params} label={`Structure 1`} variant="outlined" />}
           />
           <Autocomplete
-            value={auth_asym_id1}
+            value={slot_1.chain}
             className={classes.autocomplete}
             options={chains1}
             getOptionLabel={(chain: PolymerMinimal) => {
@@ -417,7 +424,7 @@ export default function ProteinAlignment() {
           />
 
           <Autocomplete
-            value={auth_asym_id2}
+            value={slot_2.chain}
             className={classes.autocomplete}
             options={chains2}
             getOptionLabel={(chain: PolymerMinimal) => {
@@ -474,25 +481,24 @@ export default function ProteinAlignment() {
         </Grid>
         <Grid item>
 
-
+{/* 
           <Button
             style={{ marginBottom: "10px", textTransform: "none" }}
             fullWidth
             variant="outlined"
             onClick={() => {
-              if (chainStructPair1.includes(null) || chainStructPair2.includes(null)) {
+              if ([slot_1.chain, slot_1.struct, slot_2.chain, slot_2.struct].includes(null)) {
                 alert("Select chains to align.")
                 return
               }
 
               viewerInstance.visual.update({
                 customData: {
-                  url: `${process.env.REACT_APP_DJANGO_URL}/static_files/align_3d/?struct1=${chainStructPair1[1]}&struct2=${chainStructPair2[1]}&strand1=${chainStructPair1[0]}&strand2=${chainStructPair2[0]}`,
+                  url: `${process.env.REACT_APP_DJANGO_URL}/static_files/align_3d/?struct1=${slot_1.struct?.struct.rcsb_id}&struct2=${slot_2.struct?.struct.rcsb_id}&strand1=${slot_1.chain?.auth_asym_id}&strand2=${slot_2.chain?.auth_asym_id}`,
                   format: "pdb",
                   binary: false,
                 },
               });
-
 
               requestAlignment(
                 chainStructPair1[1] as string,
@@ -502,7 +508,7 @@ export default function ProteinAlignment() {
               );
             }}>
             Download Aligned
-          </Button>
+          </Button> */}
         </Grid>
 
 
