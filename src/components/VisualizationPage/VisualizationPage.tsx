@@ -18,13 +18,13 @@ import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import fileDownload from 'js-file-download';
 import Tooltip from "@mui/material/Tooltip";
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { getNeo4jData } from '../../redux/AsyncActions/getNeo4jData';
 import { BanClassMetadata, NeoStruct, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces';
-import { cache_full_struct, COMPONENT_TAB_CHANGE, fullstructCache_change, protein_change, protein_update_auth_asym_id, rna_change, rna_update_auth_asym_id, struct_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
+import { cache_full_struct, COMPONENT_TAB_CHANGE, fullstructCache_change, protein_change, protein_update_auth_asym_id, rna_change, rna_update_auth_asym_id, struct_change, update_struct_tab_range, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
 import { AppState, store } from '../../redux/store';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
 import { StructHeroVertical, CardBodyAnnotation } from "./../../materialui/StructHero";
@@ -39,10 +39,9 @@ import { SeqViz } from "seqviz";
 import { DialogProps } from '@mui/material/Dialog';
 import { requestBanClass } from "../../redux/reducers/Proteins/ActionTypes";
 import { coerce_full_structure_to_neostruct } from "../../redux/reducers/Visualization/VisualizationReducer";
-
+import { debounce } from 'lodash'
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
-
 const useSelectStyles = makeStyles((theme: Theme) =>
   createStyles({
     select: {
@@ -78,23 +77,18 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   const dispatch = useDispatch()
   const selectStructStyles = (makeStyles({ autocomoplete: { width: "100%" } }))()
 
-  // const current_full_struct: RibosomeStructure | null = useSelector((state: AppState) => state.visualization.structure_tab.fullStructProfile)
-  // const current_neo_struct: NeoStruct | null = useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))
-
-  // useSelector((state: AppState) => coerce_full_structure_to_neostruct(state.visualization.structure_tab.fullStructProfile))
 
   const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
   const structs = useSelector((state: AppState) => state.structures.derived_filtered)
-  const cached_struct = useSelector((state: AppState) => state.visualization.full_structure_cache)
-  // const { addToast                   }                 = useToasts  (                                                                        );
+  const cached_struct = useSelector((state: AppState) => state.visualization.full_structure_cache[0])
 
 
   const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {
 
 
 
-    dispatch(cache_full_struct(selected_neostruct && selected_neostruct?.struct.rcsb_id))
+    dispatch(cache_full_struct(selected_neostruct && selected_neostruct?.struct.rcsb_id, 0))
     if (selected_neostruct !== null) {
       dispatch(struct_change(null, selected_neostruct))
 
@@ -245,7 +239,7 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
     }
 
     setProtParent(newvalue.parent_rcsb_id);
-    dispatch(cache_full_struct(newvalue.parent_rcsb_id))
+    dispatch(cache_full_struct(newvalue.parent_rcsb_id, 0))
     getCifChainByClass(curProtClass as ProteinClass, newvalue.parent_rcsb_id)
     dispatch(protein_change(curProtClass, newvalue.parent_rcsb_id))
 
@@ -286,12 +280,12 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
 
 const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifChainByClass: (strand: string, parent: string) => void }) => {
 
-  const styles   = useSelectStyles();
+  const styles = useSelectStyles();
   const dispatch = useDispatch();
 
-  const [curRna, setCurRna]          = React.useState<RNAClass | null>(null);
+  const [curRna, setCurRna] = React.useState<RNAClass | null>(null);
   const [curRnaParent, setRnaParent] = React.useState<string | null>(null);
-  const parents                      = useSelector((state: AppState) => state.rna.rna_classes_derived)
+  const parents = useSelector((state: AppState) => state.rna.rna_classes_derived)
 
 
   var rnaClasses: { v: string, t: RNAClass }[] = [
@@ -314,10 +308,10 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
           <FormControl className={styles.sub1}>
             <InputLabel> RNA Class </InputLabel>
             <Select
-              labelId  = "demo-simple-select-label"
-              id       = "demo-simple-select"
-              value    = {curRna}
-              onChange = {(event: any) => {
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={curRna}
+              onChange={(event: any) => {
                 setCurRna(event.target.value)
                 dispatch(rna_change(event.target.value, curRnaParent))
               }}>
@@ -339,7 +333,7 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
 
                   console.log("Got newvalue for rna select parent", newValue.parent_rcsb_id)
                   setRnaParent(newValue.parent_rcsb_id)
-                  dispatch(cache_full_struct(newValue.parent_rcsb_id))
+                  dispatch(cache_full_struct(newValue.parent_rcsb_id, 0))
                   getCifChainByClass(curRna as string, newValue.parent_rcsb_id)
                   dispatch(rna_change(curRna, newValue.parent_rcsb_id))
 
@@ -450,12 +444,52 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
 
 // --------------------------------------------------------------------------------------------------
 
-const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asym_id: string | null, full_structure_cache: RibosomeStructure | null }) => {
+const paintMolstarCanvas = (resRange: number[], chain_to_highlight: string) => {
+  var selectSections =
+  {
+    instance_id: 'ASM_1',
+    auth_asym_id: chain_to_highlight,
+    start_residue_number: resRange[0] === 0 ? 1 : resRange[0],
+    end_residue_number: resRange[1],
+    color: { r: 255, g: 255, b: 255 },
+    focus: true
+  }
+  // console.log("got select params options", selectSections);
+
+  // viewerInstance.visual.select({ data: selectSections, nonSelectedColor: { r: 180, g: 180, b: 180 } })
+  // { data: [{ struct_asym_id: 'B', start_residue_number: 1, end_residue_number: 6, color:{r:255,g:255,b:0}, focus: true }]}
+  viewerInstance.visual.select({
+    data: [selectSections], nonSelectedColor: { r: 50, g: 50, b: 50 }
+  })
+};
+export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux_effect }: {
+  auth_asym_id: string | null,
+  full_structure_cache: RibosomeStructure | null,
+  redux_effect: (_: any) => void
+}) => {
+
+  // @param redux_effect is a memoized debounced function that would update the correspodning range in redux.
+  // this way, we can avoid updating the range in the redux store every time the slider is moved,
+  // yet we can still keep the range in sync with the slider by storing it locally (usestate)
+  // -----------------------------------------------------
+
   // takes in a full protein or rna
   const [currentChainFull, setCurrentChainFull] = React.useState<Protein | RNA | null>(null)
+  const [residueRange, setResidueRange] = React.useState<number[]>([0, 0]);           // current slider value
+  const [MaxRes, setMaxRes] = React.useState<number>(0);                  // keep track of what's the max residue range
 
-  const [residueRange, setResidueRange] = React.useState<number[]>([0, 0]);  // current slider value
-  const [MaxRes, setMaxRes] = React.useState<number>(0);         // keep track of what's the max residue range
+  const rangeChangeHandler = (event: any) => {
+    let _: number[] = event.target.value;
+    if (_[1] > MaxRes) { _[1] = MaxRes }
+    if (_[0] < 0) { _[0] = 0 }
+    if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
+    setResidueRange(_)
+    if (_[0] === _[1]) { return }
+  }
+  useEffect(() => {
+    redux_effect(residueRange)
+  }, [residueRange])
+
 
   useEffect(() => {
     if (full_structure_cache && auth_asym_id) {
@@ -467,7 +501,6 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
           return full_structure_cache.rnas
         }
       })()].filter(c => c.auth_asym_id === auth_asym_id)
-
       if (pickFullChain.length < 1) {
         console.log("Haven't found chain with this asym_id on the full structure. Something went terribly wrong.");
       } else {
@@ -491,68 +524,38 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
   ])
 
 
-  const paintMolstarCanvas = (resRange: number[], chain_to_highlight: string) => {
-    var selectSections =
-    {
-      instance_id: 'ASM_1',
-      auth_asym_id: chain_to_highlight,
-      start_residue_number: resRange[0] === 0 ? 1 : resRange[0],
-      end_residue_number: resRange[1],
-      color: { r: 255, g: 255, b: 255 },
-      focus: true
-    }
-    // console.log("got select params options", selectSections);
 
-    // viewerInstance.visual.select({ data: selectSections, nonSelectedColor: { r: 180, g: 180, b: 180 } })
-    // { data: [{ struct_asym_id: 'B', start_residue_number: 1, end_residue_number: 6, color:{r:255,g:255,b:0}, focus: true }]}
-    viewerInstance.visual.select({
-      data: [selectSections], nonSelectedColor: { r: 50, g: 50, b: 50 }
-    })
-  };
 
-  // const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 300)
 
   const handleSearchRange = () => {
     if (auth_asym_id === null) { window.alert('Chain to highlight is null. Provide asym_id to paint.'); return }
-    paintMolstarCanvas(residueRange, auth_asym_id)
-    console.log(`Target asym_id: ${auth_asym_id}. Searching range: [${residueRange}]`)
-
   }
 
-  const handleSliderChange = (event: Event, newvalue: number[]) => {
-    let _: number[] = newvalue;
-    if (newvalue[1] > MaxRes) { _[1] = MaxRes }
-    if (newvalue[0] < 0) { _[0] = 0 }
-    if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
-    setResidueRange(_);
-
-    if (_[0] === _[1]) { return }
-    paintMolstarCanvas(_, auth_asym_id as string);
-  }
+  // const handleSliderChange = (event: Event, newvalue: number[]) => {
+  //   let _: number[] = newvalue;
+  //   if (newvalue[1] > MaxRes) { _[1] = MaxRes }
+  //   if (newvalue[0] < 0) { _[0] = 0 }
+  //   if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
+  //   setResidueRange(_);
+  //   if (_[0] === _[1]) { return }
+  //   // paintMolstarCanvas(_, auth_asym_id as string);
+  // }
 
   const handleResRangeStart = (endVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-
     let numeric = Number(event.target.value.replace(/^\D+/g, ''));
     if (numeric > MaxRes) { numeric = MaxRes }
     if (numeric < 0) { numeric = 0 }
     setResidueRange([numeric.toString() === '' ? 0 : numeric, endVal])
-    paintMolstarCanvas(residueRange, auth_asym_id as string)
+    // paintMolstarCanvas(residueRange, auth_asym_id as string)
   };
 
   const handleResRangeEnd = (startVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(`Max res is ${MaxRes} res range 0 is ${residueRange[0]}    resrange 1 is ${residueRange[1]}`);
     let numeric = Number(event.target.value.replace(/^\D+/g, ''));
-    if (numeric > MaxRes) {
-      numeric = MaxRes
-    }
-    if (numeric < 0) {
-      numeric = 0
-    }
+    if (numeric > MaxRes) { numeric = MaxRes }
+    if (numeric < 0) { numeric = 0 }
     setResidueRange([startVal, numeric.toString() === '' ? MaxRes : Number(numeric)])
-    paintMolstarCanvas(residueRange, auth_asym_id as string)
   };
-
-
 
   // Donwload Popover
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -562,9 +565,6 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
   const id = open ? 'simple-popover' : undefined;
 
 
-  // Dialgoue sequence
-  const [dialogueOpen, setDialogueOpen] = React.useState(false);
-  const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
 
   const descriptionElementRef = React.useRef<HTMLElement>(null);
   React.useEffect(() => {
@@ -756,8 +756,7 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
                     disabled={currentChainFull === null}
                     min={0}
                     max={currentChainFull?.entity_poly_seq_length}
-                    // @ts-ignore
-                    onChange={handleSliderChange}
+                    onChange={rangeChangeHandler}
                     valueLabelDisplay="auto"
                   // getAriaValueText  = {valuetext}
                   />
@@ -858,7 +857,6 @@ const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asy
 //     })
 //   };
 
-//   // const paintMolstarCanvas__debounced = _.debounce(paintMolstarCanvas, 300)
 
 //   const handleSearchRange = () => {
 //     if (current_chain_to_highlight === null) { window.alert('Chain to highlight is null. Provide asym_id to paint.'); return }
@@ -1214,8 +1212,6 @@ const VisualizationPage = (props: any) => {
   const all_structures: StructSnip[] = useSelector((state: AppState) => state.structures.neo_response.map(
     r => { return { rcsb_id: r.struct.rcsb_id, title: r.struct.citation_title } }))
 
-
-
   // ----------- This one, i think is for fetching struct on uri parmas pass. Should be able to do in redux
   // useEffect(() => {
   //   if (params === undefined || Object.keys(params).length < 1) { return }
@@ -1475,33 +1471,33 @@ const VisualizationPage = (props: any) => {
   const current_protein_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.protein_tab.auth_asym_id)
   const current_protein_neostruct: NeoStruct | null = useSelector((state: AppState) => current_protein_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id === current_protein_parent)[0])
 
-  const current_rna_class: RNAClass | null = useSelector((state: AppState) => state.visualization.rna_tab.class)
-  const current_rna_parent: string | null = useSelector((state: AppState) => state.visualization.rna_tab.parent)
-  const current_rna_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.rna_tab.auth_asym_id)
-  const current_rna_neostruct: NeoStruct | null = useSelector((state: AppState) => current_rna_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id === current_rna_parent)[0])
+  const current_rna_class        : RNAClass  | null = useSelector((state: AppState) =>                                      state.visualization.rna_tab     .class                                                  )
+  const current_rna_parent       : string    | null = useSelector((state: AppState) =>                                      state.visualization.rna_tab     .parent                                                 )
+  const current_rna_auth_asym_id : string    | null = useSelector((state: AppState) =>                                      state.visualization.rna_tab     .auth_asym_id                                           )
+  const current_rna_neostruct    : NeoStruct | null = useSelector((state: AppState) => current_rna_parent === null ? null : state.structures   .neo_response.filter(s => s.struct.rcsb_id === current_rna_parent)[0])
 
   useEffect(() => {
     if (current_protein_class && current_protein_parent) {
       // identify the asym_id of the given class in the parent (the cached version should be available)
-      if (cached_struct === null) {
+      if (cached_struct[0] === null) {
         console.log("We have a problem! cahched struct not here");
       } else {
-        const found = cached_struct.proteins.filter(c => c.nomenclature.includes(current_protein_class))
+        const found = cached_struct[0].proteins.filter(c => c.nomenclature.includes(current_protein_class))
         if (found.length < 1) {
-          alert("Could not find protein class " + current_protein_class + ` in the cached structure ${cached_struct === null ? "null" : cached_struct.rcsb_id}. This is a bug, please report it.`);
+          alert("Could not find protein class " + current_protein_class + ` in the cached structure ${cached_struct[0] === null ? "null" : cached_struct[0].rcsb_id}. This is a bug, please report it.`);
         }
         dispatch(protein_update_auth_asym_id(found[0].auth_asym_id))
       }
     } else {
       dispatch(protein_update_auth_asym_id(null))
     }
-  }, [current_protein_class, current_protein_parent, cached_struct])
+  }, [current_protein_class, current_protein_parent, cached_struct[0]])
 
   useEffect(() => {
     if (current_rna_parent === null) {
-      cache_full_struct(null)
+      cache_full_struct(null, 0)
     } else {
-      cache_full_struct(current_rna_parent)
+      cache_full_struct(current_rna_parent, 0)
     }
   }, [current_rna_parent])
 
@@ -1509,18 +1505,18 @@ const VisualizationPage = (props: any) => {
   useEffect(() => {
     if (current_rna_class && current_rna_parent) {
       // identify the asym_id of the given class in the parent (the cached version should be available)
-      if (cached_struct === null) {
+      if (cached_struct[0] === null) {
         console.log("We have a problem! cahched struct not here");
       } else {
-        if (!cached_struct.rnas) {
+        if (!cached_struct[0].rnas) {
           dispatch(rna_update_auth_asym_id(null))
           console.log("This structure does not have RNA data. This is a bug, please report it.");
           return
         }
 
-        const found = cached_struct.rnas.filter(c => c.nomenclature.includes(current_rna_class))
+        const found = cached_struct[0].rnas.filter(c => c.nomenclature.includes(current_rna_class))
         if (found.length < 1) {
-          // alert("Could not find rna class " + current_rna_class + ` in the cached structure ${cached_struct === null ? "null" : cached_struct.rcsb_id}. This is a bug, please report it.`);
+          // alert("Could not find rna class " + current_rna_class + ` in the cached structure ${cached_struct[0] === null ? "null" : cached_struct[0].rcsb_id}. This is a bug, please report it.`);
           return
         }
         dispatch(rna_update_auth_asym_id(found[0].auth_asym_id))
@@ -1528,7 +1524,16 @@ const VisualizationPage = (props: any) => {
     } else {
       dispatch(rna_update_auth_asym_id(null))
     }
-  }, [current_rna_class, current_rna_parent, cached_struct])
+  }, [current_rna_class, current_rna_parent, cached_struct[0]])
+
+
+
+  const debounedRangeChange__redux = debounce((redux_range: number[]) => {
+    paintMolstarCanvas(redux_range, current_chain_to_highlight as string)
+    dispatch(update_struct_tab_range(redux_range))
+  }, 200)
+
+
 
   return (
     <Grid container xs={12} spacing={1} alignContent="flex-start">
@@ -1544,7 +1549,7 @@ const VisualizationPage = (props: any) => {
       <Grid item direction="column" xs={3} style={{ padding: "5px" }}>
         <List>
 
-          {(() => {
+          {/* {(() => {
             if (lastViewed[0] == null && lastViewed[1] != null) {
               return <ListItem>
                 Last Item Viewed:   Structure {lastViewed[1]}
@@ -1559,7 +1564,7 @@ const VisualizationPage = (props: any) => {
               </ListItem>
             }
           }
-          )()}
+          )()} */}
 
 
           <ListSubheader>Select Item Category: {(() => {
@@ -1617,7 +1622,7 @@ const VisualizationPage = (props: any) => {
           })()}
 
           {/* {
-            coerce_full_structure_to_neostruct(cached_struct) === null ? null : <ListItem> <StructHeroVertical d={coerce_full_structure_to_neostruct(cached_struct) as NeoStruct} 
+            coerce_full_structure_to_neostruct(cached_struct[0]) === null ? null : <ListItem> <StructHeroVertical d={coerce_full_structure_to_neostruct(cached_struct[0]) as NeoStruct} 
             inCart={false} topless={true} /></ListItem>
           } */}
 
@@ -1627,16 +1632,20 @@ const VisualizationPage = (props: any) => {
           {(() => {
             switch (current_tab) {
               case 'protein_tab':
-                return current_protein_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_protein_auth_asym_id} full_structure_cache={cached_struct} /></ListItem>
+                return current_protein_auth_asym_id === null ? null : <ListItem>
+                  <ChainHighlightSlider auth_asym_id={current_protein_auth_asym_id} full_structure_cache={cached_struct[0]} redux_effect={debounedRangeChange__redux}
+                  /></ListItem>
               case 'structure_tab':
-                return current_chain_to_highlight === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_chain_to_highlight} full_structure_cache={cached_struct} /></ListItem>
+                return current_chain_to_highlight === null ? null : <ListItem> <ChainHighlightSlider redux_effect={debounedRangeChange__redux} auth_asym_id={current_chain_to_highlight} full_structure_cache={cached_struct[0]} /></ListItem>
               case 'rna_tab':
                 // return "Select rna"
-                return current_rna_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_rna_auth_asym_id} full_structure_cache={cached_struct} /></ListItem>
+                return current_rna_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_rna_auth_asym_id}
+                  full_structure_cache={cached_struct[0]} redux_effect={debounedRangeChange__redux} /></ListItem>
                 return // <SelectRna items={[]} getCifChainByClass={getCifChainByClass} />
               default:
                 return "Null"
             }
+
           })()}
 
           <ListItem>

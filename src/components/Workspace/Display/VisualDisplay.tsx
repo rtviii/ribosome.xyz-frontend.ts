@@ -89,11 +89,11 @@ const VisualDisplay = () => {
 
     interface PDBEvent extends Event {
       eventData: {
-        chainId: string;
-        entityId: string;
-        entryId: string;
+        chainId      : string;
+        entityId     : string;
+        entryId      : string;
         residueNumber: number;
-        type: string;
+        type         : string;
       };
     }
     document.addEventListener("PDB.topologyViewer.mouseover", e => {
