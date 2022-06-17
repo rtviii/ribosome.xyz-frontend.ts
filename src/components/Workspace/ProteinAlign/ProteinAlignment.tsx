@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData';
 import { RibosomeStructure } from '../../../redux/RibosomeTypes';
@@ -15,7 +15,7 @@ import Paper from '@material-ui/core/Paper/Paper';
 import { NeoStruct, PolymerMinimal } from '../../../redux/DataInterfaces';
 import { ChainHighlightSlider } from '../../VisualizationPage/VisualizationPage';
 import { cache_full_struct, superimpose_slot_change } from '../../../redux/reducers/Visualization/ActionTypes';
-
+import { debounce } from 'lodash';
 
 export const nomenclatureCompareFn = (a: PolymerMinimal, b: PolymerMinimal) => {
   //  console.log("Got two to sort" , a, b);
@@ -40,11 +40,8 @@ export const nomenclatureCompareFn = (a: PolymerMinimal, b: PolymerMinimal) => {
   }
 }
 
-
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
-
-
 
 export default function ProteinAlignment() {
   const dispatch = useDispatch();
@@ -117,6 +114,11 @@ export default function ProteinAlignment() {
 
   const structs = useSelector((state: AppState) => state.structures.derived_filtered)
 
+  const debounedRangeChange1__redux = debounce((redux_range: number[]) =>{
+    dispatch(superimpose_slot_change(1, { chain_range: redux_range }))}, 200)
+
+  const debounedRangeChange2__redux = debounce((redux_range: number[]) =>{
+    dispatch(superimpose_slot_change(2, { chain_range: redux_range }))}, 200)
 
 
   // | ------------------------------------------ NEW STATE ----------------------------------|
@@ -128,6 +130,9 @@ export default function ProteinAlignment() {
 
   const struct_cache_1 =useSelector((state:AppState)=>state.visualization.full_structure_cache[0])
   const struct_cache_2 =useSelector((state:AppState)=>state.visualization.full_structure_cache[1])
+
+  const range_slot_1 =useSelector((state:AppState)=>state.visualization.superimpose.struct_1.chain_range)
+  const range_slot_2 =useSelector((state:AppState)=>state.visualization.superimpose.struct_2.chain_range)
   // | ------------------------------------------ NEW STATE ----------------------------------|
 
   // 
@@ -141,7 +146,6 @@ export default function ProteinAlignment() {
   const [chains1, setChains1] = useState<PolymerMinimal[]>([])
   // | ------------------------------------------ OLD STATE ----------------------------------|
   const minDistance = 10;
-
 
 
   // const [residueRange1, setResidueRange1] = React.useState<number[]>([0, 0]);  // current slider value
@@ -176,8 +180,10 @@ export default function ProteinAlignment() {
   ) => {
     console.log("-----------------")
     console.log("Requesting ranged alignment with values:")
-    // console.log(`Struct 1: ${slot_1.struct?.struct.rcsb_id}, chain ${slot_1.chain?.auth_asym_id} [${rangeSlider1[0]}, ${rangeSlider1[1]}]`)
-    // console.log(`Struct 2: ${slot_2.struct?.struct.rcsb_id}, chain ${slot_2.chain?.auth_asym_id} [${rangeSlider2[0]}, ${rangeSlider2[1]}]`)
+    // @ts-ignore
+    console.log(`Struct 1: ${slot_1.struct?.struct.rcsb_id}, chain ${slot_1.chain?.auth_asym_id} [${range_slot_1[0]}, ${range_slot_1[1]}]`)
+    // @ts-ignore
+    console.log(`Struct 2: ${slot_2.struct?.struct.rcsb_id}, chain ${slot_2.chain?.auth_asym_id} [${range_slot_2[0]}, ${range_slot_2[1]}]`)
     console.log("-----------------")
 
     if ([slot_1.chain, slot_1.struct, slot_2.chain, slot_2.struct].includes(null)) { alert("Please select a chain in both structures to align and a residue range.") }
@@ -198,7 +204,6 @@ export default function ProteinAlignment() {
       },
     });
   }
-
 
   const requestAlignment = (
     struct1: string,
@@ -379,11 +384,13 @@ export default function ProteinAlignment() {
           />
 
           <ChainHighlightSlider 
+              redux_effect={debounedRangeChange1__redux}
               auth_asym_id         = {slot_1.chain?.auth_asym_id as string}
               full_structure_cache = {struct_cache_1}/>
 
           <ChainHighlightSlider 
-          auth_asym_id={slot_2.chain?.auth_asym_id as string}
+            redux_effect={debounedRangeChange2__redux}
+            auth_asym_id={slot_2.chain?.auth_asym_id as string}
            full_structure_cache={struct_cache_2}/>
 
 

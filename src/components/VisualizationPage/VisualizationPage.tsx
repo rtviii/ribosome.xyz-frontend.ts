@@ -39,7 +39,7 @@ import { SeqViz } from "seqviz";
 import { DialogProps } from '@mui/material/Dialog';
 import { requestBanClass } from "../../redux/reducers/Proteins/ActionTypes";
 import { coerce_full_structure_to_neostruct } from "../../redux/reducers/Visualization/VisualizationReducer";
-import {debounce} from 'lodash'
+import { debounce } from 'lodash'
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -244,7 +244,7 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
     }
 
     setProtParent(newvalue.parent_rcsb_id);
-    dispatch(cache_full_struct(newvalue.parent_rcsb_id,0))
+    dispatch(cache_full_struct(newvalue.parent_rcsb_id, 0))
     getCifChainByClass(curProtClass as ProteinClass, newvalue.parent_rcsb_id)
     dispatch(protein_change(curProtClass, newvalue.parent_rcsb_id))
 
@@ -256,10 +256,10 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
           <FormControl className={styles.sub1}>
             <InputLabel>Protein Class</InputLabel>
             <Select
-              labelId  = "demo-simple-select-label"
-              id       = "demo-simple-select"
-              value    = {curProtClass}
-              onChange = {chooseProtein}>
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={curProtClass}
+              onChange={chooseProtein}>
               {proteins.map((i) => <MenuItem value={i.banClass}>{i.banClass}
               </MenuItem>)}
             </Select>
@@ -267,9 +267,9 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
 
           <FormControl className={styles.sub2}>
             <Autocomplete
-              styles         = {{ marginRight: "9px", outline: "none" }}
-              options        = {availablestructs.length > -1 ? availablestructs : [{ parent_rcsb_id: "Choose a protein class." } as ProteinProfile]}
-              getOptionLabel = {(parent) => parent.parent_rcsb_id}
+              styles={{ marginRight: "9px", outline: "none" }}
+              options={availablestructs.length > -1 ? availablestructs : [{ parent_rcsb_id: "Choose a protein class." } as ProteinProfile]}
+              getOptionLabel={(parent) => parent.parent_rcsb_id}
               // @ts-ignore
               onChange={chooseProtParent}
               renderOption={(option) => (<div style={{ fontSize: "9px", width: "400px" }}><b>{option.parent_rcsb_id}</b> ({option.pfam_descriptions} ) </div>)}
@@ -285,12 +285,12 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
 
 const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifChainByClass: (strand: string, parent: string) => void }) => {
 
-  const styles   = useSelectStyles();
+  const styles = useSelectStyles();
   const dispatch = useDispatch();
 
-  const [curRna, setCurRna]          = React.useState<RNAClass | null>(null);
+  const [curRna, setCurRna] = React.useState<RNAClass | null>(null);
   const [curRnaParent, setRnaParent] = React.useState<string | null>(null);
-  const parents                      = useSelector((state: AppState) => state.rna.rna_classes_derived)
+  const parents = useSelector((state: AppState) => state.rna.rna_classes_derived)
 
 
   var rnaClasses: { v: string, t: RNAClass }[] = [
@@ -313,10 +313,10 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
           <FormControl className={styles.sub1}>
             <InputLabel> RNA Class </InputLabel>
             <Select
-              labelId  = "demo-simple-select-label"
-              id       = "demo-simple-select"
-              value    = {curRna}
-              onChange = {(event: any) => {
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={curRna}
+              onChange={(event: any) => {
                 setCurRna(event.target.value)
                 dispatch(rna_change(event.target.value, curRnaParent))
               }}>
@@ -449,41 +449,37 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
 
 // --------------------------------------------------------------------------------------------------
 
-export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asym_id: string | null, full_structure_cache: RibosomeStructure | null }) => {
+export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux_effect }: {
+  auth_asym_id: string | null,
+  full_structure_cache: RibosomeStructure | null,
+  redux_effect: (_:any) => void
+}) => {
+
+  // @param redux_effect is a memoized debounced function that would update the correspodning range in redux.
+  // this way, we can avoid updating the range in the redux store every time the slider is moved,
+  // yet we can still keep the range in sync with the slider by storing it locally (usestate)
+  // -----------------------------------------------------
 
   // takes in a full protein or rna
   const [currentChainFull, setCurrentChainFull] = React.useState<Protein | RNA | null>(null)
-  const [residueRange, setResidueRange]         = React.useState<number[]>([0, 0]);           // current slider value
-  const [MaxRes, setMaxRes]                     = React.useState<number>(0);                  // keep track of what's the max residue range
-  const dispatch  = useDispatch();
+  const [residueRange, setResidueRange] = React.useState<number[]>([0, 0]);           // current slider value
+  const [MaxRes, setMaxRes] = React.useState<number>(0);                  // keep track of what's the max residue range
+  const dispatch = useDispatch();
 
-  let dispatch_range_change = (superimpose_struct_slot:1|2,redux_range:number[])=>{
-    dispatch(superimpose_slot_change(superimpose_struct_slot,{chain_range: redux_range}))
-  }
 
-  const debounedRangeChange__redux = useCallback(debounce(dispatch_range_change, 500), []);
-
-  const rangeChangeHandler1 = (event:any)=>{
+  const rangeChangeHandler = (event: any) => {
     let _: number[] = event.target.value;
     if (_[1] > MaxRes) { _[1] = MaxRes }
     if (_[0] < 0) { _[0] = 0 }
     if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
-    setResidueRange(_)  
-    debounedRangeChange__redux(1,_)
+
+    setResidueRange(_)
     if (_[0] === _[1]) { return }
   }
-
-  // const rangeChangeHandler2= (event:any)=>{
-  //   let _: number[] = event.target.value;
-  //   if (_[1] > MaxRes) { _[1] = MaxRes }
-  //   if (_[0] < 0) { _[0] = 0 }
-  //   if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
-  //   setResidueRange(_)  
-  //   debounedRangeChange__redux(2,_)
-  //   if (_[0] === _[1]) { return }
-  // }
-
-
+  useEffect(()=>{
+    console.log("got res range change, redux effect ", residueRange)
+    redux_effect(residueRange)
+  }, [residueRange])
 
 
   useEffect(() => {
@@ -564,17 +560,17 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { a
   const handleResRangeEnd = (startVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(`Max res is ${MaxRes} res range 0 is ${residueRange[0]}    resrange 1 is ${residueRange[1]}`);
     let numeric = Number(event.target.value.replace(/^\D+/g, ''));
-    if (numeric > MaxRes) {numeric = MaxRes}
-    if (numeric < 0) {numeric = 0}
+    if (numeric > MaxRes) { numeric = MaxRes }
+    if (numeric < 0) { numeric = 0 }
     setResidueRange([startVal, numeric.toString() === '' ? MaxRes : Number(numeric)])
   };
 
   // Donwload Popover
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const handlePopoverClick      = (event: any) => { setAnchorEl(event.currentTarget); };
-  const handlePopoverClose      = () => { setAnchorEl(null); };
-  const open                    = Boolean(anchorEl);
-  const id                      = open ? 'simple-popover' : undefined;
+  const handlePopoverClick = (event: any) => { setAnchorEl(event.currentTarget); };
+  const handlePopoverClose = () => { setAnchorEl(null); };
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
 
 
@@ -768,7 +764,7 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { a
                     disabled={currentChainFull === null}
                     min={0}
                     max={currentChainFull?.entity_poly_seq_length}
-                    onChange={rangeChangeHandler1}
+                    onChange={rangeChangeHandler}
                     valueLabelDisplay="auto"
                   // getAriaValueText  = {valuetext}
                   />
@@ -1509,7 +1505,7 @@ const VisualizationPage = (props: any) => {
     if (current_rna_parent === null) {
       cache_full_struct(null, 0)
     } else {
-      cache_full_struct(current_rna_parent,0)
+      cache_full_struct(current_rna_parent, 0)
     }
   }, [current_rna_parent])
 
@@ -1635,16 +1631,19 @@ const VisualizationPage = (props: any) => {
           {(() => {
             switch (current_tab) {
               case 'protein_tab':
-                return current_protein_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_protein_auth_asym_id} full_structure_cache={cached_struct[0]} /></ListItem>
+                return current_protein_auth_asym_id === null ? null : <ListItem>
+                  <ChainHighlightSlider auth_asym_id={current_protein_auth_asym_id} full_structure_cache={cached_struct[0]} redux_effect={() => { }}
+                  /></ListItem>
               case 'structure_tab':
-                return current_chain_to_highlight === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_chain_to_highlight} full_structure_cache={cached_struct[0]} /></ListItem>
+                return current_chain_to_highlight === null ? null : <ListItem> <ChainHighlightSlider redux_effect={() => { }} auth_asym_id={current_chain_to_highlight} full_structure_cache={cached_struct[0]} /></ListItem>
               case 'rna_tab':
                 // return "Select rna"
-                return current_rna_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_rna_auth_asym_id} full_structure_cache={cached_struct[0]} /></ListItem>
+                return current_rna_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_rna_auth_asym_id} full_structure_cache={cached_struct[0]} redux_effect={() => { }} /></ListItem>
                 return // <SelectRna items={[]} getCifChainByClass={getCifChainByClass} />
               default:
                 return "Null"
             }
+
           })()}
 
           <ListItem>
