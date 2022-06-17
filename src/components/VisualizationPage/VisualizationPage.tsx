@@ -453,11 +453,13 @@ const DownloadElement = ({ elemtype, id, parent }: DownloadElement_P) => {
 export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { auth_asym_id: string | null, full_structure_cache: RibosomeStructure | null }) => {
   // takes in a full protein or rna
   const [currentChainFull, setCurrentChainFull] = React.useState<Protein | RNA | null>(null)
-
-  const [residueRange, setResidueRange] = React.useState<number[]>([0, 0]);  // current slider value
-  const [MaxRes, setMaxRes] = React.useState<number>(0);         // keep track of what's the max residue range
+  const [residueRange, setResidueRange]         = React.useState<number[]>([0, 0]);           // current slider value
+  const [MaxRes, setMaxRes]                     = React.useState<number>(0);                  // keep track of what's the max residue range
 
   useEffect(() => {
+    console.log("useEffect ChainHighlightSlider: got authasymid", auth_asym_id);
+    console.log("useEffect ChainHighlightSlider: got struct\t\t", full_structure_cache);
+
     if (full_structure_cache && auth_asym_id) {
       // pluck the chain off the full structure
       const pickFullChain = [...full_structure_cache.proteins, ...(() => {
@@ -467,7 +469,6 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache }: { a
           return full_structure_cache.rnas
         }
       })()].filter(c => c.auth_asym_id === auth_asym_id)
-
       if (pickFullChain.length < 1) {
         console.log("Haven't found chain with this asym_id on the full structure. Something went terribly wrong.");
       } else {

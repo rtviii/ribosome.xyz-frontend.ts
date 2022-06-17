@@ -30,7 +30,7 @@ export interface fetchFullStructGo { type: typeof FETCH_FULL_STRUCT_GO }
 export interface updateCachedFullstruct { 
 	type             : typeof UPDATE_CACHED_FULLSTRUCT,
 	nextcache        : RibosomeStructure | null
-	cache_slot_number: number
+	cache_slot_number: 0 | 1
 	 }
 export interface fetchFullStructError { type: typeof FETCH_FULL_STRUCT_ERR, err: Error }
 
@@ -95,7 +95,7 @@ export const struct_change = (highlighted_chain: string | null, struct: NeoStruc
 	}
 }
 
-export const fullstructCache_change = (nextcache: RibosomeStructure | null, cache_slot_number:number): updateCachedFullstruct => ({
+export const fullstructCache_change = (nextcache: RibosomeStructure | null, cache_slot_number:0|1): updateCachedFullstruct => ({
 	nextcache,
 	cache_slot_number,
 	type: 'UPDATE_CACHED_FULLSTRUCT'
@@ -108,7 +108,7 @@ export const tab_change = (tab: VisualizationTabs): componentTabChange => ({
 
 export const cache_full_struct = (
 	struct_id_to_cache: string | null,
-	cache_slot_number: number
+	cache_slot_number: 0|1
 ) => {
 
 	console.log("Changing struct cache: ", struct_id_to_cache);

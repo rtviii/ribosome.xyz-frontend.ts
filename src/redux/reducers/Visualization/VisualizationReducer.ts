@@ -122,11 +122,16 @@ export const VisualizationReducer = (
 			}} 
 
 		case "UPDATE_CACHED_FULLSTRUCT":
-			return {
-				...state, full_structure_cache: {
+			console.log("REDUCER. returning following fullstruct cache", { full_structure_cache: {
 					...state.full_structure_cache,
 					...{ [action.cache_slot_number]: action.nextcache }
-				}
+				} });
+			
+			return {
+				...state, ...{ full_structure_cache: {
+					...state.full_structure_cache,
+					...{ [action.cache_slot_number]: action.nextcache }
+				} }
 			}
 
 		case "STRUCTURE_CHANGE":  // this one is for selected...

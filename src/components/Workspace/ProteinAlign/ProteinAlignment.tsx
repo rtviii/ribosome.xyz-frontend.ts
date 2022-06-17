@@ -14,7 +14,7 @@ import TextField from '@material-ui/core/TextField/TextField';
 import Paper from '@material-ui/core/Paper/Paper';
 import { NeoStruct, PolymerMinimal } from '../../../redux/DataInterfaces';
 import { ChainHighlightSlider } from '../../VisualizationPage/VisualizationPage';
-import { superimpose_slot_change } from '../../../redux/reducers/Visualization/ActionTypes';
+import { cache_full_struct, superimpose_slot_change } from '../../../redux/reducers/Visualization/ActionTypes';
 
 
 export const nomenclatureCompareFn = (a: PolymerMinimal, b: PolymerMinimal) => {
@@ -126,6 +126,8 @@ export default function ProteinAlignment() {
   const slot_1 = useSelector((state: AppState) => state.visualization.superimpose.struct_1)
   const slot_2 = useSelector((state: AppState) => state.visualization.superimpose.struct_2)
 
+  const struct_cache_1 =useSelector((state:AppState)=>state.visualization.full_structure_cache[0])
+  // const struct_cache_2 =useSelector((state:AppState)=>state.visualization.full_structure_cache[1])
   // | ------------------------------------------ NEW STATE ----------------------------------|
 
   // 
@@ -135,20 +137,10 @@ export default function ProteinAlignment() {
   // 
 
   // | ------------------------------------------ OLD STATE ----------------------------------|
-  // const [chainStructPair1, setChainStructPair1] = useState<[PolymerMinimal | null, string | null]>([null, null])
-  // const [chainStructPair2, setChainStructPair2] = useState<[PolymerMinimal | null, string | null]>([null, null])
-
-
-  // const [auth_asym_id1, set_auth_asym_id1] = useState<any>(null)
-  // const [auth_asym_id2, set_auth_asym_id2] = useState<any>(null)
-
   const [chains2, setChains2] = useState<PolymerMinimal[]>([])
   const [chains1, setChains1] = useState<PolymerMinimal[]>([])
   // | ------------------------------------------ OLD STATE ----------------------------------|
   const minDistance = 10;
-
-  const [rangeSlider1, setRangeSlider1] = useState<number[]>([0, minDistance]);
-  const [rangeSlider2, setRangeSlider2] = useState<number[]>([0, minDistance]);
 
 
 
@@ -236,13 +228,16 @@ export default function ProteinAlignment() {
       if (newvalue === null) {
         dispatch(superimpose_slot_change(1, {
           struct: null,
-          chain: null
+          chain : null
         }))
+
+        dispatch(cache_full_struct(null, 0))
       }
       else {
         dispatch(superimpose_slot_change(1, {
           struct: newvalue,
         }))
+        dispatch(cache_full_struct(newvalue.struct.rcsb_id, 0))
         setChains1([...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas])
       }
     }
@@ -252,11 +247,14 @@ export default function ProteinAlignment() {
           struct: null,
           chain: null
         }))
+        dispatch(cache_full_struct(null, 1))
+
       } else {
-        dispatch(superimpose_slot_change(2, {
-          struct: newvalue,
-        }))
+
+        dispatch(superimpose_slot_change(2, { struct: newvalue, }))
+        dispatch(cache_full_struct(newvalue.struct.rcsb_id, 1))
         setChains2([...newvalue.rps.sort(nomenclatureCompareFn), ...newvalue.rnas])
+
       }
     }
   }
@@ -271,9 +269,6 @@ export default function ProteinAlignment() {
         dispatch(superimpose_slot_change(1, {
           chain: null
         }))
-        // set_auth_asym_id1(null)
-
-        // setChainStructPair1([null, chainStructPair1[1]])
         // setRangeSlider2([0, minDistance])
 
       } else {
@@ -281,8 +276,6 @@ export default function ProteinAlignment() {
           chain: newvalue
         }))
 
-        // set_auth_asym_id1(newvalue)
-        // setChainStructPair1([newvalue, chainStructPair1[1]])
         // setRangeSlider1([0, newvalue.entity_poly_seq_one_letter_code.length - 1])
 
       }
@@ -378,11 +371,21 @@ export default function ProteinAlignment() {
               // if (chain.nomenclature === null)
               return chain.nomenclature && chain.nomenclature.length > 0 ? chain.nomenclature[0] : chain.auth_asym_id
             }}
+
             // @ts-ignore
-            onChange={handleChainChange(1)}
-            renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.nomenclature.length > 0 ? option.nomenclature[0] : " "}</b> {option.auth_asym_id}  </div>)}
-            renderInput={(params) => <TextField {...params} label={`Chain 1`} variant="outlined" />}
+            onChange     = {handleChainChange(1)}
+            renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.nomenclature.length > 0 ? option.nomenclature[0] : " "}</b> {option.auth_asym_id}  </div>)}
+            renderInput  = {(params) => <TextField {...params} label={`Chain 1`} variant="outlined" />}
           />
+
+          <ChainHighlightSlider 
+              auth_asym_id         = {slot_1.chain?.auth_asym_id as string}
+              full_structure_cache = {struct_cache_1}/>
+
+          <ChainHighlightSlider 
+          auth_asym_id={slot_2.chain?.auth_asym_id as string}
+           full_structure_cache={struct_cache_2}/>
+
 
 
           {/* <Slider
@@ -481,7 +484,7 @@ export default function ProteinAlignment() {
         </Grid>
         <Grid item>
 
-{/* 
+          {/* 
           <Button
             style={{ marginBottom: "10px", textTransform: "none" }}
             fullWidth
