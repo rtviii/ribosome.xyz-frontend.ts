@@ -148,33 +148,6 @@ export default function ProteinAlignment() {
   const minDistance = 10;
 
 
-  // const [residueRange1, setResidueRange1] = React.useState<number[]>([0, 0]);  // current slider value
-  // const [MaxRes1, setMaxRes1] = React.useState<number>(0);         // keep track of what's the max residue range
-
-
-  // useEffect(() => {
-  //   if (chainStructPair1.includes(null)) {
-  //     setRangeSlider1([0, minDistance])
-  //   }
-  //   if (chainStructPair1[1] === null) {
-  //     setChains1([])
-  //   }
-
-  //   viewerInstance.visual.reset({ camera: true, theme: true })
-  //   viewerInstance.visual.update({ moleculeId: 'none' })
-
-  // }, [chainStructPair1])
-
-  // useEffect(() => {
-  //   if (chainStructPair2.includes(null)) {
-  //     setRangeSlider2([0, minDistance])
-  //   }
-  //   if (chainStructPair2[1] === null) {
-  //     setChains1([])
-  //   }
-
-  //   viewerInstance.visual.reset({ camera: true, theme: true })
-  // }, [chainStructPair2])
 
   const visualizeRangedAlignment = (
   ) => {

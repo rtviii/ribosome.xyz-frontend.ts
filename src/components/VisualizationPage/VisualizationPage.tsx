@@ -24,7 +24,7 @@ import { useHistory } from 'react-router';
 import { DashboardButton } from '../../materialui/Dashboard/Dashboard';
 import { getNeo4jData } from '../../redux/AsyncActions/getNeo4jData';
 import { BanClassMetadata, NeoStruct, ProteinProfile, RNAProfile } from '../../redux/DataInterfaces';
-import { cache_full_struct, COMPONENT_TAB_CHANGE, fullstructCache_change, protein_change, protein_update_auth_asym_id, rna_change, rna_update_auth_asym_id, struct_change, superimpose_slot_change, VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
+import { cache_full_struct, COMPONENT_TAB_CHANGE, fullstructCache_change, protein_change, protein_update_auth_asym_id, rna_change, rna_update_auth_asym_id, struct_change,  update_struct_tab_range,  VisualizationTabs } from '../../redux/reducers/Visualization/ActionTypes';
 import { AppState, store } from '../../redux/store';
 import { nomenclatureCompareFn } from '../Workspace/ProteinAlign/ProteinAlignment';
 import { StructHeroVertical, CardBodyAnnotation } from "./../../materialui/StructHero";
@@ -472,12 +472,10 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
     if (_[1] > MaxRes) { _[1] = MaxRes }
     if (_[0] < 0) { _[0] = 0 }
     if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
-
     setResidueRange(_)
     if (_[0] === _[1]) { return }
   }
   useEffect(()=>{
-    console.log("got res range change, redux effect ", residueRange)
     redux_effect(residueRange)
   }, [residueRange])
 
@@ -1534,6 +1532,14 @@ const VisualizationPage = (props: any) => {
     }
   }, [current_rna_class, current_rna_parent, cached_struct[0]])
 
+
+
+  const debounedRangeChange__redux = debounce((redux_range: number[]) =>{
+    dispatch(update_struct_tab_range(redux_range))
+  }, 200)
+
+
+
   return (
     <Grid container xs={12} spacing={1} alignContent="flex-start">
       <Grid item xs={12} style={{ padding: "10px" }}>
@@ -1632,13 +1638,14 @@ const VisualizationPage = (props: any) => {
             switch (current_tab) {
               case 'protein_tab':
                 return current_protein_auth_asym_id === null ? null : <ListItem>
-                  <ChainHighlightSlider auth_asym_id={current_protein_auth_asym_id} full_structure_cache={cached_struct[0]} redux_effect={() => { }}
+                  <ChainHighlightSlider auth_asym_id={current_protein_auth_asym_id} full_structure_cache={cached_struct[0]} redux_effect={debounedRangeChange__redux}
                   /></ListItem>
               case 'structure_tab':
-                return current_chain_to_highlight === null ? null : <ListItem> <ChainHighlightSlider redux_effect={() => { }} auth_asym_id={current_chain_to_highlight} full_structure_cache={cached_struct[0]} /></ListItem>
+                return current_chain_to_highlight === null ? null : <ListItem> <ChainHighlightSlider redux_effect={debounedRangeChange__redux} auth_asym_id={current_chain_to_highlight} full_structure_cache={cached_struct[0]} /></ListItem>
               case 'rna_tab':
                 // return "Select rna"
-                return current_rna_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_rna_auth_asym_id} full_structure_cache={cached_struct[0]} redux_effect={() => { }} /></ListItem>
+                return current_rna_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_rna_auth_asym_id} 
+                full_structure_cache={cached_struct[0]} redux_effect={debounedRangeChange__redux} /></ListItem>
                 return // <SelectRna items={[]} getCifChainByClass={getCifChainByClass} />
               default:
                 return "Null"

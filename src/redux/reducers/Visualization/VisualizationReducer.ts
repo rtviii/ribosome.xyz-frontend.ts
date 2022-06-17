@@ -12,8 +12,9 @@ export interface VisualizationReducerState {
 		1: RibosomeStructure | null
 	},
 	structure_tab: {
-		structure: NeoStruct | null,
-		highlighted_chain: string | null
+		structure        : NeoStruct | null,
+		highlighted_chain: string    | null
+		chain_range      : number[]  | null
 	},
 	protein_tab: {
 		auth_asym_id: string | null,
@@ -46,6 +47,7 @@ const init: VisualizationReducerState = {
 	},
 	structure_tab: {
 		structure: null,
+		chain_range:null,
 		highlighted_chain: null
 	},
 	protein_tab: {
@@ -109,6 +111,7 @@ export const VisualizationReducer = (
 	switch (action.type) {
 		case "RESET_ACTION":
 			return init
+		
 
 		case "SUPERIMPOSE_SLOT_CHANGE":
 			const structn_to_change = action.slot === 1 ? "struct_1" : "struct_2";
@@ -136,6 +139,8 @@ export const VisualizationReducer = (
 					...{ [action.cache_slot_number]: action.nextcache }
 				} }
 			}
+		case "UPDATE_STRUCTTAB_RANGE":
+			return {...state, structure_tab: {...state.structure_tab, chain_range: action.nextrange}}
 
 		case "STRUCTURE_CHANGE":  // this one is for selected...
 			if (action.structure === null) {
@@ -143,6 +148,7 @@ export const VisualizationReducer = (
 					...state,
 					structure_tab: {
 						highlighted_chain: null,
+						chain_range:null,
 						structure: null
 					}
 				}
@@ -152,7 +158,8 @@ export const VisualizationReducer = (
 
 				structure_tab: {
 					highlighted_chain: action.highlighted_chain,
-					structure: action.structure
+					chain_range      : state.structure_tab.chain_range,
+					structure        : action.structure
 				}
 			}
 

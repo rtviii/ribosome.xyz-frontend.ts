@@ -24,6 +24,15 @@ export const RNA_UPDATE_AUTH_ASYM_ID     = "RNA_UPDATE_AUTH_ASYM_ID"
 
 export const COMPONENT_TAB_CHANGE        = "COMPONENT_TAB_CHANGE"
 
+
+export const UPDATE_STRUCTTAB_RANGE  = "UPDATE_STRUCTTAB_RANGE"
+export interface updateStructTabRange { type: typeof UPDATE_STRUCTTAB_RANGE, nextrange: number[]}
+export const update_struct_tab_range = (range:number[]): updateStructTabRange => ({
+	type     : "UPDATE_STRUCTTAB_RANGE",
+	nextrange: range
+})
+
+
 export type VisualizationTabs = 'structure_tab' | 'protein_tab' | 'rna_tab';
 
 export interface fetchFullStructGo { type: typeof FETCH_FULL_STRUCT_GO }
@@ -173,4 +182,4 @@ export const superimpose_slot_change = (slot: 1 | 2, payload: Partial<Superimpos
 
 export type VisualizationActions = resetAction|  structureChange | rnaChange | proteinChange | componentTabChange |
 	fetchFullStructError | fetchFullStructGo | updateCachedFullstruct | {type:"NOOP"}| proteinUpdateAuthAsymId | rnaUpdateAuthAsymId
-	| superimposeSlotChange;
+	| superimposeSlotChange | updateStructTabRange;
