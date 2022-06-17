@@ -114,11 +114,13 @@ export default function ProteinAlignment() {
 
   const structs = useSelector((state: AppState) => state.structures.derived_filtered)
 
-  const debounedRangeChange1__redux = debounce((redux_range: number[]) =>{
-    dispatch(superimpose_slot_change(1, { chain_range: redux_range }))}, 200)
+  const debounedRangeChange1__redux = debounce((redux_range: number[]) => {
+    dispatch(superimpose_slot_change(1, { chain_range: redux_range }))
+  }, 200)
 
-  const debounedRangeChange2__redux = debounce((redux_range: number[]) =>{
-    dispatch(superimpose_slot_change(2, { chain_range: redux_range }))}, 200)
+  const debounedRangeChange2__redux = debounce((redux_range: number[]) => {
+    dispatch(superimpose_slot_change(2, { chain_range: redux_range }))
+  }, 200)
 
 
   // | ------------------------------------------ NEW STATE ----------------------------------|
@@ -128,11 +130,11 @@ export default function ProteinAlignment() {
   const slot_1 = useSelector((state: AppState) => state.visualization.superimpose.struct_1)
   const slot_2 = useSelector((state: AppState) => state.visualization.superimpose.struct_2)
 
-  const struct_cache_1 =useSelector((state:AppState)=>state.visualization.full_structure_cache[0])
-  const struct_cache_2 =useSelector((state:AppState)=>state.visualization.full_structure_cache[1])
+  const struct_cache_1 = useSelector((state: AppState) => state.visualization.full_structure_cache[0])
+  const struct_cache_2 = useSelector((state: AppState) => state.visualization.full_structure_cache[1])
 
-  const range_slot_1 =useSelector((state:AppState)=>state.visualization.superimpose.struct_1.chain_range)
-  const range_slot_2 =useSelector((state:AppState)=>state.visualization.superimpose.struct_2.chain_range)
+  const range_slot_1 = useSelector((state: AppState) => state.visualization.superimpose.struct_1.chain_range)
+  const range_slot_2 = useSelector((state: AppState) => state.visualization.superimpose.struct_2.chain_range)
   // | ------------------------------------------ NEW STATE ----------------------------------|
 
   // 
@@ -160,22 +162,26 @@ export default function ProteinAlignment() {
     console.log("-----------------")
 
     if ([slot_1.chain, slot_1.struct, slot_2.chain, slot_2.struct].includes(null)) { alert("Please select a chain in both structures to align and a residue range.") }
-    viewerInstance.visual.update({
-      customData: {
-        url:
-          `${process.env.REACT_APP_DJANGO_URL}/static_files/ranged_align/?` +
-          `r1start=${0}` +
-          `&r1end=${0}` +
-          `&r2start=${100}` +
-          `&r2end=${100}` +
-          `&struct1=${slot_1.struct?.struct.rcsb_id}` +
-          `&struct2=${slot_2.struct?.struct.rcsb_id}` +
-          `&auth_asym_id1=${slot_1.chain?.auth_asym_id}` +
-          `&auth_asym_id2=${slot_2.chain?.auth_asym_id}`,
-        format: "pdb",
-        binary: false,
-      },
-    });
+
+    if ([range_slot_1, range_slot_2].includes(null)) { alert("range_slot_1 or range_slot_2 is null. Soemthing went wrong"); return } else {
+      viewerInstance.visual.update({
+        customData: {
+          url:
+            `${process.env.REACT_APP_DJANGO_URL}/static_files/ranged_align/?` +
+            `r1start=${range_slot_1![0]}` +
+            `&r1end=${range_slot_1![1]}` +
+            `&r2start=${range_slot_2![0]}` +
+            `&r2end=${range_slot_2![1]}` +
+            `&struct1=${slot_1.struct?.struct.rcsb_id}` +
+            `&struct2=${slot_2.struct?.struct.rcsb_id}` +
+            `&auth_asym_id1=${slot_1.chain?.auth_asym_id}` +
+            `&auth_asym_id2=${slot_2.chain?.auth_asym_id}`,
+          format: "pdb",
+          binary: false,
+        },
+      })
+    }
+
   }
 
   const requestAlignment = (
@@ -206,7 +212,7 @@ export default function ProteinAlignment() {
       if (newvalue === null) {
         dispatch(superimpose_slot_change(1, {
           struct: null,
-          chain : null
+          chain: null
         }))
 
         dispatch(cache_full_struct(null, 0))
@@ -351,20 +357,20 @@ export default function ProteinAlignment() {
             }}
 
             // @ts-ignore
-            onChange     = {handleChainChange(1)}
-            renderOption = {(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.nomenclature.length > 0 ? option.nomenclature[0] : " "}</b> {option.auth_asym_id}  </div>)}
-            renderInput  = {(params) => <TextField {...params} label={`Chain 1`} variant="outlined" />}
+            onChange={handleChainChange(1)}
+            renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.nomenclature.length > 0 ? option.nomenclature[0] : " "}</b> {option.auth_asym_id}  </div>)}
+            renderInput={(params) => <TextField {...params} label={`Chain 1`} variant="outlined" />}
           />
 
-          <ChainHighlightSlider 
-              redux_effect={debounedRangeChange1__redux}
-              auth_asym_id         = {slot_1.chain?.auth_asym_id as string}
-              full_structure_cache = {struct_cache_1}/>
+          <ChainHighlightSlider
+            redux_effect={debounedRangeChange1__redux}
+            auth_asym_id={slot_1.chain?.auth_asym_id as string}
+            full_structure_cache={struct_cache_1} />
 
-          <ChainHighlightSlider 
+          <ChainHighlightSlider
             redux_effect={debounedRangeChange2__redux}
             auth_asym_id={slot_2.chain?.auth_asym_id as string}
-           full_structure_cache={struct_cache_2}/>
+            full_structure_cache={struct_cache_2} />
 
 
 
