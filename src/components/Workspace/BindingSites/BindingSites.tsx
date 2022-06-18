@@ -345,6 +345,8 @@ const BindingSites = () => {
 	}
 
 	const highlightInterface = (source_auth_asym_id:string|null) => {
+		console.log("Called highlihgt iface.");
+		
 
 		if (interface_data === null || interface_data === undefined) {
 			alert("Select a binding site.")
@@ -378,7 +380,8 @@ const BindingSites = () => {
 					x.push({
 						// @ts-ignore
 						// entity_id     : current_binding_site?.rcsb_id.toLowerCase(),
-						auth_asym_id: y.parent_auth_asym_id,
+						auth_asym_id  : y.parent_auth_asym_id,
+						sideChain     : false,
 						residue_number: y.residue_id,
 						color         : { r: 1, g: 200, b: 200 },
 						focus         : false,
