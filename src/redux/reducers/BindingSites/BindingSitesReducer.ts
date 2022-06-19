@@ -141,6 +141,9 @@ export const BindingSitesReducer = (
   case "LIGAND_BINDING_SITE_SUCCESS":
     return {...state, binding_site_data:action.binding_site_object, is_loading:false}
   case "LIGAND_PREDICTION_SUCCESS":
+    console.log("receieved prediction object", action.prediction_object);
+    // console.log("receieved prediction object. it's empty", Object.b);
+    
     return {...state, prediction_data:action.prediction_object, is_loading:false}
     case "CHANGE_VIS_TAB":
       return{...state, visualization_tab:action.tab}
