@@ -471,24 +471,25 @@ const BindingSites = () => {
 	}
 
 
-
 	useEffect(() => {
+
 		if (cur_ligclass === null) {
 			set_derived_bsites(bsites)
-			dispatch(action._partial_state_change({ 'binding_site_data': null }))
 		} else {
-
 			set_derived_bsites(bsites.filter(bs => cur_ligclass[getdesc(cur_ligclass)].map(f => f.description).includes(bs.description)))
 			if (current_binding_site !== null) {
 				updateBindingSiteData(current_binding_site as BindingSite, cur_ligclass)
 			}
 		}
+
+		dispatch(action._partial_state_change({ 'binding_site_data': null }))
+		dispatch(action.current_target_change(null))
+
 	}, [cur_ligclass])
 
 	useEffect(() => {
 
 		console.log("Current binding site changed to ", current_binding_site);
-
 		if (current_binding_site === null) {
 			set_derived_antibiotics(antibiotics)
 			set_derived_factors(factors)
@@ -531,19 +532,18 @@ const BindingSites = () => {
 			}
 
 		}
+		dispatch(action._partial_state_change({ 'binding_site_data': null }))
+		dispatch(action.current_target_change(null))
 	}, [current_binding_site])
 
 	useEffect(() => {
 		if (cur_tgt !== null) {
-			console.log("this fired");
 
 			if (cur_ligclass !== null) {
 				console.log("Pre dispatch: ");
 				console.log(current_binding_site);
 				console.log(cur_ligclass[getdesc(cur_ligclass)][0].polymer);
 				if (cur_ligclass[getdesc(cur_ligclass)][0].polymer === true) {
-
-
 					dispatch(action.request_Prediction(
 						true,
 						current_binding_site?.auth_asym_id as string,
@@ -828,19 +828,15 @@ const BindingSites = () => {
 				</Grid>
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
-						color="primary"
-						onClick={() => {
-							setMsaOpen(true)
-						}}
-						style={{ textTransform: "none" }}
+						color   = "primary"
+						onClick = {() => {setMsaOpen(true)}}
+						style   = {{ textTransform: "none" }}
 						fullWidth
-						disabled={prediction_data === null || (prediction_data !== null && Object.keys(prediction_data).length === 0)}
-						variant="outlined"> Inspect Prediction </Button>
+						disabled = {prediction_data === null || (prediction_data !== null && Object.keys(prediction_data).length === 0)}
+						variant  = "outlined"> Inspect Prediction </Button>
 
 				</Grid>
 				<Grid item style={{ marginBottom: "10px" }}>
-
-
 					<CSVLink
 
 						aria-disabled={prediction_data === null  || (prediction_data !== null && Object.keys(prediction_data).length === 0)}
@@ -853,7 +849,6 @@ const BindingSites = () => {
 							} else {
 								
 								let total:any = []
-
 									Object.entries(prediction_data).map((kv) => {
 										let poly_class = kv[0]
 										let poly_data = kv[1]
