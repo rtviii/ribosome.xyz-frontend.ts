@@ -28,6 +28,7 @@ import _ from 'lodash';
 // import { useToasts } from 'react-toast-notifications';
 import { loadingIndicatorCSS } from 'react-select/src/components/indicators';
 import { Protein } from '../../../redux/RibosomeTypes';
+import { log } from 'console';
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
@@ -238,11 +239,11 @@ const BindingSites = () => {
 
 	const [cur_auth_asym_id, set_cur_auth_asym_id] = useState<string | null>(null)
 
-	const bsites      = useSelector((state: AppState) => state.binding_sites.bsites)
+	const bsites = useSelector((state: AppState) => state.binding_sites.bsites)
 	const antibiotics = useSelector((state: AppState) => state.binding_sites.antibiotics)
-	const factors     = useSelector((state: AppState) => state.binding_sites.factors)
-	const mrna        = useSelector((state: AppState) => state.binding_sites.mrna)
-	const trna        = useSelector((state: AppState) => state.binding_sites.trna)
+	const factors = useSelector((state: AppState) => state.binding_sites.factors)
+	const mrna = useSelector((state: AppState) => state.binding_sites.mrna)
+	const trna = useSelector((state: AppState) => state.binding_sites.trna)
 	// const mixed       = useSelector                ((state: AppState) => state.binding_sites.mixed_ligands   )
 
 	const [bsites_derived, set_derived_bsites] = useState<BindingSite[]>()
@@ -250,7 +251,7 @@ const BindingSites = () => {
 	const [derived_antibiotics, set_derived_antibiotics] = useState<LigandClass[]>([])
 	useEffect(() => { set_derived_antibiotics(antibiotics) }, [antibiotics])
 	const [derived_factors, set_derived_factors] = useState<LigandClass[]>([])
-	useEffect(() => {set_derived_factors(factors)}, [factors])
+	useEffect(() => { set_derived_factors(factors) }, [factors])
 	const [derived_mrna, set_derived_mrna] = useState<LigandClass[]>([])
 	useEffect(() => { set_derived_mrna(mrna) }, [mrna])
 	const [derived_trna, set_derived_trna] = useState<LigandClass[]>([])
@@ -271,8 +272,8 @@ const BindingSites = () => {
 
 	useEffect(() => {
 		var options = {
-			moleculeId      : 'Element to visualize can be selected above.',
-			hideControls    : true,
+			moleculeId: 'Element to visualize can be selected above.',
+			hideControls: true,
 			layoutIsExpanded: false,
 		}
 		var viewerContainer = document.getElementById('molstar-viewer');
@@ -280,7 +281,7 @@ const BindingSites = () => {
 	}, [])
 
 	useEffect(() => {
-		if ( prediction_data !==null && Object.keys(prediction_data).length === 0){
+		if (prediction_data !== null && Object.keys(prediction_data).length === 0) {
 			// make this an "Until removed" toast.
 			alert(`Could not find matching classes of polymers in target structure (${cur_tgt?.struct.rcsb_id}) for this binding site. Would you mind trying another target?`)
 		}
@@ -299,9 +300,9 @@ const BindingSites = () => {
 				if (i > 0) {
 					prediction_vis_data.push({
 						residue_number: i,
-						focus         : true,
-						color         : { r: 1, g: 200, b: 200 },
-						auth_asym_id  : chain.target.auth_asym_id
+						focus: true,
+						color: { r: 1, g: 200, b: 200 },
+						auth_asym_id: chain.target.auth_asym_id
 					})
 				}
 			}
@@ -329,7 +330,7 @@ const BindingSites = () => {
 		for (var chain_ress of Object.values(by_chain)) {
 			viewerInstance.visual.select(
 				{
-					data            : chain_ress,
+					data: chain_ress,
 					// focus           : true,
 					nonSelectedColor: { r: 240, g: 240, b: 240 },
 				}
@@ -355,12 +356,12 @@ const BindingSites = () => {
 					x.push({
 						// @ts-ignore
 						// entity_id     : current_binding_site?.rcsb_id.toLowerCase(),
-						assmeblyId:'1',
-						auth_asym_id  : y.parent_auth_asym_id,
-						sideChain     : false,
+						assmeblyId: '1',
+						auth_asym_id: y.parent_auth_asym_id,
+						sideChain: false,
 						residue_number: y.residue_id,
-						color         : { r: 1, g: 200, b: 200 },
-						focus         : false,
+						color: { r: 1, g: 200, b: 200 },
+						focus: false,
 
 					})
 				}
@@ -390,10 +391,13 @@ const BindingSites = () => {
 			}
 		}
 
-		viewerInstance.visual.select({ data: [{ 
-			auth_asym_id: source_auth_asym_id,
-			 color: { r: 255, g: 100, b: 0 },
-			  focus: true }], nonSelectedColor: { r: 255, g: 255, b: 255 } })
+		viewerInstance.visual.select({
+			data: [{
+				auth_asym_id: source_auth_asym_id,
+				color: { r: 255, g: 100, b: 0 },
+				focus: true
+			}], nonSelectedColor: { r: 255, g: 255, b: 255 }
+		})
 
 		for (var chain_ress of Object.values(by_chain)) {
 			viewerInstance.visual.select(
@@ -471,7 +475,6 @@ const BindingSites = () => {
 		if (cur_ligclass === null) {
 			set_derived_bsites(bsites)
 			dispatch(action._partial_state_change({ 'binding_site_data': null }))
-
 		} else {
 
 			set_derived_bsites(bsites.filter(bs => cur_ligclass[getdesc(cur_ligclass)].map(f => f.description).includes(bs.description)))
@@ -674,7 +677,7 @@ const BindingSites = () => {
 					value={current_binding_site}
 					className={classes.autocomplete}
 					options={bsites_derived === undefined ? [] : bsites_derived}
-					getOptionLabel={(bs: BindingSite) => bs.rcsb_id + "  " + bs.description + " "}
+					getOptionLabel={(bs: BindingSite) => bs.rcsb_id }
 					// @ts-ignore
 					groupBy={(option: BindingSite) => `Structure ${option.rcsb_id}`}
 					// @ts-ignore
@@ -683,7 +686,23 @@ const BindingSites = () => {
 
 						<div style={{ fontSize: "10px", width: "100%", zIndex: 2000 }}><b>{option.description} {current_binding_site?.auth_asym_id ? current_binding_site.auth_asym_id : null}</b></div>
 					</>)}
-					renderInput={(params) => <TextField {...params} label={`Binding Sites ( ${bsites_derived !== undefined ? bsites_derived.length : "0"} )`} variant="outlined" />}
+					renderInput={(params) =>
+						<TextField {...params}
+							label={(() => {
+
+								var parens = ""
+								if (bsites_derived !== undefined) {
+									console.log(cur_ligclass);
+									
+									parens = cur_ligclass === null ? `${bsites_derived.length}` : `${bsites_derived.length} for ${Object.keys(cur_ligclass)[0] }`
+								} else {
+									parens = "0"
+
+								}
+								return `Binding Sites (${parens})`
+
+							})()} variant="outlined" />}
+
 				/>
 
 				<Autocomplete
@@ -719,7 +738,21 @@ const BindingSites = () => {
 					}
 					}
 					renderInput={(params) => <TextField {...params} label={
-						`Ligands  (${[...derived_antibiotics, ...derived_factors, ...derived_mrna, ...derived_trna] !== undefined ? [...derived_antibiotics, ...derived_factors, ...derived_mrna, ...derived_trna].length : "0"})`
+
+						(() => {
+							let parens = ""
+							if ([...derived_antibiotics, ...derived_factors, ...derived_mrna, ...derived_trna] !== undefined ){
+								parens = `${ current_binding_site === null ?  [...derived_antibiotics, ...derived_factors, ...derived_mrna, ...derived_trna].length : `${[...derived_antibiotics, ...derived_factors, ...derived_mrna, ...derived_trna].length} in ${current_binding_site.rcsb_id}`}`
+
+							}else{
+
+								parens = "0"
+							}
+							return `Ligands (${parens})`
+						})()
+
+
+						
 					} variant="outlined" />} />
 
 				<Grid item style={{ marginBottom: "10px" }}>
@@ -778,7 +811,7 @@ const BindingSites = () => {
 						label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
-						disabled={[cur_ligclass, current_binding_site].includes(null) || prediction_data==={}}
+						disabled={[cur_ligclass, current_binding_site].includes(null) || (prediction_data !== null && Object.keys(prediction_data).length === 0)}
 						onClick={() => {
 							color_prediction()
 						}}
@@ -794,7 +827,7 @@ const BindingSites = () => {
 						}}
 						style={{ textTransform: "none" }}
 						fullWidth
-						disabled={prediction_data === null}
+						disabled={prediction_data === null || (prediction_data !== null && Object.keys(prediction_data).length === 0)}
 						variant="outlined"> Inspect Prediction </Button>
 
 				</Grid>
@@ -810,7 +843,7 @@ const BindingSites = () => {
 							color="primary"
 							style={{ textTransform: "none" }}
 							fullWidth
-							disabled={prediction_data === null}
+							disabled={prediction_data === null || (prediction_data !== null && Object.keys(prediction_data).length === 0)}
 							variant="outlined"> Download Prediction (.csv) </Button>
 
 					</CSVLink>
@@ -888,7 +921,7 @@ const BindingSites = () => {
 
 
 							variant="outlined"
-							disabled={cur_tgt === null || prediction_data==={}}
+							disabled={cur_tgt === null || prediction_data === {} || (prediction_data !== null && Object.keys(prediction_data).length === 0)}
 							color={cur_vis_tab === 'prediction' ? 'primary' : "default"}
 							onClick={() => {
 
