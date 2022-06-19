@@ -344,7 +344,7 @@ const BindingSites = () => {
 		console.log("Called highlihgt iface.");
 
 		if (interface_data === null || interface_data === undefined) {
-			alert("Select a binding site.")
+			alert("Select a binding site or a ligand class.")
 			return
 		}
 
@@ -769,35 +769,25 @@ const BindingSites = () => {
 
 
 					<CSVLink
-						aria-disabled = {interface_data === null || cur_ligclass === null || current_binding_site === null}
-						target        = "_blank"
-						filename      = {`bsite_${current_binding_site?.rcsb_id}_${Object.keys(cur_ligclass!)[0]}.csv`}
-						data          = {(() => {
+						aria-disabled={interface_data === null || cur_ligclass === null || current_binding_site === null}
+						target="_blank"
+						filename={cur_ligclass === null ? `bsite_${current_binding_site?.rcsb_id}.csv` : `bsite_${current_binding_site?.rcsb_id}_${Object.keys(cur_ligclass)[0]}.csv`}
+						data={(() => {
 							if (interface_data === null) {
 								return []
 							} else {
 								return [
 									["chain", "polymer_nomenclature", "auth_asym_id", "residue_ids", "sequence"]
 									,
-								...Object.entries(interface_data).map((kv) => {
-									let chainname = kv[0]
-									let chaindata = kv[1]
-									return [chainname, chaindata.nomenclature, chaindata.asym_ids, chaindata.residues.map(r => r.residue_id).join(','), chaindata.sequence]
-								})
-
+									...Object.entries(interface_data).map((kv) => {
+										let chainname = kv[0]
+										let chaindata = kv[1]
+										return [chainname, chaindata.nomenclature, chaindata.asym_ids, chaindata.residues.map(r => r.residue_id).join(','), chaindata.sequence]
+									})
 								]
-
 							}
 						})()}
-						onClick={() => {
-							if (interface_data == null) {
-								return false;
-							}
-							else {
-
-							}
-						}}
-					>
+						onClick={() => { if (interface_data == null) { return false; } }}>
 
 						<Button
 
@@ -828,7 +818,7 @@ const BindingSites = () => {
 						label={`Prediction Target ( ${target_structs !== undefined ? target_structs.length : "0"} )`} variant="outlined" />} />
 				<Grid item style={{ marginBottom: "10px" }}>
 					<Button
-						disabled={[cur_ligclass, current_binding_site].includes(null) || (prediction_data !== null && Object.keys(prediction_data).length === 0)}
+						disabled={[cur_tgt, cur_ligclass, current_binding_site].includes(null) || (prediction_data !== null && Object.keys(prediction_data).length === 0)}
 						onClick={() => {
 							color_prediction()
 						}}
@@ -849,13 +839,45 @@ const BindingSites = () => {
 
 				</Grid>
 				<Grid item style={{ marginBottom: "10px" }}>
+
+
 					<CSVLink
-						data={[]}
-						onClick={() => {
-							if (prediction_data === null || _.isEqual(prediction_data, {})) {
-								return false;
+
+						aria-disabled={prediction_data === null  || (prediction_data !== null && Object.keys(prediction_data).length === 0)}
+
+						target="_blank"
+						filename={cur_ligclass === null ||cur_tgt === null || current_binding_site === null ? `ligand_prediction.csv` : `prediction_${Object.keys(cur_ligclass)[0]}_from_${current_binding_site.rcsb_id}_to_${cur_tgt.struct.rcsb_id}.csv`}
+						data={(() => {
+							if (prediction_data === null || (prediction_data !== null && Object.keys(prediction_data).length === 0)) {
+								return []
+							} else {
+								
+								let total:any = []
+
+									Object.entries(prediction_data).map((kv) => {
+										let poly_class = kv[0]
+										let poly_data = kv[1]
+										total.push([poly_class])
+										total.push(["-"])
+										total.push(["source_polymer_sequence", "source_auth_asym_id","source_residue_ids"])
+										total.push([poly_data.source.src, poly_data.source.auth_asym_id,poly_data.source.src_ids.join(",")])
+										total.push(["-"])
+										total.push(["target_polymer_sequence", "target_auth_asym_id","target_residue_ids"])
+										total.push([poly_data.target.tgt, poly_data.target.auth_asym_id,poly_data.target.tgt_ids.join(",")])
+										total.push(["-"])
+										total.push(["source_alignment", "target_alignment","alignment_ids"])
+										total.push([poly_data.alignment.src_aln, poly_data.alignment.tgt_aln,poly_data.alignment.aln_ids.join(",")])
+										total.push([""])
+										total.push([""])
+
+									})
+
+								return total
+
+
 							}
-						}}>
+						})()}
+						onClick={() => null }>
 						<Button
 							color="primary"
 							style={{ textTransform: "none" }}
