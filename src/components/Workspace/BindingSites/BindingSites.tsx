@@ -343,13 +343,14 @@ const BindingSites = () => {
 	const highlightInterface = (source_auth_asym_id: string | null) => {
 		console.log("Called highlihgt iface.");
 
-
 		if (interface_data === null || interface_data === undefined) {
 			alert("Select a binding site.")
 			return
 		}
 
 		var vis_data: MolStarResidue[] = []
+
+
 		for (var chain of Object.values(interface_data)) {
 			var reduced = chain.residues.reduce((x: MolStarResidue[], y: Residue) => {
 				if (y.residue_id > 0) {
@@ -621,20 +622,6 @@ const BindingSites = () => {
 	// const { addToast } = 								useToasts();
 
 
-	const generatePredictionCSV = () => {
-		if (prediction_data === null || _.isEqual(prediction_data, {})) {
-			alert("Prediction is empty. Either not chosen by user or no chains with overlapping nomenclature found for target and source structures. ")
-			return
-		}
-		else {
-
-			// prediction_data
-
-
-
-		}
-	}
-
 
 	const getdesc = (l: LigandClass): string => Object.keys(l)[0]
 
@@ -677,7 +664,7 @@ const BindingSites = () => {
 					value={current_binding_site}
 					className={classes.autocomplete}
 					options={bsites_derived === undefined ? [] : bsites_derived}
-					getOptionLabel={(bs: BindingSite) => bs.rcsb_id }
+					getOptionLabel={(bs: BindingSite) => bs.rcsb_id}
 					// @ts-ignore
 					groupBy={(option: BindingSite) => `Structure ${option.rcsb_id}`}
 					// @ts-ignore
@@ -690,14 +677,16 @@ const BindingSites = () => {
 						<TextField {...params}
 							label={(() => {
 
+								if (current_binding_site !== null && cur_ligclass !== null) {
+									return "Binding Site in Structure"
+								}
 								var parens = ""
 								if (bsites_derived !== undefined) {
 									console.log(cur_ligclass);
-									
-									parens = cur_ligclass === null ? `${bsites_derived.length}` : `${bsites_derived.length} for ${Object.keys(cur_ligclass)[0] }`
+
+									parens = cur_ligclass === null ? `${bsites_derived.length}` : `${bsites_derived.length} for ${Object.keys(cur_ligclass)[0]}`
 								} else {
 									parens = "0"
-
 								}
 								return `Binding Sites (${parens})`
 
@@ -740,11 +729,18 @@ const BindingSites = () => {
 					renderInput={(params) => <TextField {...params} label={
 
 						(() => {
-							let parens = ""
-							if ([...derived_antibiotics, ...derived_factors, ...derived_mrna, ...derived_trna] !== undefined ){
-								parens = `${ current_binding_site === null ?  [...derived_antibiotics, ...derived_factors, ...derived_mrna, ...derived_trna].length : `${[...derived_antibiotics, ...derived_factors, ...derived_mrna, ...derived_trna].length} in ${current_binding_site.rcsb_id}`}`
 
-							}else{
+
+							if (current_binding_site !== null && cur_ligclass !== null) {
+								return "Ligand"
+							}
+
+
+							let parens = ""
+							if ([...derived_antibiotics, ...derived_factors, ...derived_mrna, ...derived_trna] !== undefined) {
+								parens = `${current_binding_site === null ? [...derived_antibiotics, ...derived_factors, ...derived_mrna, ...derived_trna].length : `${[...derived_antibiotics, ...derived_factors, ...derived_mrna, ...derived_trna].length} in ${current_binding_site.rcsb_id}`}`
+
+							} else {
 
 								parens = "0"
 							}
@@ -752,7 +748,7 @@ const BindingSites = () => {
 						})()
 
 
-						
+
 					} variant="outlined" />} />
 
 				<Grid item style={{ marginBottom: "10px" }}>
@@ -773,11 +769,32 @@ const BindingSites = () => {
 
 
 					<CSVLink
-						data={[]}
+						aria-disabled = {interface_data === null || cur_ligclass === null || current_binding_site === null}
+						target        = "_blank"
+						filename      = {`bsite_${current_binding_site?.rcsb_id}_${Object.keys(cur_ligclass!)[0]}.csv`}
+						data          = {(() => {
+							if (interface_data === null) {
+								return []
+							} else {
+								return [
+									["chain", "polymer_nomenclature", "auth_asym_id", "residue_ids", "sequence"]
+									,
+								...Object.entries(interface_data).map((kv) => {
+									let chainname = kv[0]
+									let chaindata = kv[1]
+									return [chainname, chaindata.nomenclature, chaindata.asym_ids, chaindata.residues.map(r => r.residue_id).join(','), chaindata.sequence]
+								})
+
+								]
+
+							}
+						})()}
 						onClick={() => {
 							if (interface_data == null) {
-
 								return false;
+							}
+							else {
+
 							}
 						}}
 					>
@@ -788,7 +805,7 @@ const BindingSites = () => {
 							variant="outlined"
 							style={{ textTransform: "none" }}
 							color={[current_binding_site, cur_ligclass].includes(null) ? 'primary' : 'default'}
-							disabled={interface_data == null}>
+							disabled={interface_data === null || cur_ligclass === null || current_binding_site === null}>
 							Download Binding Site
 						</Button>
 

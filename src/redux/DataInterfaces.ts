@@ -29,7 +29,8 @@ export type LigandBindingSite = {
     nomenclature : string[ ]
     asym_ids     : string[ ]
     residues     : Residue[]
-  }}
+  }
+}
 
 
 export type LigandPrediction = {
