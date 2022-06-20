@@ -491,7 +491,6 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
     redux_effect(residueRange)
   }, [residueRange])
 
-
   useEffect(() => {
     if (full_structure_cache && auth_asym_id) {
       // pluck the chain off the full structure
@@ -667,16 +666,15 @@ case "U":
               // label    = {currentChainFull && currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]] ?
               //   `${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}` : ``}
 
-              label    = {<div style={{
+              label    = {
+              <div style={{
                 fontWeight:"bold",
-                
                 color: ResidueColor(currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]])}}> 
               {currentChainFull && currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]] ?`${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}` : ``}
               </div>
               }
 
-  InputProps={{ disableUnderline: true }}
-              disabled = {currentChainFull === null}
+  InputProps={{ disableUnderline: true }} disabled = {currentChainFull === null}
             />
           </Grid>
 
@@ -716,7 +714,11 @@ case "U":
             {/* <Paper variant="outlined" elevation={2} id='outlined-interact' style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} > */}
             {/* <SearchIcon onClick={handleSearchRange} style={{ width: "50px", height: "50px" }} /> */}
             <Grid item >
-              <SearchIcon onClick={handleSearchRange} />
+              <SearchIcon 
+              id='search-icon-msa'
+              
+              onClick={
+   handlePopoverClick } />
             </Grid>
 
             {/* </Paper> */}
@@ -729,7 +731,7 @@ case "U":
               onClose={handlePopoverClose}
               style={{ padding: "20px" }}
               anchorOrigin={{
-                vertical: "bottom",
+                vertical  : "bottom",
                 horizontal: "center",
               }}
               transformOrigin={{ vertical: "top", horizontal: "center", }}>
@@ -770,11 +772,11 @@ case "U":
                     seq={currentChainFull?.entity_poly_seq_one_letter_code_can} showAnnotations={false} />
                 </Grid>
 
-                <div style={{ display: "flex", justifyContent: "center", justifyItems: "center" }}>
+                {/* <div style={{ display: "flex", justifyContent: "center", justifyItems: "center" }}>
                   <Button fullWidth>Select</Button>
                   <Button fullWidth>Download seq</Button>
                   <Button fullWidth>Download cif</Button>
-                </div>
+                </div> */}
               </Grid>
             </Popover>
             {/* Seqviz Popover  ------------------- End*/}
