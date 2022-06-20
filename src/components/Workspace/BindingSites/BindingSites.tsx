@@ -481,7 +481,6 @@ const BindingSites = () => {
 				updateBindingSiteData(current_binding_site as BindingSite, cur_ligclass)
 			}
 		}
-
 		dispatch(action._partial_state_change({ 'binding_site_data': null }))
 		dispatch(action.current_target_change(null))
 

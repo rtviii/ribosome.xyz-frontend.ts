@@ -45,16 +45,6 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 
 export default function ProteinAlignment() {
   const dispatch = useDispatch();
-  const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-      formControl: {
-        margin: theme.spacing(1),
-        minWidth: 120,
-        marginLeft: 20
-      }
-
-    })
-  );
   const classes = makeStyles((theme: Theme) => ({
     autocomplete: {
       width: "100%",
@@ -105,7 +95,7 @@ export default function ProteinAlignment() {
 
   useEffect(() => {
     var options = {
-      moleculeId: 'none',
+      moleculeId  : 'none',
       hideControls: true
     }
     var viewerContainer = document.getElementById('molstar-viewer');
@@ -116,11 +106,11 @@ export default function ProteinAlignment() {
 
   const debounedRangeChange1__redux = debounce((redux_range: number[]) => {
     dispatch(superimpose_slot_change(1, { chain_range: redux_range }))
-  }, 200)
+  }, 300)
 
   const debounedRangeChange2__redux = debounce((redux_range: number[]) => {
     dispatch(superimpose_slot_change(2, { chain_range: redux_range }))
-  }, 200)
+  }, 300)
 
 
   // | ------------------------------------------ NEW STATE ----------------------------------|
@@ -183,28 +173,6 @@ export default function ProteinAlignment() {
     }
 
   }
-
-  // const requestAlignment = (
-  //   struct1: string,
-  //   struct2: string,
-  //   asym_id1: string,
-  //   asym_id2: string,
-  // ) => {
-
-  //   getNeo4jData("static_files", {
-  //     endpoint: "align_3d",
-  //     params: {
-  //       struct1,
-  //       struct2,
-  //       auth_asym_id1: asym_id1,
-  //       auth_asym_id2: asym_id2
-  //     },
-  //   })
-  //     .then(
-  //       resp => { fileDownload(resp.data, `${struct1}-${asym_id1}_over_${struct2}-${asym_id2}.pdb`) },
-  //       e => console.log(e)
-  //     )
-  // };
 
 
   const handleStructChange = (struct_number: number) => (event: React.ChangeEvent<{ value: unknown }>, newvalue: NeoStruct) => {
@@ -288,8 +256,7 @@ export default function ProteinAlignment() {
 
   const pageData = {
     title: "3D Superimposition",
-    text: "Multiple individual components (sets of protein- and RNA-strands, protein-ion clusters, etc. ) belonging to different structures can be extracted, superimposed and exported here\
-     for further processing and structural analyses."}
+    text: ""}
 
 
 
@@ -338,10 +305,10 @@ export default function ProteinAlignment() {
         {/*  ------------------------------------------------------- SLOT 1 --------------------------------------*/}
         <Grid item style={{ marginBottom: "40px" }}>
           <Autocomplete
-            value={struct_1}
-            className={classes.autocomplete}
-            options={structs}
-            getOptionLabel={(parent: NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
+            value          = {struct_1}
+            className      = {classes.autocomplete}
+            options        = {structs}
+            getOptionLabel = {(parent: NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
             // @ts-ignore
             onChange={handleStructChange(1)}
             renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title} </div>)}
@@ -372,25 +339,6 @@ export default function ProteinAlignment() {
             auth_asym_id={slot_2.chain?.auth_asym_id as string}
             full_structure_cache={struct_cache_2} />
 
-
-
-          {/* <Slider
-            getAriaLabel={() => 'Minimum distance'}
-            value={rangeSlider1}
-            min={0}
-            max={chainStructPair1[0] !== null ? chainStructPair1[0].entity_poly_seq_one_letter_code.length : minDistance}
-            onChange={handleChange1}
-            valueLabelDisplay="auto"
-            // getAriaValueText={valuetext}
-            disabled={chainStructPair1[0] === null}
-            disableSwap
-          />
-
-          range : {rangeSlider1[0]} - {rangeSlider1[1]} */}
-
-
-
-          {/* <ChainHighlightSlider auth_asym_id={}/> */}
         </Grid>
         {/*  ------------------------------------------------------- SLOT 1 --------------------------------------*/}
 
@@ -434,18 +382,6 @@ export default function ProteinAlignment() {
           />
 
 
-          {/* <Slider
-            getAriaLabel={() => 'Minimum distance'}
-            value={rangeSlider2}
-            min={0}
-            max={chainStructPair2[0] !== null ? chainStructPair2[0].entity_poly_seq_one_letter_code.length : minDistance}
-            onChange={handleChange2}
-            valueLabelDisplay="auto"
-            // getAriaValueText={valuetext}
-            disabled={chainStructPair2[0] === null}
-            disableSwap
-          />
-          range : {rangeSlider2[0]} - {rangeSlider2[1]} */}
         </Grid>
 
         {/* ------------------------------------------  SLOT 2 */}
