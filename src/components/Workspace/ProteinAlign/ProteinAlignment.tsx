@@ -95,7 +95,7 @@ export default function ProteinAlignment() {
 
   useEffect(() => {
     var options = {
-      moleculeId  : 'none',
+      moleculeId: 'none',
       hideControls: true
     }
     var viewerContainer = document.getElementById('molstar-viewer');
@@ -140,6 +140,38 @@ export default function ProteinAlignment() {
   const minDistance = 10;
 
 
+  const downloadRangedAlignment = () => {
+
+    console.log("-----------------")
+    console.log("Requesting ranged alignment DOWNLOAD:")
+    // @ts-ignore
+    console.log(`Struct 1: ${slot_1.struct?.struct.rcsb_id}, chain ${slot_1.chain?.auth_asym_id} [${range_slot_1[0]}, ${range_slot_1[1]}]`)
+    // @ts-ignore
+    console.log(`Struct 2: ${slot_2.struct?.struct.rcsb_id}, chain ${slot_2.chain?.auth_asym_id} [${range_slot_2[0]}, ${range_slot_2[1]}]`)
+    console.log("-----------------")
+    if ([slot_1.chain, slot_1.struct, slot_2.chain, slot_2.struct].includes(null)) { alert("Please select a chain in both structures to align and a residue range.") }
+    getNeo4jData('static_files', {
+      endpoint: 'ranged_align',
+      params: {
+        r1start      : range_slot_1![0],
+        r1end        : range_slot_1![1],
+        r2start      : range_slot_2![0],
+        r2end        : range_slot_2![1],
+        struct1      : slot_1.struct?.struct.rcsb_id as string,
+        struct2      : slot_2.struct?.struct.rcsb_id as string,
+        auth_asym_id1: slot_1.chain?.auth_asym_id as string,
+        auth_asym_id2: slot_2.chain?.auth_asym_id as string,
+      }
+    }).then(response => {
+      console.log("got alignment file:", response.data);
+      fileDownload(
+        response.data,
+        `alignment_${slot_1.struct?.struct.rcsb_id as string}.${slot_1.chain?.auth_asym_id as string}_${slot_2.struct?.struct.rcsb_id as string}.${slot_1.chain?.auth_asym_id as string}.cif`,
+        "chemical/x-mmcif"
+      )
+    })
+
+  }
 
   const visualizeRangedAlignment = (
   ) => {
@@ -256,7 +288,8 @@ export default function ProteinAlignment() {
 
   const pageData = {
     title: "3D Superimposition",
-    text: ""}
+    text: ""
+  }
 
 
 
@@ -305,10 +338,10 @@ export default function ProteinAlignment() {
         {/*  ------------------------------------------------------- SLOT 1 --------------------------------------*/}
         <Grid item style={{ marginBottom: "40px" }}>
           <Autocomplete
-            value          = {struct_1}
-            className      = {classes.autocomplete}
-            options        = {structs}
-            getOptionLabel = {(parent: NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
+            value={struct_1}
+            className={classes.autocomplete}
+            options={structs}
+            getOptionLabel={(parent: NeoStruct) => { return parent.struct.rcsb_id ? parent.struct.rcsb_id + " : " + parent.struct.citation_title : "" }}
             // @ts-ignore
             onChange={handleStructChange(1)}
             renderOption={(option) => (<div style={{ fontSize: "10px", width: "400px" }}><b>{option.struct.rcsb_id}</b> {option.struct.citation_title} </div>)}
@@ -383,7 +416,6 @@ export default function ProteinAlignment() {
 
 
         </Grid>
-
         {/* ------------------------------------------  SLOT 2 */}
 
 
@@ -406,7 +438,7 @@ export default function ProteinAlignment() {
         </Grid>
         <Grid item>
 
-          {/* 
+
           <Button
             style={{ marginBottom: "10px", textTransform: "none" }}
             fullWidth
@@ -425,15 +457,9 @@ export default function ProteinAlignment() {
                 },
               });
 
-              requestAlignment(
-                chainStructPair1[1] as string,
-                chainStructPair2[1] as string,
-                chainStructPair1[0]?.auth_asym_id as string,
-                chainStructPair2[0]?.auth_asym_id as string,
-              );
             }}>
             Download Aligned
-          </Button> */}
+          </Button>
         </Grid>
 
 
