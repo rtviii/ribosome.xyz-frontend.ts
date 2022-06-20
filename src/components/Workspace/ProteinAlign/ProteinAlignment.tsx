@@ -285,14 +285,10 @@ export default function ProteinAlignment() {
     }
   }
 
-
   const pageData = {
     title: "3D Superimposition",
     text: ""
   }
-
-
-
 
   // const handleChange1 = (
   //   event: Event,

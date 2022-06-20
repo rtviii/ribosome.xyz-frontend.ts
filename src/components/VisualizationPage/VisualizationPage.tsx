@@ -15,6 +15,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Slider from '@mui/material/Slider';
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import fileDownload from 'js-file-download';
 import Tooltip from "@mui/material/Tooltip";
@@ -531,15 +532,6 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
     if (auth_asym_id === null) { window.alert('Chain to highlight is null. Provide asym_id to paint.'); return }
   }
 
-  // const handleSliderChange = (event: Event, newvalue: number[]) => {
-  //   let _: number[] = newvalue;
-  //   if (newvalue[1] > MaxRes) { _[1] = MaxRes }
-  //   if (newvalue[0] < 0) { _[0] = 0 }
-  //   if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
-  //   setResidueRange(_);
-  //   if (_[0] === _[1]) { return }
-  //   // paintMolstarCanvas(_, auth_asym_id as string);
-  // }
 
   const handleResRangeStart = (endVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     let numeric = Number(event.target.value.replace(/^\D+/g, ''));
@@ -564,6 +556,55 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
+  const ResidueColor =(residue:string| undefined) =>{
+    switch (residue){
+      case undefined:
+        return "black"
+case "G"	 :
+  return "green"
+case "P"		:
+  return "red"
+case "A"		:
+  return "blue"
+case "V"	:
+  return "orange"
+case "L"		:
+  return "olive"
+case "I"	:
+  return "magenta"
+case "M"		:
+  return "purple"
+case "C"	:
+  return "pink"
+case "F":
+  return "brown"
+case "Y"	:
+  return "cyan"
+case "W":
+  return "turquoise"
+case "H"	:
+  return "sienna"
+case "K"		:
+  return "tan"
+case "R"	:
+  return "salmon"
+case "Q"	:
+  return "chocolate"
+case "N"	:
+  return "darkgrey"
+case "E":
+  return "darkolivegreen"
+case "D"	:
+  return "forestgreen"
+case "S":
+  return "teal"
+case "T"	:
+  return "lawngreen"
+case "U":
+  return "navy"
+    }
+
+  }
 
 
   const descriptionElementRef = React.useRef<HTMLElement>(null);
@@ -577,213 +618,169 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
   }, [open]);
 
 
-  type SeqVizSelection = {
-    clockwise: boolean
-    element: any
-    end: number
-    gc: number
-    length: number
-    name: string
-    ref: string
-    seq: string
-    start: number
-    tm: number
-    type: string
-  }
-
-
   return (
     <Card variant="outlined" style={{ minWidth: "100%", height: "maxContent", display: "flex", flexDirection: "row" }}>
+      <Grid item container xs={12} style={{ height: "100%", width: "100%" }}>
+
+        <Grid container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+          component="div"
+          style={{
+            fontSize: "12",
+            padding: "5px",
+          }}
+        >
+          <Typography variant="body2" color="textSecondary" component="p" >
+            {currentChainFull?.entity_poly_polymer_type || " "}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p"  >
+            {currentChainFull?.nomenclature[0] as string || ""}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p" >
+            {currentChainFull && currentChainFull?.auth_asym_id ? `Chain ${currentChainFull?.auth_asym_id}` : " "}
+          </Typography>
+        </Grid>
+
+        <Grid container
+          style={{ padding: "5px" }}
+          direction="column"
+          justify="flex-start"
+          alignItems="flex-start"
+          component="div"
+        >
+          <CardBodyAnnotation keyname={"Source Organism"} value={truncate(currentChainFull?.src_organism_names[0] || " ", 50, 50)} />
+          <CardBodyAnnotation keyname={"Host Organism"} value={truncate(currentChainFull?.host_organism_names[0] || " ", 50, 50)} />
+          <CardBodyAnnotation keyname={"Description"} value={currentChainFull?.rcsb_pdbx_description || ""} />
+        </Grid>
 
 
-      <Grid container >
+        <Divider />
 
-        <Grid container direction={"column"} item spacing={2} xs={3} style={{ padding: "10px" }} >
+        <Grid container direction="row" xs={12} spacing={2} style={{ width: "100%", height: "70px", padding: "5px" }} >
 
-          <Grid item xs={4}>
-            <Paper variant="outlined" elevation={2}
-              id='outlined-interact'
-              style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
-              <DownloadIcon onClick={handlePopoverClick} style={{ width: "50px", height: "50px" }} />
-            </Paper>
-          </Grid>
+          <Grid item xs={2}>
+            <TextField
+              value    = {residueRange[0]}
+              onChange = {handleResRangeStart(residueRange[1])}
+              // label    = {currentChainFull && currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]] ?
+              //   `${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}` : ``}
 
-
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handlePopoverClose}
-            style={{ padding: "20px" }}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
-            }}
-            transformOrigin={{ vertical: "top", horizontal: "center", }}>
-
-            <Grid container direction="column">
-
-              <Grid item xs={10}>
-
-                <SeqViz
-                  style={{ padding: "10px", margin: "10px", fontSize: "8px", size: '8px', width: "800px", height: "200px" }}
-                  onSelection={(e) => {
-                    console.log("Got range : ", e.start, " --> ", e.end);
-                    console.log(e);
-                    if (e.start === e.end) {
-                      return
-                    }
-
-                    if (e.start > e.end) {
-                      setResidueRange([e.end, e.start])
-                    }
-                    else {
-                      setResidueRange([e.start, e.end])
-                    }
-
-                    paintMolstarCanvas(residueRange, auth_asym_id as string)
-                  }}
-                  showIndex={true}
-                  viewer="linear"
-                  annotations={[{
-                    color: "blue",
-                    direction: 1,
-                    end: residueRange[1],
-                    start: residueRange[0],
-                    name: 'selected',
-                    id: "none",
-                    // @ts-ignore
-                    type: ""
-                  }]}
-                  seq={currentChainFull?.entity_poly_seq_one_letter_code_can} showAnnotations={false} />
-              </Grid>
-
-              <div style={{ display: "flex", justifyContent: "center", justifyItems: "center" }}>
-
-                <Button fullWidth>Select</Button>
-                <Button fullWidth>Download seq</Button>
-                <Button fullWidth>Download cif</Button>
+              label    = {<div style={{
+                fontWeight:"bold",
+                
+                color: ResidueColor(currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]])}}> 
+              {currentChainFull && currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]] ?`${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}` : ``}
               </div>
+              }
 
-            </Grid>
-
-          </Popover>
-
-          <Grid item xs={4} >
-            <Paper variant="outlined" elevation={2} id='outlined-interact' style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
-              <SearchIcon onClick={handleSearchRange} style={{ width: "50px", height: "50px" }} />
-            </Paper>
+  InputProps={{ disableUnderline: true }}
+              disabled = {currentChainFull === null}
+            />
           </Grid>
 
-          <Grid item xs={4}>
-            <Paper variant="outlined" elevation={2}
-              id='outlined-interact'
-              style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
-              <ContentCutIcon style={{ width: "50px", height: "50px" }}
-              />
-            </Paper>
-          </Grid>
-        </Grid>
-
-        <Grid container xs={9} style={{ height: "100%", width: "100%" }}>
-
-          <Grid xs={12} item >
-
-            <Grid
-              container
-              direction="row"
-              justify="space-between"
-              alignItems="center"
-              component="div"
-              style={{
-                fontSize: "12",
-                padding: "5px",
+          <Grid item xs={2}>
+            <TextField
+              value    = {residueRange[1]}
+              onChange = {handleResRangeEnd(residueRange[0])}
+              label    = {<div 
+                style={{color:
+                currentChainFull && currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]] ?
+                ResidueColor(currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[1]-1]) : "black"
               }}
-            >
-              <Typography variant="body2" color="textSecondary" component="p" >
-                {currentChainFull?.entity_poly_polymer_type || " "}
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p"  >
-                {currentChainFull?.nomenclature[0] as string || ""}
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p" >
-                Chain {currentChainFull?.auth_asym_id || " "}
-              </Typography>
-            </Grid>
+              > {currentChainFull && currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]] ?
+                `${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[1]-1]}` : ``}</div>}
+              disabled = {currentChainFull === null}
 
-            <Grid
-              container
-              style={{ padding: "5px" }}
-              direction="column"
-              justify="flex-start"
-              alignItems="flex-start"
-              component="div"
-            >
-              <CardBodyAnnotation keyname={"Source Organism"} value={truncate(currentChainFull?.src_organism_names[0] || " ", 50, 50)} />
-              <CardBodyAnnotation keyname={"Host Organism"} value={truncate(currentChainFull?.host_organism_names[0] || " ", 50, 50)} />
-              <CardBodyAnnotation keyname={"Description"} value={currentChainFull?.rcsb_pdbx_description || ""} />
-            </Grid>
+  InputProps={{ disableUnderline: true }}
+            />
+          </Grid>
 
+          <Grid item xs={7} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "10px", }}>
+            <Slider
+              style={{ width: "100%" }}
+              getAriaLabel={() => 'Chain XXX'}
+              value={residueRange}
+              disabled={currentChainFull === null}
+              min={0}
+              max={currentChainFull?.entity_poly_seq_length}
+              onChange={rangeChangeHandler}
+              valueLabelDisplay="auto"
+            // getAriaValueText  = {valuetext}
+            />
           </Grid>
 
 
-          <Grid xs={12} item>
-            <Paper variant="outlined"
-              style={{
-                height: "70px", width: "100%", paddingBottom: "5px", paddingTop: "5px", paddingLeft: "10px", paddingRight: "10px"
-              }}>
+          <Grid item container xs={1} alignContent='center' justifyContent="center" alignItems="center">
+            {/* <Paper variant="outlined" elevation={2} id='outlined-interact' style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} > */}
+            {/* <SearchIcon onClick={handleSearchRange} style={{ width: "50px", height: "50px" }} /> */}
+            <Grid item >
+              <SearchIcon onClick={handleSearchRange} />
+            </Grid>
 
-              <Grid container direction="row" xs={12} spacing={1} style={{ width: "100%", height: "50px" }} >
-                <Grid item xs={3}>
-                  <TextField
-                    // style    = {{width:"50px"}}
-                    value={residueRange[0]}
-                    onChange={handleResRangeStart(residueRange[1])}
-                    id="outlined-number"
-                    label={`Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}`}
-                    fullWidth
-                    disabled={currentChainFull === null}
-                    type="number"
-                    InputLabelProps={{ style: { fontSize: 16 } }}
-                  />
-                </Grid>
+            {/* </Paper> */}
 
-                <Grid item xs={6} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "10px", }}>
-                  <Slider
-                    style={{ width: "100%" }}
-                    getAriaLabel={() => 'Chain XXX'}
-                    value={residueRange}
-                    disabled={currentChainFull === null}
-                    min={0}
-                    max={currentChainFull?.entity_poly_seq_length}
-                    onChange={rangeChangeHandler}
-                    valueLabelDisplay="auto"
-                  // getAriaValueText  = {valuetext}
-                  />
-                </Grid>
+            {/* Seqviz Popover  ------------------- Start*/}
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handlePopoverClose}
+              style={{ padding: "20px" }}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{ vertical: "top", horizontal: "center", }}>
+              <Grid container direction="column">
 
-                <Grid item xs={3}>
-                  <TextField
-                    // style    = {{width:"50px"}}
-                    disabled={currentChainFull === null}
-                    value={residueRange[1]}
-                    onChange={handleResRangeEnd(residueRange[0])}
-                    id="ou2tlined-number"
-                    fullWidth
-                    label={`Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[1] - 1]}`}
-                    type="number"
-                    InputLabelProps={{
-                      shrink: true,
-                      style: { fontSize: 16 }
+                <Grid item xs={10}>
+
+                  <SeqViz
+                    style={{ padding: "10px", margin: "10px", fontSize: "8px", size: '8px', width: "800px", height: "200px" }}
+                    onSelection={(e) => {
+                      console.log("Got range : ", e.start, " --> ", e.end);
+                      console.log(e);
+                      if (e.start === e.end) {
+                        return
+                      }
+
+                      if (e.start > e.end) {
+                        setResidueRange([e.end, e.start])
+                      }
+                      else {
+                        setResidueRange([e.start, e.end])
+                      }
+
+                      paintMolstarCanvas(residueRange, auth_asym_id as string)
                     }}
-                  />
-
+                    showIndex={true}
+                    viewer="linear"
+                    annotations={[{
+                      color: "blue",
+                      direction: 1,
+                      end: residueRange[1],
+                      start: residueRange[0],
+                      name: 'selected',
+                      id: "none",
+                      // @ts-ignore
+                      type: ""
+                    }]}
+                    seq={currentChainFull?.entity_poly_seq_one_letter_code_can} showAnnotations={false} />
                 </Grid>
-              </Grid>
-            </Paper>
-          </Grid>
 
+                <div style={{ display: "flex", justifyContent: "center", justifyItems: "center" }}>
+                  <Button fullWidth>Select</Button>
+                  <Button fullWidth>Download seq</Button>
+                  <Button fullWidth>Download cif</Button>
+                </div>
+              </Grid>
+            </Popover>
+            {/* Seqviz Popover  ------------------- End*/}
+          </Grid>
         </Grid>
+
       </Grid>
 
     </Card>
@@ -792,408 +789,6 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
 
 
 
-// const ChainHighlightSlider = () => {
-
-//   // takes in a full protein or rna
-//   const current_chain_to_highlight              = useSelector((appstate: AppState) => appstate.visualization.structure_tab.highlighted_chain)
-//   const fullstruct_cache                        = useSelector((appstate: AppState) => appstate.visualization.full_structure_cache)
-
-//   const [currentChainFull, setCurrentChainFull] = React.useState<Protein | RNA | null>(null)
-
-//   const [residueRange, setResidueRange] = React.useState<number[]>([0, 0]);  // current slider value
-//   const [MaxRes, setMaxRes] = React.useState<number>(0);         // keep track of what's the max residue range
-
-
-//   useEffect(() => {
-//     if (fullstruct_cache && current_chain_to_highlight) {
-//       // pluck the chain off the full structure
-//       const pickFullChain = [...fullstruct_cache.proteins, ...(() => {
-//         if (fullstruct_cache.rnas === undefined || fullstruct_cache.rnas === null) {
-//           return []
-//         } else {
-//           return fullstruct_cache.rnas
-//         }
-//       })()].filter(c => c.auth_asym_id === current_chain_to_highlight)
-
-//       if (pickFullChain.length < 1) {
-//         console.log("Haven't found chain with this asym_id on the full structure. Something went terribly wrong.");
-//       } else {
-//         setCurrentChainFull(pickFullChain[0])
-//         setResidueRange([0, pickFullChain[0].entity_poly_seq_length])
-//         setMaxRes(pickFullChain[0].entity_poly_seq_length)
-//       }
-//     }
-//     if (fullstruct_cache === null) {
-//       setCurrentChainFull(null)
-//       setMaxRes(0)
-//     }
-
-//     else if (current_chain_to_highlight === null) {
-//       // setInFocus(null)
-//     }
-
-//   }, [
-//     current_chain_to_highlight,
-//     fullstruct_cache
-//   ])
-
-
-//   const paintMolstarCanvas = (resRange: number[], chain_to_highlight: string) => {
-//     var selectSections =
-//     {
-//       instance_id: 'ASM_1',
-//       auth_asym_id: chain_to_highlight,
-//       start_residue_number: resRange[0] === 0 ? 1 : resRange[0],
-//       end_residue_number: resRange[1],
-//       color: { r: 255, g: 255, b: 255 },
-//       focus: true
-//     }
-//     // console.log("got select params options", selectSections);
-
-//     // viewerInstance.visual.select({ data: selectSections, nonSelectedColor: { r: 180, g: 180, b: 180 } })
-//     // { data: [{ struct_asym_id: 'B', start_residue_number: 1, end_residue_number: 6, color:{r:255,g:255,b:0}, focus: true }]}
-//     viewerInstance.visual.select({
-//       data: [selectSections], nonSelectedColor: { r: 50, g: 50, b: 50 }
-//     })
-//   };
-
-
-//   const handleSearchRange = () => {
-//     if (current_chain_to_highlight === null) { window.alert('Chain to highlight is null. Provide asym_id to paint.'); return }
-//     paintMolstarCanvas(residueRange, current_chain_to_highlight)
-//     console.log(`Target asym_id: ${current_chain_to_highlight}. Searching range: [${residueRange}]`)
-
-//   }
-
-//   const handleSliderChange = (event: Event, newvalue: number[]) => {
-//     let _: number[] = newvalue;
-//     if (newvalue[1] > MaxRes) { _[1] = MaxRes }
-//     if (newvalue[0] < 0) { _[0] = 0 }
-//     if (_[0] > _[1] || _[1] < _[0]) { const t = _[0]; _[0] = _[1]; _[1] = t }
-//     setResidueRange(_);
-
-//     if (_[0] === _[1]) { return }
-//     paintMolstarCanvas(_, current_chain_to_highlight as string);
-//   }
-
-
-//   const handleResRangeStart = (endVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-
-//     let numeric = Number(event.target.value.replace(/^\D+/g, ''));
-//     if (numeric > MaxRes) { numeric = MaxRes }
-//     if (numeric < 0) { numeric = 0 }
-//     setResidueRange([numeric.toString() === '' ? 0 : numeric, endVal])
-//     paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
-//   };
-
-//   const handleResRangeEnd = (startVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-//     console.log(`Max res is ${MaxRes} res range 0 is ${residueRange[0]}    resrange 1 is ${residueRange[1]}`);
-//     let numeric = Number(event.target.value.replace(/^\D+/g, ''));
-//     if (numeric > MaxRes) {
-//       numeric = MaxRes
-//     }
-//     if (numeric < 0) {
-//       numeric = 0
-//     }
-//     setResidueRange([startVal, numeric.toString() === '' ? MaxRes : Number(numeric)])
-//     paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
-//   };
-
-
-
-//   // Donwload Popover
-//   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-//   const handlePopoverClick = (event: any) => { setAnchorEl(event.currentTarget); };
-//   const handlePopoverClose = () => { setAnchorEl(null); };
-//   const open = Boolean(anchorEl);
-//   const id = open ? 'simple-popover' : undefined;
-
-
-//   // Dialgoue sequence
-//   const [dialogueOpen, setDialogueOpen] = React.useState(false);
-//   const [scroll, setScroll] = React.useState<DialogProps['scroll']>('paper');
-
-//   const handleDialogueClickOpen = (scrollType: DialogProps['scroll']) => () => {
-//     setDialogueOpen(true);
-//     setScroll(scrollType);
-//   };
-
-//   const handleDialogueClose = () => {
-//     setDialogueOpen(false);
-//   };
-
-//   const descriptionElementRef = React.useRef<HTMLElement>(null);
-//   React.useEffect(() => {
-//     if (open) {
-//       const { current: descriptionElement } = descriptionElementRef;
-//       if (descriptionElement !== null) {
-//         descriptionElement.focus();
-//       }
-//     }
-//   }, [open]);
-
-
-//   type SeqVizSelection = {
-//     clockwise: boolean
-//     element: any
-//     end: number
-//     gc: number
-//     length: number
-//     name: string
-//     ref: string
-//     seq: string
-//     start: number
-//     tm: number
-//     type: string
-//   }
-
-
-//   return (
-//     <Card variant="outlined" style={{ minWidth: "100%", height: "maxContent", display: "flex", flexDirection: "row" }}>
-
-
-//       <Grid container >
-
-//         <Grid container direction={"column"} item spacing={2} xs={3} style={{ padding: "10px" }} >
-
-//           <Grid item xs={4}>
-//             <Paper variant="outlined" elevation={2}
-//               id='outlined-interact'
-//               style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
-//               <DownloadIcon onClick={handlePopoverClick} style={{ width: "50px", height: "50px" }} />
-//             </Paper>
-//           </Grid>
-
-
-//           <Popover
-//             id={id}
-//             open={open}
-//             anchorEl={anchorEl}
-//             onClose={handlePopoverClose}
-//             style={{ padding: "20px" }}
-//             anchorOrigin={{
-//               vertical: "bottom",
-//               horizontal: "center",
-//             }}
-//             transformOrigin={{ vertical: "top", horizontal: "center", }}>
-
-//             <Grid container direction="column">
-
-//               <Grid item xs={10}>
-
-//                 <SeqViz
-//                   style={{ padding: "10px", margin: "10px", fontSize: "8px", size: '8px', width: "800px", height: "200px" }}
-//                   onSelection={(e) => {
-//                     console.log("Got range : ", e.start, " --> ", e.end);
-//                     console.log(e);
-//                     if (e.start === e.end) {
-//                       return
-//                     }
-
-//                     if (e.start > e.end) {
-//                       setResidueRange([e.end, e.start])
-//                     }
-//                     else {
-//                       setResidueRange([e.start, e.end])
-//                     }
-
-//                     paintMolstarCanvas(residueRange, current_chain_to_highlight as string)
-//                   }}
-//                   showIndex={true}
-//                   viewer="linear"
-//                   annotations={[{
-//                     color: "blue",
-//                     direction: 1,
-//                     end: residueRange[1],
-//                     start: residueRange[0],
-//                     name: 'selected',
-//                     id: "none",
-//                     // @ts-ignore
-//                     type: ""
-//                   }]}
-//                   seq={currentChainFull?.entity_poly_seq_one_letter_code_can} showAnnotations={false} />
-//               </Grid>
-
-//               <div style={{ display: "flex", justifyContent: "center", justifyItems: "center" }}>
-
-//                 <Button fullWidth>Select</Button>
-//                 <Button fullWidth>Download seq</Button>
-//                 <Button fullWidth>Download cif</Button>
-//               </div>
-//               {/* <Grid direction="row"  container xs={2} style={{ display:"flex",  outline:"1px solid black", width: "100%" }}>
-
-//                 <Grid item xs={3}></Grid>
-
-//                 <Grid item xs={3}><Button fullWidth>Download seq</Button></Grid>
-
-//                 <Grid item xs={3}></Grid>
-//               </Grid> */}
-
-//             </Grid>
-
-//           </Popover>
-//           {/* <Dialog
-//         open={dialogueOpen}
-//         onClose={handleDialogueClose}
-//         scroll={scroll}
-//         aria-labelledby="scroll-dialog-title"
-//         aria-describedby="scroll-dialog-description"
-//       >
-//         <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
-//         <DialogContent dividers={scroll === 'paper'} style={{height:"20vh", width:"70vw", padding:"10px", margin:"5px", display:"flex", justifyContent:"center"}}>
-//             <SeqViz
-//             style={{padding:"20px"}}
-//               onSelection = {(e) => { console.log(e) }}
-//               showIndex   = {true}
-//               viewer      = "linear"
-//               seq         = {currentChainFull?.entity_poly_seq_one_letter_code_can} showAnnotations = {false} />
-//         </DialogContent>
-//         <DialogActions>
-//           <Button onClick={handleClose}>Cancel</Button>
-//           <Button onClick={handleClose}>Subscribe</Button>
-//         </DialogActions>
-//       </Dialog> */}
-
-//           {/* <Popover
-//             // id           = {id}
-//             open         = {open}
-//             anchorEl     = {anchorEl}
-//             onClose      = {handleClose}
-//             anchorOrigin = {{
-//               vertical: 'bottom',
-//               horizontal: 'left',
-//             }}
-
-
-//             >
-//               <Paper style={{outline:"1px solid black"}}>
-
-
-//               </Paper>
-//           </Popover> */}
-
-//           <Grid item xs={4} >
-//             <Paper variant="outlined" elevation={2} id='outlined-interact' style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
-//               <SearchIcon onClick={handleSearchRange} style={{ width: "50px", height: "50px" }} />
-//             </Paper>
-//           </Grid>
-
-//           <Grid item xs={4}>
-//             <Paper variant="outlined" elevation={2}
-//               id='outlined-interact'
-//               style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} >
-//               <ContentCutIcon style={{ width: "50px", height: "50px" }}
-//               />
-//             </Paper>
-//           </Grid>
-//         </Grid>
-
-//         <Grid container xs={9} style={{ height: "100%", width: "100%" }}>
-
-//           <Grid xs={12} item >
-
-//             <Grid
-//               container
-//               direction="row"
-//               justify="space-between"
-//               alignItems="center"
-//               component="div"
-//               style={{
-//                 fontSize: "12",
-//                 padding: "5px",
-//               }}
-//             >
-//               <Typography variant="body2" color="textSecondary" component="p" >
-//                 {currentChainFull?.entity_poly_polymer_type || " "}
-//               </Typography>
-//               <Typography variant="body2" color="textSecondary" component="p"  >
-//                 {currentChainFull?.nomenclature[0] as string || ""}
-//               </Typography>
-//               <Typography variant="body2" color="textSecondary" component="p" >
-//                 Chain {currentChainFull?.auth_asym_id || " "}
-//               </Typography>
-//             </Grid>
-
-//             <Grid
-//               container
-//               style={{ padding: "5px" }}
-//               direction="column"
-//               justify="flex-start"
-//               alignItems="flex-start"
-//               component="div"
-//             >
-//               <CardBodyAnnotation keyname={"Source Organism"} value={truncate(currentChainFull?.src_organism_names[0] || " ", 50, 50)} />
-//               <CardBodyAnnotation keyname={"Host Organism"} value={truncate(currentChainFull?.host_organism_names[0] || " ", 50, 50)} />
-//               <CardBodyAnnotation keyname={"Description"} value={currentChainFull?.rcsb_pdbx_description || ""} />
-//             </Grid>
-
-//           </Grid>
-
-
-//           <Grid xs={12} item
-//           >
-//             <Paper variant="outlined"
-//               style={{
-//                 height: "70px", width: "100%", paddingBottom: "5px", paddingTop: "5px", paddingLeft: "10px", paddingRight: "10px"
-//               }}>
-
-//               <Grid container direction="row" xs={12} spacing={1} style={{ width: "100%", height: "50px" }} >
-//                 <Grid item xs={3}>
-//                   <TextField
-//                     // style    = {{width:"50px"}}
-//                     value={residueRange[0]}
-//                     onChange={handleResRangeStart(residueRange[1])}
-//                     id="outlined-number"
-//                     label={`Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}`}
-//                     fullWidth
-//                     disabled={currentChainFull === null}
-//                     type="number"
-//                     InputLabelProps={{ style: { fontSize: 16 } }}
-//                   />
-//                 </Grid>
-
-//                 <Grid item xs={6} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "10px", }}>
-//                   <Slider
-//                     style={{ width: "100%" }}
-//                     getAriaLabel={() => 'Chain XXX'}
-//                     value={residueRange}
-//                     disabled={currentChainFull === null}
-//                     min={0}
-//                     max={currentChainFull?.entity_poly_seq_length}
-//                     // @ts-ignore
-//                     onChange={handleSliderChange}
-//                     valueLabelDisplay="auto"
-//                   // getAriaValueText  = {valuetext}
-//                   />
-//                 </Grid>
-
-//                 <Grid item xs={3}>
-//                   <TextField
-//                     // style    = {{width:"50px"}}
-//                     disabled={currentChainFull === null}
-//                     value={residueRange[1]}
-//                     onChange={handleResRangeEnd(residueRange[0])}
-//                     id="ou2tlined-number"
-//                     fullWidth
-//                     label={`Residue ${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[1] - 1]}`}
-//                     type="number"
-//                     InputLabelProps={{
-//                       shrink: true,
-//                       style: { fontSize: 16 }
-//                     }}
-//                   />
-
-//                 </Grid>
-//               </Grid>
-//             </Paper>
-//           </Grid>
-
-//         </Grid>
-//       </Grid>
-
-//     </Card>
-//   );
-// }
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
@@ -1471,10 +1066,10 @@ const VisualizationPage = (props: any) => {
   const current_protein_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.protein_tab.auth_asym_id)
   const current_protein_neostruct: NeoStruct | null = useSelector((state: AppState) => current_protein_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id === current_protein_parent)[0])
 
-  const current_rna_class        : RNAClass  | null = useSelector((state: AppState) =>                                      state.visualization.rna_tab     .class                                                  )
-  const current_rna_parent       : string    | null = useSelector((state: AppState) =>                                      state.visualization.rna_tab     .parent                                                 )
-  const current_rna_auth_asym_id : string    | null = useSelector((state: AppState) =>                                      state.visualization.rna_tab     .auth_asym_id                                           )
-  const current_rna_neostruct    : NeoStruct | null = useSelector((state: AppState) => current_rna_parent === null ? null : state.structures   .neo_response.filter(s => s.struct.rcsb_id === current_rna_parent)[0])
+  const current_rna_class: RNAClass | null = useSelector((state: AppState) => state.visualization.rna_tab.class)
+  const current_rna_parent: string | null = useSelector((state: AppState) => state.visualization.rna_tab.parent)
+  const current_rna_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.rna_tab.auth_asym_id)
+  const current_rna_neostruct: NeoStruct | null = useSelector((state: AppState) => current_rna_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id === current_rna_parent)[0])
 
   useEffect(() => {
     if (current_protein_class && current_protein_parent) {
