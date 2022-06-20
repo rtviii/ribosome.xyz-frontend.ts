@@ -16,6 +16,7 @@ import { NeoStruct, PolymerMinimal } from '../../../redux/DataInterfaces';
 import { ChainHighlightSlider } from '../../VisualizationPage/VisualizationPage';
 import { cache_full_struct, superimpose_slot_change } from '../../../redux/reducers/Visualization/ActionTypes';
 import { debounce } from 'lodash';
+import Divider from '@mui/material/Divider';
 
 export const nomenclatureCompareFn = (a: PolymerMinimal, b: PolymerMinimal) => {
   //  console.log("Got two to sort" , a, b);
@@ -153,12 +154,12 @@ export default function ProteinAlignment() {
     getNeo4jData('static_files', {
       endpoint: 'ranged_align',
       params: {
-        r1start      : range_slot_1![0],
-        r1end        : range_slot_1![1],
-        r2start      : range_slot_2![0],
-        r2end        : range_slot_2![1],
-        struct1      : slot_1.struct?.struct.rcsb_id as string,
-        struct2      : slot_2.struct?.struct.rcsb_id as string,
+        r1start: range_slot_1![0],
+        r1end: range_slot_1![1],
+        r2start: range_slot_2![0],
+        r2end: range_slot_2![1],
+        struct1: slot_1.struct?.struct.rcsb_id as string,
+        struct2: slot_2.struct?.struct.rcsb_id as string,
         auth_asym_id1: slot_1.chain?.auth_asym_id as string,
         auth_asym_id2: slot_2.chain?.auth_asym_id as string,
       }
@@ -285,14 +286,10 @@ export default function ProteinAlignment() {
     }
   }
 
-
   const pageData = {
     title: "3D Superimposition",
     text: ""
   }
-
-
-
 
   // const handleChange1 = (
   //   event: Event,
@@ -332,11 +329,11 @@ export default function ProteinAlignment() {
         <PageAnnotation {...pageData} />
       </Grid>
 
-      <Grid item direction="column" xs={2} spacing={2} style={{ padding: "10px" }}>
+      <Grid item direction="column" xs={2}  style={{ paddingRight: "10px" , paddingLeft:"10px"}} >
 
 
         {/*  ------------------------------------------------------- SLOT 1 --------------------------------------*/}
-        <Grid item style={{ marginBottom: "40px" }}>
+        <Grid item >
           <Autocomplete
             value={struct_1}
             className={classes.autocomplete}
@@ -362,26 +359,19 @@ export default function ProteinAlignment() {
             renderInput={(params) => <TextField {...params} label={`Chain 1`} variant="outlined" />}
           />
 
+        </Grid>
+
+        <Grid item >
           <ChainHighlightSlider
             redux_effect={debounedRangeChange1__redux}
             auth_asym_id={slot_1.chain?.auth_asym_id as string}
             full_structure_cache={struct_cache_1} />
-
-          <ChainHighlightSlider
-            redux_effect={debounedRangeChange2__redux}
-            auth_asym_id={slot_2.chain?.auth_asym_id as string}
-            full_structure_cache={struct_cache_2} />
-
         </Grid>
-        {/*  ------------------------------------------------------- SLOT 1 --------------------------------------*/}
 
-
-
-
-
-        {/* ------------------------------------------  SLOT 2 */}
-        <Grid item style={{ marginBottom: "40px" }}>
-
+<Grid item>
+<Divider/>
+</Grid>
+        <Grid item style={{marginTop:"40px"}}>
           <Autocomplete
             value={struct_2}
             className={classes.autocomplete}
@@ -414,14 +404,13 @@ export default function ProteinAlignment() {
             renderInput={(params) => <TextField {...params} label={`Chain 2`} variant="outlined" />}
           />
 
-
         </Grid>
-        {/* ------------------------------------------  SLOT 2 */}
 
-
-
-        <Grid item>
-
+        <Grid item style={{marginBottom:"20px"}}>
+          <ChainHighlightSlider
+            redux_effect={debounedRangeChange2__redux}
+            auth_asym_id={slot_2.chain?.auth_asym_id as string}
+            full_structure_cache={struct_cache_2} />
         </Grid>
 
         <Grid item>
@@ -436,9 +425,8 @@ export default function ProteinAlignment() {
             Align
           </Button>
         </Grid>
+
         <Grid item>
-
-
           <Button
             style={{ marginBottom: "10px", textTransform: "none" }}
             fullWidth
@@ -455,7 +443,6 @@ export default function ProteinAlignment() {
             Download Aligned
           </Button>
         </Grid>
-
 
         <Grid item>
           <DashboardButton />

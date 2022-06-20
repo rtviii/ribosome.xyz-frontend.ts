@@ -20,3 +20,13 @@
   margin: 0px;
   flex: 1 1 0;
 }
+
+
+#search-icon-msa{
+  transition: transform .2s ease-in-out;
+  
+}
+#search-icon-msa:hover{
+  cursor: pointer;
+  transform: rotate(40deg); 
+}

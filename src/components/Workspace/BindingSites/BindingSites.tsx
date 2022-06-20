@@ -470,9 +470,7 @@ const BindingSites = () => {
 		}
 	}
 
-
 	useEffect(() => {
-
 		if (cur_ligclass === null) {
 			set_derived_bsites(bsites)
 		} else {
