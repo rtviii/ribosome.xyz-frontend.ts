@@ -8,15 +8,15 @@ type DjangoAPIs = "neo4j" | "static_files"
 
 
 type StaticFilesEndpoints =
+  | ranged_align
   | downloadCifChain
   | download_ligand_nbhd
   | get_tunnel
-  | align_3d
   | cif_chain_by_class
   | download_structure
   | ligand_prediction
 
-  interface ligand_prediction{
+interface ligand_prediction{
     endpoint:"ligand_prediction",
     params:{
       src_struct   : string,
@@ -25,6 +25,20 @@ type StaticFilesEndpoints =
       is_polymer   : boolean,
     }
 
+}
+
+interface ranged_align {
+  endpoint: "ranged_align",
+  params: {
+    r1start       : number,
+    r1end         : number,
+    r2start       : number,
+    r2end         : number,
+    struct1       : string,
+    struct2       : string,
+    auth_asym_id1 : string,
+    auth_asym_id2 : string
+  }
 }
 
 interface download_structure {
@@ -73,15 +87,6 @@ interface get_tunnel {
   params: {
     struct: string;
     filetype: "report" | "centerline";
-  }
-}
-interface align_3d {
-  endpoint: "align_3d",
-  params: {
-    struct1      : string,
-    struct2      : string,
-    auth_asym_id1: string,
-    auth_asym_id2: string
   }
 }
 
@@ -237,9 +242,7 @@ interface get_ligand_nbhd {
 }
 
 export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {
-
   const URI = encodeURI(`${BACKEND}/${api}/${ep.endpoint}/`);
-
   return ep.params != null ? Axios.get(URI, {
     params: ep.params, paramsSerializer: params => qs.stringify(params,
       {
