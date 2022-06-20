@@ -449,13 +449,7 @@ export default function ProteinAlignment() {
                 return
               }
 
-              viewerInstance.visual.update({
-                customData: {
-                  url: `${process.env.REACT_APP_DJANGO_URL}/static_files/align_3d/?struct1=${slot_1.struct?.struct.rcsb_id}&struct2=${slot_2.struct?.struct.rcsb_id}&strand1=${slot_1.chain?.auth_asym_id}&strand2=${slot_2.chain?.auth_asym_id}`,
-                  format: "pdb",
-                  binary: false,
-                },
-              });
+              downloadRangedAlignment()
 
             }}>
             Download Aligned

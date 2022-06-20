@@ -290,10 +290,9 @@ export const StructHeroCard = ({ rcsb_id, nomedia }: {
 
                   getNeo4jData("static_files", { endpoint: "download_structure", params: { struct_id: structdata.structure.rcsb_id } })
                     .then(r => {
-
                       fileDownload(
                         r.data,
-                        `${structdata.structure.rcsb_id}.cif`,
+                        `${structdata.structure.rcsb_id}.pdb`,
                         "chemical/x-mmcif"
                       )
                     })
