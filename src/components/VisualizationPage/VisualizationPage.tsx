@@ -550,10 +550,10 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
 
   // Donwload Popover
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const handlePopoverClick = (event: any) => { setAnchorEl(event.currentTarget); };
-  const handlePopoverClose = () => { setAnchorEl(null); };
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const handlePopoverClick      = (event: any) => { setAnchorEl(event.currentTarget); };
+  const handlePopoverClose      = () => { setAnchorEl(null); };
+  const open                    = Boolean(anchorEl);
+  const id                      = open ? 'simple-popover' : undefined;
 
   const ResidueColor =(residue:string| undefined) =>{
     switch (residue){
@@ -902,121 +902,6 @@ const VisualizationPage = (props: any) => {
 
   }
 
-  // useEffect(() => {
-  //   if (inView.type === "struct") {
-  //     getNeo4jData("neo4j", {
-  //       endpoint: "get_struct",
-  //       params: { pdbid: inView.id },
-  //     }).then(
-  //       resp => {
-  //         const respdata: RibosomeStructure = (flattenDeep(resp.data)[0] as any).structure;
-  //         // setstruct(respdata);
-  //         // setInViewData({ type: "struct", data: respdata })
-  //       },
-
-  //       err => {
-  //         console.log("Got error on /neo request", err);
-  //       }
-  //     );
-  //   }
-  //   else if (inView.type === "chain") {getNeo4jData("neo4j", { endpoint: "nomclass_visualize", params: { ban: inView.id } }).then(r => { }) } }, [inView])
-
-  // const RenderInViewInfo = ({ type, structdata, protClassInfo }: {
-  //   type: string,
-  //   structdata: RibosomeStructure,
-  //   protClassInfo: {
-  //     class: string,
-  //     comments: string[][],
-  //     members: { parent: string, chain: string }[]
-  //   }
-  // }) => {
-  //   switch (type) {
-  //     case "chain":
-  //       return protClassInfo.class ? <List>
-  //         <ListSubheader>Ribosomal Protein Class {protClassInfo.class}</ListSubheader>
-  //         {
-  //           uniq(flattenDeep(protClassInfo.comments)).filter(r => r !== "NULL").map(r =>
-  //             <ListItem>
-  //               <Typography className={"s"}>{r}</Typography>
-  //             </ListItem>
-  //           )
-  //         }
-
-  //       </List> : <div>Not Found</div>
-  //     case "struct":
-  //       return structdata?.rcsb_id ?
-  //         <Card className={classes.card}>
-  //           <CardHeader
-  //             title={`${structdata.rcsb_id}`}
-  //             subheader={structdata.src_organism_ids.length > 0 ? structdata.src_organism_names[0] : ""}
-  //           />
-  //           <CardActionArea>
-  //             <CardMedia
-  //               onClick={() => { history.push(`/structs/${structdata.rcsb_id.toUpperCase()}`) }}
-  //               image={process.env.PUBLIC_URL + `/ray_templates/_ray_${structdata.rcsb_id.toUpperCase()}.png`}
-  //               title={`${structdata.rcsb_id}\n${structdata.citation_title}`}
-  //               className={classes.title}
-  //             />
-  //           </CardActionArea>
-  //           <List>
-  //             <CardBodyAnnotation keyname="Species" value={structdata.src_organism_ids.length > 0 ? structdata.src_organism_names[0] : ""} />
-  //             <CardBodyAnnotation keyname="Resolution" value={structdata.resolution} />
-  //             < CardBodyAnnotation keyname="Experimental Method" value={structdata.expMethod} />
-  //             < CardBodyAnnotation keyname="Title" value={structdata.citation_title} />
-
-
-  //             < CardBodyAnnotation keyname="Year" value={structdata.citation_year} />
-  //           </List>
-  //           <CardActions>
-  //             <Grid container justify="space-evenly" direction="row">
-
-  //               <Grid item>
-
-  //                 <Button size="small" color="primary">
-  //                   <a href={`https://www.rcsb.org/structure/${structdata.rcsb_id}`}>
-  //                     PDB
-  //                   </a>
-  //                 </Button>
-  //               </Grid>
-  //               <Grid item>
-  //                 <Button size="small" color="primary">
-  //                   <a href={
-
-  //                     structdata.rcsb_external_ref_link[0]
-  //                   }>
-  //                     EMD
-  //                   </a>
-  //                 </Button>
-  //               </Grid>
-  //               <Grid item>
-  //                 <Button size="small" color="primary">
-  //                   <a href={
-  //                     `https://doi.org/${structdata.citation_pdbx_doi}`
-  //                   }>
-  //                     DOI
-  //                   </a>
-  //                 </Button>
-  //               </Grid>
-  //             </Grid>
-  //           </CardActions>
-  //         </Card>
-  //         : <div>"Loading"</div>
-  //     default:
-  //       return <div></div>
-  //   }
-  // }
-
-  // const coerce_neo_struct_to_struct_hero = (_: NeoStruct): {
-  //   struct: RibosomeStructure;
-  //   ligands: string[];
-  //   rps: Array<{ nomenclature: string[]; auth_asym_id: string }>;
-  //   rnas: string[];
-  // } => ({
-  //   struct : _.struct,
-  //   ligands: _.ligands,
-  //   rps    : _.rps.map(rp => { return { nomenclature: rp.nomenclature, auth_asym_id: rp.auth_asym_id } }),
-  //   rnas   : _.rnas.map(rna => rna.auth_asym_id)
-  // })
 
   const classes = makeStyles({
     pageDescription: {

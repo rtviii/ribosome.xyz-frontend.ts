@@ -128,11 +128,6 @@ export default function ProteinAlignment() {
   const range_slot_2 = useSelector((state: AppState) => state.visualization.superimpose.struct_2.chain_range)
   // | ------------------------------------------ NEW STATE ----------------------------------|
 
-  // 
-  // 
-  // 
-  // 
-  // 
 
   // | ------------------------------------------ OLD STATE ----------------------------------|
   const [chains2, setChains2] = useState<PolymerMinimal[]>([])

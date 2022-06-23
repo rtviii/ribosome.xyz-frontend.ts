@@ -13,13 +13,15 @@ export interface BindingSitesReducerState{
     visualization_tab: "origin" | 'prediction',
     bsites           : BindingSite[],
 
-    factors    : LigandClass[],
-    antibiotics: LigandClass[],
-    mrna       : LigandClass[],
-    trna       : LigandClass[],
+    factors            : LigandClass[],
+    antibiotics        : LigandClass[],
+    mrna               : LigandClass[],
+    trna               : LigandClass[],
+    other_uncategorized: LigandClass[],
 
     current_binding_site: BindingSite | null
     current_ligand_class: LigandClass | null,
+
     current_target      : NeoStruct   | null,
 
     binding_site_data : LigandBindingSite | null,
@@ -33,23 +35,20 @@ const initialstateBindinginSitesReducer:BindingSitesReducerState = {
     error      : null,
     is_loading : false,
     errored_out: false,
-
     visualization_tab: 'origin',
 
     bsites        : [],
-
     factors      : [],
     antibiotics  : [],
     mrna         : [],
     trna         : [],
+    other_uncategorized         : [],
 
-
-    // mixed_ligands:MixedLigand[],
 
     current_ligand_class: null,
     current_binding_site: null,
-    current_target      : null,
 
+    current_target      : null,
 
     binding_site_data: null,
     prediction_data  : null,
@@ -74,15 +73,17 @@ export const BindingSitesReducer = (
 	case "REQUEST_ALL_BSITES_SUCCESS":
 
 
-    var _antibiotics_reg =  /(\w*(?<!(cha|pro|dom|str|pla))in\b|(\b\w*zyme\b))/gi; 
+    // var _antibiotics_reg           = /(\w*(?<!(cha|pro|dom|str|pla))in\b|(\b\w*zyme\b))/gi;
+    var _antibiotics_reg           = /(\w*(?<!(cha|pro|dom|str|pla))in\b|(\b\w*zyme\b)|(\b\w*mine\b))/gi;
     var antibioitcs :LigandClass[] = [];
     var factors     :LigandClass[] = [];
     var mrna        :LigandClass[] = [];
     var trna        :LigandClass[] = [];
+    var other_uncategorized        :LigandClass[] = [];
 
-    var filtered= action.mixed_ligands
+    var filtered = action.mixed_ligands
+    var grouped  = _.groupBy(filtered,'description')
 
-    var grouped    = _.groupBy(filtered,'description')
     var bsites_all = filtered.reduce(( a:BindingSite[],b:MixedLigand )=>{
       return [...a, b.present_in]
     },[])
@@ -98,38 +99,34 @@ export const BindingSitesReducer = (
     
 
     Object.entries(grouped).map(( l ) => {
+
+
       if (l[0].toLowerCase().match(_antibiotics_reg)){
-        antibioitcs = [...antibioitcs, {
-          [l[0]] : l[1]
-        }]
+        antibioitcs = [...antibioitcs, {[l[0]] : l[1]}]
       }
       else if(l[0].toLowerCase().includes('factor')){
-        factors = [...factors, {
-          [l[0]] : l[1]
-        }]
+        factors = [...factors, {[l[0]] : l[1]}]
       }
       else if(l[0].toLowerCase().includes('mrna')||l[0].toLowerCase().includes('messenger')){
-        mrna = [...mrna, {
-          [l[0]] : l[1]
-        }]
+        mrna = [...mrna, {[l[0]] : l[1]}]
       }
       else if(l[0].toLowerCase().includes('trna')||l[0].toLowerCase().includes('transfer')){
-        trna = [...trna, {
-          [l[0]] : l[1]
-        }]
+        trna = [...trna, {[l[0]] : l[1]}]
       }
       else {
-        (()=>{})()
+        other_uncategorized = [...other_uncategorized, {[l[0]] : l[1]}]
       }
     })
 
 		return {
       ...state,
-      bsites     : bsites_all,
-      factors    : factors,
-      antibiotics: antibioitcs,
-      mrna       : mrna,
-      trna       : trna
+      bsites             : bsites_all,
+      factors            : factors,
+      antibiotics        : antibioitcs,
+      mrna               : mrna,
+      trna               : trna,
+      other_uncategorized: other_uncategorized
+
     }
 
     case "FILE_REQUEST_ERROR":
