@@ -255,7 +255,7 @@ const BindingSites = () => {
 	const cur_ligclass: LigandClass | null         = useSelector((state: AppState) => state.binding_sites.current_ligand_class)
 	const cur_tgt: NeoStruct | null                = useSelector((state: AppState) => state.binding_sites.current_target)
 
-	const [cur_auth_asym_id, set_cur_auth_asym_id] = useState<string | null>(null)
+	// const [cur_auth_asym_id, set_cur_auth_asym_id] = useState<string | null>(null)
 
 	const bsites              = useSelector((state: AppState) => state.binding_sites.bsites)
 	const antibiotics         = useSelector((state: AppState) => state.binding_sites.antibiotics)
@@ -337,7 +337,7 @@ const BindingSites = () => {
 	const currentBindingSiteChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: BindingSite) => {
 		if (newvalue === null) {
 			dispatch(action.current_struct_change(null))
-			set_cur_auth_asym_id(null)
+			// set_cur_auth_asym_id(null)
 			__VIEWER_RESET()
 		} else {
 
@@ -581,7 +581,8 @@ const BindingSites = () => {
 
 	}
 
-	const highlightInterface = (source_auth_asym_id: string | null) => {
+	const highlightInterface = () => {
+
 
 		if (interface_data === null || interface_data === undefined) {
 			alert("Select a binding site or a ligand class.")
@@ -591,19 +592,21 @@ const BindingSites = () => {
 		var vis_data: MolStarResidue[] = []
 
 
+		console.log("Coloring data:", interface_data);
+		
+
 		for (var chain of Object.values(interface_data)) {
 			var reduced = chain.residues.reduce((x: MolStarResidue[], y: Residue) => {
 				if (y.residue_id > 0) {
 					x.push({
 						// @ts-ignore
 						// entity_id     : current_binding_site?.rcsb_id.toLowerCase(),
-						assmeblyId: '1',
-						auth_asym_id: y.parent_auth_asym_id,
-						sideChain: false,
-						residue_number: y.residue_id,
-						color: { r: 1, g: 200, b: 200 },
-						focus: false,
-
+						assmeblyId    : '1',
+						auth_asym_id  : y.parent_auth_asym_id,
+						// sideChain     : false,
+						auth_residue_number: y.residue_id,
+						color         : { r: 1, g: 200, b: 200 },
+						// focus         : false,
 					})
 				}
 				return x
@@ -612,7 +615,14 @@ const BindingSites = () => {
 			vis_data = [...vis_data, ...reduced]
 		}
 
+		console.log("Create vis_Data", vis_data);
+		
 
+		viewerInstance.visual.select({
+			data: vis_data, 
+					nonSelectedColor: { r: 255, g: 255, b: 255 }
+		})
+		
 		if (vis_data.length > 300) {
 			if (window.confirm("This ligand binds to more than 300 residues. Your browser might take some time to visualize it.")) {
 			}
@@ -621,32 +631,32 @@ const BindingSites = () => {
 			}
 		}
 
-		var by_chain: Record<string, MolStarResidue[]> = {}
-		for (var u of vis_data) {
-			if (Object.keys(by_chain).includes(u.auth_asym_id as string)) {
-				by_chain[u.auth_asym_id as string] = [...by_chain[u.auth_asym_id as string], u]
-			}
-			else {
-				by_chain[u.auth_asym_id as string] = [u]
-			}
-		}
+		// var by_chain: Record<string, MolStarResidue[]> = {}
+		// for (var u of vis_data) {
+		// 	if (Object.keys(by_chain).includes(u.auth_asym_id as string)) {
+		// 		by_chain[u.auth_asym_id as string] = [...by_chain[u.auth_asym_id as string], u]
+		// 	}
+		// 	else {
+		// 		by_chain[u.auth_asym_id as string] = [u]
+		// 	}
+		// }
 
-		viewerInstance.visual.select({
-			data: [{
-				auth_asym_id: source_auth_asym_id,
-				color: { r: 255, g: 100, b: 0 },
-				focus: true
-			}], nonSelectedColor: { r: 255, g: 255, b: 255 }
-		})
+		// viewerInstance.visual.select({
+		// 	data: [{
+		// 		auth_asym_id: source_auth_asym_id,
+		// 		color: { r: 255, g: 100, b: 0 },
+		// 		focus: true
+		// 	}], nonSelectedColor: { r: 255, g: 255, b: 255 }
+		// })
 
-		for (var chain_ress of Object.values(by_chain)) {
-			viewerInstance.visual.select(
-				{
-					data: chain_ress,
-					nonSelectedColor: { r: 240, g: 240, b: 240 },
-				}
-			)
-		}
+		// for (var chain_ress of Object.values(by_chain)) {
+		// 	viewerInstance.visual.select(
+		// 		{
+		// 			data: chain_ress,
+		// 			nonSelectedColor: { r: 240, g: 240, b: 240 },
+		// 		}
+		// 	)
+		// }
 	}
 
 	// No polymers in common between the binding site and the target structure
@@ -789,7 +799,7 @@ const BindingSites = () => {
 						variant={"outlined"}
 						style={[current_binding_site, cur_ligclass].includes(null) ? { color: "gray", textTransform: "none" } : { textTransform: "none" }}
 						onClick={() => {
-							highlightInterface(cur_auth_asym_id as string)
+							highlightInterface()
 
 						}}>
 						Visualize Binding Site
