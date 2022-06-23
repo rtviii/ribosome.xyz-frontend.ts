@@ -35,6 +35,7 @@ const Main: React.FC<MainProps> = (prop: MainProps) => {
     dispatch(requestBanMetadata("b", "SSU"));
     dispatch(requestBanMetadata("e", "SSU"));
     dispatch(requestBanMetadata("u", "SSU"));
+
     dispatch(request_all_bsites());
 
     for (var k of [

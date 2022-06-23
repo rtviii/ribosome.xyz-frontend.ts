@@ -33,23 +33,19 @@ const initialstateBindinginSitesReducer:BindingSitesReducerState = {
     error      : null,
     is_loading : false,
     errored_out: false,
-
     visualization_tab: 'origin',
 
     bsites        : [],
-
     factors      : [],
     antibiotics  : [],
     mrna         : [],
     trna         : [],
 
 
-    // mixed_ligands:MixedLigand[],
-
     current_ligand_class: null,
     current_binding_site: null,
-    current_target      : null,
 
+    current_target      : null,
 
     binding_site_data: null,
     prediction_data  : null,

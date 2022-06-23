@@ -61,6 +61,13 @@ interface MolStarResidue {
 // Tinge of blue for origin #aad5ff
 // Tinge of green for prediction #fff8bd
 
+
+const __VIEWER_RESET= ()=>{
+	viewerInstance.visual.reset({ camera: true, theme: true })
+      viewerInstance.visual.update({ moleculeId: 'none' })
+}
+
+
 const ChainAlignmentBlock = ({ src_struct, tgt_struct, nomenclature, tgt_aln, src_aln, aln_ids, tgt_strand, src_strand }: { src_struct: string, tgt_struct: string, nomenclature: string, tgt_strand: string, src_strand: string, tgt_aln: string, src_aln: string, aln_ids: number[] }) => {
 	const history = useHistory();
 	return <Paper
@@ -233,112 +240,55 @@ const BindingSites = () => {
 
 	const dispatch = useDispatch();
 
-	const current_binding_site: BindingSite | null = useSelector((state: AppState) => state.binding_sites.current_binding_site)
-	const cur_ligclass: LigandClass | null = useSelector((state: AppState) => state.binding_sites.current_ligand_class)
-	const cur_tgt: NeoStruct | null = useSelector((state: AppState) => state.binding_sites.current_target)
-
-	const [cur_auth_asym_id, set_cur_auth_asym_id] = useState<string | null>(null)
-
-	const bsites = useSelector((state: AppState) => state.binding_sites.bsites)
-	const antibiotics = useSelector((state: AppState) => state.binding_sites.antibiotics)
-	const factors = useSelector((state: AppState) => state.binding_sites.factors)
-	const mrna = useSelector((state: AppState) => state.binding_sites.mrna)
-	const trna = useSelector((state: AppState) => state.binding_sites.trna)
-	// const mixed       = useSelector                ((state: AppState) => state.binding_sites.mixed_ligands   )
-
-	const [bsites_derived, set_derived_bsites] = useState<BindingSite[]>()
-	useEffect(() => { set_derived_bsites(bsites) }, [bsites])
-	const [derived_antibiotics, set_derived_antibiotics] = useState<LigandClass[]>([])
-	useEffect(() => { set_derived_antibiotics(antibiotics) }, [antibiotics])
-	const [derived_factors, set_derived_factors] = useState<LigandClass[]>([])
-	useEffect(() => { set_derived_factors(factors) }, [factors])
-	const [derived_mrna, set_derived_mrna] = useState<LigandClass[]>([])
-	useEffect(() => { set_derived_mrna(mrna) }, [mrna])
-	const [derived_trna, set_derived_trna] = useState<LigandClass[]>([])
-	useEffect(() => { set_derived_trna(trna) }, [trna])
-
-
-	const interface_data = useSelector((state: AppState) => state.binding_sites.binding_site_data)
-	const prediction_data = useSelector((state: AppState) => state.binding_sites.prediction_data)
-
-
-	useEffect(() => {
-		console.log("Got interface data:", interface_data)
-	}, [interface_data])
-
-	const cur_vis_tab = useSelector((state: AppState) => state.binding_sites.visualization_tab)
-	const target_structs = useSelector((state: AppState) => state.structures.neo_response)
-
-
+	// Mounting the viewer
 	useEffect(() => {
 		var options = {
-			moleculeId: 'Element to visualize can be selected above.',
-			hideControls: true,
+			moleculeId      : 'Element to visualize can be selected above.',
+			hideControls    : true,
 			layoutIsExpanded: false,
 		}
 		var viewerContainer = document.getElementById('molstar-viewer');
 		viewerInstance.render(viewerContainer, options);
 	}, [])
 
-	useEffect(() => {
-		if (prediction_data !== null && Object.keys(prediction_data).length === 0) {
-			// make this an "Until removed" toast.
-			alert(`Could not find matching classes of polymers in target structure (${cur_tgt?.struct.rcsb_id}) for this binding site. Would you mind trying another target?`)
-		}
+	const current_binding_site: BindingSite | null = useSelector((state: AppState) => state.binding_sites.current_binding_site)
+	const cur_ligclass: LigandClass | null         = useSelector((state: AppState) => state.binding_sites.current_ligand_class)
+	const cur_tgt: NeoStruct | null                = useSelector((state: AppState) => state.binding_sites.current_target)
 
-	}, [prediction_data])
+	const [cur_auth_asym_id, set_cur_auth_asym_id] = useState<string | null>(null)
 
+	const bsites      = useSelector((state: AppState) => state.binding_sites.bsites)
+	const antibiotics = useSelector((state: AppState) => state.binding_sites.antibiotics)
+	const factors     = useSelector((state: AppState) => state.binding_sites.factors)
+	const mrna        = useSelector((state: AppState) => state.binding_sites.mrna)
+	const trna        = useSelector((state: AppState) => state.binding_sites.trna)
+	// const mixed       = useSelector                ((state: AppState) => state.binding_sites.mixed_ligands   )
 
-	const color_prediction = () => {
-		if (prediction_data == null) {
-			return
-		}
+	const [bsites_derived, set_derived_bsites] = useState<BindingSite[]>()
+	useEffect(() => { set_derived_bsites(bsites) }, [bsites])
 
-		var prediction_vis_data: MolStarResidue[] = []
-		for (var chain of Object.values(prediction_data)) {
-			for (var i of chain.target.tgt_ids) {
-				if (i > 0) {
-					prediction_vis_data.push({
-						residue_number: i,
-						focus: true,
-						color: { r: 1, g: 200, b: 200 },
-						auth_asym_id: chain.target.auth_asym_id
-					})
-				}
-			}
-		}
-		if (prediction_vis_data.length > 300) {
-			if (window.confirm("This ligand binds to more than 300 residues. Your browser might take some time to visualize it.")) {
-			}
-			else {
-				return
-			}
-		}
+	const [derived_antibiotics, set_derived_antibiotics] = useState<LigandClass[]>([])
+	useEffect(() => { set_derived_antibiotics(antibiotics) }, [antibiotics])
+
+	const [derived_factors, set_derived_factors] = useState<LigandClass[]>([])
+	useEffect(() => { set_derived_factors(factors) }, [factors])
+
+	const [derived_mrna, set_derived_mrna] = useState<LigandClass[]>([])
+	useEffect(() => { set_derived_mrna(mrna) }, [mrna])
+
+	const [derived_trna, set_derived_trna] = useState<LigandClass[]>([])
+	useEffect(() => { set_derived_trna(trna) }, [trna])
 
 
-		var by_chain: Record<string, MolStarResidue[]> = {}
-		for (var u of prediction_vis_data) {
-			if (Object.keys(by_chain).includes(u.auth_asym_id as string)) {
-				by_chain[u.auth_asym_id as string] = [...by_chain[u.auth_asym_id as string], u]
-			}
-			else {
-				by_chain[u.auth_asym_id as string] = [u]
-			}
+	const interface_data  = useSelector((state: AppState) => state.binding_sites.binding_site_data)
+	const prediction_data = useSelector((state: AppState) => state.binding_sites.prediction_data)
 
-		}
+	const cur_vis_tab    = useSelector((state: AppState) => state.binding_sites.visualization_tab)
+	const target_structs = useSelector((state: AppState) => state.structures.neo_response)
 
-		for (var chain_ress of Object.values(by_chain)) {
-			viewerInstance.visual.select(
-				{
-					data: chain_ress,
-					// focus           : true,
-					nonSelectedColor: { r: 240, g: 240, b: 240 },
-				}
-			)
 
-		}
 
-	}
+
 
 	const highlightInterface = (source_auth_asym_id: string | null) => {
 		console.log("Called highlihgt iface.");
@@ -414,43 +364,40 @@ const BindingSites = () => {
 	const updateBindingSiteData = (current_bs: BindingSite, curligand: LigandClass) => {
 
 		if (curligand[getdesc(curligand)][0].polymer) {
+			console.log("got a polymer ", curligand[getdesc(curligand)][0]);
 			console.log("Dispatching:");
 			console.log(current_bs.auth_asym_id, curligand[getdesc(curligand)][0].polymer, current_bs.rcsb_id)
 			dispatch(action.request_LigandBindingSite(current_bs.auth_asym_id as string, curligand[getdesc(curligand)][0].polymer, current_bs.rcsb_id))
+
 		} else {
+			console.log("got a ligand ", curligand[getdesc(curligand)][0]);
 			dispatch(action.request_LigandBindingSite(curligand[getdesc(curligand)][0].chemicalId as string, curligand[getdesc(curligand)][0].polymer, current_bs.rcsb_id))
 		}
+
 	}
 
 
-	var comparefn = (a: LigandClass, b: LigandClass) => {
-		var akey = Object.keys(a)[0];
-		var bkey = Object.keys(b)[0];
-
-		if (akey.toLowerCase() > bkey.toLowerCase()) {
-			return 1
-		}
-
-		if (akey.toLowerCase() < bkey.toLowerCase()) {
-			return -1
-		}
-		else { return 0 }
-	}
 
 
 	const currentBindingSiteChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: BindingSite) => {
+		console.log("Handler Changed:", newvalue);
 		if (newvalue === null) {
 			dispatch(action.current_struct_change(null))
 			set_cur_auth_asym_id(null)
+			__VIEWER_RESET()
 		} else {
 			if (newvalue.auth_asym_id !== undefined) {
-				set_cur_auth_asym_id(newvalue.auth_asym_id)
+				set_cur_auth_asym_id(newvalue.auth_asym_id) 
+				dispatch(action.current_struct_change(newvalue))
+			}else{
+				dispatch(action.current_struct_change(newvalue))
 			}
-			dispatch(action.current_struct_change(newvalue))
 		}
 	}
+
 	const currentLigandClassChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: LigandClass) => {
 
+		console.log("Current lignad class change");
 		console.log(cur_ligclass === newvalue);
 
 		if (newvalue === null) {
@@ -485,8 +432,6 @@ const BindingSites = () => {
 	}, [cur_ligclass])
 
 	useEffect(() => {
-
-		console.log("Current binding site changed to ", current_binding_site);
 		if (current_binding_site === null) {
 			set_derived_antibiotics(antibiotics)
 			set_derived_factors(factors)
@@ -495,8 +440,7 @@ const BindingSites = () => {
 		} else {
 			if (cur_ligclass === null) {
 				set_derived_antibiotics(
-					antibiotics
-						.filter((ligclass: LigandClass) => { return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) })
+					antibiotics.filter((ligclass: LigandClass) => { return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) })
 				)
 				set_derived_factors(factors
 					.filter((ligclass: LigandClass) => { return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) })
@@ -504,23 +448,14 @@ const BindingSites = () => {
 				set_derived_mrna(mrna
 					.filter((ligclass: LigandClass) => { return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) })
 				)
-				set_derived_trna(trna
-					.filter((ligclass: LigandClass) => { return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) })
+				set_derived_trna(trna.filter((ligclass: LigandClass) => { return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) })
 				)
 
 			}
 			else {
 				updateBindingSiteData(current_binding_site, cur_ligclass)
 			}
-
 			if (cur_vis_tab === 'origin') {
-
-				// addToast(`Structure ${current_binding_site?.rcsb_id} is being loaded.`,
-
-				// 	{
-				// 		appearance: 'info',
-				// 		autoDismiss: true,
-				// 	})
 
 				viewerInstance.visual.update({
 					assemblyId: '1',
@@ -529,17 +464,28 @@ const BindingSites = () => {
 			}
 
 		}
+
 		dispatch(action._partial_state_change({ 'binding_site_data': null }))
 		dispatch(action.current_target_change(null))
 	}, [current_binding_site])
 
+
+
+
+
+
+
+
+
+	const getdesc = (l: LigandClass): string => Object.keys(l)[0]
+
+
+
+
+	// ------------ Tabs state ------------
 	useEffect(() => {
 		if (cur_tgt !== null) {
-
 			if (cur_ligclass !== null) {
-				console.log("Pre dispatch: ");
-				console.log(current_binding_site);
-				console.log(cur_ligclass[getdesc(cur_ligclass)][0].polymer);
 				if (cur_ligclass[getdesc(cur_ligclass)][0].polymer === true) {
 					dispatch(action.request_Prediction(
 						true,
@@ -548,6 +494,7 @@ const BindingSites = () => {
 						cur_tgt.struct.rcsb_id
 					))
 				}
+
 				else {
 					dispatch(action.request_Prediction(
 						false,
@@ -555,7 +502,6 @@ const BindingSites = () => {
 						current_binding_site!.rcsb_id as string,
 						cur_tgt!.struct.rcsb_id,
 					))
-
 				}
 			}
 
@@ -572,7 +518,6 @@ const BindingSites = () => {
 	}, [cur_tgt])
 
 	useEffect(() => {
-
 		if (cur_tgt != null && cur_vis_tab === 'prediction') {
 
 			// 		addToast(`Switched into PREDICTION view.`,
@@ -612,19 +557,76 @@ const BindingSites = () => {
 		}
 	}, [cur_vis_tab])
 
+	// ------------ + ------------------------------------------------------------
+
+	// msa state
 	const [msaOpen, setMsaOpen] = useState<boolean>(false)
 	const handleopen = () => { setMsaOpen(true) }
 	const handleclose = () => { setMsaOpen(false) }
 
-	// const { addToast } = 								useToasts();
+
+	// paint the prediction data to molstar viewer
+	const color_prediction = () => {
+		if (prediction_data == null) {
+			return
+		}
+
+		var prediction_vis_data: MolStarResidue[] = []
+		for (var chain of Object.values(prediction_data)) {
+			for (var i of chain.target.tgt_ids) {
+				if (i > 0) {
+					prediction_vis_data.push({
+						residue_number: i,
+						focus: true,
+						color: { r: 1, g: 200, b: 200 },
+						auth_asym_id: chain.target.auth_asym_id
+					})
+				}
+			}
+		}
+		if (prediction_vis_data.length > 300) {
+			if (window.confirm("This ligand binds to more than 300 residues. Your browser might take some time to visualize it.")) {
+			}
+			else {
+				return
+			}
+		}
 
 
+		var by_chain: Record<string, MolStarResidue[]> = {}
+		for (var u of prediction_vis_data) {
+			if (Object.keys(by_chain).includes(u.auth_asym_id as string)) {
+				by_chain[u.auth_asym_id as string] = [...by_chain[u.auth_asym_id as string], u]
+			}
+			else {
+				by_chain[u.auth_asym_id as string] = [u]
+			}
 
-	const getdesc = (l: LigandClass): string => Object.keys(l)[0]
+		}
+
+		for (var chain_ress of Object.values(by_chain)) {
+			viewerInstance.visual.select(
+				{
+					data: chain_ress,
+					// focus           : true,
+					nonSelectedColor: { r: 240, g: 240, b: 240 },
+				}
+			)
+
+		}
+
+	}
+
+	// No polymers in common between the binding site and the target structure
+	useEffect(() => {
+		if (prediction_data !== null && Object.keys(prediction_data).length === 0) {
+			// make this an "Until removed" toast.
+			alert(`Could not find matching classes of polymers in target structure (${cur_tgt?.struct.rcsb_id}) for this binding site. Would you mind trying another target?`)
+		}
+	}, [prediction_data])
+
 
 	const MixedLigandComparison = (a: LigandClass, b: LigandClass) => {
-
-
 
 		if (a !== null && b !== null) {
 			var ac = Object.keys(a)[0]

@@ -2,7 +2,6 @@ import { flattenDeep, isPlainObject, merge } from "lodash";
 import { Dispatch } from "redux";
 import { getNeo4jData } from "../../AsyncActions/getNeo4jData";
 import { BindingSite, LigandBindingSite, LigandClass, LigandPrediction, MixedLigand, NeoStruct } from "../../DataInterfaces";
-import { Ligand, Protein } from "../../RibosomeTypes";
 import { BindingSitesReducer, BindingSitesReducerState } from "./BindingSitesReducer";
 
 export type BSitesFilter = "SPECIES" | "SEARCH" | "YEAR" | "EXPERIMENTAL_METHOD" | "RESOLUTION"
@@ -123,7 +122,11 @@ export const current_target_change = (tgt: NeoStruct | null): currentPredictionC
 })
 
 export const request_LigandBindingSite = (ligandlike_id:string, is_polymer:boolean, src_struct: string) => {
+	console.log(`Requested Ligand Binding Site for [ligandlike id:${ligandlike_id}, polymer:${is_polymer}, in struct:${src_struct}]`);
+	// ligandlike id is either the auth_asym_id of the polymer in question or ligand name (e.g. "SPM")
 	return async (dispatch: Dispatch<BSitesActions>) => {
+		dispatch(_partial_state_change({ 'binding_site_data': null }))
+
 		dispatch({
 			type: "REQUEST_LIGAND_BINDING_SITE",
 		});
@@ -204,6 +207,12 @@ export const request_all_bsites = () => {
 			getNeo4jData("neo4j", { endpoint: "get_all_ligands", params: null }),
 			getNeo4jData("neo4j", { endpoint: "get_all_ligandlike", params: null })
 		]).then(responses => {
+			console.log("Received all ligands and ligandlike, ", responses);
+			console.log("searching for 6rw4");
+			console.log((responses[0].data as AllLigandsResponseType).filter(r => r.presentIn.rcsb_id === "6RW4"));
+			console.log((responses[1].data as AllLigandlikeResponseType).filter(r => r.presentIn.rcsb_id === "6RW4"));
+
+			
 			var lig_coerced_to_mixed = (responses[0].data as AllLigandsResponseType).map(_ => ({
 				description: _.description,
 				polymer    : _.polymer    ,

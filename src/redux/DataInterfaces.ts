@@ -55,7 +55,7 @@ export type BindingSite  =  {
                                  src_organism_ids   : number[],
                                  description        : string,
                                  citation_title     : string,
-                                 auth_asym_id     ? : string;
+                                 auth_asym_id     ? : string;    // if it's a polymer, i suppose.
                                  expMethod          : string,
                                  rcsb_id            : string,
                                  resolution         : number,
