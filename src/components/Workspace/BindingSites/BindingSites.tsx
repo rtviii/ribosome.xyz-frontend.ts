@@ -323,22 +323,13 @@ const BindingSites = () => {
 
 	// This functions updates the binding site data (i.e. the neighborhood/interface)
 	// it is responsible for making requests to the backend via request_LigandBindingSite
-	const updateBindingSiteData = (current_bs: BindingSite, curligand: LigandClass) => {
-		if (curligand[getdesc(curligand)][0].polymer) {
-			// checks 
 
-			if (current_bs.auth_asym_id === undefined) {
-				alert("what the fuck, current_bs.auth_asym_id is null")
-				console.log("bsite auth_asymid", current_bs);
-			}
-
-			else {
-				dispatch(action.request_LigandBindingSite(current_bs.auth_asym_id, curligand[getdesc(curligand)][0].polymer, current_bs.rcsb_id))
-			}
-
-
+	const updateBindingSiteData = (current_bs: BindingSite, mixedligand: MixedLigand) => {
+		if (mixedligand.polymer) {
+			
+			dispatch(action.request_LigandBindingSite(mixedligand.present_in.auth_asym_id as string, mixedligand.polymer, current_bs.rcsb_id))
 		} else {
-			dispatch(action.request_LigandBindingSite(curligand[getdesc(curligand)][0].chemicalId as string, curligand[getdesc(curligand)][0].polymer, current_bs.rcsb_id))
+			dispatch(action.request_LigandBindingSite(mixedligand.chemicalId as string, mixedligand.polymer, current_bs.rcsb_id))
 		}
 
 	}
@@ -366,12 +357,22 @@ const BindingSites = () => {
 	}
 
 	useEffect(() => {
+		// On ligand class update:
+		
 		if (cur_ligclass === null) {
+			// if ligclass is null, set all binding sites to original(defilter)
 			set_derived_bsites(bsites)
+			// ?CLEANUP
+			
 		} else {
-			set_derived_bsites(bsites.filter(bs => cur_ligclass[getdesc(cur_ligclass)].map(f => f.description).includes(bs.description)))
+			// if its not null, filter binding sites on whether the description matches that of the just-chosen ligand class
+			set_derived_bsites(bsites.filter(( bs:BindingSite ) => { 
+				return cur_ligclass[getdesc(cur_ligclass)].map((mixed_ligand:MixedLigand) => mixed_ligand.description).includes(bs.description) 
+			}))
+
 			if (current_binding_site !== null) {
-				updateBindingSiteData(current_binding_site as BindingSite, cur_ligclass)
+				let curligand_with_auth_id = cur_ligclass[getdesc(cur_ligclass)].filter((ml:MixedLigand)=>{return ml.present_in.rcsb_id === current_binding_site.rcsb_id})[0]
+				updateBindingSiteData(current_binding_site as BindingSite, curligand_with_auth_id)
 			}
 		}
 		dispatch(action._partial_state_change({ 'binding_site_data': null }))
@@ -408,7 +409,9 @@ const BindingSites = () => {
 			}
 
 			else {
-				updateBindingSiteData(current_binding_site, cur_ligclass)
+
+				let curligand_with_auth_id = cur_ligclass[getdesc(cur_ligclass)].filter((ml:MixedLigand)=>{return ml.present_in.rcsb_id === current_binding_site.rcsb_id})[0]
+				updateBindingSiteData(current_binding_site, curligand_with_auth_id)
 			}
 
 			if (cur_vis_tab === 'origin') {

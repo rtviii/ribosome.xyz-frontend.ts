@@ -84,7 +84,6 @@ export const BindingSitesReducer = (
     var filtered = action.mixed_ligands
     var grouped  = _.groupBy(filtered,'description')
 
-    console.log("grouped: ", grouped)
     var bsites_all = filtered.reduce(( a:BindingSite[],b:MixedLigand )=>{
       return [...a, b.present_in]
     },[])

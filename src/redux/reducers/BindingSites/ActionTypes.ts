@@ -209,8 +209,8 @@ export const request_all_bsites = () => {
 		]).then(responses => {
 			// console.log("Received all ligands and ligandlike, ", responses);
 			// console.log("searching for 6rw4");
-			console.log((responses[0].data as AllLigandsResponseType).filter(r => r.presentIn.rcsb_id === "6RW4"));
-			console.log((responses[1].data as AllLigandlikeResponseType).filter(r => r.presentIn.rcsb_id === "6RW4"));
+			// console.log((responses[0].data as AllLigandsResponseType).filter(r => r.presentIn.rcsb_id === "6RW4"));
+			// console.log((responses[1].data as AllLigandlikeResponseType).filter(r => r.presentIn.rcsb_id === "6RW4"));
 
 			
 			var lig_coerced_to_mixed = (responses[0].data as AllLigandsResponseType).map(_ => ({
