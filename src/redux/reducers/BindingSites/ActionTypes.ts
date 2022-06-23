@@ -207,8 +207,8 @@ export const request_all_bsites = () => {
 			getNeo4jData("neo4j", { endpoint: "get_all_ligands", params: null }),
 			getNeo4jData("neo4j", { endpoint: "get_all_ligandlike", params: null })
 		]).then(responses => {
-			console.log("Received all ligands and ligandlike, ", responses);
-			console.log("searching for 6rw4");
+			// console.log("Received all ligands and ligandlike, ", responses);
+			// console.log("searching for 6rw4");
 			console.log((responses[0].data as AllLigandsResponseType).filter(r => r.presentIn.rcsb_id === "6RW4"));
 			console.log((responses[1].data as AllLigandlikeResponseType).filter(r => r.presentIn.rcsb_id === "6RW4"));
 
@@ -224,7 +224,6 @@ export const request_all_bsites = () => {
 				description : _.description,
 				polymer     : _.polymer,
 				present_in  : _.presentIn
-
 			}))
 
 			 

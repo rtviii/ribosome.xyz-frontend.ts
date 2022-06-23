@@ -29,7 +29,7 @@ const collapseFilter = (action: any) => {
 const logger = createLogger({
   predicate: (getState, action:AppActions) =>  ![
   STRUCTURE_CHANGE,
-  CURRENT_STRUCTURE_CHANGE,
+  // CURRENT_STRUCTURE_CHANGE,
   CURRENT_LIGAND_CHANGE,
   REQUEST_LIGAND_BINDING_SITE,
   LIGAND_BINDING_SITE_SUCCESS,
@@ -55,8 +55,7 @@ const logger = createLogger({
   REQUEST_RNA_CLASS_ERR        ,
   RESET_ACTION,
   "ANY"
-].includes( action.type ) ,
-   collapsed: collapseFilter });
+].includes( action.type ),collapsed: collapseFilter });
 
 export const rootReducer = combineReducers({
   visualization: VisualizationReducer,
