@@ -324,16 +324,12 @@ const BindingSites = () => {
 	// This functions updates the binding site data (i.e. the neighborhood/interface)
 	// it is responsible for making requests to the backend via request_LigandBindingSite
 	const updateBindingSiteData = (current_bs: BindingSite, curligand: LigandClass) => {
-		console.log("Binding site data update")
 		if (curligand[getdesc(curligand)][0].polymer) {
-			console.log("got a polymer ", curligand[getdesc(curligand)][0]);
-			console.log("Dispatching:");
-			console.log(current_bs.auth_asym_id, curligand[getdesc(curligand)][0].polymer, current_bs.rcsb_id)
 			// checks 
 
 			if (current_bs.auth_asym_id === undefined) {
 				alert("what the fuck, current_bs.auth_asym_id is null")
-				console.log(current_bs);
+				console.log("bsite auth_asymid", current_bs);
 			}
 
 			else {
@@ -342,7 +338,6 @@ const BindingSites = () => {
 
 
 		} else {
-			console.log("got a ligand ", curligand[getdesc(curligand)][0]);
 			dispatch(action.request_LigandBindingSite(curligand[getdesc(curligand)][0].chemicalId as string, curligand[getdesc(curligand)][0].polymer, current_bs.rcsb_id))
 		}
 
@@ -354,7 +349,6 @@ const BindingSites = () => {
 			set_cur_auth_asym_id(null)
 			__VIEWER_RESET()
 		} else {
-			console.log("dispatching current struct change", newvalue);
 
 			dispatch(action.current_struct_change(newvalue))
 		}
@@ -362,8 +356,6 @@ const BindingSites = () => {
 
 	const currentLigandClassChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: LigandClass) => {
 
-		console.log("Current lignad class change");
-		console.log(cur_ligclass === newvalue);
 
 		if (newvalue === null) {
 			dispatch(action.current_ligand_change(null))
@@ -399,7 +391,6 @@ const BindingSites = () => {
 			// if the current binding site changes while the ligclass is null, we filter liglike categories by "presentIn" on that binding site's rcsb_id
 			if (cur_ligclass === null) {
 				// 
-				console.log("filterign on the present_in")
 				set_derived_antibiotics(antibiotics.filter((ligclass: LigandClass) => { 
 						
 
@@ -588,7 +579,6 @@ const BindingSites = () => {
 	}
 
 	const highlightInterface = (source_auth_asym_id: string | null) => {
-		console.log("Called highlihgt iface.");
 
 		if (interface_data === null || interface_data === undefined) {
 			alert("Select a binding site or a ligand class.")
@@ -620,7 +610,6 @@ const BindingSites = () => {
 		}
 
 
-		console.log("Painting visdata", vis_data);
 		if (vis_data.length > 300) {
 			if (window.confirm("This ligand binds to more than 300 residues. Your browser might take some time to visualize it.")) {
 			}
@@ -721,7 +710,6 @@ const BindingSites = () => {
 								}
 								var parens = ""
 								if (bsites_derived !== undefined) {
-									console.log(cur_ligclass);
 
 									parens = cur_ligclass === null ? `${bsites_derived.length}` : `${bsites_derived.length} for ${Object.keys(cur_ligclass)[0]}`
 								} else {
