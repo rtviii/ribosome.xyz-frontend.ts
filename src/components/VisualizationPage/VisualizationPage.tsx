@@ -41,6 +41,7 @@ import { DialogProps } from '@mui/material/Dialog';
 import { requestBanClass } from "../../redux/reducers/Proteins/ActionTypes";
 import { coerce_full_structure_to_neostruct } from "../../redux/reducers/Visualization/VisualizationReducer";
 import { debounce } from 'lodash'
+import { log } from "console";
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -476,8 +477,14 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
 
   // takes in a full protein or rna
   const [currentChainFull, setCurrentChainFull] = React.useState<Protein | RNA | null>(null)
-  const [residueRange, setResidueRange] = React.useState<number[]>([0, 0]);           // current slider value
-  const [MaxRes, setMaxRes] = React.useState<number>(0);                  // keep track of what's the max residue range
+  const [residueRange, setResidueRange]         = React.useState<number[]>([0, 0]);           // current slider value
+  const [MaxRes, setMaxRes]                     = React.useState<number>(0);                  // keep track of what's the max residue range
+
+  useEffect(()=>{
+
+    console.log("got new auth asymid  and full struct cahce. max res is", MaxRes );
+
+  },[MaxRes])
 
   const rangeChangeHandler = (event: any) => {
     let _: number[] = event.target.value;
@@ -487,6 +494,7 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
     setResidueRange(_)
     if (_[0] === _[1]) { return }
   }
+
   useEffect(() => {
     redux_effect(residueRange)
   }, [residueRange])
@@ -494,13 +502,13 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
   useEffect(() => {
     if (full_structure_cache && auth_asym_id) {
       // pluck the chain off the full structure
-      const pickFullChain = [...full_structure_cache.proteins, ...(() => {
+      const pickFullChain = [...full_structure_cache.proteins, ...(() => { 
+
         if (full_structure_cache.rnas === undefined || full_structure_cache.rnas === null) {
           return []
         } else {
           return full_structure_cache.rnas
-        }
-      })()].filter(c => c.auth_asym_id === auth_asym_id)
+        }})()].filter(c => c.auth_asym_id === auth_asym_id)
       if (pickFullChain.length < 1) {
         console.log("Haven't found chain with this asym_id on the full structure. Something went terribly wrong.");
       } else {
@@ -508,14 +516,9 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
         setResidueRange([0, pickFullChain[0].entity_poly_seq_length])
         setMaxRes(pickFullChain[0].entity_poly_seq_length)
       }
-    }
-    if (full_structure_cache === null) {
+    }else{
       setCurrentChainFull(null)
       setMaxRes(0)
-    }
-
-    else if (auth_asym_id === null) {
-      // setInFocus(null)
     }
 
   }, [
@@ -523,13 +526,6 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
     full_structure_cache
   ])
 
-
-
-
-
-  const handleSearchRange = () => {
-    if (auth_asym_id === null) { window.alert('Chain to highlight is null. Provide asym_id to paint.'); return }
-  }
 
 
   const handleResRangeStart = (endVal: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -663,9 +659,6 @@ case "U":
             <TextField
               value    = {residueRange[0]}
               onChange = {handleResRangeStart(residueRange[1])}
-              // label    = {currentChainFull && currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]] ?
-              //   `${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}` : ``}
-
               label    = {
               <div style={{
                 fontWeight:"bold",

@@ -211,6 +211,8 @@ export default function ProteinAlignment() {
           chain: null
         }))
 
+        setMaxRange1(0)
+
         dispatch(cache_full_struct(null, 0))
       }
       else {
@@ -229,6 +231,8 @@ export default function ProteinAlignment() {
         }))
         dispatch(cache_full_struct(null, 1))
 
+        setMaxRange2(0)
+
       } else {
 
         dispatch(superimpose_slot_change(2, { struct: newvalue, }))
@@ -239,22 +243,28 @@ export default function ProteinAlignment() {
     }
   }
 
+  const [ maxRange1, setMaxRange1 ] = useState(0)
+  const [ maxRange2, setMaxRange2 ] = useState(0)
+
   const handleChainChange = (chain_number: number) => (event: React.ChangeEvent<{ value: unknown }>,
     newvalue: PolymerMinimal) => {
-
     console.log("Changing chain. Newavalue: ", newvalue);
-
     if (chain_number === 1) {
       if (newvalue === null) {
+
+        setMaxRange1(0)
         dispatch(superimpose_slot_change(1, {
           chain: null
         }))
         // setRangeSlider2([0, minDistance])
 
       } else {
+
+        setMaxRange1(newvalue.entity_poly_seq_one_letter_code.length)
         dispatch(superimpose_slot_change(1, {
           chain: newvalue
         }))
+
 
         // setRangeSlider1([0, newvalue.entity_poly_seq_one_letter_code.length - 1])
 
@@ -264,13 +274,17 @@ export default function ProteinAlignment() {
     if (chain_number === 2) {
       if (newvalue === null) {
 
+        setMaxRange2(0)
         dispatch(superimpose_slot_change(2, {
           chain: null
         }))
         // set_auth_asym_id2(null)
         // setChainStructPair2([null, chainStructPair2[1]])
         // setRangeSlider2([0, minDistance])
+
       } else {
+
+        setMaxRange2(newvalue.entity_poly_seq_one_letter_code.length)
         dispatch(superimpose_slot_change(2, {
           chain: newvalue
         }))
@@ -286,36 +300,6 @@ export default function ProteinAlignment() {
     text: ""
   }
 
-  // const handleChange1 = (
-  //   event: Event,
-  //   newValue: number | number[],
-  //   activeThumb: number,
-  // ) => {
-  //   if (!Array.isArray(newValue)) {
-  //     return;
-  //   }
-  //   if (activeThumb === 0) {
-  //     setRangeSlider1([Math.min(newValue[0], rangeSlider1[1] - minDistance), rangeSlider1[1]]);
-  //   } else {
-  //     setRangeSlider1([rangeSlider1[0], Math.max(newValue[1], rangeSlider1[0] + minDistance)]);
-  //   }
-  // };
-
-  // const handleChange2 = (
-  //   event: Event,
-  //   newValue: number | number[],
-  //   activeThumb: number,
-  // ) => {
-  //   if (!Array.isArray(newValue)) {
-  //     return;
-  //   }
-
-  //   if (activeThumb === 0) {
-  //     setRangeSlider2([Math.min(newValue[0], rangeSlider2[1] - minDistance), rangeSlider2[1]]);
-  //   } else {
-  //     setRangeSlider2([rangeSlider2[0], Math.max(newValue[1], rangeSlider2[0] + minDistance)]);
-  //   }
-  // };
 
   return (
     <Grid container xs={12} spacing={1} style={{ outline: "1px solid gray", height: "100vh" }} alignContent="flex-start">
