@@ -538,10 +538,16 @@ const BindingSites = () => {
 			for (var i of chain.target.tgt_ids) {
 				if (i > 0) {
 					prediction_vis_data.push({
-						residue_number: i,
-						focus: true,
-						color: { r: 1, g: 200, b: 200 },
-						auth_asym_id: chain.target.auth_asym_id
+						// @ts-ignore
+						// entity_id     : current_binding_site?.rcsb_id.toLowerCase(),
+						assmeblyId    : '1',
+						auth_asym_id  : chain.target.auth_asym_id,
+						// sideChain     : false,
+						auth_residue_number: i,
+						color         : { r: 1, g: 200, b: 200 },
+						// focus         : false,
+
+
 					})
 				}
 			}
@@ -554,28 +560,12 @@ const BindingSites = () => {
 			}
 		}
 
+		viewerInstance.visual.select({
+			data: prediction_vis_data, 
+			nonSelectedColor: { r: 255, g: 255, b: 255 }
+		})
 
-		var by_chain: Record<string, MolStarResidue[]> = {}
-		for (var u of prediction_vis_data) {
-			if (Object.keys(by_chain).includes(u.auth_asym_id as string)) {
-				by_chain[u.auth_asym_id as string] = [...by_chain[u.auth_asym_id as string], u]
-			}
-			else {
-				by_chain[u.auth_asym_id as string] = [u]
-			}
 
-		}
-
-		for (var chain_ress of Object.values(by_chain)) {
-			viewerInstance.visual.select(
-				{
-					data: chain_ress,
-					// focus           : true,
-					nonSelectedColor: { r: 240, g: 240, b: 240 },
-				}
-			)
-
-		}
 
 	}
 
@@ -613,13 +603,7 @@ const BindingSites = () => {
 			vis_data = [...vis_data, ...reduced]
 		}
 
-		console.log("Create vis_Data", vis_data);
-		
 
-		viewerInstance.visual.select({
-			data: vis_data, 
-					nonSelectedColor: { r: 255, g: 255, b: 255 }
-		})
 		
 		if (vis_data.length > 300) {
 			if (window.confirm("This ligand binds to more than 300 residues. Your browser might take some time to visualize it.")) {
@@ -629,32 +613,10 @@ const BindingSites = () => {
 			}
 		}
 
-		// var by_chain: Record<string, MolStarResidue[]> = {}
-		// for (var u of vis_data) {
-		// 	if (Object.keys(by_chain).includes(u.auth_asym_id as string)) {
-		// 		by_chain[u.auth_asym_id as string] = [...by_chain[u.auth_asym_id as string], u]
-		// 	}
-		// 	else {
-		// 		by_chain[u.auth_asym_id as string] = [u]
-		// 	}
-		// }
-
-		// viewerInstance.visual.select({
-		// 	data: [{
-		// 		auth_asym_id: source_auth_asym_id,
-		// 		color: { r: 255, g: 100, b: 0 },
-		// 		focus: true
-		// 	}], nonSelectedColor: { r: 255, g: 255, b: 255 }
-		// })
-
-		// for (var chain_ress of Object.values(by_chain)) {
-		// 	viewerInstance.visual.select(
-		// 		{
-		// 			data: chain_ress,
-		// 			nonSelectedColor: { r: 240, g: 240, b: 240 },
-		// 		}
-		// 	)
-		// }
+		viewerInstance.visual.select({
+			data: vis_data, 
+					nonSelectedColor: { r: 255, g: 255, b: 255 }
+		})
 	}
 
 	// No polymers in common between the binding site and the target structure
