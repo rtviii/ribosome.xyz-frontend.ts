@@ -4,8 +4,13 @@ import qs from 'qs'
 import { ProteinClass, RNAClass } from "../RibosomeTypes";
 
 const BACKEND: any = process.env.REACT_APP_DJANGO_URL;
-type DjangoAPIs = "neo4j" | "static_files"
+type DjangoAPIs = "neo4j" | "static_files" | "utils"
 
+type UtilsEndpoints  = number_of_structures;
+interface number_of_structures{
+  endpoint:"number_of_structures",
+  params:null
+};
 
 type StaticFilesEndpoints =
   | ranged_align
@@ -118,7 +123,8 @@ type Neo4jEndpoints =
   | get_all_ligandlike
   | get_full_structure
   | get_RibosomeStructure
-type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
+
+type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints | UtilsEndpoints;
 
 
 interface proteins_number {
