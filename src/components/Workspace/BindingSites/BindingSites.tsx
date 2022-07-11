@@ -25,10 +25,7 @@ import { ChainParentPill } from '../RibosomalProteins/RibosomalProteinCard';
 import { useHistory } from 'react-router-dom';
 import * as action from './../../../redux/reducers/BindingSites/ActionTypes'
 import _ from 'lodash';
-// import { useToasts } from 'react-toast-notifications';
-import { loadingIndicatorCSS } from 'react-select/src/components/indicators';
-import { Protein } from '../../../redux/RibosomeTypes';
-import { log } from 'console';
+import { toast, Toaster } from 'react-hot-toast'
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
@@ -251,16 +248,16 @@ const BindingSites = () => {
 	}, [])
 
 	const current_binding_site: BindingSite | null = useSelector((state: AppState) => state.binding_sites.current_binding_site)
-	const cur_ligclass: LigandClass | null         = useSelector((state: AppState) => state.binding_sites.current_ligand_class)
-	const cur_tgt: NeoStruct | null                = useSelector((state: AppState) => state.binding_sites.current_target)
+	const cur_ligclass: LigandClass | null = useSelector((state: AppState) => state.binding_sites.current_ligand_class)
+	const cur_tgt: NeoStruct | null = useSelector((state: AppState) => state.binding_sites.current_target)
 
 	// const [cur_auth_asym_id, set_cur_auth_asym_id] = useState<string | null>(null)
 
-	const bsites              = useSelector((state: AppState) => state.binding_sites.bsites)
-	const antibiotics         = useSelector((state: AppState) => state.binding_sites.antibiotics)
-	const factors             = useSelector((state: AppState) => state.binding_sites.factors)
-	const mrna                = useSelector((state: AppState) => state.binding_sites.mrna)
-	const trna                = useSelector((state: AppState) => state.binding_sites.trna)
+	const bsites = useSelector((state: AppState) => state.binding_sites.bsites)
+	const antibiotics = useSelector((state: AppState) => state.binding_sites.antibiotics)
+	const factors = useSelector((state: AppState) => state.binding_sites.factors)
+	const mrna = useSelector((state: AppState) => state.binding_sites.mrna)
+	const trna = useSelector((state: AppState) => state.binding_sites.trna)
 	const other_uncategorized = useSelector((state: AppState) => state.binding_sites.other_uncategorized)
 	// const mixed       = useSelector                ((state: AppState) => state.binding_sites.mixed_ligands   )
 
@@ -314,8 +311,6 @@ const BindingSites = () => {
 	// }
 
 
-
-
 	const getdesc = (l: LigandClass): string => Object.keys(l)[0]
 
 	// This functions updates the binding site data (i.e. the neighborhood/interface)
@@ -323,7 +318,7 @@ const BindingSites = () => {
 
 	const updateBindingSiteData = (current_bs: BindingSite, mixedligand: MixedLigand) => {
 		if (mixedligand.polymer) {
-			
+
 			dispatch(action.request_LigandBindingSite(mixedligand.present_in.auth_asym_id as string, mixedligand.polymer, current_bs.rcsb_id))
 		} else {
 			dispatch(action.request_LigandBindingSite(mixedligand.chemicalId as string, mixedligand.polymer, current_bs.rcsb_id))
@@ -337,13 +332,11 @@ const BindingSites = () => {
 			// set_cur_auth_asym_id(null)
 			__VIEWER_RESET()
 		} else {
-
 			dispatch(action.current_struct_change(newvalue))
 		}
 	}
 
 	const currentLigandClassChange = (event: React.ChangeEvent<{ value: unknown }>, newvalue: LigandClass) => {
-
 
 		if (newvalue === null) {
 			dispatch(action.current_ligand_change(null))
@@ -355,20 +348,19 @@ const BindingSites = () => {
 
 	useEffect(() => {
 		// On ligand class update:
-		
 		if (cur_ligclass === null) {
 			// if ligclass is null, set all binding sites to original(defilter)
 			set_derived_bsites(bsites)
 			// ?CLEANUP
-			
+
 		} else {
 			// if its not null, filter binding sites on whether the description matches that of the just-chosen ligand class
-			set_derived_bsites(bsites.filter(( bs:BindingSite ) => { 
-				return cur_ligclass[getdesc(cur_ligclass)].map((mixed_ligand:MixedLigand) => mixed_ligand.description).includes(bs.description) 
+			set_derived_bsites(bsites.filter((bs: BindingSite) => {
+				return cur_ligclass[getdesc(cur_ligclass)].map((mixed_ligand: MixedLigand) => mixed_ligand.description).includes(bs.description)
 			}))
 
 			if (current_binding_site !== null) {
-				let curligand_with_auth_id = cur_ligclass[getdesc(cur_ligclass)].filter((ml:MixedLigand)=>{return ml.present_in.rcsb_id === current_binding_site.rcsb_id})[0]
+				let curligand_with_auth_id = cur_ligclass[getdesc(cur_ligclass)].filter((ml: MixedLigand) => { return ml.present_in.rcsb_id === current_binding_site.rcsb_id })[0]
 				updateBindingSiteData(current_binding_site as BindingSite, curligand_with_auth_id)
 			}
 		}
@@ -389,16 +381,13 @@ const BindingSites = () => {
 			// if the current binding site changes while the ligclass is null, we filter liglike categories by "presentIn" on that binding site's rcsb_id
 			if (cur_ligclass === null) {
 				// 
-				set_derived_antibiotics(antibiotics.filter((ligclass: LigandClass) => { 
-						
+				set_derived_antibiotics(antibiotics.filter((ligclass: LigandClass) => {
+					return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id)
 
-						
-						return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) 
-					
-					}))
-				set_derived_factors(factors.filter((ligclass: LigandClass) => { 
-
-					return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) }))
+				}))
+				set_derived_factors(factors.filter((ligclass: LigandClass) => {
+					return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id)
+				}))
 				set_derived_mrna(mrna.filter((ligclass: LigandClass) => { return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) }))
 				set_derived_trna(trna.filter((ligclass: LigandClass) => { return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) }))
 				set_derived_uncategorized(other_uncategorized.filter((ligclass: LigandClass) => { return ligclass[getdesc(ligclass)].map((mixedLig: MixedLigand) => mixedLig.present_in.rcsb_id).includes(current_binding_site.rcsb_id) }))
@@ -406,16 +395,31 @@ const BindingSites = () => {
 			}
 
 			else {
-
-				let curligand_with_auth_id = cur_ligclass[getdesc(cur_ligclass)].filter((ml:MixedLigand)=>{return ml.present_in.rcsb_id === current_binding_site.rcsb_id})[0]
+				let curligand_with_auth_id = cur_ligclass[getdesc(cur_ligclass)].filter((ml: MixedLigand) => { return ml.present_in.rcsb_id === current_binding_site.rcsb_id })[0]
 				updateBindingSiteData(current_binding_site, curligand_with_auth_id)
 			}
 
 			if (cur_vis_tab === 'origin') {
+
+
+				toast.loading(`Loadig structure ${current_binding_site?.rcsb_id.toUpperCase()}`, {
+					icon: <img
+						height="30px"
+						width="30px"
+						src={process.env.PUBLIC_URL + `/ray_templates/_ray_${current_binding_site?.rcsb_id.toUpperCase()}.png`}
+						alt={"toast-icon-ribx"} />,
+					duration: 4000,
+					position: "bottom-center",
+					style: {
+						fontSize: "12px",
+						border: "1px solid black"
+					}
+				})
 				viewerInstance.visual.update({
 					assemblyId: '1',
 					moleculeId: current_binding_site?.rcsb_id.toLowerCase()
 				});
+
 			}
 
 		}
@@ -455,7 +459,6 @@ const BindingSites = () => {
 						cur_tgt.struct.rcsb_id
 					))
 				}
-
 				else {
 					dispatch(action.request_Prediction(
 						false,
@@ -467,6 +470,20 @@ const BindingSites = () => {
 			}
 
 			if (cur_vis_tab === 'prediction') {
+
+				toast.loading(`Loadig structure ${( current_binding_site!.rcsb_id as string ).toUpperCase()}`, {
+					icon: <img
+						height="30px"
+						width="30px"
+						src={process.env.PUBLIC_URL + `/ray_templates/_ray_${( current_binding_site!.rcsb_id as string ).toUpperCase()}.png`}
+						alt={"toast-icon-ribx"} />,
+					duration: 4000,
+					position: "bottom-center",
+					style: {
+						fontSize: "12px",
+						border: "1px solid black"
+					}
+				})
 				viewerInstance.visual.update({
 					assemblyId: '1',
 					moleculeId: cur_tgt?.struct.rcsb_id.toLowerCase()
@@ -479,13 +496,29 @@ const BindingSites = () => {
 	}, [cur_tgt])
 
 	useEffect(() => {
+		toast(<div>Switched to tab: <b>{cur_vis_tab === 'origin' ? "Origin" : "Prediction"}</b></div>, {
+			position: "bottom-left"
+		})
 		if (cur_tgt != null && cur_vis_tab === 'prediction') {
-
 			// 		addToast(`Switched into PREDICTION view.`,
 			// 							{
 			// 	appearance: 'warning',
 			// 	autoDismiss: true,
 			// })
+
+			toast.loading(`Loadig structure ${cur_tgt?.struct.rcsb_id.toUpperCase()}`, {
+				icon: <img
+					height="30px"
+					width="30px"
+					src={process.env.PUBLIC_URL + `/ray_templates/_ray_${cur_tgt?.struct.rcsb_id.toUpperCase()}.png`}
+					alt={"toast-icon-ribx"} />,
+				duration: 4000,
+				position: "bottom-center",
+				style: {
+					fontSize: "12px",
+					border: "1px solid black"
+				}
+			})
 
 			viewerInstance.visual.update({
 				assemblyId: '1',
@@ -500,6 +533,20 @@ const BindingSites = () => {
 		}
 
 		if (current_binding_site != null && cur_vis_tab === 'origin') {
+
+			toast.loading(`Loadig structure ${current_binding_site?.rcsb_id.toUpperCase()}`, {
+				icon: <img
+					height="30px"
+					width="30px"
+					src={process.env.PUBLIC_URL + `/ray_templates/_ray_${current_binding_site?.rcsb_id.toUpperCase()}.png`}
+					alt={"toast-icon-ribx"} />,
+				duration: 4000,
+				position: "bottom-center",
+				style: {
+					fontSize: "12px",
+					border: "1px solid black"
+				}
+			})
 
 			// 		addToast(`Switched into ORIGINAL STRUCTURE view.`,
 			// 							{
@@ -516,6 +563,7 @@ const BindingSites = () => {
 				moleculeId: current_binding_site?.rcsb_id.toLowerCase()
 			});
 		}
+
 	}, [cur_vis_tab])
 
 	// ------------ + ------------------------------------------------------------
@@ -591,7 +639,7 @@ const BindingSites = () => {
 
 
 		console.log("Coloring data:", interface_data);
-		
+
 
 		for (var chain of Object.values(interface_data)) {
 			var reduced = chain.residues.reduce((x: MolStarResidue[], y: Residue) => {
@@ -599,11 +647,11 @@ const BindingSites = () => {
 					x.push({
 						// @ts-ignore
 						// entity_id     : current_binding_site?.rcsb_id.toLowerCase(),
-						assmeblyId    : '1',
-						auth_asym_id  : y.parent_auth_asym_id,
+						assmeblyId: '1',
+						auth_asym_id: y.parent_auth_asym_id,
 						// sideChain     : false,
 						auth_residue_number: y.residue_id,
-						color         : { r: 1, g: 200, b: 200 },
+						color: { r: 1, g: 200, b: 200 },
 						// focus         : false,
 					})
 				}
@@ -614,7 +662,7 @@ const BindingSites = () => {
 		}
 
 
-		
+
 		if (vis_data.length > 300) {
 			if (window.confirm("This ligand binds to more than 300 residues. Your browser might take some time to visualize it.")) {
 			}
@@ -624,8 +672,8 @@ const BindingSites = () => {
 		}
 
 		viewerInstance.visual.select({
-			data: vis_data, 
-					nonSelectedColor: { r: 255, g: 255, b: 255 }
+			data: vis_data,
+			nonSelectedColor: { r: 255, g: 255, b: 255 }
 		})
 	}
 
@@ -728,7 +776,7 @@ const BindingSites = () => {
 						}
 						else if (derived_factors.includes(option)) {
 							return "E/T/I Factors"
-						}else{
+						} else {
 							return "Other"
 						}
 					}}
@@ -990,6 +1038,7 @@ const BindingSites = () => {
 					</Paper>
 				</Grid >
 			</Grid>
+			<Toaster />
 		</Grid>
 	)
 }

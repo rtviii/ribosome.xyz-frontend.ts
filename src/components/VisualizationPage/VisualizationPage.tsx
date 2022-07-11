@@ -42,6 +42,8 @@ import { requestBanClass } from "../../redux/reducers/Proteins/ActionTypes";
 import { coerce_full_structure_to_neostruct } from "../../redux/reducers/Visualization/VisualizationReducer";
 import { debounce } from 'lodash'
 import { log } from "console";
+import toast, { Toaster } from "react-hot-toast";
+import { border } from "@mui/system";
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -80,10 +82,10 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   const selectStructStyles = (makeStyles({ autocomoplete: { width: "100%" } }))()
 
 
-  const current_neostruct: NeoStruct | null       = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
-  const structs                                   = useSelector((state: AppState) => state.structures.derived_filtered)
-  const cached_struct                             = useSelector((state: AppState) => state.visualization.full_structure_cache[0])
+  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
+  const cached_struct = useSelector((state: AppState) => state.visualization.full_structure_cache[0])
 
 
   const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {
@@ -96,6 +98,20 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
 
       // addToast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`, { appearance: 'info', autoDismiss: true, })
       // viewer params : https://github.com/molstar/pdbe-molstar/wiki/1.-PDBe-Molstar-as-JS-plugin#plugin-parameters-options
+      toast.loading(`Loadig structure ${selected_neostruct.struct.rcsb_id.toLocaleUpperCase()}`, {
+        icon: <img 
+        height = "30px"
+        width  = "30px"
+        src    = { process.env.PUBLIC_URL + `/ray_templates/_ray_${selected_neostruct.struct.rcsb_id.toLocaleUpperCase()}.png` }
+        alt    = {"toast-icon-ribx"}/>,
+        duration: 3000,
+        position: "bottom-center",
+        style   : {
+          fontSize: "12px",
+          border  : "1px solid black"
+        }
+      })
+
       const viewerParams = {
         moleculeId: selected_neostruct.struct.rcsb_id.toLowerCase(),
         assemblyId: "1"
@@ -477,14 +493,14 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
 
   // takes in a full protein or rna
   const [currentChainFull, setCurrentChainFull] = React.useState<Protein | RNA | null>(null)
-  const [residueRange, setResidueRange]         = React.useState<number[]>([0, 0]);           // current slider value
-  const [MaxRes, setMaxRes]                     = React.useState<number>(0);                  // keep track of what's the max residue range
+  const [residueRange, setResidueRange] = React.useState<number[]>([0, 0]);           // current slider value
+  const [MaxRes, setMaxRes] = React.useState<number>(0);                  // keep track of what's the max residue range
 
-  useEffect(()=>{
+  useEffect(() => {
 
-    console.log("got new auth asymid  and full struct cahce. max res is", MaxRes );
+    console.log("got new auth asymid  and full struct cahce. max res is", MaxRes);
 
-  },[MaxRes])
+  }, [MaxRes])
 
   const rangeChangeHandler = (event: any) => {
     let _: number[] = event.target.value;
@@ -502,13 +518,14 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
   useEffect(() => {
     if (full_structure_cache && auth_asym_id) {
       // pluck the chain off the full structure
-      const pickFullChain = [...full_structure_cache.proteins, ...(() => { 
+      const pickFullChain = [...full_structure_cache.proteins, ...(() => {
 
         if (full_structure_cache.rnas === undefined || full_structure_cache.rnas === null) {
           return []
         } else {
           return full_structure_cache.rnas
-        }})()].filter(c => c.auth_asym_id === auth_asym_id)
+        }
+      })()].filter(c => c.auth_asym_id === auth_asym_id)
       if (pickFullChain.length < 1) {
         console.log("Haven't found chain with this asym_id on the full structure. Something went terribly wrong.");
       } else {
@@ -516,7 +533,7 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
         setResidueRange([0, pickFullChain[0].entity_poly_seq_length])
         setMaxRes(pickFullChain[0].entity_poly_seq_length)
       }
-    }else{
+    } else {
       setCurrentChainFull(null)
       setMaxRes(0)
     }
@@ -546,57 +563,57 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
 
   // Donwload Popover
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const handlePopoverClick      = (event: any) => { setAnchorEl(event.currentTarget); };
-  const handlePopoverClose      = () => { setAnchorEl(null); };
-  const open                    = Boolean(anchorEl);
-  const id                      = open ? 'simple-popover' : undefined;
+  const handlePopoverClick = (event: any) => { setAnchorEl(event.currentTarget); };
+  const handlePopoverClose = () => { setAnchorEl(null); };
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
-  const ResidueColor =(residue:string| undefined) =>{
-    switch (residue){
+  const ResidueColor = (residue: string | undefined) => {
+    switch (residue) {
       case undefined:
         return "black"
-case "G"	 :
-  return "green"
-case "P"		:
-  return "red"
-case "A"		:
-  return "blue"
-case "V"	:
-  return "orange"
-case "L"		:
-  return "olive"
-case "I"	:
-  return "magenta"
-case "M"		:
-  return "purple"
-case "C"	:
-  return "pink"
-case "F":
-  return "brown"
-case "Y"	:
-  return "cyan"
-case "W":
-  return "turquoise"
-case "H"	:
-  return "sienna"
-case "K"		:
-  return "tan"
-case "R"	:
-  return "salmon"
-case "Q"	:
-  return "chocolate"
-case "N"	:
-  return "darkgrey"
-case "E":
-  return "darkolivegreen"
-case "D"	:
-  return "forestgreen"
-case "S":
-  return "teal"
-case "T"	:
-  return "lawngreen"
-case "U":
-  return "navy"
+      case "G":
+        return "green"
+      case "P":
+        return "red"
+      case "A":
+        return "blue"
+      case "V":
+        return "orange"
+      case "L":
+        return "olive"
+      case "I":
+        return "magenta"
+      case "M":
+        return "purple"
+      case "C":
+        return "pink"
+      case "F":
+        return "brown"
+      case "Y":
+        return "cyan"
+      case "W":
+        return "turquoise"
+      case "H":
+        return "sienna"
+      case "K":
+        return "tan"
+      case "R":
+        return "salmon"
+      case "Q":
+        return "chocolate"
+      case "N":
+        return "darkgrey"
+      case "E":
+        return "darkolivegreen"
+      case "D":
+        return "forestgreen"
+      case "S":
+        return "teal"
+      case "T":
+        return "lawngreen"
+      case "U":
+        return "navy"
     }
 
   }
@@ -657,34 +674,36 @@ case "U":
 
           <Grid item xs={2}>
             <TextField
-              value    = {residueRange[0]}
-              onChange = {handleResRangeStart(residueRange[1])}
-              label    = {
-              <div style={{
-                fontWeight:"bold",
-                color: ResidueColor(currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]])}}> 
-              {currentChainFull && currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]] ?`${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}` : ``}
-              </div>
+              value={residueRange[0]}
+              onChange={handleResRangeStart(residueRange[1])}
+              label={
+                <div style={{
+                  fontWeight: "bold",
+                  color: ResidueColor(currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]])
+                }}>
+                  {currentChainFull && currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]] ? `${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]]}` : ``}
+                </div>
               }
 
-  InputProps={{ disableUnderline: true }} disabled = {currentChainFull === null}
+              InputProps={{ disableUnderline: true }} disabled={currentChainFull === null}
             />
           </Grid>
 
           <Grid item xs={2}>
             <TextField
-              value    = {residueRange[1]}
-              onChange = {handleResRangeEnd(residueRange[0])}
-              label    = {<div 
-                style={{color:
-                currentChainFull && currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]] ?
-                ResidueColor(currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[1]-1]) : "black"
-              }}
+              value={residueRange[1]}
+              onChange={handleResRangeEnd(residueRange[0])}
+              label={<div
+                style={{
+                  color:
+                    currentChainFull && currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]] ?
+                      ResidueColor(currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[1] - 1]) : "black"
+                }}
               > {currentChainFull && currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[0]] ?
-                `${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[1]-1]}` : ``}</div>}
-              disabled = {currentChainFull === null}
+                `${currentChainFull?.entity_poly_seq_one_letter_code_can[residueRange[1] - 1]}` : ``}</div>}
+              disabled={currentChainFull === null}
 
-  InputProps={{ disableUnderline: true }}
+              InputProps={{ disableUnderline: true }}
             />
           </Grid>
 
@@ -707,11 +726,11 @@ case "U":
             {/* <Paper variant="outlined" elevation={2} id='outlined-interact' style={{ width: "60px", height: "60px", padding: "5px", cursor: "pointer" }} > */}
             {/* <SearchIcon onClick={handleSearchRange} style={{ width: "50px", height: "50px" }} /> */}
             <Grid item >
-              <SearchIcon 
-              id='search-icon-msa'
-              
-              onClick={
-   handlePopoverClick } />
+              <SearchIcon
+                id='search-icon-msa'
+
+                onClick={
+                  handlePopoverClick} />
             </Grid>
 
             {/* </Paper> */}
@@ -724,7 +743,7 @@ case "U":
               onClose={handlePopoverClose}
               style={{ padding: "20px" }}
               anchorOrigin={{
-                vertical  : "bottom",
+                vertical: "bottom",
                 horizontal: "center",
               }}
               transformOrigin={{ vertical: "top", horizontal: "center", }}>
@@ -866,7 +885,6 @@ const VisualizationPage = (props: any) => {
 
   const selectStruct = (rcsb_id: string) => {
     // https://github.com/molstar/pdbe-molstar/wiki/1.-PDBe-Molstar-as-JS-plugin#plugin-parameters-options
-    console.log("Selecting struct with params");
 
     const viewerParams = {
       moleculeId: rcsb_id.toLowerCase(),
@@ -926,9 +944,6 @@ const VisualizationPage = (props: any) => {
       color: "black"
     }
   })();
-
-
-
 
 
   const current_tab = useSelector((state: AppState) => state.visualization.component_tab)
@@ -1011,20 +1026,21 @@ const VisualizationPage = (props: any) => {
 
 
   return (
-    <Grid container xs={12} spacing={1} alignContent="flex-start">
-      <Grid item xs={12} style={{ padding: "10px" }}>
-        <Paper variant="outlined" className={classes.pageDescription}>
-          <Typography variant="h4">
-            Visualization
-          </Typography>
-        </Paper>
-      </Grid>
+    <>
+      <Grid container xs={12} spacing={1} alignContent="flex-start">
+        <Grid item xs={12} style={{ padding: "10px" }}>
+          <Paper variant="outlined" className={classes.pageDescription}>
+            <Typography variant="h4">
+              Visualization
+            </Typography>
+          </Paper>
+        </Grid>
 
 
-      <Grid item direction="column" xs={3} style={{ padding: "5px" }}>
-        <List>
+        <Grid item direction="column" xs={3} style={{ padding: "5px" }}>
+          <List>
 
-          {/* {(() => {
+            {/* {(() => {
             if (lastViewed[0] == null && lastViewed[1] != null) {
               return <ListItem>
                 Last Item Viewed:   Structure {lastViewed[1]}
@@ -1042,107 +1058,108 @@ const VisualizationPage = (props: any) => {
           )()} */}
 
 
-          <ListSubheader>Select Item Category: {(() => {
-            switch (current_tab) {
-              case 'protein_tab':
-                return 'Proteins'
-              case 'structure_tab':
-                return 'Structures'
-              case 'rna_tab':
-                return 'RNA'
-            }
-          })()} </ListSubheader>
+            <ListSubheader>Select Item Category: {(() => {
+              switch (current_tab) {
+                case 'protein_tab':
+                  return 'Proteins'
+                case 'structure_tab':
+                  return 'Structures'
+                case 'rna_tab':
+                  return 'RNA'
+              }
+            })()} </ListSubheader>
 
-          <ListItem style={{ display: "flex", flexDirection: "row" }}>
+            <ListItem style={{ display: "flex", flexDirection: "row" }}>
 
-            <Button size="small" color={current_tab === 'structure_tab' ? "primary" : "default"} onClick={() => { handleTabClick('structure_tab') }} variant="outlined" style={{ marginRight: "5px" }} >Structures </Button>
-            <Button size="small" color={current_tab === 'protein_tab' ? "primary" : "default"} onClick={() => { handleTabClick("protein_tab") }} variant="outlined" style={{ marginRight: "5px" }} >Proteins   </Button>
-            <Button size="small" color={current_tab === 'rna_tab' ? "primary" : "default"} onClick={() => { handleTabClick('rna_tab') }} variant="outlined" style={{ marginRight: "5px" }} >RNA        </Button>
+              <Button size="small" color={current_tab === 'structure_tab' ? "primary" : "default"} onClick={() => { handleTabClick('structure_tab') }} variant="outlined" style={{ marginRight: "5px" }} >Structures </Button>
+              <Button size="small" color={current_tab === 'protein_tab' ? "primary" : "default"} onClick={() => { handleTabClick("protein_tab") }} variant="outlined" style={{ marginRight: "5px" }} >Proteins   </Button>
+              <Button size="small" color={current_tab === 'rna_tab' ? "primary" : "default"} onClick={() => { handleTabClick('rna_tab') }} variant="outlined" style={{ marginRight: "5px" }} >RNA        </Button>
 
-          </ListItem>
+            </ListItem>
 
 
 
-          {/* Tab Selectors */}
-          <ListItem>
+            {/* Tab Selectors */}
+            <ListItem>
+              {(() => {
+                switch (current_tab) {
+                  case 'protein_tab':
+                    return <SelectProtein proteins={prot_classes} getCifChainByClass={getCifChainByClass} />
+
+                  case 'structure_tab':
+                    return <SelectStruct items={all_structures} selectStruct={selectStruct} />
+
+                  case 'rna_tab':
+                    return <SelectRna items={[]} getCifChainByClass={getCifChainByClass} />
+                  default:
+                    return "Null"
+                }
+              })()}
+            </ListItem>
+
+            {/*  */}
             {(() => {
               switch (current_tab) {
                 case 'protein_tab':
-                  return <SelectProtein proteins={prot_classes} getCifChainByClass={getCifChainByClass} />
-
+                  return current_protein_parent === null ? null : <ListItem> <StructHeroVertical d={current_protein_neostruct} inCart={false} topless={true} /></ListItem>
                 case 'structure_tab':
-                  return <SelectStruct items={all_structures} selectStruct={selectStruct} />
-
+                  return current_neostruct === null ? null : <ListItem> <StructHeroVertical d={current_neostruct} inCart={false} topless={true} /></ListItem>
                 case 'rna_tab':
-                  return <SelectRna items={[]} getCifChainByClass={getCifChainByClass} />
+                  return current_rna_parent === null ? null : <ListItem> <StructHeroVertical d={current_rna_neostruct} inCart={false} topless={true} /></ListItem>
                 default:
                   return "Null"
               }
             })()}
-          </ListItem>
 
-          {/*  */}
-          {(() => {
-            switch (current_tab) {
-              case 'protein_tab':
-                return current_protein_parent === null ? null : <ListItem> <StructHeroVertical d={current_protein_neostruct} inCart={false} topless={true} /></ListItem>
-
-              case 'structure_tab':
-                return current_neostruct === null ? null : <ListItem> <StructHeroVertical d={current_neostruct} inCart={false} topless={true} /></ListItem>
-              case 'rna_tab':
-                return current_rna_parent === null ? null : <ListItem> <StructHeroVertical d={current_rna_neostruct} inCart={false} topless={true} /></ListItem>
-              default:
-                return "Null"
-            }
-          })()}
-
-          {/* {
+            {/* {
             coerce_full_structure_to_neostruct(cached_struct[0]) === null ? null : <ListItem> <StructHeroVertical d={coerce_full_structure_to_neostruct(cached_struct[0]) as NeoStruct} 
             inCart={false} topless={true} /></ListItem>
           } */}
 
 
 
-          {/* Chain Selector  */}
-          {(() => {
-            switch (current_tab) {
-              case 'protein_tab':
-                return current_protein_auth_asym_id === null ? null : <ListItem>
-                  <ChainHighlightSlider auth_asym_id={current_protein_auth_asym_id} full_structure_cache={cached_struct[0]} redux_effect={debounedRangeChange__redux}
-                  /></ListItem>
-              case 'structure_tab':
-                return current_chain_to_highlight === null ? null : <ListItem> <ChainHighlightSlider redux_effect={debounedRangeChange__redux} auth_asym_id={current_chain_to_highlight} full_structure_cache={cached_struct[0]} /></ListItem>
-              case 'rna_tab':
-                // return "Select rna"
-                return current_rna_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_rna_auth_asym_id}
-                  full_structure_cache={cached_struct[0]} redux_effect={debounedRangeChange__redux} /></ListItem>
-                return // <SelectRna items={[]} getCifChainByClass={getCifChainByClass} />
-              default:
-                return "Null"
-            }
+            {/* Chain Selector  */}
+            {(() => {
+              switch (current_tab) {
+                case 'protein_tab':
+                  return current_protein_auth_asym_id === null ? null : <ListItem>
+                    <ChainHighlightSlider auth_asym_id={current_protein_auth_asym_id} full_structure_cache={cached_struct[0]} redux_effect={debounedRangeChange__redux}
+                    /></ListItem>
+                case 'structure_tab':
+                  return current_chain_to_highlight === null ? null : <ListItem> <ChainHighlightSlider redux_effect={debounedRangeChange__redux} auth_asym_id={current_chain_to_highlight} full_structure_cache={cached_struct[0]} /></ListItem>
+                case 'rna_tab':
+                  // return "Select rna"
+                  return current_rna_auth_asym_id === null ? null : <ListItem> <ChainHighlightSlider auth_asym_id={current_rna_auth_asym_id}
+                    full_structure_cache={cached_struct[0]} redux_effect={debounedRangeChange__redux} /></ListItem>
+                  return // <SelectRna items={[]} getCifChainByClass={getCifChainByClass} />
+                default:
+                  return "Null"
+              }
 
-          })()}
+            })()}
 
-          <ListItem>
-            <DashboardButton />
-          </ListItem>
+            <ListItem>
+              <DashboardButton />
+            </ListItem>
 
-        </List>
+          </List>
+        </Grid>
+
+        <Grid item container direction="row" xs={9} style={{ height: "100%" }}>
+
+
+          <Grid item xs={12} >
+            <Paper variant="outlined" style={{ position: "relative", padding: "10px", height: "80vh" }} >
+              <div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
+            </Paper>
+          </Grid >
+        </Grid>
+
+
+
+        <Toaster />
       </Grid>
-
-      <Grid item container direction="row" xs={9} style={{ height: "100%" }}>
-
-
-        <Grid item xs={12} >
-          <Paper variant="outlined" style={{ position: "relative", padding: "10px", height: "80vh" }} >
-            <div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
-          </Paper>
-        </Grid >
-      </Grid>
-
-
-
-    </Grid>
+    </>
   )
 }
 

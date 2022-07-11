@@ -306,10 +306,14 @@ export const requestAllStructuresDjango =  () => {
 
     )
 
-    toast.promise(promise, {
-    loading:"loading",
-    success:"success",
-    error:"error"
+  toast.promise(promise, {
+      loading: "Loading structures...",
+      success: "Success",
+      error  : "Failed to load."
+  },{
+    style:{
+      border:"1px solid black"
+    }
   })
 
   };
