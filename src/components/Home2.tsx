@@ -236,6 +236,7 @@ const MainContent = () =>{
 
 
   let [ number_of_structures, set_number_of_structures ] = useState(0);
+
   useEffect(()=>{
 	getNeo4jData('utils', {
 		endpoint: "number_of_structures",

@@ -14,19 +14,22 @@ import { requestRnaClass } from "../redux/reducers/RNA/ActionTypes";
 import { request_all_bsites } from "./../redux/reducers/BindingSites/ActionTypes";
 import { RNAClass } from "../redux/RibosomeTypes";
 
-interface OwnProps {}
-interface ReduxProps {}
-interface DispatchProps {
-  __rx_requestStructures: () => void;
-  __rx_requestAllLigands: () => void;
-}
+// interface OwnProps {}
+// interface ReduxProps {}
+// interface DispatchProps {
+//   __rx_requestStructures: () => void;
+//   __rx_requestAllLigands: () => void;
+// }
 
-type MainProps = DispatchProps & OwnProps & ReduxProps;
-const Main: React.FC<MainProps> = (prop: MainProps) => {
+// type MainProps = DispatchProps & OwnProps & ReduxProps;
+const Main = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    prop.__rx_requestStructures();
-    prop.__rx_requestAllLigands();
+    // prop.__rx_requestStructures();
+    dispatch(redux.requestAllStructuresDjango())
+    dispatch(requestAllLigands())
+    // prop.__rx_requestAllLigands();
+
 
     dispatch(requestBanMetadata("b", "LSU"));
     dispatch(requestBanMetadata("e", "LSU"));
@@ -63,21 +66,22 @@ const Main: React.FC<MainProps> = (prop: MainProps) => {
   );
 };
 
-const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
-  __rx_structures: state.structures.neo_response,
-  loading: state.structures.Loading,
-});
+// const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
+//   __rx_structures: state.structures.neo_response,
+//   loading: state.structures.Loading,
+// });
 
-const mapdispatch = (
-  dispatch: ThunkDispatch<any, any, AppActions>,
-  ownprops: OwnProps
-): DispatchProps => ({
-  __rx_requestStructures: () => dispatch(redux.requestAllStructuresDjango()),
-  // __rx_requestRNAs      : ()=> dispatch(requestAllRNAs()),
-  __rx_requestAllLigands: () => dispatch(requestAllLigands()),
-});
+// const mapdispatch = (
+//   dispatch: ThunkDispatch<any, any, AppActions>,
+//   ownprops: OwnProps
+// ): DispatchProps => ({
+//   __rx_requestStructures: () => dispatch(redux.requestAllStructuresDjango()),
+//   // __rx_requestRNAs      : ()=> dispatch(requestAllRNAs()),
+//   __rx_requestAllLigands: () => dispatch(requestAllLigands()),
+// });
 
-export default connect(mapstate, mapdispatch)(Main);
+// export default connect(mapstate, mapdispatch)(Main);
+export default Main;
 export const truncate = (str: string, charlim: number, truncateto: number) => {
   if (typeof str === "undefined") {
     return str;
