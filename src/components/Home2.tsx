@@ -21,6 +21,9 @@ import { useSelector } from     'react-redux'                             ;
 import { getNeo4jData } from    '../redux/AsyncActions/getNeo4jData'      ;
 import { useHistory } from 'react-router-dom';
 import { Theme } from '@material-ui/core';
+import toast, { Toaster } from 'react-hot-toast';
+import Button from '@mui/material/Button/Button';
+const notify = () => toast('Here is your toast.');
 
 
 const AcknowlegementsList = () => {
@@ -233,6 +236,7 @@ const MainContent = () =>{
 	  }
     })
   ))()
+
 
 
   let [ number_of_structures, set_number_of_structures ] = useState(0);

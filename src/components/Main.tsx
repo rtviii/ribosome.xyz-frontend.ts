@@ -1,11 +1,11 @@
-import React, { createContext, useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../redux/AppActions";
 import { AppState } from "../redux/store";
 import "./Main.css";
 import Display from "./Workspace/Display/Display";
 import * as redux from "../redux/reducers/StructuresReducer/StructuresReducer";
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { TemporaryDrawer } from "./../materialui/Dashboard/Dashboard";
 
 import { requestAllLigands } from "../redux/reducers/Ligands/ActionTypes";
@@ -13,6 +13,7 @@ import { requestBanMetadata } from "../redux/reducers/Proteins/ActionTypes";
 import { requestRnaClass } from "../redux/reducers/RNA/ActionTypes";
 import { request_all_bsites } from "./../redux/reducers/BindingSites/ActionTypes";
 import { RNAClass } from "../redux/RibosomeTypes";
+import toast, { Toaster } from "react-hot-toast";
 
 // interface OwnProps {}
 // interface ReduxProps {}
@@ -24,12 +25,14 @@ import { RNAClass } from "../redux/RibosomeTypes";
 // type MainProps = DispatchProps & OwnProps & ReduxProps;
 const Main = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    // prop.__rx_requestStructures();
-    dispatch(redux.requestAllStructuresDjango())
-    dispatch(requestAllLigands())
-    // prop.__rx_requestAllLigands();
+  const structs_loading = useSelector((state:AppState)=>state.structures.neo_response.length === 0)
 
+  useEffect(()=>{
+    dispatch(redux.requestAllStructuresDjango())
+  },[])
+
+  useEffect(() => {
+    dispatch(requestAllLigands())
 
     dispatch(requestBanMetadata("b", "LSU"));
     dispatch(requestBanMetadata("e", "LSU"));
@@ -62,6 +65,7 @@ const Main = () => {
     <div>
       <TemporaryDrawer />
       <Display />
+      <Toaster/>
     </div>
   );
 };

@@ -49,7 +49,6 @@
     "react-scripts": "^3.4.3",
     "react-select": "^3.1.1",
     "react-toast-notifications": "^2.5.1",
-    "react-toastify": "^9.0.1",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",

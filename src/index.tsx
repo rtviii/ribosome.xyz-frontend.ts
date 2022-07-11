@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import Main from "./components/Main";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { store } from "./redux/store";
 import { BrowserRouter as Router,  } from "react-router-dom";
 import 'react-image-lightbox/style.css'; 
@@ -13,6 +13,8 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
+import { Toaster } from "react-hot-toast";
+import * as redux from "./redux/reducers/StructuresReducer/StructuresReducer";
 
 
 
@@ -48,13 +50,15 @@ export const DefaultTheme = createTheme(theme,{
 });
 
 
-
+// let dispatch = useDispatch();
+// dispatch(redux.requestAllStructuresDjango())
 ReactDOM.render(
   <Provider store={store}>
     <Router>
       <React.StrictMode>
           <ThemeProvider theme={DefaultTheme}>
           <Main/>
+          <Toaster/>
           </ThemeProvider>
       </React.StrictMode>
     </Router>

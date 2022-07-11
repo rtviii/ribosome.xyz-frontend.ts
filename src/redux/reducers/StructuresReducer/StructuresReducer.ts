@@ -6,6 +6,7 @@ import { NeoStruct } from "./../../DataInterfaces";
 import { flattenDeep } from "lodash";
 import { Filter, filterChange, FilterPredicates, FilterRegistry } from "../Filters/ActionTypes";
 import { StructFilterType, StructSortType } from "./ActionTypes";
+import { toast } from "react-hot-toast";
 
 export interface StructReducerState {
   neo_response    : NeoStruct[]
@@ -274,12 +275,18 @@ export const requestAllStructuresDjango =  () => {
     dispatch({
       type: actions.REQUEST_STRUCTS_GO,
     });
-    getNeo4jData("neo4j", { endpoint: "get_all_structs", params: null }).then(
+    
+    // console.log("Started requesting all structures.")
+    // toast("Hi", {duration:4000})
+
+
+    let promise = getNeo4jData("neo4j", { endpoint: "get_all_structs", params: null }).then(
       response => {
         dispatch({
           type   : actions.REQUEST_STRUCTS_SUCCESS,
           payload: flattenDeep( response.data ) as any,
         });
+            console.log("Succeed with all structures.")
       },
       error => {
         dispatch({
@@ -287,13 +294,24 @@ export const requestAllStructuresDjango =  () => {
          error: error,
         });
       }
-    ).then(
+    )
+    .catch(e=>{
+      console.log(`Failed to fetch structs: ${e}`)
+    })
+    .then(
       r=>{
         dispatch({type:"STRUCTS_SORT_CHANGE",sortType:"PDB_CODENAME"})
         dispatch({type:"STRUCTS_SORT_CHANGE",sortType:"PDB_CODENAME"})
       }
 
     )
+
+    toast.promise(promise, {
+    loading:"loading",
+    success:"success",
+    error:"error"
+  })
+
   };
 };
 
