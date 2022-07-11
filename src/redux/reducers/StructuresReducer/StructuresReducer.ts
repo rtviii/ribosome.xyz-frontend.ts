@@ -21,7 +21,6 @@ export interface StructReducerState {
   compareFn        : (a:NeoStruct, b:NeoStruct) => 1 | 0 | -1
 }>
 }
-
 const StructsSortsState:Record<StructSortType,{
   reverse  : boolean,
   compareFn: (a:NeoStruct, b:NeoStruct) => 1 | 0 | -1

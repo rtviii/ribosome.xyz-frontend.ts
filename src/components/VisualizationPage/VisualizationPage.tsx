@@ -80,10 +80,10 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   const selectStructStyles = (makeStyles({ autocomoplete: { width: "100%" } }))()
 
 
-  const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const current_neostruct: NeoStruct | null       = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
-  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
-  const cached_struct = useSelector((state: AppState) => state.visualization.full_structure_cache[0])
+  const structs                                   = useSelector((state: AppState) => state.structures.derived_filtered)
+  const cached_struct                             = useSelector((state: AppState) => state.visualization.full_structure_cache[0])
 
 
   const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {

@@ -67,7 +67,6 @@ const __VIEWER_RESET = () => {
 	viewerInstance.visual.update({ moleculeId: 'none' })
 }
 
-
 const ChainAlignmentBlock = ({ src_struct, tgt_struct, nomenclature, tgt_aln, src_aln, aln_ids, tgt_strand, src_strand }: { src_struct: string, tgt_struct: string, nomenclature: string, tgt_strand: string, src_strand: string, tgt_aln: string, src_aln: string, aln_ids: number[] }) => {
 	const history = useHistory();
 	return <Paper

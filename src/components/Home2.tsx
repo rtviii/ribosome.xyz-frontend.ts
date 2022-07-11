@@ -170,7 +170,7 @@ export const Home2 = () => {
 
 const MainContent = () =>{
 
-	const  structnumber             = useSelector        (( state:AppState ) => state.structures.derived_filtered.length)
+	const  structnumber             = useSelector        (( state:AppState ) => state.structures.neo_response.length)
 	 const [protn       , setsprotn] = useState   <number>(0                                                             )
 	 const  history                  = useHistory         (                                                              )
 	useEffect(() => {
