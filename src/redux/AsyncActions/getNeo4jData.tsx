@@ -249,7 +249,8 @@ interface get_ligand_nbhd {
 
 export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {
   const URI = encodeURI(`${BACKEND}/${api}/${ep.endpoint}/`);
-  return ep.params != null ? Axios.get(URI, {
+  console.log("geneo4jdata: ",URI);
+  let intercept = ep.params != null ? Axios.get(URI, {
     params: ep.params, paramsSerializer: params => qs.stringify(params,
       {
         arrayFormat: "repeat"
@@ -257,7 +258,10 @@ export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {
     )
   }) : Axios.get(URI);
 
+  // console.log("intercept: ",intercept);
+  return intercept
 };
+
 
 
 export const download_zip = (params: {

@@ -194,6 +194,7 @@ export const _StructuresReducer = (
     case "REQUEST_STRUCTS_ERR":
       return { ...state, Loading: false, Error: action.error };
     case "REQUEST_STRUCTS_SUCCESS":
+        console.log("Got structs : ", action.payload.length)
         return { ...state,
         neo_response    : [...action.payload],
         derived_filtered: [...action.payload],
@@ -280,8 +281,11 @@ export const requestAllStructuresDjango =  () => {
     // toast("Hi", {duration:4000})
 
 
+    console.log("Requesting all structures.");
     let promise = getNeo4jData("neo4j", { endpoint: "get_all_structs", params: null }).then(
       response => {
+        console.log("Got all structures.")
+        console.log("resp data", response.data)
         dispatch({
           type   : actions.REQUEST_STRUCTS_SUCCESS,
           payload: flattenDeep( response.data ) as any,
@@ -303,7 +307,6 @@ export const requestAllStructuresDjango =  () => {
         dispatch({type:"STRUCTS_SORT_CHANGE",sortType:"PDB_CODENAME"})
         dispatch({type:"STRUCTS_SORT_CHANGE",sortType:"PDB_CODENAME"})
       }
-
     )
 
   toast.promise(promise, {
