@@ -27,3 +27,5 @@ yarn-error.log*
 /old
 /.apacheconfig
 /.vscode
+
+**.png

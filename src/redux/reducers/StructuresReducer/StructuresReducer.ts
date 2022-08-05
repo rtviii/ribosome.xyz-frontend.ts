@@ -6,6 +6,7 @@ import { NeoStruct } from "./../../DataInterfaces";
 import { flattenDeep } from "lodash";
 import { Filter, filterChange, FilterPredicates, FilterRegistry } from "../Filters/ActionTypes";
 import { StructFilterType, StructSortType } from "./ActionTypes";
+import { toast } from "react-hot-toast";
 
 export interface StructReducerState {
   neo_response    : NeoStruct[]
@@ -21,7 +22,6 @@ export interface StructReducerState {
   compareFn        : (a:NeoStruct, b:NeoStruct) => 1 | 0 | -1
 }>
 }
-
 const StructsSortsState:Record<StructSortType,{
   reverse  : boolean,
   compareFn: (a:NeoStruct, b:NeoStruct) => 1 | 0 | -1
@@ -194,6 +194,7 @@ export const _StructuresReducer = (
     case "REQUEST_STRUCTS_ERR":
       return { ...state, Loading: false, Error: action.error };
     case "REQUEST_STRUCTS_SUCCESS":
+        console.log("Got structs : ", action.payload.length)
         return { ...state,
         neo_response    : [...action.payload],
         derived_filtered: [...action.payload],
@@ -275,12 +276,21 @@ export const requestAllStructuresDjango =  () => {
     dispatch({
       type: actions.REQUEST_STRUCTS_GO,
     });
-    getNeo4jData("neo4j", { endpoint: "get_all_structs", params: null }).then(
+    
+    // console.log("Started requesting all structures.")
+    // toast("Hi", {duration:4000})
+
+
+    console.log("Requesting all structures.");
+    let promise = getNeo4jData("neo4j", { endpoint: "get_all_structs", params: null }).then(
       response => {
+        console.log("Got all structures.")
+        console.log("resp data", response.data)
         dispatch({
           type   : actions.REQUEST_STRUCTS_SUCCESS,
           payload: flattenDeep( response.data ) as any,
         });
+            console.log("Succeed with all structures.")
       },
       error => {
         dispatch({
@@ -288,13 +298,27 @@ export const requestAllStructuresDjango =  () => {
          error: error,
         });
       }
-    ).then(
+    )
+    .catch(e=>{
+      console.log(`Failed to fetch structs: ${e}`)
+    })
+    .then(
       r=>{
         dispatch({type:"STRUCTS_SORT_CHANGE",sortType:"PDB_CODENAME"})
         dispatch({type:"STRUCTS_SORT_CHANGE",sortType:"PDB_CODENAME"})
       }
-
     )
+
+  toast.promise(promise, {
+      loading: "Loading structures...",
+      success: "Success",
+      error  : "Failed to load."
+  },{
+    style:{
+      border:"1px solid black"
+    }
+  })
+
   };
 };
 

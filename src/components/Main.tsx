@@ -1,11 +1,11 @@
-import React, { createContext, useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../redux/AppActions";
 import { AppState } from "../redux/store";
 import "./Main.css";
 import Display from "./Workspace/Display/Display";
 import * as redux from "../redux/reducers/StructuresReducer/StructuresReducer";
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { TemporaryDrawer } from "./../materialui/Dashboard/Dashboard";
 
 import { requestAllLigands } from "../redux/reducers/Ligands/ActionTypes";
@@ -13,20 +13,26 @@ import { requestBanMetadata } from "../redux/reducers/Proteins/ActionTypes";
 import { requestRnaClass } from "../redux/reducers/RNA/ActionTypes";
 import { request_all_bsites } from "./../redux/reducers/BindingSites/ActionTypes";
 import { RNAClass } from "../redux/RibosomeTypes";
+import toast, { Toaster } from "react-hot-toast";
 
-interface OwnProps {}
-interface ReduxProps {}
-interface DispatchProps {
-  __rx_requestStructures: () => void;
-  __rx_requestAllLigands: () => void;
-}
+// interface OwnProps {}
+// interface ReduxProps {}
+// interface DispatchProps {
+//   __rx_requestStructures: () => void;
+//   __rx_requestAllLigands: () => void;
+// }
 
-type MainProps = DispatchProps & OwnProps & ReduxProps;
-const Main: React.FC<MainProps> = (prop: MainProps) => {
+// type MainProps = DispatchProps & OwnProps & ReduxProps;
+const Main = () => {
   const dispatch = useDispatch();
+  const structs_loading = useSelector((state:AppState)=>state.structures.neo_response.length === 0)
+
+  useEffect(()=>{
+    dispatch(redux.requestAllStructuresDjango())
+  },[])
+
   useEffect(() => {
-    prop.__rx_requestStructures();
-    prop.__rx_requestAllLigands();
+    dispatch(requestAllLigands())
 
     dispatch(requestBanMetadata("b", "LSU"));
     dispatch(requestBanMetadata("e", "LSU"));
@@ -59,25 +65,27 @@ const Main: React.FC<MainProps> = (prop: MainProps) => {
     <div>
       <TemporaryDrawer />
       <Display />
+      <Toaster/>
     </div>
   );
 };
 
-const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
-  __rx_structures: state.structures.neo_response,
-  loading: state.structures.Loading,
-});
+// const mapstate = (state: AppState, ownprops: OwnProps): ReduxProps => ({
+//   __rx_structures: state.structures.neo_response,
+//   loading: state.structures.Loading,
+// });
 
-const mapdispatch = (
-  dispatch: ThunkDispatch<any, any, AppActions>,
-  ownprops: OwnProps
-): DispatchProps => ({
-  __rx_requestStructures: () => dispatch(redux.requestAllStructuresDjango()),
-  // __rx_requestRNAs      : ()=> dispatch(requestAllRNAs()),
-  __rx_requestAllLigands: () => dispatch(requestAllLigands()),
-});
+// const mapdispatch = (
+//   dispatch: ThunkDispatch<any, any, AppActions>,
+//   ownprops: OwnProps
+// ): DispatchProps => ({
+//   __rx_requestStructures: () => dispatch(redux.requestAllStructuresDjango()),
+//   // __rx_requestRNAs      : ()=> dispatch(requestAllRNAs()),
+//   __rx_requestAllLigands: () => dispatch(requestAllLigands()),
+// });
 
-export default connect(mapstate, mapdispatch)(Main);
+// export default connect(mapstate, mapdispatch)(Main);
+export default Main;
 export const truncate = (str: string, charlim: number, truncateto: number) => {
   if (typeof str === "undefined") {
     return str;

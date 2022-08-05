@@ -4,8 +4,13 @@ import qs from 'qs'
 import { ProteinClass, RNAClass } from "../RibosomeTypes";
 
 const BACKEND: any = process.env.REACT_APP_DJANGO_URL;
-type DjangoAPIs = "neo4j" | "static_files"
+type DjangoAPIs = "neo4j" | "static_files" | "utils"
 
+type UtilsEndpoints  = number_of_structures;
+interface number_of_structures{
+  endpoint:"number_of_structures",
+  params:null
+};
 
 type StaticFilesEndpoints =
   | ranged_align
@@ -118,7 +123,8 @@ type Neo4jEndpoints =
   | get_all_ligandlike
   | get_full_structure
   | get_RibosomeStructure
-type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints;
+
+type DjangoEndpoinds = Neo4jEndpoints | StaticFilesEndpoints | UtilsEndpoints;
 
 
 interface proteins_number {
@@ -243,7 +249,8 @@ interface get_ligand_nbhd {
 
 export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {
   const URI = encodeURI(`${BACKEND}/${api}/${ep.endpoint}/`);
-  return ep.params != null ? Axios.get(URI, {
+  console.log("geneo4jdata: ",URI);
+  let intercept = ep.params != null ? Axios.get(URI, {
     params: ep.params, paramsSerializer: params => qs.stringify(params,
       {
         arrayFormat: "repeat"
@@ -251,7 +258,10 @@ export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {
     )
   }) : Axios.get(URI);
 
+  // console.log("intercept: ",intercept);
+  return intercept
 };
+
 
 
 export const download_zip = (params: {

@@ -21,3 +21,9 @@ options undefined  when returning from a protclass link to a ligand prediction.
 
 
 
+# Caching/Pagination 
+
+big structure profiles are the biggest source of lag. what depends on them:
+- `VisualizationPage` uses polymer miminal representation of data
+- most of the fetching is done in `/src/components/Main.tsx`
+- given that a lot of front-facing functionality (filters in particular) depends on the monolithic neostruct array being available -- let's just fetch it in the background but populate pages gradually. 

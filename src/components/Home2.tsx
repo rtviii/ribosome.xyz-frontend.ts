@@ -21,6 +21,9 @@ import { useSelector } from     'react-redux'                             ;
 import { getNeo4jData } from    '../redux/AsyncActions/getNeo4jData'      ;
 import { useHistory } from 'react-router-dom';
 import { Theme } from '@material-ui/core';
+import toast, { Toaster } from 'react-hot-toast';
+import Button from '@mui/material/Button/Button';
+const notify = () => toast('Here is your toast.');
 
 
 const AcknowlegementsList = () => {
@@ -47,6 +50,10 @@ const AcknowlegementsList = () => {
     //   maxWidth: 100,
     },
   })();
+
+
+
+
   return (
 
     <Grid item className={plugstyles.acknlist} xs={12} spacing={3}>
@@ -70,7 +77,6 @@ const AcknowlegementsList = () => {
 			</Grid>
 		</Grid>
 
-
 		<Grid item container className={plugstyles.root}>
 				<Grid item xs={2} justify="center" alignItems="center" alignContent="center">
 				<img src={bioplogo} className={plugstyles.cardmedia} />
@@ -82,7 +88,6 @@ const AcknowlegementsList = () => {
 				</Typography>
 				</Grid>
 			</Grid>
-
         <Grid item  container className={plugstyles.root}>
 				  <Grid item xs={2}>
 					  <img src={pfam} className={plugstyles.cardmedia} />
@@ -108,7 +113,7 @@ const AcknowlegementsList = () => {
 Developed by <a href="https://kdaoduc.com/">Khanh Dao-Duc's group</a> at the University of British Columbia, in collaboration with <a href="https://ww2.chemistry.gatech.edu/~lw26/index.html#PI">
                     Loren Williams' group
                   </a> at Georgia Institute of Technology.
- Please address your questions and suggestions regarding RiboXYZ to <a href="mailto:ribosome.xyz@gmail.com">ribosome.xyz@gmail.com</a>.
+ Please address your questions and suggestions to <a href="mailto:kdd@math.ubc.ca">Khanh Dao-Duc</a>.
  </p>
 
               </Typography>
@@ -170,7 +175,7 @@ export const Home2 = () => {
 
 const MainContent = () =>{
 
-	const  structnumber             = useSelector        (( state:AppState ) => state.structures.derived_filtered.length)
+	const  structnumber             = useSelector        (( state:AppState ) => state.structures.neo_response.length)
 	 const [protn       , setsprotn] = useState   <number>(0                                                             )
 	 const  history                  = useHistory         (                                                              )
 	useEffect(() => {
@@ -234,6 +239,18 @@ const MainContent = () =>{
 
 
 
+  let [ number_of_structures, set_number_of_structures ] = useState(0);
+
+  useEffect(()=>{
+	getNeo4jData('utils', {
+		endpoint: "number_of_structures",
+		params  : null
+	}).then(r =>{
+		set_number_of_structures(r.data)
+		console.log(`Got response  :${r.data}`)
+	})
+  }, [])
+
 return(
 
 		<Grid container item style={{  padding: "10px" }} alignItems="flex-start"  alignContent='flex-start' xs={12} spacing={3}>
@@ -260,7 +277,7 @@ return(
 				<Grid item xs={4}>
 					<Paper className={mainstyles.tabpaper} onClick={() => history.push('/structs')}>
 						<Grid xs={12} alignContent="center" alignItems="center" justify='center' container>
-							<Typography align="center" style={{ fontSize: "18px", width: "100%", fontFamily: "Optima" }}>  {structnumber} Ribosome Structures</Typography>
+							<Typography align="center" style={{ fontSize: "18px", width: "100%", fontFamily: "Optima" }}>  {number_of_structures} Ribosome Structures</Typography>
 							<Typography align="center" style={{ color: "gray", fontSize: "12px", width: "100%" }}>Sub 4 Å Resolution</Typography>
 							<Grid item>
 								<img className={mainstyles.tabicon} src={structicon} />
