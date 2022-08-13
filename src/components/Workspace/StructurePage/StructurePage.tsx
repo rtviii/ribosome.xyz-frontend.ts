@@ -257,11 +257,9 @@ export const StructHeroCard = ({ rcsb_id, nomedia }: {
                 size="small"
                 style={{ textTransform: "none" }}
                 onClick={() => {
-
                   // console.log("sending params to vis:", { pathname: `/vis`, state: { 
                   //   struct: structdata.structure.rcsb_id 
                   // }});
-
                   history.push({ pathname: `/vis`, state: { struct: structdata.structure.rcsb_id } })
                 }}>
                 <VisibilityIcon />
@@ -280,19 +278,16 @@ export const StructHeroCard = ({ rcsb_id, nomedia }: {
                 Add To Workspace
               </Button>
             </Grid>
-
             <Grid item>
               <Button
-                size="small"
-                style={{ textTransform: "none" }}
-
-                onClick={() => {
-
+                size    = "small"
+                style   = {{ textTransform: "none" }}
+                onClick = {() => {
                   getNeo4jData("static_files", { endpoint: "download_structure", params: { struct_id: structdata.structure.rcsb_id } })
                     .then(r => {
                       fileDownload(
                         r.data,
-                        `${structdata.structure.rcsb_id}.pdb`,
+                        `${structdata.structure.rcsb_id}.cif`,
                         "chemical/x-mmcif"
                       )
                     })
