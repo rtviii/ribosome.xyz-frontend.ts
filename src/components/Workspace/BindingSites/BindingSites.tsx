@@ -400,9 +400,7 @@ const BindingSites = () => {
 			}
 
 			if (cur_vis_tab === 'origin') {
-
-
-				toast.loading(`Loadig structure ${current_binding_site?.rcsb_id.toUpperCase()}`, {
+				toast.loading(`Loading structure ${current_binding_site?.rcsb_id.toUpperCase()}`, {
 					icon: <img
 						height="30px"
 						width="30px"
@@ -471,7 +469,7 @@ const BindingSites = () => {
 
 			if (cur_vis_tab === 'prediction') {
 
-				toast.loading(`Loadig structure ${( current_binding_site!.rcsb_id as string ).toUpperCase()}`, {
+				toast.loading(`Loading structure ${( current_binding_site!.rcsb_id as string ).toUpperCase()}`, {
 					icon: <img
 						height="30px"
 						width="30px"
@@ -506,7 +504,7 @@ const BindingSites = () => {
 			// 	autoDismiss: true,
 			// })
 
-			toast.loading(`Loadig structure ${cur_tgt?.struct.rcsb_id.toUpperCase()}`, {
+			toast.loading(`Loading structure ${cur_tgt?.struct.rcsb_id.toUpperCase()}`, {
 				icon: <img
 					height="30px"
 					width="30px"
@@ -534,7 +532,7 @@ const BindingSites = () => {
 
 		if (current_binding_site != null && cur_vis_tab === 'origin') {
 
-			toast.loading(`Loadig structure ${current_binding_site?.rcsb_id.toUpperCase()}`, {
+			toast.loading(`Loading structure ${current_binding_site?.rcsb_id.toUpperCase()}`, {
 				icon: <img
 					height="30px"
 					width="30px"
