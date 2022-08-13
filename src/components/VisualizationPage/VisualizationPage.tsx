@@ -861,8 +861,8 @@ const VisualizationPage = (props: any) => {
   useEffect(() => {
 
     var options = {
-      moleculeId: 'Element to visualize can be selected above.',
-      hideControls: true,
+      moleculeId      : 'Element to visualize can be selected above.',
+      hideControls    : true,
       layoutIsExpanded: false,
     }
 
@@ -909,6 +909,7 @@ const VisualizationPage = (props: any) => {
       parent: parent_struct,
     })
 
+    viewerInstance.canvas.setBgColor({r:255, g:255, b:255});
     setLastViewed([`protein.${banclass}`, parent_struct])
 
   }
