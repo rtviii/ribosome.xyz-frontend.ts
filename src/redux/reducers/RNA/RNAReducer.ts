@@ -99,7 +99,7 @@ const RnaClassFilterRegistry: FilterRegistry<RnaFilter, RNAProfile> = {
       }
     },
     "RESOLUTION":{
-      value    : [0,5],
+      value    : [0,4],
       set      : false,
       predicate: (value) => (rna)=>{
 return rna.parent_resolution >= (value as number[])[0] && rna.parent_resolution <= (value as number[])[1]
@@ -107,7 +107,7 @@ return rna.parent_resolution >= (value as number[])[0] && rna.parent_resolution 
     },
 
     "YEAR": {
-      value    : [2012, 2021],
+      value    : [2000, 2022],
       set      : false,
       predicate: (value) => (rna)=>{
      return rna.parent_year >= (value as number[])[0] && rna.parent_year <= (value as number[])[1]

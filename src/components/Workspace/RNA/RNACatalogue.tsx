@@ -271,12 +271,12 @@ const RNACatalogue: React.FC<ReduxProps & DispatchProps> = (prop) => {
           <ListItem>
             {/* <DropdownTreeSelect data={data} onChange={onChange} keepOpenOnSelect={true} keepTreeOnSearch={true} keepChildrenOnSearch={true} /> */}
           </ListItem>
-          <ListItem>
+          {/* <ListItem>
             <BulkDownloadMenu />
-          </ListItem>
-          <ListItem>
+          </ListItem> */}
+          {/* <ListItem>
             <Cart />
-          </ListItem>
+          </ListItem> */}
 
 
           <ListItem>
