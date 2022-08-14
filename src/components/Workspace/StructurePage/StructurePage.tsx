@@ -266,7 +266,7 @@ export const StructHeroCard = ({ rcsb_id, nomedia }: {
                 Visualize
               </Button>
             </Grid>
-            <Grid item>
+            {/* <Grid item>
               <Button
                 size="small"
                 style={{ textTransform: "none" }}
@@ -277,12 +277,12 @@ export const StructHeroCard = ({ rcsb_id, nomedia }: {
                 <BookmarkIcon />
                 Add To Workspace
               </Button>
-            </Grid>
+            </Grid> */}
             <Grid item>
               <Button
-                size    = "small"
-                style   = {{ textTransform: "none" }}
-                onClick = {() => {
+                size="small"
+                style={{ textTransform: "none" }}
+                onClick={() => {
                   getNeo4jData("static_files", { endpoint: "download_structure", params: { struct_id: structdata.structure.rcsb_id } })
                     .then(r => {
                       fileDownload(
@@ -308,9 +308,9 @@ export const StructHeroCard = ({ rcsb_id, nomedia }: {
 
 export type GetStructResponseShape = {
   structure: RibosomeStructure;
-  ligands  : Ligand[];
-  rnas     : RNA[];
-  proteins      : Protein[];
+  ligands: Ligand[];
+  rnas: RNA[];
+  proteins: Protein[];
 };
 const StructurePage = () => {
 
@@ -318,19 +318,19 @@ const StructurePage = () => {
 
 
   const [structdata, setstruct] = useState<RibosomeStructure>();
-  const [protdata, setprots]    = useState<Protein[]>([]);
-  const [rrnas, setrrnas]       = useState<RNA[]>([]);
-  const [ligands, setligands]   = useState<Ligand[]>([]);
+  const [protdata, setprots] = useState<Protein[]>([]);
+  const [rrnas, setrrnas] = useState<RNA[]>([]);
+  const [ligands, setligands] = useState<Ligand[]>([]);
 
-  const history        = useHistory()
-  const activecat      = useSelector((state: AppState) => state.Interface.structure_page.component)
+  const history = useHistory()
+  const activecat = useSelector((state: AppState) => state.Interface.structure_page.component)
 
-  
+
 
   useEffect(() => {
     getNeo4jData("neo4j", {
       endpoint: "get_struct",
-      params  : { pdbid: pdbid },
+      params: { pdbid: pdbid },
     }).then(
       resp => {
 
@@ -362,7 +362,7 @@ const StructurePage = () => {
   useEffect(() => {
 
     console.log("Filtering protdata ", protdata);
-    
+
     var lsu = protdata.filter(x => x.nomenclature.length === 1 && flattenDeep(x.nomenclature.map(name => { return name.match(/L/) })).includes('L'))
     var ssu = protdata.filter(x => x.nomenclature.length === 1 && flattenDeep(x.nomenclature.map(name => { return name.match(/S/) })).includes('S'))
     var other = protdata.filter(x => ![...lsu, ...ssu].includes(x))
@@ -382,10 +382,10 @@ const StructurePage = () => {
     <Grid xs={12} container item spacing={2} style={{ padding: "5px" }}>
       <Grid xs={3} container item alignContent="flex-start" spacing={2}>
         <StructHeroCard rcsb_id={structdata.rcsb_id} nomedia={false} />
-        <Grid item>
+        {/* <Grid item>
 
           <Cart />
-        </Grid>
+        </Grid> */}
         <Grid item>
           <DashboardButton />
         </Grid>
@@ -416,49 +416,48 @@ const StructurePage = () => {
 
         <Grid container xs={12} spacing={1} >
 
-          {lsu.map(protein => {
-            return <Grid item xs={12}>
-              <RibosomalProteinCard displayPill={false} protein={protein} />
-            </Grid>
-          })
+
+          {
+          }
+
+          {
+            (() => {
+              switch (activecat) {
+                case "ligand":
+                  return ligands.map(lig => (
+                    <Grid item>
+                      <LigandHeroCard lig={lig} outline={false} />
+                    </Grid>
+                  ))
+                case "protein":
+                    return [ ...lsu, ...ssu,...other ].map(protein => {
+                      return <Grid item xs={12}>
+                        <RibosomalProteinCard displayPill={false} protein={protein} />
+                      </Grid>
+                    }) 
+                case "rna":
+                  return rrnas.map(obj => (
+                    <Grid item xs={12}>
+                      <RNACard e={
+                        {
+                          ...obj,
+                          parent_method: structdata!.expMethod,
+                          parent_resolution: structdata!.resolution,
+                          parent_year: structdata!.citation_year,
+                        }}
+
+                        displayPill={false} />
+                    </Grid>
+                  ))
+
+              }
+            })()
+
           }
 
 
-
-          {other.map(protein => {
-            return <Grid item xs={12}>
-              <RibosomalProteinCard displayPill={false} protein={protein} />
-            </Grid>
-          })}
-
-          {ssu.map(protein => {
-            return <Grid item xs={12}>
-              <RibosomalProteinCard displayPill={false} protein={protein} />
-            </Grid>
-          })}
-
           {
-            rrnas.map(obj => (
-              <Grid item xs={12}>
-                <RNACard e={
-                  {
-                    ...obj,
-                  parent_method    : structdata!.expMethod,
-                  parent_resolution: structdata!.resolution,
-                  parent_year      : structdata!.citation_year,
-                }}
-
-                  displayPill={false} />
-              </Grid>
-            ))}
-
-
-          {
-            ligands.map(lig => (
-                <Grid item>
-                  <LigandHeroCard lig={lig} outline={false} />
-                </Grid>
-              ))}
+          }
 
 
         </Grid>
