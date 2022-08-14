@@ -93,8 +93,7 @@ export default function Nomenclature() {
       setValue(subcomponent)
     }
 
-    console.log("ogt params", params);
-
+    console.log("got parameters", params);
 
   }, [params])
 
@@ -142,9 +141,9 @@ export default function Nomenclature() {
           variant="fullWidth"
           aria-label="icon label tabs example"
         >
-          <Tab label="Structures" value='structure' />
-          <Tab label="Proteins" value='protein' />
-          <Tab label="RNA" value='rna' />
+          <Tab key={1} label="Structures" value='structure' />
+          <Tab key={2} label="Proteins" value='protein' />
+          <Tab key={3} label="RNA" value='rna' />
 
         </Tabs>
 
@@ -191,10 +190,11 @@ export default function Nomenclature() {
 
 
       </Grid>
+
       <Grid item xs={2}>
 
         <List >
-          <ListItem>
+          <ListItem key={1}>
             <TextField
               id="outlined-required"
               label="Search"
@@ -204,20 +204,24 @@ export default function Nomenclature() {
               onChange={(e) => { setsearch(e.target.value) }}
             />
           </ListItem>
-          <ListItem>
-            <CSVLink data={gentable()}>
-              <Button fullWidth style={{ textTransform: "none" }} 
-              
-              disabled={true}
-              
-              color="primary" variant="outlined"> Download as Table</Button>
-            </CSVLink>
-          </ListItem>
+          {
+            value === 'protein' ?
+
+              <ListItem key={2}>
+                <CSVLink data={gentable()} filename="ribosomal_proteins_nomenclature_ban2014.csv">
+
+                  <Button fullWidth style={{ textTransform: "none" }} color="primary" variant="outlined"
+                  > Download as Table</Button>
+                </CSVLink>
+              </ListItem> : null
+
+          }
           <ListItem>
             <DashboardButton />
           </ListItem>
         </List>
       </Grid>
+
       <Grid item xs={10}>
         {(
           () => {
@@ -227,43 +231,36 @@ export default function Nomenclature() {
                 <Table className={classes.table} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Protein Nomenclature Class</TableCell>
-                      <TableCell>In      Bacteria          </TableCell>
-                      <TableCell>In      Yeast             </TableCell>
-                      <TableCell>In      Human             </TableCell>
-
-
-                      <TableCell align="right">Associated PFAM Families</TableCell>
+                      <TableCell key={1}>Protein Nomenclature Class</TableCell>
+                      <TableCell key={2}>In      Bacteria          </TableCell>
+                      <TableCell key={3}>In      Yeast             </TableCell>
+                      <TableCell key={4}>In      Human             </TableCell>
+                      <TableCell key={5} align="right">Associated PFAM Families</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {
+                    {Object.entries(banclasses).filter(r => {
 
-                      Object.entries(banclasses).filter(r => {
+                      if (search === 'Search' || search === '') { return true }
+                      else {
+                        return (r[0] + r[1].b + r[1].y + r[1].h).toLowerCase().includes(search.toLowerCase())
 
-                        if (search === 'Search' || search === '') { return true }
-                        else {
-                          return (r[0] + r[1].b + r[1].y + r[1].h).toLowerCase().includes(search.toLowerCase())
-
-                        }
-                      }).map(row => {
-                        return <TableRow key={row[0]}>
-                          <TableCell
-
-                            className={classes.classButton}
-                            color="primary"
-                            scope="row"
-
-                            onClick={() => { history.push(`/rps/${row[0]}`) }}>
-                            <b>{row[0]}</b>
-                          </TableCell>
-                          <TableCell >{row[1].b}</TableCell>
-                          <TableCell >{row[1].y}</TableCell>
-                          <TableCell >{row[1].h}</TableCell>
-                          <TableCell align="right">{row[1].pfamDomainAccession.map((a) => <div><a href={`https://pfam.xfam.org/family/${a}`}>{a}</a></div>)}</TableCell>
-                        </TableRow>
-                      })
-                    }
+                      }
+                    }).map(row => {
+                      return <TableRow key={row[0]}>
+                        <TableCell
+                          className={classes.classButton}
+                          color="primary"
+                          scope="row"
+                          onClick={() => { history.push(`/rps/${row[0]}`) }}>
+                          <b>{row[0]}</b>
+                        </TableCell>
+                        <TableCell >{row[1].b}</TableCell>
+                        <TableCell >{row[1].y}</TableCell>
+                        <TableCell >{row[1].h}</TableCell>
+                        <TableCell align="right">{row[1].pfamDomainAccession.map((a) => <div><a href={`https://pfam.xfam.org/family/${a}`}>{a}</a></div>)}</TableCell>
+                      </TableRow>
+                    })}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -305,34 +302,29 @@ export default function Nomenclature() {
                 </Table>
               </TableContainer>
             } else if (value === 'structure') {
-              return <div className={classes.root} style={{display:"flex", flexDirection:"column"}}>
+              return <div className={classes.root} style={{ display: "flex", flexDirection: "column" }}>
+
                 {structures.length > 0 ? <>
-                  <Pagination {...{ gotopage: (pid) => dispatch(gotopage(pid)), pagecount: pagecount }} />
+                  <Pagination  {...{ gotopage: (pid) => dispatch(gotopage(pid)), pagecount: pagecount }} />
                   {structures
-
-
                     .slice((curpage - 1) * 20, curpage * 20)
                     .map(s => {
-
-                      const source = s.rnas.map(rp => ({ [rp.auth_asym_id]: rp.nomenclature }))
-                      return <Accordion
-                      
-                        style={{marginBottom:"10px"}}
-                      >
+                      console.log("Displaying struct ", s)
+                      const source = s.rnas.map(rp => ({ [rp.auth_asym_id]: rp.nomenclature === null ? "" : rp.nomenclature }))
+                      return <Accordion key={s.struct.rcsb_id} style={{ marginBottom: "10px" }}>
                         <AccordionSummary
-                          style={{display:"flex", alignContent:"center",alignItems:"center", justifyContent:"center", justifyItems:"center"}}
+                          style={{ display: "flex", alignContent: "center", alignItems: "center", justifyContent: "center", justifyItems: "center" }}
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1a-content"
                           id="panel1a-header">
-
                           <img src={structicon} height={25} width={25} />
 
-                          <Typography style={{marginRight:"20px"}} >{s.struct.rcsb_id} </Typography>
+                          <Typography style={{ marginRight: "20px" }} >{s.struct.rcsb_id} </Typography>
 
-                          <Typography  style={{fontSize:"10px"}}>{s.struct.citation_title}</Typography>
+                          <Typography style={{ fontSize: "10px" }}>{s.struct.citation_title}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                          <StructPaper {...s}/>
+                          <StructPaper {...s} />
 
 
 
@@ -360,35 +352,42 @@ export default function Nomenclature() {
 
 
 
-const StructPaper = (struct:NeoStruct) =>{
+const StructPaper = (struct: NeoStruct) => {
 
-  
+
 
   useEffect(() => {
-    for (var _ of struct.rnas){
-      if ( _.nomenclature == null ){
-        console.log("------>",struct);
-        console.log(struct.rnas);
-        
+    for (var rna of struct.rnas) {
+      if (rna.nomenclature === null) {
+
+
       }
     }
   }, [])
 
-  return <Paper variant="outlined">
-  {struct.rnas !== null ?   struct.rnas.map(rna => {
-    if (rna.nomenclature!== null){
-    return <pre> {rna.auth_asym_id}:{rna.nomenclature.length> 0 ? rna.nomenclature : "Undefined"} </pre>
+  return  <Paper variant="outlined">
+    {struct.rnas !== null ? struct.rnas.map(rna => {
+      if (rna.nomenclature !== null) {
+        return <pre key={rna.auth_asym_id}> {rna.auth_asym_id}:{rna.nomenclature.length > 0 ? rna.nomenclature : "Undefined"} </pre>
+      }
     }
-  }
-    ) 
-    : ""
-   }
+    )
+      : ""
+    }
 
 
+    {
+    struct.rps !== null ?
+      struct.rps.map(rp =>{ 
 
-
-
-  {struct.rps !== null ? struct.rps.map(rp  => {return <pre> {rp.auth_asym_id}:{rp.nomenclature.length> 0 ? rp.nomenclature.reduce((a,b)=>{return a + ',' + b}, '') : "Undefined"} </pre>}): ""}
-              </Paper>
+        rp.nomenclature === null ? rp.nomenclature = [ "Undefined" ] : rp.nomenclature = rp.nomenclature
+        return <pre key={rp.auth_asym_id}> {rp.auth_asym_id} :
+          {
+            rp.nomenclature === null || rp.nomenclature.length > 0 ?
+              rp.nomenclature.reduce((a, b) => { return a + ',' + b }, '') :
+              "Undefined"
+          } </pre>
+      }) : ""}
+  </Paper>
 
 }

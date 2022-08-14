@@ -263,7 +263,7 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
 
               {selectedItems.length > 0 ?
 
-                <CSVLink data={generate_wspace_summary()} style={{ textTransform: "none", textDecoration: "none", color: "blac" }}>
+                <CSVLink data={generate_wspace_summary()} style={{ textTransform: "none", textDecoration: "none", color: "black" }}>
                   Download Summary
                 </CSVLink> :
                 "Download Summary"

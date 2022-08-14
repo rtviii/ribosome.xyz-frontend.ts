@@ -211,7 +211,9 @@ export const _StructuresReducer = (
       }
       return {...state, current_page:state.current_page-1}
     case "GOTO_PAGE_STRUCTS":
+      console.log("action gotoopage", action.page_id)
       if (action.page_id <= state.pages_total && action.page_id >=1) {
+
         return {...state, current_page: action.page_id}
       }
     case "RESET_ALL_FILTERS":
