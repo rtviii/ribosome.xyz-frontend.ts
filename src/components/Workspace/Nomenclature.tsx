@@ -98,7 +98,7 @@ export default function Nomenclature() {
 
   }, [params])
 
-  const [value, setValue] = React.useState('structure');
+  const [value, setValue] = React.useState('protein');
   const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
     setValue(newValue);
   };
@@ -163,6 +163,7 @@ export default function Nomenclature() {
               </Typography>
             </Paper>
           }
+
           else if (value === 'rna') {
 
             return <Paper variant="outlined" className={classes.pageData}>
