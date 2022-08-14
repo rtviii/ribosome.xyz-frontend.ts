@@ -205,7 +205,7 @@ export const RNACard: React.FC<RNACardProps> = (prop) => {
                </Grid>
 
           </Grid>
-          <Grid container item xs={4}>
+          {/* <Grid container item xs={4}>
             <Button
             className={classes.actionButton}
 
@@ -220,7 +220,7 @@ export const RNACard: React.FC<RNACardProps> = (prop) => {
               Add to Workspace
               <img src={bookmark} style={{ width: "30px", height: "30px" }} />
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
       </CardActions>
 
