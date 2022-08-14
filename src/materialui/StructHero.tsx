@@ -134,7 +134,7 @@ export const StructHero = ({ d, inCart, topless }: { d: NeoStruct, inCart: boole
         <Button target='_blank' href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
           EMDB
         </Button>
-        <Tooltip title={`${inCart ? "Delete From" : "Add To"} Workspace`} arrow>
+        {/* <Tooltip title={`${inCart ? "Delete From" : "Add To"} Workspace`} arrow>
 
 
           {inCart ?
@@ -155,7 +155,7 @@ export const StructHero = ({ d, inCart, topless }: { d: NeoStruct, inCart: boole
               }
             />}
 
-        </Tooltip>
+        </Tooltip> */}
         <Tooltip title={`Download .cif model`} arrow placement="right">
           <GetApp
             style={{ cursor: "pointer" }}
