@@ -20,15 +20,15 @@ const filtersReducerDefaultState: FiltersReducerState = {
   filters         : {
     PROTEIN_COUNT: {
       set: false,
-      value: [25, 150],
+      value: [25, 200],
     },
     YEAR: {
       set: false,
-      value: [2012, 2021],
+      value: [2000, 2022],
     },
     RESOLUTION: {
       set: false,
-      value: [1, 6],
+      value: [1, 4],
     },
     PROTEINS_PRESENT: {
       set: false,

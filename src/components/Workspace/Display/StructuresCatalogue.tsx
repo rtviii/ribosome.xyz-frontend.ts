@@ -574,10 +574,11 @@ useEffect(() => {
           <StructuresSearchField/>
         </ListItem>
         <ListItem key={"year"}>
-          <ValueSlider {...{filter_type: "YEAR",max:2021,min:2012,name:"Deposition Date", step:1, action_to_dispatch:structsFilterChangeAC}}/>
+          <ValueSlider {...{filter_type: "YEAR",
+          max:2022,min:2000,name:"Deposition Date", step:1, action_to_dispatch:structsFilterChangeAC}}/>
         </ListItem>
         <ListItem key={"resolution"}>
-          <ValueSlider {...{filter_type: "RESOLUTION",max:6,min:1,name:"Resolution", step:0.1, action_to_dispatch: structsFilterChangeAC}}/>
+          <ValueSlider {...{filter_type: "RESOLUTION",max:4,min:1,name:"Resolution", step:0.1, action_to_dispatch: structsFilterChangeAC}}/>
         </ListItem>
         <ListItem key={"select-proteins"} >
           <ProteinsPresentFilter/>
@@ -609,12 +610,12 @@ useEffect(() => {
         {/* <DropdownTreeSelect data={data} onChange={onChange}  keepOpenOnSelect={true} keepTreeOnSearch={true} keepChildrenOnSearch={true}/> */}
         </ListItem>
 
-        <ListItem >
+        {/* <ListItem >
         <Cart />
-        </ListItem>
-        <ListItem key={"bulkdownload"} >
+        </ListItem> */}
+        {/* <ListItem key={"bulkdownload"} >
         <BulkDownloadMenu/>
-        </ListItem>
+        </ListItem> */}
         <ListItem >
         <DashboardButton/>
         </ListItem>

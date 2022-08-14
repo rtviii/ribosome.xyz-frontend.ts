@@ -216,18 +216,24 @@ export const filterChangeActionCreator = (
 ): filterChange => {
   let filterTypeIsSet: boolean = (() => {
     switch (filttype) {
+
       case "PROTEINS_PRESENT":
         return !(newval.length === 0);
+
       case "PROTEIN_COUNT":
-        return !(newval[0] === 25 && newval[1] === 150);
+        return !(newval[0] === 25 && newval[1] === 200);
+
       case "RESOLUTION":
-        return !(newval[0] === 1 && newval[1] === 6);
+        return !(newval[0] === 1 && newval[1] === 4);
+
       case "SEARCH":
         return !(newval.length === 0);
+
       case "SPECIES":
         return !(newval.length === 0);
+
       case "YEAR":
-        return !(newval[0] === 2012 && newval[1] === 2021);
+        return !(newval[0] === 2000 && newval[1] === 2022);
       default:
         return false;
     }
