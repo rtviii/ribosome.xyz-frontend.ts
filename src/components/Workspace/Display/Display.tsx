@@ -14,6 +14,7 @@ import ProteinAlignment from                        './../ProteinAlign/ProteinAl
 import VisualizationPage from                       '../../VisualizationPage/VisualizationPage'
 import BindingSites from '../BindingSites/BindingSites'
 import Nomenclature from "../Nomenclature";
+import { HowTo } from "./HowTo";
 
 const Display = () => {
   return (
@@ -24,6 +25,7 @@ const Display = () => {
       </Route>
 
       <Switch>
+        <Route exact path = "/howto" component                        = {HowTo} />
         <Route exact path = "/super" component                        = {ProteinAlignment} />
         <Route exact path = "/home"                           component = {Home2               } />
         <Route exact path = "/structs"                        component = {WorkspaceCatalogue } />
