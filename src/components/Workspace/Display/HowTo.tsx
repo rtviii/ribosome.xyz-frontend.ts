@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { Typography } from "@material-ui/core";
-
+import { DashboardButton } from '../../../materialui/Dashboard/Dashboard';
 
 export const HowTo = () => {
   return (
@@ -15,6 +15,9 @@ export const HowTo = () => {
       <Grid item xs={12}>
         <Typography variant="h3">User Manual</Typography>
         For an in-depth overview of tools and sections of the website, please refer to the <a href={process.env.PUBLIC_URL + '/RiboXYZ_usermanual.pdf'}>User Manual</a> (downloadable pdf).
+      </Grid>
+      <Grid item xs={1}>
+          <DashboardButton />
       </Grid>
 
       <Grid item xs={12}>
