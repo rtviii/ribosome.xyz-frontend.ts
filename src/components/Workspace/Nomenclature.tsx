@@ -141,8 +141,8 @@ export default function Nomenclature() {
           variant="fullWidth"
           aria-label="icon label tabs example"
         >
-          <Tab key={1} label="Structures" value='structure' />
           <Tab key={2} label="Proteins" value='protein' />
+          <Tab key={1} label="Structures" value='structure' />
           <Tab key={3} label="RNA" value='rna' />
 
         </Tabs>
