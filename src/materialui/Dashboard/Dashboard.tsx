@@ -221,6 +221,7 @@ const _TemporaryDrawer: React.FC<DashProps> = (props) => {
         {/*  */}
         <MenuItem key='new1' icon={align} menutext="3D Superimposition" linkto='/super' /> 
         <MenuItem key='new1' icon={ligands} menutext="Ligands/Binding Sites" linkto='/bindingsites' />
+        <MenuItem key='new1' icon={process.env.PUBLIC_URL + '/question.png'} menutext="How To" linkto='/howto' />
 
       {/* <ListItem button key={"wspace-dash"} onClick={() => {
         dispatch(toggle_cart())
