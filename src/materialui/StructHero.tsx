@@ -79,8 +79,6 @@ export const StructHero = ({ d, inCart, topless }: { d: NeoStruct, inCart: boole
     <Card className={classes.card} id={`struct-hero-${d.struct.rcsb_id}`}variant='outlined' style={{}}>
       <CardActionArea >
         <CardContent onClick={() => { history.push(`/structs/${d.struct.rcsb_id}`) }}>
-
-
           <CardMedia
             component="img"
             alt={""}
@@ -139,36 +137,28 @@ export const StructHero = ({ d, inCart, topless }: { d: NeoStruct, inCart: boole
         <Button target='_blank' href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
           EMDB
         </Button>
-        {/* <Tooltip title={`${inCart ? "Delete From" : "Add To"} Workspace`} arrow>
-
-
-          {inCart ?
-
-            <BookmarkIcon
-
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                dispatch(cart_remove_item(d.struct))
-              }} /> :
-
-            <BookmarkBorderIcon
-              style={{ cursor: "pointer" }}
-              onClick={
-                () => {
-                  dispatch(cart_add_item(d.struct))
-                }
-              }
-            />}
-
-        </Tooltip> */}
-        <Tooltip title={`Download .cif model`} arrow placement="right">
+        <Tooltip title={`Visualize structure`} arrow placement="right">
           <GetApp
             style={{ cursor: "pointer" }}
             onClick={() => {
 
+            }}
+          />
+        </Tooltip>
+        <Tooltip title={`Open in Binding Sites (if any are present).`} arrow placement="right">
+          <GetApp
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+
+            }}
+          />
+        </Tooltip>
+        <Tooltip title={`Download .cif model`} arrow placement="right">
+          <GetApp
+            style={{ cursor: "pointer" }}
+            onClick={() => {
               getNeo4jData("static_files", { endpoint: "download_structure", params: { struct_id: d.struct.rcsb_id } })
                 .then(r => {
-
                   fileDownload(
                     r.data,
                     `${d.struct.rcsb_id}.cif`,
@@ -177,9 +167,7 @@ export const StructHero = ({ d, inCart, topless }: { d: NeoStruct, inCart: boole
                 })
 
             }}
-
           />
-
         </Tooltip>
 
       </CardActions>
