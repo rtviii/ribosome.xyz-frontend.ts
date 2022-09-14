@@ -44,6 +44,7 @@ import { debounce } from 'lodash'
 import { log } from "console";
 import toast, { Toaster } from "react-hot-toast";
 import { border } from "@mui/system";
+import { useParams } from "react-router-dom";
 
 // viewer doc: https://embed.plnkr.co/plunk/afXaDJsKj9UutcTD
 const useSelectStyles = makeStyles((theme: Theme) =>
@@ -809,10 +810,13 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 // @ts-ignore
 // const viewerInstance2 = new PDBeMolstarPlugin() as any;
 const VisualizationPage = (props: any) => {
+
   const dispatch = useDispatch();
   // ? Get uri parametrs ----------------------------
   const history: any = useHistory();
   const params = history.location.state;
+  const { pdbid }: { pdbid: string } = useParams();
+
   //? Get uri parametrs ----------------------------
 
   const [lastViewed, setLastViewed] = useState<Array<string | null>>([null, null])
@@ -861,11 +865,11 @@ const VisualizationPage = (props: any) => {
   useEffect(() => {
 
     var options = {
-      moleculeId      : 'Element to visualize can be selected above.',
+      moleculeId      : pdbid === null ? 'Element to visualize can be selected above.' : pdbid.toLocaleLowerCase(),
+      assemblyId: 'ASM_1',
       hideControls    : true,
       layoutIsExpanded: false,
     }
-
 
     var viewerContainer = document.getElementById('molstar-viewer');
 
@@ -879,7 +883,7 @@ const VisualizationPage = (props: any) => {
       if ((params as { struct: string }).struct) {
         selectStruct(params.struct)
       }
-  }, [])
+  }, [pdbid])
 
   const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => _.flattenDeep(Object.values(state.proteins.ban_classes)))
 
@@ -957,8 +961,8 @@ const VisualizationPage = (props: any) => {
   const current_neostruct = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
 
-  const current_protein_class: ProteinClass | null = useSelector((state: AppState) => state.visualization.protein_tab.class)
-  const current_protein_parent: string | null = useSelector((state: AppState) => state.visualization.protein_tab.parent)
+  const current_protein_class: ProteinClass | null  = useSelector((state: AppState) => state.visualization.protein_tab.class)
+  const current_protein_parent: string | null       = useSelector((state: AppState) => state.visualization.protein_tab.parent)
   const current_protein_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.protein_tab.auth_asym_id)
   const current_protein_neostruct: NeoStruct | null = useSelector((state: AppState) => current_protein_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id === current_protein_parent)[0])
 

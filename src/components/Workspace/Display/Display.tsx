@@ -34,12 +34,13 @@ const Display = () => {
         <Route exact path = "/rps/:nom"                       component = {RPPage             } />
         {/* <Route exact path = "/ligands"                        component = {LigandCatalogue    } />
         <Route exact path = "/ligands/:lig"                   component = {LigandCatalogue    } /> */}
-        <Route exact path = "/rnas/:rnaclass"                 component = {RNACatalogue       } />
-        <Route exact path = "/rnas"                           component = {RNACatalogue       } />
-        <Route exact path = "/bindingsites"                   component = {BindingSites         } />
-        <Route exact path = "/vis"                            component = {VisualizationPage  } />
-        <Route       path = "/nomenclature/:subcomponent?" component = {Nomenclature } />
-        <Route render={() => <Redirect to="/home" />} />
+        <Route exact path = "/rnas/:rnaclass"                 component        = {RNACatalogue       } />
+        <Route exact path = "/rnas"                           component        = {RNACatalogue       } />
+        <Route exact path = "/bindingsites"                   component        = {BindingSites         } />
+        <Route exact path = "/vis"                            component        = {VisualizationPage  } />
+        <Route exact path = "/vis/:pdbid"                            component = {VisualizationPage  } />
+        <Route path       = "/nomenclature/:subcomponent?" component           = {Nomenclature } />
+        <Route render     = {() => <Redirect to="/home" />} />
       </Switch>
     </div>
 

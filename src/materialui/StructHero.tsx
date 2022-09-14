@@ -20,7 +20,14 @@ import _ from 'lodash';
 import GetApp from '@material-ui/icons/GetApp';
 import { getNeo4jData } from '../redux/AsyncActions/getNeo4jData';
 import Tooltip from '@material-ui/core/Tooltip';
+import proteins from './../static/protein_icon_chain.png';
+import ligands  from './../static/ligand_icon.svg'
+import table    from './../static/table.png'
+import home     from './../static/mainpage_icon.svg'
+import align    from './../static/align_icon.svg'
+import eye      from './../static/eye_icon.svg'
 
+import { SvgIcon } from '@mui/material';
 const verticalStyle = makeStyles({
   card: {
     width: 300,
@@ -128,31 +135,22 @@ export const StructHero = ({ d, inCart, topless }: { d: NeoStruct, inCart: boole
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button target='_blank' href={`https://www.rcsb.org/structure/${d.struct.rcsb_id}`} size="small" color="primary">
+        <Button target='_blank' href={`https://www.rcsb.org/structure/${d.struct.rcsb_id}`} size="small" color="primary" style={{padding:0, margin:0}}>
           PDB
         </Button>
-        <Button target='_blank' href={`${d.struct.citation_pdbx_doi}`} size="small" color="primary">
+        <Button target='_blank' href={`${d.struct.citation_pdbx_doi}`} size="small" color="primary" style={{padding:0, margin:0}}>
           DOI
         </Button>
-        <Button target='_blank' href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
+        <Button target='_blank' href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary" style={{padding:0, margin:0}}>
           EMDB
         </Button>
-        <Tooltip title={`Visualize structure`} arrow placement="right">
-          <GetApp
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-
-            }}
-          />
+        <Tooltip title={`Visualize structure.`} arrow placement="right">
+        <img style={{height:"20px", width:"20px", cursor:"pointer"}} src={eye}></img>
         </Tooltip>
         <Tooltip title={`Open in Binding Sites (if any are present).`} arrow placement="right">
-          <GetApp
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-
-            }}
-          />
+          <img style={{height:"20px", width:"20px", cursor:"pointer"}} src={ligands}></img>
         </Tooltip>
+
         <Tooltip title={`Download .cif model`} arrow placement="right">
           <GetApp
             style={{ cursor: "pointer" }}

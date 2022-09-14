@@ -315,14 +315,13 @@ export type GetStructResponseShape = {
 const StructurePage = () => {
 
   const { pdbid }: { pdbid: string } = useParams();
-
+  const history = useHistory()
 
   const [structdata, setstruct] = useState<RibosomeStructure>();
   const [protdata, setprots] = useState<Protein[]>([]);
   const [rrnas, setrrnas] = useState<RNA[]>([]);
   const [ligands, setligands] = useState<Ligand[]>([]);
 
-  const history = useHistory()
   const activecat = useSelector((state: AppState) => state.Interface.structure_page.component)
 
 
