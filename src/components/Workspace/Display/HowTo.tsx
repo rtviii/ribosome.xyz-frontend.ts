@@ -14,8 +14,9 @@ export const HowTo = () => {
       
       <Grid item xs={12}>
         <Typography variant="h3">User Manual</Typography>
-        For an in-depth overview of tools and sections of the website, please refer to the <a href={process.env.PUBLIC_URL + '/RiboXYZ_usermanual.pdf'}>User Manual</a> (downloadable pdf).
+        For an in-depth overview of tools and sections of the website, please refer to the User Manual downloadable <a href={process.env.PUBLIC_URL + '/RiboXYZ_usermanual.pdf'}>pdf</a>.
       </Grid>
+
       <Grid item xs={1}>
           <DashboardButton />
       </Grid>

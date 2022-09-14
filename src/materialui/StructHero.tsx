@@ -69,6 +69,11 @@ export const StructHero = ({ d, inCart, topless }: { d: NeoStruct, inCart: boole
   const classes = verticalStyle();
   const history = useHistory();
   const dispatch = useDispatch()
+  useEffect(() => {
+    console.log("loaded struct", d);
+    
+
+  },[])
 
   return (
     <Card className={classes.card} id={`struct-hero-${d.struct.rcsb_id}`}variant='outlined' style={{}}>
@@ -128,7 +133,7 @@ export const StructHero = ({ d, inCart, topless }: { d: NeoStruct, inCart: boole
         <Button target='_blank' href={`https://www.rcsb.org/structure/${d.struct.rcsb_id}`} size="small" color="primary">
           PDB
         </Button>
-        <Button target='_blank' href={`https://doi.org/${d.struct.citation_pdbx_doi}`} size="small" color="primary">
+        <Button target='_blank' href={`${d.struct.citation_pdbx_doi}`} size="small" color="primary">
           DOI
         </Button>
         <Button target='_blank' href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
