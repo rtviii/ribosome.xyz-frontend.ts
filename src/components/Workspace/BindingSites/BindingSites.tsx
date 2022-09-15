@@ -1,10 +1,9 @@
-import React, { useEffect, useState, ChangeEvent } from 'react'
+import React, { useEffect, useState } from 'react'
 import Grid from "@material-ui/core/Grid";
 import Typography from '@material-ui/core/Typography/Typography';
 import Paper from '@material-ui/core/Paper/Paper';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { DashboardButton } from '../../../materialui/Dashboard/Dashboard';
-import { Cart } from '../Cart/Cart';
 import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../redux/store';
@@ -12,9 +11,6 @@ import TextField from '@material-ui/core/TextField/TextField';
 import { BindingSite, LigandBindingSite, LigandClass, LigandPrediction, MixedLigand, NeoStruct, Residue } from '../../../redux/DataInterfaces';
 import { Button } from '@material-ui/core';
 import { getNeo4jData } from '../../../redux/AsyncActions/getNeo4jData';
-import fileDownload from 'js-file-download';
-import axios from 'axios';
-import { CSVLink } from 'react-csv';
 import Dialog, { DialogProps } from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -26,6 +22,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import * as action from './../../../redux/reducers/BindingSites/ActionTypes'
 import _ from 'lodash';
 import { toast, Toaster } from 'react-hot-toast'
+import { CSVLink } from 'react-csv';
 
 // @ts-ignore
 const viewerInstance = new PDBeMolstarPlugin() as any;
@@ -236,25 +233,26 @@ const BindingSites = () => {
 
 	const dispatch = useDispatch();
 	const history = useHistory();
-	const { pdbid }: { pdbid: string } = useParams();
+	var { rcsb_id_param }: { rcsb_id_param: string | undefined } = useParams();
+
+
 
 	// Mounting the viewer
 	useEffect(() => {
 		var options = {
-			moleculeId: pdbid === null ? 'Element to visualize can be selected above.' : pdbid.toLocaleLowerCase(),
+			moleculeId: rcsb_id_param === undefined ? 'Element to visualize can be selected above.' : rcsb_id_param.toLocaleLowerCase(),
 			hideControls: true,
 			layoutIsExpanded: false,
 		}
 		var viewerContainer = document.getElementById('molstar-viewer');
 		viewerInstance.render(viewerContainer, options);
 
-		if (pdbid !== null) {
-			// throw up a toast for struct loading
-			toast.loading(`Loadig structure ${pdbid.toLocaleUpperCase()}`, {
+		if (rcsb_id_param !== undefined) {
+			toast.loading(`Loadig structure ${rcsb_id_param.toLocaleUpperCase()}`, {
 				icon: <img
 					height="30px"
 					width="30px"
-					src={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toLocaleUpperCase()}.png`}
+					src={process.env.PUBLIC_URL + `/ray_templates/_ray_${rcsb_id_param.toLocaleUpperCase()}.png`}
 					alt={"toast-icon-ribx"} />,
 				duration: 3000,
 				position: "bottom-center",
@@ -263,11 +261,6 @@ const BindingSites = () => {
 					border: "1px solid black"
 				}
 			})
-
-			// inject param into search field
-			
-
-
 		}
 
 	}, [])
@@ -275,8 +268,6 @@ const BindingSites = () => {
 	const current_binding_site: BindingSite | null = useSelector((state: AppState) => state.binding_sites.current_binding_site)
 	const cur_ligclass: LigandClass | null = useSelector((state: AppState) => state.binding_sites.current_ligand_class)
 	const cur_tgt: NeoStruct | null = useSelector((state: AppState) => state.binding_sites.current_target)
-
-	// const [cur_auth_asym_id, set_cur_auth_asym_id] = useState<string | null>(null)
 
 	const bsites = useSelector((state: AppState) => state.binding_sites.bsites)
 	const antibiotics = useSelector((state: AppState) => state.binding_sites.antibiotics)
@@ -287,14 +278,19 @@ const BindingSites = () => {
 	// const mixed       = useSelector                ((state: AppState) => state.binding_sites.mixed_ligands   )
 
 	const [bsites_derived, set_derived_bsites] = useState<BindingSite[]>()
-	useEffect(() => { set_derived_bsites(bsites) 
+	useEffect(() => {
+		set_derived_bsites(bsites)
 
-		if (pdbid !== null && bsites.filter((site) => site.rcsb_id === pdbid.toLocaleUpperCase())[0] !== undefined) {
-			console.log("Got filtered ", bsites.filter((site) => site.rcsb_id === pdbid.toLocaleUpperCase())[0]);
-			
-			action.current_struct_change(bsites.filter((site) => site.rcsb_id === pdbid.toLocaleUpperCase())[0]);
+		if (rcsb_id_param !== undefined) {
+			var parametrized = bsites.filter(bs => bs.rcsb_id === ( rcsb_id_param as string ).toUpperCase())
+			if (parametrized.length > 0) {
+				dispatch(action.current_struct_change(parametrized[0]))
+			}
 		}
-	}, [bsites, pdbid])
+
+
+
+	}, [bsites])
 
 	const [derived_antibiotics, set_derived_antibiotics] = useState<LigandClass[]>([])
 	useEffect(() => { set_derived_antibiotics(antibiotics) }, [antibiotics])
@@ -759,6 +755,7 @@ const BindingSites = () => {
 					// @ts-ignore
 					onChange={currentBindingSiteChange}
 					renderOption={(option: BindingSite) => (<>
+
 						<div style={{ fontSize: "10px", width: "100%", zIndex: 2000 }}><b>{option.description} {current_binding_site?.auth_asym_id ? current_binding_site.auth_asym_id : null}</b></div>
 					</>)}
 					renderInput={(params) =>
