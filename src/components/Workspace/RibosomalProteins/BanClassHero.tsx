@@ -23,9 +23,9 @@ const BanClassHero = ({ nom_class,  unique_organisms  , comments, structures}:
   const history      = useHistory();
   const useStyles    = makeStyles(() =>
     createStyles({
-
       root: {
       },
+
       tooltipwidth: {
         maxWidth: 600
       },

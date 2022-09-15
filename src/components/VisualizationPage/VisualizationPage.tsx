@@ -865,11 +865,25 @@ const VisualizationPage = (props: any) => {
   useEffect(() => {
 
     var options = {
-      moleculeId      : pdbid === null ? 'Element to visualize can be selected above.' : pdbid.toLocaleLowerCase(),
-      assemblyId: 'ASM_1',
+      moleculeId      : pdbid === null ? 'Element to visualize can be selected above.': pdbid.toLocaleLowerCase(),
+      assemblyId      : 'ASM_1',
       hideControls    : true,
       layoutIsExpanded: false,
     }
+
+if ( pdbid !==null ){toast.loading(`Loadig structure ${pdbid.toLocaleUpperCase()}`, {
+        icon: <img 
+        height = "30px"
+        width  = "30px"
+        src    = { process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toLocaleUpperCase()}.png` }
+        alt    = {"toast-icon-ribx"}/>,
+        duration: 3000,
+        position: "bottom-center",
+        style   : {
+          fontSize: "12px",
+          border  : "1px solid black"
+        }
+      })}
 
     var viewerContainer = document.getElementById('molstar-viewer');
 
@@ -951,14 +965,14 @@ const VisualizationPage = (props: any) => {
   })();
 
 
-  const current_tab = useSelector((state: AppState) => state.visualization.component_tab)
-  const vis_state = useSelector((state: AppState) => state.visualization)
+  const current_tab    = useSelector((state: AppState) => state.visualization.component_tab)
+  const vis_state      = useSelector((state: AppState) => state.visualization)
   const handleTabClick = (tab: VisualizationTabs) => {
     dispatch({ type: "RESET_ACTION" });
     dispatch({ type: COMPONENT_TAB_CHANGE, tab });
   }
-  const cached_struct = useSelector((state: AppState) => state.visualization.full_structure_cache)
-  const current_neostruct = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const cached_struct              = useSelector((state: AppState) => state.visualization.full_structure_cache)
+  const current_neostruct          = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
 
   const current_protein_class: ProteinClass | null  = useSelector((state: AppState) => state.visualization.protein_tab.class)
@@ -966,8 +980,8 @@ const VisualizationPage = (props: any) => {
   const current_protein_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.protein_tab.auth_asym_id)
   const current_protein_neostruct: NeoStruct | null = useSelector((state: AppState) => current_protein_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id === current_protein_parent)[0])
 
-  const current_rna_class: RNAClass | null = useSelector((state: AppState) => state.visualization.rna_tab.class)
-  const current_rna_parent: string | null = useSelector((state: AppState) => state.visualization.rna_tab.parent)
+  const current_rna_class: RNAClass | null      = useSelector((state: AppState) => state.visualization.rna_tab.class)
+  const current_rna_parent: string | null       = useSelector((state: AppState) => state.visualization.rna_tab.parent)
   const current_rna_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.rna_tab.auth_asym_id)
   const current_rna_neostruct: NeoStruct | null = useSelector((state: AppState) => current_rna_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id === current_rna_parent)[0])
 

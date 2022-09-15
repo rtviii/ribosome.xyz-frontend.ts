@@ -145,10 +145,15 @@ export const StructHero = ({ d, inCart, topless }: { d: NeoStruct, inCart: boole
           EMDB
         </Button>
         <Tooltip title={`Visualize structure.`} arrow placement="right">
-        <img style={{height:"20px", width:"20px", cursor:"pointer"}} src={eye}></img>
+        <img 
+        
+          onClick={()=>{ history.push(`/vis/${d.struct.rcsb_id}`) }}
+        style={{height:"20px", width:"20px", cursor:"pointer"}} src={eye}></img>
         </Tooltip>
         <Tooltip title={`Open in Binding Sites (if any are present).`} arrow placement="right">
-          <img style={{height:"20px", width:"20px", cursor:"pointer"}} src={ligands}></img>
+          <img 
+          onClick={()=>{history.push(`/bindingsites/${d.struct.rcsb_id}`)}}
+           style={{height:"20px", width:"20px", cursor:"pointer"}} src={ligands}></img>
         </Tooltip>
 
         <Tooltip title={`Download .cif model`} arrow placement="right">
@@ -222,6 +227,7 @@ export const StructHeroVertical = ({ d, inCart, topless }: { d: NeoStruct | null
           <Button className={classes.actionButton} target='_blank' href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
             EMDB
           </Button>
+
           <Tooltip title={`${inCart ? "Delete From" : "Add To"} Workspace`} arrow>
 
 
@@ -244,6 +250,7 @@ export const StructHeroVertical = ({ d, inCart, topless }: { d: NeoStruct | null
               />}
 
           </Tooltip>
+
           <Tooltip title={`Download .cif model`} arrow placement="right">
             <GetApp
               style={{ cursor: "pointer" }}
