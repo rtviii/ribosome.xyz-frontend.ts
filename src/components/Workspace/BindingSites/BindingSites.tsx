@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, ChangeEvent } from 'react'
 import Grid from "@material-ui/core/Grid";
 import Typography from '@material-ui/core/Typography/Typography';
 import Paper from '@material-ui/core/Paper/Paper';
@@ -22,7 +22,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import createStyles from '@material-ui/core/styles/createStyles';
 import Highlighter from "react-highlight-words";
 import { ChainParentPill } from '../RibosomalProteins/RibosomalProteinCard';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import * as action from './../../../redux/reducers/BindingSites/ActionTypes'
 import _ from 'lodash';
 import { toast, Toaster } from 'react-hot-toast'
@@ -235,16 +235,41 @@ const BindingSites = () => {
 	}))();
 
 	const dispatch = useDispatch();
+	const history = useHistory();
+	const { pdbid }: { pdbid: string } = useParams();
 
 	// Mounting the viewer
 	useEffect(() => {
 		var options = {
-			moleculeId: 'Element to visualize can be selected above.',
+			moleculeId: pdbid === null ? 'Element to visualize can be selected above.' : pdbid.toLocaleLowerCase(),
 			hideControls: true,
 			layoutIsExpanded: false,
 		}
 		var viewerContainer = document.getElementById('molstar-viewer');
 		viewerInstance.render(viewerContainer, options);
+
+		if (pdbid !== null) {
+			// throw up a toast for struct loading
+			toast.loading(`Loadig structure ${pdbid.toLocaleUpperCase()}`, {
+				icon: <img
+					height="30px"
+					width="30px"
+					src={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toLocaleUpperCase()}.png`}
+					alt={"toast-icon-ribx"} />,
+				duration: 3000,
+				position: "bottom-center",
+				style: {
+					fontSize: "12px",
+					border: "1px solid black"
+				}
+			})
+
+			// inject param into search field
+			
+
+
+		}
+
 	}, [])
 
 	const current_binding_site: BindingSite | null = useSelector((state: AppState) => state.binding_sites.current_binding_site)
@@ -262,7 +287,14 @@ const BindingSites = () => {
 	// const mixed       = useSelector                ((state: AppState) => state.binding_sites.mixed_ligands   )
 
 	const [bsites_derived, set_derived_bsites] = useState<BindingSite[]>()
-	useEffect(() => { set_derived_bsites(bsites) }, [bsites])
+	useEffect(() => { set_derived_bsites(bsites) 
+
+		if (pdbid !== null && bsites.filter((site) => site.rcsb_id === pdbid.toLocaleUpperCase())[0] !== undefined) {
+			console.log("Got filtered ", bsites.filter((site) => site.rcsb_id === pdbid.toLocaleUpperCase())[0]);
+			
+			action.current_struct_change(bsites.filter((site) => site.rcsb_id === pdbid.toLocaleUpperCase())[0]);
+		}
+	}, [bsites, pdbid])
 
 	const [derived_antibiotics, set_derived_antibiotics] = useState<LigandClass[]>([])
 	useEffect(() => { set_derived_antibiotics(antibiotics) }, [antibiotics])
@@ -469,11 +501,11 @@ const BindingSites = () => {
 
 			if (cur_vis_tab === 'prediction') {
 
-				toast.loading(`Loading structure ${( current_binding_site!.rcsb_id as string ).toUpperCase()}`, {
+				toast.loading(`Loading structure ${(current_binding_site!.rcsb_id as string).toUpperCase()}`, {
 					icon: <img
 						height="30px"
 						width="30px"
-						src={process.env.PUBLIC_URL + `/ray_templates/_ray_${( current_binding_site!.rcsb_id as string ).toUpperCase()}.png`}
+						src={process.env.PUBLIC_URL + `/ray_templates/_ray_${(current_binding_site!.rcsb_id as string).toUpperCase()}.png`}
 						alt={"toast-icon-ribx"} />,
 					duration: 4000,
 					position: "bottom-center",
@@ -727,7 +759,6 @@ const BindingSites = () => {
 					// @ts-ignore
 					onChange={currentBindingSiteChange}
 					renderOption={(option: BindingSite) => (<>
-
 						<div style={{ fontSize: "10px", width: "100%", zIndex: 2000 }}><b>{option.description} {current_binding_site?.auth_asym_id ? current_binding_site.auth_asym_id : null}</b></div>
 					</>)}
 					renderInput={(params) =>
@@ -953,7 +984,6 @@ const BindingSites = () => {
 						variant="outlined"> Reset</Button>
 				</Grid>
 				<Grid item style={{ marginBottom: "10px" }}>
-
 					<Dialogue
 						src_struct={current_binding_site?.rcsb_id as string}
 						tgt_struct={cur_tgt?.struct.rcsb_id as string}

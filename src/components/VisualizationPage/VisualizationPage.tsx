@@ -82,7 +82,6 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   const dispatch = useDispatch()
   const selectStructStyles = (makeStyles({ autocomoplete: { width: "100%" } }))()
 
-
   const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
   const structs = useSelector((state: AppState) => state.structures.derived_filtered)
@@ -813,8 +812,8 @@ const VisualizationPage = (props: any) => {
 
   const dispatch = useDispatch();
   // ? Get uri parametrs ----------------------------
-  const history: any = useHistory();
-  const params = history.location.state;
+  const history: any                 = useHistory();
+  const params                       = history.location.state;
   const { pdbid }: { pdbid: string } = useParams();
 
   //? Get uri parametrs ----------------------------
