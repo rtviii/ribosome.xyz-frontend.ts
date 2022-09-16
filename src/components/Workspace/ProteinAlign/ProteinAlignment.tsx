@@ -15,9 +15,10 @@ import Paper from '@material-ui/core/Paper/Paper';
 import { NeoStruct, PolymerMinimal } from '../../../redux/DataInterfaces';
 import { ChainHighlightSlider } from '../../VisualizationPage/VisualizationPage';
 import { cache_full_struct, superimpose_slot_change } from '../../../redux/reducers/Visualization/ActionTypes';
-import { debounce } from 'lodash';
+import { debounce, filter } from 'lodash';
 import Divider from '@mui/material/Divider';
 import { useParams } from 'react-router-dom';
+import toast, { Toaster } from "react-hot-toast";
 
 export const nomenclatureCompareFn = (a: PolymerMinimal, b: PolymerMinimal) => {
   //  console.log("Got two to sort" , a, b);
@@ -119,7 +120,17 @@ export default function ProteinAlignment() {
         }))
         dispatch(cache_full_struct(filtered[0].struct.rcsb_id, 0))
         setChains1([...filtered[0].rps.sort(nomenclatureCompareFn), ...filtered[0].rnas])
+       var corresponding_species =  structs
+        .filter(s => [ ...s.struct.src_organism_ids,  ]
+          .includes([ ...filtered[0].struct.src_organism_ids ][0]))
+          console.log(corresponding_species)
+
+      toast.success(`Loaded structure ${rcsb_id_param.toUpperCase()} (${filtered[0].struct.src_organism_names.length > 0 ? filtered[0].struct.src_organism_names[0] : ""}) as Structure 1. \nSelect Structure 2 to align against.\n ${corresponding_species.length> 0 ? `${corresponding_species[0].struct.rcsb_id} might also be ${filtered[0].struct.src_organism_names[0]}` : null}.`, {
+        duration:7000,
+        position:"bottom-left"
+      })
       }
+
     }
   },[structs, rcsb_id_param,dispatch])
 
@@ -457,6 +468,7 @@ export default function ProteinAlignment() {
 
       </Grid>
 
+        <Toaster />
     </Grid>
 
   );
