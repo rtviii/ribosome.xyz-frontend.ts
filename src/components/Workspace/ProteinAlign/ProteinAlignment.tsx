@@ -109,18 +109,17 @@ export default function ProteinAlignment() {
   }, [])
 
   const structs = useSelector((state: AppState) => state.structures.derived_filtered)
+
   useEffect(()=>{
     if (rcsb_id_param !== undefined) {
-      var filtered = structs.filter(s => s.struct.rcsb_id === rcsb_id_param)
+      var filtered = structs.filter(s => s.struct.rcsb_id === rcsb_id_param.toUpperCase())
       if (filtered.length > 0) {
         dispatch(superimpose_slot_change(1, {
           struct: filtered[0],
         }))
         dispatch(cache_full_struct(filtered[0].struct.rcsb_id, 0))
         setChains1([...filtered[0].rps.sort(nomenclatureCompareFn), ...filtered[0].rnas])
-
       }
-      
     }
   },[structs, rcsb_id_param,dispatch])
 
