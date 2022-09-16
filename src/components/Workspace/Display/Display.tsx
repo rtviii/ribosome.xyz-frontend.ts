@@ -26,6 +26,7 @@ const Display = () => {
 
       <Switch>
         <Route exact path = "/howto" component                        = {HowTo} />
+        <Route exact path = "/super/:rcsb_id_param" component                        = {ProteinAlignment} />
         <Route exact path = "/super" component                        = {ProteinAlignment} />
         <Route exact path = "/home"                           component = {Home2               } />
         <Route exact path = "/structs"                        component = {WorkspaceCatalogue } />

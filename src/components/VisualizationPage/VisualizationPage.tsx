@@ -268,10 +268,10 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
           <FormControl className={styles.sub1}>
             <InputLabel>Protein Class</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={curProtClass}
-              onChange={chooseProtein}>
+              labelId  = "demo-simple-select-label"
+              id       = "demo-simple-select"
+              value    = {curProtClass}
+              onChange = {chooseProtein}>
               {proteins.map((i) => <MenuItem value={i.banClass}>{i.banClass}
               </MenuItem>)}
             </Select>
@@ -300,23 +300,23 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
   const styles = useSelectStyles();
   const dispatch = useDispatch();
 
-  const [curRna, setCurRna] = React.useState<RNAClass | null>(null);
+  const [curRna, setCurRna]          = React.useState<RNAClass | null>(null);
   const [curRnaParent, setRnaParent] = React.useState<string | null>(null);
-  const parents = useSelector((state: AppState) => state.rna.rna_classes_derived)
+  const parents                      = useSelector((state: AppState) => state.rna.rna_classes_derived)
 
 
   var rnaClasses: { v: string, t: RNAClass }[] = [
-    { v: 'mRNA', t: 'mRNA' },
-    { v: 'tRNA', t: 'tRNA' },
-    { v: '5SrRNA', t: '5SrRNA' },
+    { v: 'mRNA'    , t: 'mRNA'     },
+    { v: 'tRNA'    , t: 'tRNA'     },
+    { v: '5SrRNA'  , t: '5SrRNA'   },
     { v: '5.8SrRNA', t: '5.8SrRNA' },
-    { v: '12SrRNA', t: '12SrRNA' },
-    { v: '16SrRNA', t: '16SrRNA' },
-    { v: '21SrRNA', t: '21SrRNA' },
-    { v: '23SrRNA', t: '23SrRNA' },
-    { v: '25SrRNA', t: '25SrRNA' },
-    { v: '28SrRNA', t: '28SrRNA' },
-    { v: '35SrRNA', t: '35SrRNA' },
+    { v: '12SrRNA' , t: '12SrRNA'  },
+    { v: '16SrRNA' , t: '16SrRNA'  },
+    { v: '21SrRNA' , t: '21SrRNA'  },
+    { v: '23SrRNA' , t: '23SrRNA'  },
+    { v: '25SrRNA' , t: '25SrRNA'  },
+    { v: '28SrRNA' , t: '28SrRNA'  },
+    { v: '35SrRNA' , t: '35SrRNA'  },
   ]
   return (
     <Grid item xs={12}>
@@ -823,39 +823,6 @@ const VisualizationPage = (props: any) => {
   const all_structures: StructSnip[] = useSelector((state: AppState) => state.structures.neo_response.map(
     r => { return { rcsb_id: r.struct.rcsb_id, title: r.struct.citation_title } }))
 
-  // ----------- This one, i think is for fetching struct on uri parmas pass. Should be able to do in redux
-  // useEffect(() => {
-  //   if (params === undefined || Object.keys(params).length < 1) { return }
-  //   else if ((params as { struct: string }).struct) {
-
-  //     getNeo4jData('neo4j', { endpoint: "get_struct", params: { pdbid: params.struct } }).then(r => {
-
-  //       if (r.data.length < 1) {
-  //         dispatch(fullStructureChange(null, null))
-  //       }
-  //       else {
-
-  //         var x: any = {}
-  //         x['ligands'] = r.data[0].ligands.map((_: any) => _.chemicalId)
-  //         x['struct'] = r.data[0].structure
-  //         x['rps'] = r.data[0].rps.map((_: any) => ({ strands: _.entity_poly_strand_id, nomenclature: _.nomenclature }))
-  //         x['rnas'] = r.data[0].rnas.map((_: any) => ({ strands: _.entity_poly_strand_id, nomenclature: _.nomenclature }))
-
-  //         dispatch(fullStructureChange(x['struct'].rcsb_id, null))
-  //         addToast(`Structure ${x.struct.rcsb_id} is being fetched.`, {
-  //           appearance: 'info',
-  //           autoDismiss: true,
-  //         })
-  //       }
-
-  //     })
-  //   }
-  // },
-  //   [
-  //     params
-  //   ]
-  // )
-
   const [inView, setInView] = useState<any>({});
 
   ////////////////////////////////    <<<<<>>>>>>>>>>   /////////////   <<<<<>>>>>>>>>>     /////////////////////////////// <<<<<>>>>>>>>>>
@@ -863,25 +830,11 @@ const VisualizationPage = (props: any) => {
   useEffect(() => {
 
     var options = {
-      moleculeId      : pdbid === null ? 'Element to visualize can be selected above.': pdbid.toLocaleLowerCase(),
       assemblyId      : 'ASM_1',
       hideControls    : true,
       layoutIsExpanded: false,
     }
 
-if ( pdbid !==null ){toast.loading(`Loadig structure ${pdbid.toLocaleUpperCase()}`, {
-        icon: <img 
-        height = "30px"
-        width  = "30px"
-        src    = { process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toLocaleUpperCase()}.png` }
-        alt    = {"toast-icon-ribx"}/>,
-        duration: 3000,
-        position: "bottom-center",
-        style   : {
-          fontSize: "12px",
-          border  : "1px solid black"
-        }
-      })}
 
     var viewerContainer = document.getElementById('molstar-viewer');
 

@@ -172,7 +172,7 @@ export const StructHero = ({ d, inCart, topless }: { d: NeoStruct, inCart: boole
 
         <Tooltip title={`Open in 3D Superimpose.`} arrow placement="right">
           <img
-            onClick={() => { history.push(`/bindingsites/${d.struct.rcsb_id}`) }}
+            onClick={() => { history.push(`/super/${d.struct.rcsb_id}`) }}
             style={{ height: "20px", width: "20px", cursor: "pointer" }} src={align}></img>
         </Tooltip>
 

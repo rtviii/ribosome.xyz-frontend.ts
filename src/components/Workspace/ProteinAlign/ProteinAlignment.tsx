@@ -17,6 +17,7 @@ import { ChainHighlightSlider } from '../../VisualizationPage/VisualizationPage'
 import { cache_full_struct, superimpose_slot_change } from '../../../redux/reducers/Visualization/ActionTypes';
 import { debounce } from 'lodash';
 import Divider from '@mui/material/Divider';
+import { useParams } from 'react-router-dom';
 
 export const nomenclatureCompareFn = (a: PolymerMinimal, b: PolymerMinimal) => {
   //  console.log("Got two to sort" , a, b);
@@ -46,6 +47,8 @@ const viewerInstance = new PDBeMolstarPlugin() as any;
 
 export default function ProteinAlignment() {
   const dispatch = useDispatch();
+  const { rcsb_id_param }: { rcsb_id_param: string | undefined } = useParams();
+
   const classes = makeStyles((theme: Theme) => ({
     autocomplete: {
       width: "100%",
@@ -99,11 +102,27 @@ export default function ProteinAlignment() {
       moleculeId: 'none',
       hideControls: true
     }
+
     var viewerContainer = document.getElementById('molstar-viewer');
     viewerInstance.render(viewerContainer, options);
+
   }, [])
 
   const structs = useSelector((state: AppState) => state.structures.derived_filtered)
+  useEffect(()=>{
+    if (rcsb_id_param !== undefined) {
+      var filtered = structs.filter(s => s.struct.rcsb_id === rcsb_id_param)
+      if (filtered.length > 0) {
+        dispatch(superimpose_slot_change(1, {
+          struct: filtered[0],
+        }))
+        dispatch(cache_full_struct(filtered[0].struct.rcsb_id, 0))
+        setChains1([...filtered[0].rps.sort(nomenclatureCompareFn), ...filtered[0].rnas])
+
+      }
+      
+    }
+  },[structs, rcsb_id_param,dispatch])
 
   const debounedRangeChange1__redux = debounce((redux_range: number[]) => {
     dispatch(superimpose_slot_change(1, { chain_range: redux_range }))
@@ -210,9 +229,7 @@ export default function ProteinAlignment() {
           struct: null,
           chain: null
         }))
-
         setMaxRange1(0)
-
         dispatch(cache_full_struct(null, 0))
       }
       else {
