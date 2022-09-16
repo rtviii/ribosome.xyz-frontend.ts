@@ -21,11 +21,11 @@ import GetApp from '@material-ui/icons/GetApp';
 import { getNeo4jData } from '../redux/AsyncActions/getNeo4jData';
 import Tooltip from '@material-ui/core/Tooltip';
 import proteins from './../static/protein_icon_chain.png';
-import ligands  from './../static/ligand_icon.svg'
-import table    from './../static/table.png'
-import home     from './../static/mainpage_icon.svg'
-import align    from './../static/align_icon.svg'
-import eye      from './../static/eye_icon.svg'
+import ligands from './../static/ligand_icon.svg'
+import table from './../static/table.png'
+import home from './../static/mainpage_icon.svg'
+import align from './../static/align_icon.svg'
+import eye from './../static/eye_icon.svg'
 
 import { SvgIcon } from '@mui/material';
 const verticalStyle = makeStyles({
@@ -78,12 +78,12 @@ export const StructHero = ({ d, inCart, topless }: { d: NeoStruct, inCart: boole
   const dispatch = useDispatch()
   useEffect(() => {
     console.log("loaded struct", d);
-    
 
-  },[])
+
+  }, [])
 
   return (
-    <Card className={classes.card} id={`struct-hero-${d.struct.rcsb_id}`}variant='outlined' style={{}}>
+    <Card className={classes.card} id={`struct-hero-${d.struct.rcsb_id}`} variant='outlined' style={{}}>
       <CardActionArea >
         <CardContent onClick={() => { history.push(`/structs/${d.struct.rcsb_id}`) }}>
           <CardMedia
@@ -134,26 +134,46 @@ export const StructHero = ({ d, inCart, topless }: { d: NeoStruct, inCart: boole
 
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <Button target='_blank' href={`https://www.rcsb.org/structure/${d.struct.rcsb_id}`} size="small" color="primary" style={{padding:0, margin:0}}>
+      <CardActions disableSpacing={true} >
+        <Button target='_blank' href={`https://www.rcsb.org/structure/${d.struct.rcsb_id}`}
+
+          color="primary" style={{
+            padding: 0,
+            margin: 0
+          }}>
           PDB
         </Button>
-        <Button target='_blank' href={`${d.struct.citation_pdbx_doi}`} size="small" color="primary" style={{padding:0, margin:0}}>
+        <Button target='_blank' href={`${d.struct.citation_pdbx_doi}`} size="small" color="primary" style={{
+          padding: 0,
+          margin: 0
+        }}>
           DOI
         </Button>
-        <Button target='_blank' href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary" style={{padding:0, margin:0}}>
+        <Button target='_blank'
+          href={`${d.struct.rcsb_external_ref_link}`}
+          size="small" color="primary" style={{
+            padding: 0,
+            margin: 0
+          }}>
           EMDB
         </Button>
         <Tooltip title={`Visualize structure.`} arrow placement="right">
-        <img 
-        
-          onClick={()=>{ history.push(`/vis/${d.struct.rcsb_id}`) }}
-        style={{height:"20px", width:"20px", cursor:"pointer"}} src={eye}></img>
+          <img
+
+            onClick={() => { history.push(`/vis/${d.struct.rcsb_id}`) }}
+            style={{ height: "20px", width: "20px", cursor: "pointer" }} src={eye}></img>
         </Tooltip>
+
         <Tooltip title={`Open in Binding Sites (if any are present).`} arrow placement="right">
-          <img 
-          onClick={()=>{history.push(`/bindingsites/${d.struct.rcsb_id}`)}}
-           style={{height:"20px", width:"20px", cursor:"pointer"}} src={ligands}></img>
+          <img
+            onClick={() => { history.push(`/bindingsites/${d.struct.rcsb_id}`) }}
+            style={{ height: "20px", width: "20px", cursor: "pointer" }} src={ligands}></img>
+        </Tooltip>
+
+        <Tooltip title={`Open in 3D Superimpose.`} arrow placement="right">
+          <img
+            onClick={() => { history.push(`/bindingsites/${d.struct.rcsb_id}`) }}
+            style={{ height: "20px", width: "20px", cursor: "pointer" }} src={align}></img>
         </Tooltip>
 
         <Tooltip title={`Download .cif model`} arrow placement="right">
@@ -201,125 +221,125 @@ const horizontalStyle = makeStyles({
 
 export const StructHeroVertical = ({ d, inCart, topless }: { d: NeoStruct | null, inCart: boolean, topless: boolean }) => {
 
-  const classes  = horizontalStyle();
-  const history  = useHistory();
+  const classes = horizontalStyle();
+  const history = useHistory();
   const dispatch = useDispatch()
 
   return (
     d === null ? <div>Nothing </div> :
-    <Card className={classes.card} style={{ display: "flex", flexDirection: "row" }} variant='outlined'>
+      <Card className={classes.card} style={{ display: "flex", flexDirection: "row" }} variant='outlined'>
 
-      <div>
-        <CardMedia
-          style={{ padding: "10px" }}
-          component="img"
-          alt={"image_of_the_ribosome"}
-          height="150"
-          image={process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`} />
+        <div>
+          <CardMedia
+            style={{ padding: "10px" }}
+            component="img"
+            alt={"image_of_the_ribosome"}
+            height="150"
+            image={process.env.PUBLIC_URL + `/ray_templates/_ray_${d.struct.rcsb_id.toUpperCase()}.png`} />
 
-        <CardActions style={{ display: "flex", flexDirection: "column" }}>
-          <Button className={classes.actionButton} target='_blank' href={`https://www.rcsb.org/structure/${d.struct.rcsb_id}`} size="small" color="primary">
-            PDB
-          </Button>
-          <Button className={classes.actionButton} target='_blank' href={`https://doi.org/${d.struct.citation_pdbx_doi}`} size="small" color="primary">
-            DOI
-          </Button>
-          <Button className={classes.actionButton} target='_blank' href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
-            EMDB
-          </Button>
+          <CardActions style={{ display: "flex", flexDirection: "column" }}>
+            <Button className={classes.actionButton} target='_blank' href={`https://www.rcsb.org/structure/${d.struct.rcsb_id}`} size="small" color="primary">
+              PDB
+            </Button>
+            <Button className={classes.actionButton} target='_blank' href={`https://doi.org/${d.struct.citation_pdbx_doi}`} size="small" color="primary">
+              DOI
+            </Button>
+            <Button className={classes.actionButton} target='_blank' href={`${d.struct.rcsb_external_ref_link}`} size="small" color="primary">
+              EMDB
+            </Button>
 
-          <Tooltip title={`${inCart ? "Delete From" : "Add To"} Workspace`} arrow>
+            <Tooltip title={`${inCart ? "Delete From" : "Add To"} Workspace`} arrow>
 
 
-            {inCart ?
+              {inCart ?
 
-              <BookmarkIcon
+                <BookmarkIcon
 
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    dispatch(cart_remove_item(d.struct))
+                  }} /> :
+
+                <BookmarkBorderIcon
+                  style={{ cursor: "pointer" }}
+                  onClick={
+                    () => {
+                      dispatch(cart_add_item(d.struct))
+                    }
+                  }
+                />}
+
+            </Tooltip>
+
+            <Tooltip title={`Download .cif model`} arrow placement="right">
+              <GetApp
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  dispatch(cart_remove_item(d.struct))
-                }} /> :
 
-              <BookmarkBorderIcon
-                style={{ cursor: "pointer" }}
-                onClick={
-                  () => {
-                    dispatch(cart_add_item(d.struct))
-                  }
-                }
-              />}
+                  getNeo4jData("static_files", { endpoint: "download_structure", params: { struct_id: d.struct.rcsb_id } })
+                    .then(r => {
 
-          </Tooltip>
+                      fileDownload(
+                        r.data,
+                        `${d.struct.rcsb_id}.cif`,
+                        "chemical/x-mmcif"
+                      )
+                    })
 
-          <Tooltip title={`Download .cif model`} arrow placement="right">
-            <GetApp
-              style={{ cursor: "pointer" }}
-              onClick={() => {
+                }}
 
-                getNeo4jData("static_files", { endpoint: "download_structure", params: { struct_id: d.struct.rcsb_id } })
-                  .then(r => {
+              />
 
-                    fileDownload(
-                      r.data,
-                      `${d.struct.rcsb_id}.cif`,
-                      "chemical/x-mmcif"
-                    )
-                  })
+            </Tooltip>
 
-              }}
+          </CardActions>
+        </div>
+        <CardActionArea >
+          <CardContent onClick={() => { history.push(`/structs/${d.struct.rcsb_id}`) }}>
 
-            />
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
+              component="div"
+              className={classes.heading}
+            >
+              <Typography variant="body2" color="textSecondary" component="p" >
+                {d.struct.rcsb_id}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p"  >
+                {Math.round(d.struct.resolution * 10) / 10} Å
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p" >
+                {d.struct.citation_year}
+              </Typography>
+            </Grid>
 
-          </Tooltip>
-
-        </CardActions>
-      </div>
-      <CardActionArea >
-        <CardContent onClick={() => { history.push(`/structs/${d.struct.rcsb_id}`) }}>
-
-          <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="center"
-            component="div"
-            className={classes.heading}
-          >
-            <Typography variant="body2" color="textSecondary" component="p" >
-              {d.struct.rcsb_id}
+            <Typography variant="body2" component="p" color="primary" className={classes.title}>
+              {truncate(d.struct.citation_title, 90, 90)}
             </Typography>
-            <Typography variant="body2" color="textSecondary" component="p"  >
-              {Math.round(d.struct.resolution * 10) / 10} Å
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p" >
-              {d.struct.citation_year}
-            </Typography>
-          </Grid>
-
-          <Typography variant="body2" component="p" color="primary" className={classes.title}>
-            {truncate(d.struct.citation_title, 90, 90)}
-          </Typography>
 
 
-          <Grid
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="flex-start"
-            component="div"
-          >
+            <Grid
+              container
+              direction="column"
+              justify="flex-start"
+              alignItems="flex-start"
+              component="div"
+            >
 
-            <CardBodyAnnotation keyname={"Organism"} value={truncate(d.struct.src_organism_names[0], 20, 20)} />
-            <CardBodyAnnotation keyname={"Method"} value={d.struct.expMethod} />
-            <CardBodyAnnotation keyname={"Proteins"} value={d.rps.length} />
-            <CardBodyAnnotation keyname={"RNA"} value={d.rnas.length} />
-            <CardBodyAnnotation keyname={"Ligands"} value={d.ligands.length} />
-            <CardBodyAnnotation keyname={"Author"} value={`${d.struct.citation_rcsb_authors[0]} et al.`} />
-          </Grid>
+              <CardBodyAnnotation keyname={"Organism"} value={truncate(d.struct.src_organism_names[0], 20, 20)} />
+              <CardBodyAnnotation keyname={"Method"} value={d.struct.expMethod} />
+              <CardBodyAnnotation keyname={"Proteins"} value={d.rps.length} />
+              <CardBodyAnnotation keyname={"RNA"} value={d.rnas.length} />
+              <CardBodyAnnotation keyname={"Ligands"} value={d.ligands.length} />
+              <CardBodyAnnotation keyname={"Author"} value={`${d.struct.citation_rcsb_authors[0]} et al.`} />
+            </Grid>
 
-        </CardContent>
-      </CardActionArea>
+          </CardContent>
+        </CardActionArea>
 
-    </Card>
+      </Card>
   );
 }

@@ -79,23 +79,23 @@ interface StructSnip {
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
   //! This component controls the structure selection
 
-  const dispatch = useDispatch()
-  const selectStructStyles = (makeStyles({ autocomoplete: { width: "100%" } }))()
+  const dispatch                                  = useDispatch()
 
-  const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  var   { pdbid }:{ pdbid: string | undefined }   = useParams();
+
+  const selectStructStyles                        = (makeStyles({ autocomoplete: { width: "100%" } }))()
+  const current_neostruct: NeoStruct | null       = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
-  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
-  const cached_struct = useSelector((state: AppState) => state.visualization.full_structure_cache[0])
+  const structs                                   = useSelector((state: AppState) => state.structures.derived_filtered)
+  const cached_struct                             = useSelector((state: AppState) => state.visualization.full_structure_cache[0])
 
 
   const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {
 
-
-
     dispatch(cache_full_struct(selected_neostruct && selected_neostruct?.struct.rcsb_id, 0))
+
     if (selected_neostruct !== null) {
       dispatch(struct_change(null, selected_neostruct))
-
       // addToast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`, { appearance: 'info', autoDismiss: true, })
       // viewer params : https://github.com/molstar/pdbe-molstar/wiki/1.-PDBe-Molstar-as-JS-plugin#plugin-parameters-options
       toast.loading(`Loadig structure ${selected_neostruct.struct.rcsb_id.toLocaleUpperCase()}`, {
@@ -122,7 +122,6 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     } else {
 
       console.log("Dispatched with null");
-
       dispatch(struct_change(null, null))
     }
   };

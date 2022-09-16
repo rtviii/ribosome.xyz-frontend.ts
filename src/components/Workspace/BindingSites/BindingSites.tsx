@@ -290,7 +290,7 @@ const BindingSites = () => {
 
 
 
-	}, [bsites])
+	}, [bsites, rcsb_id_param, dispatch])
 
 	const [derived_antibiotics, set_derived_antibiotics] = useState<LigandClass[]>([])
 	useEffect(() => { set_derived_antibiotics(antibiotics) }, [antibiotics])
