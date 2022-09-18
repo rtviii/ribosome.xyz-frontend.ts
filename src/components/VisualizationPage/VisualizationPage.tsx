@@ -838,8 +838,8 @@ const VisualizationPage = (props: any) => {
   useEffect(() => {
 
     var options = {
-      moleculeId: "none",
-      // assemblyId      : 'ASM_1',
+      moleculeId: pdbid !== undefined ? pdbid.toUpperCase() : "none",
+      assemblyId      : 'ASM_1',
       hideControls: true,
       layoutIsExpanded: false,
     }
@@ -847,14 +847,14 @@ const VisualizationPage = (props: any) => {
 
     var viewerContainer = document.getElementById('molstar-viewer');
     viewerInstance.render(viewerContainer, options);
-    if (params === undefined || Object.keys(params).length < 1) { return }
-    if ((params as { banClass: string, parent: string }).parent) {
-      getCifChainByClass(params.banClass, params.parent)
-    }
-    else
-      if ((params as { struct: string }).struct) {
-        selectStruct(params.struct)
-      }
+    // if (params === undefined || Object.keys(params).length < 1) { return }
+    // if ((params as { banClass: string, parent: string }).parent) {
+    //   getCifChainByClass(params.banClass, params.parent)
+    // }
+    // else
+    //   if ((params as { struct: string }).struct) {
+    //     selectStruct(params.struct)
+    // }
 
     if (pdbid !== undefined) {
       toast.loading(`Loadig structure ${pdbid.toLocaleUpperCase()}`, {
