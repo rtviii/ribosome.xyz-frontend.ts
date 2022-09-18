@@ -830,7 +830,8 @@ const VisualizationPage = (props: any) => {
   useEffect(() => {
 
     var options = {
-      assemblyId      : 'ASM_1',
+      moleculeId      : "none",
+      // assemblyId      : 'ASM_1',
       hideControls    : true,
       layoutIsExpanded: false,
     }
