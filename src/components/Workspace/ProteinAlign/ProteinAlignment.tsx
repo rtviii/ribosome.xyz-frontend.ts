@@ -101,7 +101,9 @@ export default function ProteinAlignment() {
   useEffect(() => {
     var options = {
       moleculeId: 'none',
-      hideControls: true
+      hideControls: true,
+      landscape:true,
+
     }
 
     var viewerContainer = document.getElementById('molstar-viewer');

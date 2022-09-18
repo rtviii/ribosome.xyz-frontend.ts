@@ -846,6 +846,7 @@ const VisualizationPage = (props: any) => {
   useEffect(() => {
 
     var options = {
+      landscape:true,
       moleculeId: pdbid !== undefined ? pdbid.toUpperCase() : "none",
       assemblyId      : 'ASM_1',
       hideControls: true,
