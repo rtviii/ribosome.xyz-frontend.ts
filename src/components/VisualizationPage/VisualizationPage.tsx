@@ -96,6 +96,17 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     }
   }, [])
 
+  useEffect(() => {
+    if (pdbid !== undefined) {
+      var sought = structs.filter(s => s.struct.rcsb_id === ( pdbid as string ).toUpperCase())
+
+      if (sought.length === 1) {
+        dispatch(cache_full_struct(null && pdbid.toUpperCase(), 0))
+        dispatch(struct_change(null, sought[0]))
+      }
+
+    }
+  }, [structs])
 
   const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {
 
@@ -118,16 +129,13 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
           border: "1px solid black"
         }
       })
-
       const viewerParams = {
         moleculeId: selected_neostruct.struct.rcsb_id.toLowerCase(),
         assemblyId: "1"
       }
-
       viewerInstance.visual.update(viewerParams);
 
     } else {
-
       console.log("Dispatched with null");
       dispatch(struct_change(null, null))
     }
