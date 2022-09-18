@@ -79,23 +79,23 @@ interface StructSnip {
 const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStruct: (_: string) => void }) => {
   //! This component controls the structure selection
 
-  const dispatch                                  = useDispatch()
+  const dispatch = useDispatch()
 
-  var   { pdbid }:{ pdbid: string | undefined }   = useParams();
+  var { pdbid }: { pdbid: string | undefined } = useParams();
 
-  const selectStructStyles                        = (makeStyles({ autocomoplete: { width: "100%" } }))()
-  const current_neostruct: NeoStruct | null       = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const selectStructStyles = (makeStyles({ autocomoplete: { width: "100%" } }))()
+  const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
-  const structs                                   = useSelector((state: AppState) => state.structures.derived_filtered)
-  const cached_struct                             = useSelector((state: AppState) => state.visualization.full_structure_cache[0])
+  const structs = useSelector((state: AppState) => state.structures.derived_filtered)
+  const cached_struct = useSelector((state: AppState) => state.visualization.full_structure_cache[0])
 
 
-  useEffect(()=>{
-    if (pdbid!==undefined){
+  useEffect(() => {
+    if (pdbid !== undefined) {
       selectStruct(pdbid.toUpperCase())
     }
-  },[])
-  
+  }, [])
+
 
   const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {
 
@@ -106,16 +106,16 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
       // addToast(`Structure ${selected_neostruct.struct.rcsb_id} is being fetched.`, { appearance: 'info', autoDismiss: true, })
       // viewer params : https://github.com/molstar/pdbe-molstar/wiki/1.-PDBe-Molstar-as-JS-plugin#plugin-parameters-options
       toast.loading(`Loadig structure ${selected_neostruct.struct.rcsb_id.toLocaleUpperCase()}`, {
-        icon: <img 
-        height = "30px"
-        width  = "30px"
-        src    = { process.env.PUBLIC_URL + `/ray_templates/_ray_${selected_neostruct.struct.rcsb_id.toLocaleUpperCase()}.png` }
-        alt    = {"toast-icon-ribx"}/>,
+        icon: <img
+          height="30px"
+          width="30px"
+          src={process.env.PUBLIC_URL + `/ray_templates/_ray_${selected_neostruct.struct.rcsb_id.toLocaleUpperCase()}.png`}
+          alt={"toast-icon-ribx"} />,
         duration: 3000,
         position: "bottom-center",
-        style   : {
+        style: {
           fontSize: "12px",
-          border  : "1px solid black"
+          border: "1px solid black"
         }
       })
 
@@ -275,10 +275,10 @@ const SelectProtein = ({ proteins, getCifChainByClass }:
           <FormControl className={styles.sub1}>
             <InputLabel>Protein Class</InputLabel>
             <Select
-              labelId  = "demo-simple-select-label"
-              id       = "demo-simple-select"
-              value    = {curProtClass}
-              onChange = {chooseProtein}>
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={curProtClass}
+              onChange={chooseProtein}>
               {proteins.map((i) => <MenuItem value={i.banClass}>{i.banClass}
               </MenuItem>)}
             </Select>
@@ -307,23 +307,23 @@ const SelectRna = ({ items, getCifChainByClass }: { items: RNAProfile[], getCifC
   const styles = useSelectStyles();
   const dispatch = useDispatch();
 
-  const [curRna, setCurRna]          = React.useState<RNAClass | null>(null);
+  const [curRna, setCurRna] = React.useState<RNAClass | null>(null);
   const [curRnaParent, setRnaParent] = React.useState<string | null>(null);
-  const parents                      = useSelector((state: AppState) => state.rna.rna_classes_derived)
+  const parents = useSelector((state: AppState) => state.rna.rna_classes_derived)
 
 
   var rnaClasses: { v: string, t: RNAClass }[] = [
-    { v: 'mRNA'    , t: 'mRNA'     },
-    { v: 'tRNA'    , t: 'tRNA'     },
-    { v: '5SrRNA'  , t: '5SrRNA'   },
+    { v: 'mRNA', t: 'mRNA' },
+    { v: 'tRNA', t: 'tRNA' },
+    { v: '5SrRNA', t: '5SrRNA' },
     { v: '5.8SrRNA', t: '5.8SrRNA' },
-    { v: '12SrRNA' , t: '12SrRNA'  },
-    { v: '16SrRNA' , t: '16SrRNA'  },
-    { v: '21SrRNA' , t: '21SrRNA'  },
-    { v: '23SrRNA' , t: '23SrRNA'  },
-    { v: '25SrRNA' , t: '25SrRNA'  },
-    { v: '28SrRNA' , t: '28SrRNA'  },
-    { v: '35SrRNA' , t: '35SrRNA'  },
+    { v: '12SrRNA', t: '12SrRNA' },
+    { v: '16SrRNA', t: '16SrRNA' },
+    { v: '21SrRNA', t: '21SrRNA' },
+    { v: '23SrRNA', t: '23SrRNA' },
+    { v: '25SrRNA', t: '25SrRNA' },
+    { v: '28SrRNA', t: '28SrRNA' },
+    { v: '35SrRNA', t: '35SrRNA' },
   ]
   return (
     <Grid item xs={12}>
@@ -818,11 +818,11 @@ const VisualizationPage = (props: any) => {
 
   const dispatch = useDispatch();
   // ? Get uri parametrs ----------------------------
-  const history: any                 = useHistory();
-  const params                       = history.location.state;
+  const history: any = useHistory();
+  const params = history.location.state;
   const { pdbid }: { pdbid: string } = useParams();
 
-  
+
   //? Get uri parametrs ----------------------------
 
   const [lastViewed, setLastViewed] = useState<Array<string | null>>([null, null])
@@ -838,20 +838,41 @@ const VisualizationPage = (props: any) => {
   useEffect(() => {
 
     var options = {
-      moleculeId      : "none",
-      hideControls    : true,
+      moleculeId: "none",
+      // assemblyId      : 'ASM_1',
+      hideControls: true,
       layoutIsExpanded: false,
     }
 
 
     var viewerContainer = document.getElementById('molstar-viewer');
     viewerInstance.render(viewerContainer, options);
-
-    if (pdbid!== undefined){
-      selectStruct(pdbid.toUpperCase())
-
+    if (params === undefined || Object.keys(params).length < 1) { return }
+    if ((params as { banClass: string, parent: string }).parent) {
+      getCifChainByClass(params.banClass, params.parent)
     }
-      
+    else
+      if ((params as { struct: string }).struct) {
+        selectStruct(params.struct)
+      }
+
+    if (pdbid !== undefined) {
+      toast.loading(`Loadig structure ${pdbid.toLocaleUpperCase()}`, {
+        icon: <img
+          height="30px"
+          width="30px"
+          src={process.env.PUBLIC_URL + `/ray_templates/_ray_${pdbid.toLocaleUpperCase()}.png`}
+          alt={"toast-icon-ribx"} />,
+        duration: 3000,
+        position: "bottom-center",
+        style: {
+          fontSize: "12px",
+          border: "1px solid black"
+        }
+      })
+      selectStruct(pdbid.toUpperCase())
+    }
+
   }, [pdbid])
 
   const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => _.flattenDeep(Object.values(state.proteins.ban_classes)))
@@ -882,7 +903,7 @@ const VisualizationPage = (props: any) => {
       parent: parent_struct,
     })
 
-    viewerInstance.canvas.setBgColor({r:255, g:255, b:255});
+    viewerInstance.canvas.setBgColor({ r: 255, g: 255, b: 255 });
     setLastViewed([`protein.${banclass}`, parent_struct])
 
   }
@@ -920,23 +941,23 @@ const VisualizationPage = (props: any) => {
   })();
 
 
-  const current_tab    = useSelector((state: AppState) => state.visualization.component_tab)
-  const vis_state      = useSelector((state: AppState) => state.visualization)
+  const current_tab = useSelector((state: AppState) => state.visualization.component_tab)
+  const vis_state = useSelector((state: AppState) => state.visualization)
   const handleTabClick = (tab: VisualizationTabs) => {
     dispatch({ type: "RESET_ACTION" });
     dispatch({ type: COMPONENT_TAB_CHANGE, tab });
   }
-  const cached_struct              = useSelector((state: AppState) => state.visualization.full_structure_cache)
-  const current_neostruct          = useSelector((state: AppState) => state.visualization.structure_tab.structure)
+  const cached_struct = useSelector((state: AppState) => state.visualization.full_structure_cache)
+  const current_neostruct = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
 
-  const current_protein_class: ProteinClass | null  = useSelector((state: AppState) => state.visualization.protein_tab.class)
-  const current_protein_parent: string | null       = useSelector((state: AppState) => state.visualization.protein_tab.parent)
+  const current_protein_class: ProteinClass | null = useSelector((state: AppState) => state.visualization.protein_tab.class)
+  const current_protein_parent: string | null = useSelector((state: AppState) => state.visualization.protein_tab.parent)
   const current_protein_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.protein_tab.auth_asym_id)
   const current_protein_neostruct: NeoStruct | null = useSelector((state: AppState) => current_protein_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id === current_protein_parent)[0])
 
-  const current_rna_class: RNAClass | null      = useSelector((state: AppState) => state.visualization.rna_tab.class)
-  const current_rna_parent: string | null       = useSelector((state: AppState) => state.visualization.rna_tab.parent)
+  const current_rna_class: RNAClass | null = useSelector((state: AppState) => state.visualization.rna_tab.class)
+  const current_rna_parent: string | null = useSelector((state: AppState) => state.visualization.rna_tab.parent)
   const current_rna_auth_asym_id: string | null = useSelector((state: AppState) => state.visualization.rna_tab.auth_asym_id)
   const current_rna_neostruct: NeoStruct | null = useSelector((state: AppState) => current_rna_parent === null ? null : state.structures.neo_response.filter(s => s.struct.rcsb_id === current_rna_parent)[0])
 

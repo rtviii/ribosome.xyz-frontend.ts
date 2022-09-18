@@ -464,7 +464,7 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
 
 
 
-            <Grid item>
+            {/* <Grid item>
 
               <Button
 
@@ -476,7 +476,7 @@ const _RibosomalProteinCard: React.FC<RibosomalProtCardProps> = (prop) => {
                 Visualize
                 <VisibilityIcon />
               </Button>
-            </Grid>
+            </Grid> */}
             <Grid item>
 
               <Button
