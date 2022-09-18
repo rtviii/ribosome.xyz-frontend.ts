@@ -90,6 +90,13 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   const cached_struct                             = useSelector((state: AppState) => state.visualization.full_structure_cache[0])
 
 
+  useEffect(()=>{
+    if (pdbid!==undefined){
+      selectStruct(pdbid.toUpperCase())
+    }
+  },[])
+  
+
   const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {
 
     dispatch(cache_full_struct(selected_neostruct && selected_neostruct?.struct.rcsb_id, 0))
@@ -815,6 +822,7 @@ const VisualizationPage = (props: any) => {
   const params                       = history.location.state;
   const { pdbid }: { pdbid: string } = useParams();
 
+  
   //? Get uri parametrs ----------------------------
 
   const [lastViewed, setLastViewed] = useState<Array<string | null>>([null, null])
@@ -831,24 +839,19 @@ const VisualizationPage = (props: any) => {
 
     var options = {
       moleculeId      : "none",
-      // assemblyId      : 'ASM_1',
       hideControls    : true,
       layoutIsExpanded: false,
     }
 
 
     var viewerContainer = document.getElementById('molstar-viewer');
-
     viewerInstance.render(viewerContainer, options);
 
-    if (params === undefined || Object.keys(params).length < 1) { return }
-    if ((params as { banClass: string, parent: string }).parent) {
-      getCifChainByClass(params.banClass, params.parent)
+    if (pdbid!== undefined){
+      selectStruct(pdbid.toUpperCase())
+
     }
-    else
-      if ((params as { struct: string }).struct) {
-        selectStruct(params.struct)
-      }
+      
   }, [pdbid])
 
   const prot_classes: BanClassMetadata[] = useSelector((state: AppState) => _.flattenDeep(Object.values(state.proteins.ban_classes)))
