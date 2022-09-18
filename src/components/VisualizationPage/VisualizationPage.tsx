@@ -97,15 +97,15 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   }, [])
 
   useEffect(() => {
+
     if (pdbid !== undefined) {
       var sought = structs.filter(s => s.struct.rcsb_id === ( pdbid as string ).toUpperCase())
-
       if (sought.length === 1) {
         dispatch(cache_full_struct(null && pdbid.toUpperCase(), 0))
         dispatch(struct_change(null, sought[0]))
       }
-
     }
+
   }, [structs])
 
   const structure_tab_select = (event: React.ChangeEvent<{ value: unknown }>, selected_neostruct: NeoStruct | null) => {

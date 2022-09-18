@@ -240,8 +240,9 @@ const BindingSites = () => {
 	// Mounting the viewer
 	useEffect(() => {
 		var options = {
-			moleculeId: rcsb_id_param === undefined ? 'Element to visualize can be selected above.' : rcsb_id_param.toLocaleLowerCase(),
-			hideControls: true,
+			landscape       : true,
+			moleculeId      : rcsb_id_param === undefined ? 'Element to visualize can be selected above.': rcsb_id_param.toLocaleLowerCase(),
+			hideControls    : true,
 			layoutIsExpanded: false,
 		}
 		var viewerContainer = document.getElementById('molstar-viewer');
@@ -1058,8 +1059,8 @@ const BindingSites = () => {
 					</Grid>
 				</Grid>
 				<Grid item xs={12} >
-					<Paper variant="outlined" style={{ position: "relative", padding: "10px", height: "80vh" }} >
-						<div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"></div>
+					<Paper variant="outlined" style={{ overflow:"auto",position: "relative", padding: "10px", height: "80vh" }} >
+						<div style={{ position: "relative", width: "100%", height: "100%" }} id="molstar-viewer"/>
 					</Paper>
 				</Grid >
 			</Grid>
