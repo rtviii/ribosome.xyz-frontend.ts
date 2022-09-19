@@ -174,7 +174,11 @@ export const HowTo = () => {
 
       <Grid item xs={12}>
         <Typography variant="h4">PTC Nucleotides Extraction</Typography>
-        We provide a <span onClick={downloadTxtFile} style={{ cursor:"pointer", color: "blue" }} >Python3 script file</span> for extracting the positions of the residues associated with the Peptidyl-Transfer-Center (PTC)
+        <Typography variant="body1">
+          We provide a <span onClick={downloadTxtFile} style={{ cursor: "pointer", color: "blue" }} >Python3 script file</span> for extracting the positions of the residues associated with the Peptidyl-Transfer-Center (PTC).
+          To execute this script one only needs <a href={"https://biopython.org/"}><code >Biopython</code></a> and <a href={"https://gemmi.readthedocs.io/en/latest/install.html"}><code>gemmi</code></a> Python packages as dependencies.
+          The script only requires the 4-letter RCSB structure code as input, downloades the RibosomeXYZ-annotated structure automatically if it is lacking on the user's machine and returns PTC residue positions as an array.
+        </Typography>
       </Grid>
 
 
