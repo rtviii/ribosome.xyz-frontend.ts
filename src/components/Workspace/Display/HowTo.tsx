@@ -172,14 +172,6 @@ export const HowTo = () => {
         <Typography variant="h3">Tutorials</Typography>
       </Grid>
 
-      <Grid item xs={12}>
-        <Typography variant="h4">PTC Nucleotides Extraction</Typography>
-        <Typography variant="body1">
-          We provide a <span onClick={downloadTxtFile} style={{ cursor: "pointer", color: "blue" }} >Python3 script file</span> for extracting the positions of the residues associated with the Peptidyl-Transfer-Center (PTC).
-          To execute this script one only needs <a href={"https://biopython.org/"}><code >Biopython</code></a> and <a href={"https://gemmi.readthedocs.io/en/latest/install.html"}><code>gemmi</code></a> Python packages as dependencies.
-          The script only requires the 4-letter RCSB structure code as input, downloades the RibosomeXYZ-annotated structure automatically if it is lacking on the user's machine and returns PTC residue positions as an array.
-        </Typography>
-      </Grid>
 
 
       <Grid item xs={12}>
@@ -222,6 +214,15 @@ export const HowTo = () => {
           tools section), with the result of the alignment shown when clicking on the “Inspect Prediction”
           button.</Typography>
         <iframe width="560" height="315" src="https://www.youtube.com/embed/Ri-T4hUw0NE" title="Ligand Prediction" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Typography variant="h4"> Extracting PTC localization</Typography>
+        <Typography variant="body1">
+          We provide a <span onClick={downloadTxtFile} style={{ cursor: "pointer", color: "blue" }} >Python3 script file</span> for extracting the positions of the residues associated with the Peptidyl-Transfer-Center (PTC) in an arbitrary <i>E. coli</i> structure.
+          To execute this script one only needs <a href={"https://biopython.org/"}><code >Biopython</code></a> and <a href={"https://gemmi.readthedocs.io/en/latest/install.html"}><code>gemmi</code></a> Python packages as dependencies.
+          The script only requires the 4-letter RCSB structure code as input, downloades the RibosomeXYZ-annotated structure automatically if it is lacking on the user's machine and returns PTC residue positions as an array.  
+        </Typography>
       </Grid>
 
     </Grid>
