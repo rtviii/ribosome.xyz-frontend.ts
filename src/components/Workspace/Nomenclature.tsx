@@ -38,6 +38,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Pagination from './../Workspace/Display/Pagination'
 import { gotopage } from '../../redux/reducers/StructuresReducer/StructuresReducer';
 import { NeoStruct } from '../../redux/DataInterfaces';
+import { structsFilterChangeAC } from '../../redux/reducers/StructuresReducer/ActionTypes';
+import { useDebounce } from 'use-debounce';
 
 const useStyles = makeStyles({
   root: {
@@ -64,6 +66,22 @@ const useStyles = makeStyles({
     { width: "100%", padding: 20, margin: 10 }
 });
 
+const StructuresSearchField = () => {
+
+  const dispatch = useDispatch();
+  const [value, setValue] = useState('')
+  const [debounced] = useDebounce(value, 250)
+
+  const handleChange = (e: any) => {
+    setValue(e.target.value)
+  }
+  useEffect(() => {
+    dispatch(structsFilterChangeAC(value, 'SEARCH'))
+  }, [debounced])
+  return (
+    <TextField id="standard-basic" label="Search" value={value} onChange={handleChange} />
+  )
+}
 
 export default function Nomenclature() {
   const [search, setsearch] = useState('')
@@ -102,7 +120,7 @@ export default function Nomenclature() {
     setValue(newValue);
   };
 
-  const structures = useSelector((state: AppState) => state.structures.neo_response)
+  const structures = useSelector((state: AppState) => state.structures.derived_filtered)
   const classes = useStyles();
   const banclasses = { ...large_subunit_map, ...small_subunit_map }
   const history = useHistory();
@@ -194,26 +212,32 @@ export default function Nomenclature() {
       <Grid item xs={2}>
 
         <List >
-          <ListItem key={1}>
-            <TextField
-              id="outlined-required"
-              label="Search"
-              disabled={value === 'structure'}
-              defaultValue=""
-              variant="outlined"
-              onChange={(e) => { setsearch(e.target.value) }}
-            />
-          </ListItem>
+{
+            value === 'structure' ? <StructuresSearchField/> : null
+
+          }
           {
             value === 'protein' ?
 
-              <ListItem key={2}>
-                <CSVLink data={gentable()} filename="ribosomal_proteins_nomenclature_ban2014.csv">
+              <>
+                <ListItem key={1}>
+                  <TextField
+                    id="outlined-required"
+                    label="Search"
+                    defaultValue=""
+                    variant="outlined"
+                    onChange={(e) => { setsearch(e.target.value) }}
+                  />
+                </ListItem>
+                <ListItem key={2}>
+                  <CSVLink data={gentable()} filename="ribosomal_proteins_nomenclature_ban2014.csv">
 
-                  <Button fullWidth style={{ textTransform: "none" }} color="primary" variant="outlined"
-                  > Download as Table</Button>
-                </CSVLink>
-              </ListItem> : null
+                    <Button fullWidth style={{ textTransform: "none" }} color="primary" variant="outlined"
+                    > Download as Table</Button>
+                  </CSVLink>
+                </ListItem>
+              </>
+              : null
 
           }
           <ListItem>
@@ -240,11 +264,10 @@ export default function Nomenclature() {
                   </TableHead>
                   <TableBody>
                     {Object.entries(banclasses).filter(r => {
-
+                      if (value !== 'protein') { return true }
                       if (search === 'Search' || search === '') { return true }
                       else {
                         return (r[0] + r[1].b + r[1].y + r[1].h).toLowerCase().includes(search.toLowerCase())
-
                       }
                     }).map(row => {
                       return <TableRow key={row[0]}>
@@ -302,41 +325,51 @@ export default function Nomenclature() {
                 </Table>
               </TableContainer>
             } else if (value === 'structure') {
-              return <div className={classes.root} style={{ display: "flex", flexDirection: "column" }}>
 
+              // search:
+              // .filter(r => {
+              // if (search === 'Search' || search === '') { return true }
+              // else {
+              //   return (r[0] + r[1].b + r[1].y + r[1].h).toLowerCase().includes(search.toLowerCase())
+              // }
+
+
+              return <div className={classes.root} style={{ display: "flex", flexDirection: "column" }}>
                 {structures.length > 0 ? <>
                   <Pagination  {...{ gotopage: (pid) => dispatch(gotopage(pid)), pagecount: pagecount }} />
-                  {structures
-                    .slice((curpage - 1) * 20, curpage * 20)
-                    .map(s => {
-                      console.log("Displaying struct ", s)
-                      const source = s.rnas.map(rp => ({ [rp.auth_asym_id]: rp.nomenclature === null ? "" : rp.nomenclature }))
-                      return <Accordion key={s.struct.rcsb_id} style={{ marginBottom: "10px" }}>
-                        <AccordionSummary
-                          style={{ display: "flex", alignContent: "center", alignItems: "center", justifyContent: "center", justifyItems: "center" }}
-                          expandIcon={<ExpandMoreIcon />}
-                          aria-controls="panel1a-content"
-                          id="panel1a-header">
-                          <img src={structicon} height={25} width={25} />
+                  {
+                    // (search === 'Search' || search === '') ? 
+                    // structures : 
+                    // structures.filter(s =>{
+                    //   ''.concat(...[...s.struct.host_organism_names,s.struct.citation_title, s.struct.rcsb_id]).toLowerCase().includes(search)
+                    // })
+                    structures
+                      .slice((curpage - 1) * 20, curpage * 20)
+                      .map(s => {
+                        const source = s.rnas.map(rp => ({ [rp.auth_asym_id]: rp.nomenclature === null ? "" : rp.nomenclature }))
+                        return <Accordion key={s.struct.rcsb_id} style={{ marginBottom: "10px" }}>
+                          <AccordionSummary
+                            style={{ display: "flex", alignContent: "center", alignItems: "center", justifyContent: "center", justifyItems: "center" }}
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header">
+                            <img src={structicon} height={25} width={25} />
 
-                          <Typography style={{ marginRight: "20px" }} >{s.struct.rcsb_id} </Typography>
+                            <Typography style={{ marginRight: "20px" }} >{s.struct.rcsb_id} </Typography>
 
-                          <Typography style={{ fontSize: "10px" }}>{s.struct.citation_title}</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <StructPaper {...s} />
-
-
-
-                        </AccordionDetails>
-                      </Accordion>
+                            <Typography style={{ fontSize: "10px" }}>{s.struct.citation_title}</Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <StructPaper {...s} />
 
 
-                    })
+
+                          </AccordionDetails>
+                        </Accordion>
+                      })
                   }
                 </> : <LinearProgress />}
               </div>
-
 
 
             }
@@ -365,7 +398,7 @@ const StructPaper = (struct: NeoStruct) => {
     }
   }, [])
 
-  return  <Paper variant="outlined">
+  return <Paper variant="outlined">
     {struct.rnas !== null ? struct.rnas.map(rna => {
       if (rna.nomenclature !== null) {
         return <pre key={rna.auth_asym_id}> {rna.auth_asym_id}:{rna.nomenclature.length > 0 ? rna.nomenclature : "Undefined"} </pre>
@@ -377,17 +410,17 @@ const StructPaper = (struct: NeoStruct) => {
 
 
     {
-    struct.rps !== null ?
-      struct.rps.map(rp =>{ 
+      struct.rps !== null ?
+        struct.rps.map(rp => {
 
-        rp.nomenclature === null ? rp.nomenclature = [ "Undefined" ] : rp.nomenclature = rp.nomenclature
-        return <pre key={rp.auth_asym_id}> {rp.auth_asym_id} :
-          {
-            rp.nomenclature === null || rp.nomenclature.length > 0 ?
-              rp.nomenclature.reduce((a, b) => { return a + ',' + b }, '') :
-              "Undefined"
-          } </pre>
-      }) : ""}
+          rp.nomenclature === null ? rp.nomenclature = ["Undefined"] : rp.nomenclature = rp.nomenclature
+          return <pre key={rp.auth_asym_id}> {rp.auth_asym_id} :
+            {
+              rp.nomenclature === null || rp.nomenclature.length > 0 ?
+                rp.nomenclature.reduce((a, b) => { return a + ',' + b }, '') :
+                "Undefined"
+            } </pre>
+        }) : ""}
   </Paper>
 
 }

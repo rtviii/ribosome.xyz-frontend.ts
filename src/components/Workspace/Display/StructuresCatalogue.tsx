@@ -190,9 +190,9 @@ export default connect(mapstate, mapdispatch)(WorkspaceCatalogue);
 const StructuresSearchField = () =>
 {
 
-  const dispatch = useDispatch();
+  const dispatch          = useDispatch();
   const [value, setValue] = useState('')
-  const [debounced] = useDebounce(value,250)
+  const [debounced]       = useDebounce(value,250)
 
   const handleChange = (e:any)=>{
     setValue(e.target.value)
