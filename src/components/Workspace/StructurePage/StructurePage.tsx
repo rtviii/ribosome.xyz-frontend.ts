@@ -46,11 +46,12 @@ import { Cart } from "../Cart/Cart";
 import { _StructuresReducer } from "../../../redux/reducers/StructuresReducer/StructuresReducer";
 import { log } from "console";
 
-export const CardBodyAnnotation = ({ keyname, value, onClick }: { keyname: string, onClick?: any, value: string | string[] | number }) => {
 
+export const CardBodyAnnotation = ({ keyname, value, onClick }: { keyname: string, onClick?: any, value: string | string[] | number }) => {
   const classes = makeStyles({
     annotation: { fontSize: 12, },
   })();
+
   return <ListItem onClick={onClick}><Grid
     container
     direction="row"
@@ -68,8 +69,6 @@ export const CardBodyAnnotation = ({ keyname, value, onClick }: { keyname: strin
     </Typography>
   </Grid></ListItem>
 }
-
-
 
 export const LigandHeroCard = ({ lig, outline }: { lig: Ligand, outline: boolean }) => {
 
@@ -260,7 +259,9 @@ export const StructHeroCard = ({ rcsb_id, nomedia }: {
                   // console.log("sending params to vis:", { pathname: `/vis`, state: { 
                   //   struct: structdata.structure.rcsb_id 
                   // }});
-                  history.push({ pathname: `/vis`, state: { struct: structdata.structure.rcsb_id } })
+                  // history.push({ pathname: `/vis`, state: { struct: structdata.structure.rcsb_id } })
+
+             history.push(`/vis/${structdata.structure.rcsb_id}`) 
                 }}>
                 <VisibilityIcon />
                 Visualize
@@ -308,10 +309,11 @@ export const StructHeroCard = ({ rcsb_id, nomedia }: {
 
 export type GetStructResponseShape = {
   structure: RibosomeStructure;
-  ligands: Ligand[];
-  rnas: RNA[];
-  proteins: Protein[];
+  ligands  : Ligand[];
+  rnas     : RNA[];
+  proteins : Protein[];
 };
+
 const StructurePage = () => {
 
   const { pdbid }: { pdbid: string } = useParams();

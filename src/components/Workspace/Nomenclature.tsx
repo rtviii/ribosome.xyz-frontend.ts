@@ -213,12 +213,11 @@ export default function Nomenclature() {
 
         <List >
 {
-            value === 'structure' ? <StructuresSearchField/> : null
+            value === 'structure' ?  <ListItem key={1}><StructuresSearchField/></ListItem> : null
 
           }
-          {
-            value === 'protein' ?
-
+          { 
+           value === 'protein' ?
               <>
                 <ListItem key={1}>
                   <TextField

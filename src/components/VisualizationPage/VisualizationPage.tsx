@@ -80,9 +80,7 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
   //! This component controls the structure selection
 
   const dispatch = useDispatch()
-
   var { pdbid }: { pdbid: string | undefined } = useParams();
-
   const selectStructStyles = (makeStyles({ autocomoplete: { width: "100%" } }))()
   const current_neostruct: NeoStruct | null = useSelector((state: AppState) => state.visualization.structure_tab.structure)
   const current_chain_to_highlight: string | null = useSelector((state: AppState) => state.visualization.structure_tab.highlighted_chain)
@@ -94,7 +92,9 @@ const SelectStruct = ({ items, selectStruct }: { items: StructSnip[], selectStru
     if (pdbid !== undefined) {
       selectStruct(pdbid.toUpperCase())
     }
-  }, [])
+  }, [
+
+  ])
 
   useEffect(() => {
 
@@ -830,6 +830,9 @@ const VisualizationPage = (props: any) => {
   const params = history.location.state;
   const { pdbid }: { pdbid: string } = useParams();
 
+  useEffect(()=>{
+    console.log("got history param : ", pdbid);
+  })
 
   //? Get uri parametrs ----------------------------
 
@@ -846,10 +849,10 @@ const VisualizationPage = (props: any) => {
   useEffect(() => {
 
     var options = {
-      landscape:true,
-      moleculeId: pdbid !== undefined ? pdbid.toUpperCase() : "none",
+      landscape       : true,
+      moleculeId      : pdbid !== undefined ? pdbid.toUpperCase(): "none",
       assemblyId      : 'ASM_1',
-      hideControls: true,
+      hideControls    : true,
       layoutIsExpanded: false,
     }
 
