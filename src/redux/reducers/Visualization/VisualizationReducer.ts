@@ -75,8 +75,6 @@ const init: VisualizationReducerState = {
 }
 
 export const coerce_full_structure_to_neostruct = (_: RibosomeStructure | null): NeoStruct | null => {
-	console.log("Got fullstruct:", _);
-
 	const coerced = _ === null ? null : {
 		ligands: _.ligands !== null ? _.ligands.map(l => l.chemicalId) : [],
 		rnas: _.rnas !== null ? _.rnas.map(r => {
@@ -97,8 +95,6 @@ export const coerce_full_structure_to_neostruct = (_: RibosomeStructure | null):
 			..._
 		}
 	}
-
-	console.log("Coerced to neostruct:", coerced);
 
 	return coerced
 }

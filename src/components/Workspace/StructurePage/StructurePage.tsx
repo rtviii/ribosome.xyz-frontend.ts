@@ -219,9 +219,7 @@ export const StructHeroCard = ({ rcsb_id, nomedia }: {
       <CardActions>
         <Grid container>
           <Grid item container justify="space-evenly" direction="row" xs={12}>
-
             <Grid item>
-
               <Button size="small" color="primary">
                 <a href={`https://www.rcsb.org/structure/${structdata.structure.rcsb_id}`}>
                   PDB
@@ -251,7 +249,6 @@ export const StructHeroCard = ({ rcsb_id, nomedia }: {
           <Grid item container justify="space-evenly" direction="row" xs={12}>
 
             <Grid item>
-
               <Button
                 size="small"
                 style={{ textTransform: "none" }}
@@ -320,9 +317,9 @@ const StructurePage = () => {
   const history = useHistory()
 
   const [structdata, setstruct] = useState<RibosomeStructure>();
-  const [protdata, setprots] = useState<Protein[]>([]);
-  const [rrnas, setrrnas] = useState<RNA[]>([]);
-  const [ligands, setligands] = useState<Ligand[]>([]);
+  const [protdata, setprots]    = useState<Protein[]>([]);
+  const [rrnas, setrrnas]       = useState<RNA[]>([]);
+  const [ligands, setligands]   = useState<Ligand[]>([]);
 
   const activecat = useSelector((state: AppState) => state.Interface.structure_page.component)
 

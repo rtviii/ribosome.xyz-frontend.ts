@@ -279,9 +279,6 @@ export const requestAllStructuresDjango =  () => {
       type: actions.REQUEST_STRUCTS_GO,
     });
     
-    // console.log("Started requesting all structures.")
-    // toast("Hi", {duration:4000})
-
 
     console.log("Requesting all structures.");
     let promise = getNeo4jData("neo4j", { endpoint: "get_all_structs", params: null }).then(

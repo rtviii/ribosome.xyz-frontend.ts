@@ -97,7 +97,6 @@ export type RNAProfile = RNA & {
 
 
 // export interface RNAProfile {
-
 //   struct           : string,
 //   orgid            : number[]
 //   description      : string

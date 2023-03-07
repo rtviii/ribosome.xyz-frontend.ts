@@ -3,23 +3,22 @@ import Axios from "axios";
 import qs from 'qs'
 import { ProteinClass, RNAClass } from "../RibosomeTypes";
 
-const BACKEND: any = process.env.REACT_APP_DJANGO_URL;
-type DjangoAPIs = "neo4j" | "static_files" | "utils"
+const BACKEND: any   = process.env.REACT_APP_DJANGO_URL;
+type  DjangoAPIs     = "neo4j" | "static_files" | "utils"
+type  UtilsEndpoints = number_of_structures;
 
-type UtilsEndpoints  = number_of_structures;
 interface number_of_structures{
-  endpoint:"number_of_structures",
-  params:null
+  endpoint: "number_of_structures",
+  params  : null
 };
 
 type StaticFilesEndpoints =
   | ranged_align
-  | downloadCifChain
-  | download_ligand_nbhd
-  | get_tunnel
   | cif_chain_by_class
-  | download_structure
   | ligand_prediction
+  | downloadCifChain
+  | download_ligand_nbhd 
+  | download_structure
 
 interface ligand_prediction{
     endpoint:"ligand_prediction",
@@ -29,7 +28,6 @@ interface ligand_prediction{
       ligandlike_id: string,
       is_polymer   : boolean,
     }
-
 }
 
 interface ranged_align {
@@ -59,6 +57,7 @@ interface get_full_structure{
     pdbid:string
   }
 }
+
 interface get_RibosomeStructure{
   endpoint:"get_RibosomeStructure",
   params:{
@@ -70,28 +69,22 @@ interface cif_chain_by_class {
   endpoint: "cif_chain_by_class",
   params: {
     classid: string,
-    struct: string
+    struct : string
   }
 }
+
 interface downloadCifChain {
   endpoint: "cif_chain",
   params: {
     structid: string,
-    chainid: string
+    chainid : string
   }
 }
 interface download_ligand_nbhd {
   endpoint: "download_ligand_nbhd",
   params: {
     structid: string,
-    chemid: string;
-  }
-}
-interface get_tunnel {
-  endpoint: "tunnel",
-  params: {
-    struct: string;
-    filetype: "report" | "centerline";
+    chemid  : string;
   }
 }
 
@@ -131,6 +124,7 @@ interface proteins_number {
   endpoint: "proteins_number",
   params: null
 }
+
 interface banclass_annotation {
   endpoint: "banclass_annotation",
   params: {
