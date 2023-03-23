@@ -507,14 +507,11 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
 
   // takes in a full protein or rna
   const [currentChainFull, setCurrentChainFull] = React.useState<Protein | RNA | null>(null)
-  const [residueRange, setResidueRange] = React.useState<number[]>([0, 0]);           // current slider value
-  const [MaxRes, setMaxRes] = React.useState<number>(0);                  // keep track of what's the max residue range
+  const [residueRange, setResidueRange]         = React.useState<number[]>([0, 0]);           // current slider value
+  const [MaxRes, setMaxRes]                     = React.useState<number>(0);                  // keep track of what's the max residue range
 
-  useEffect(() => {
-
-    console.log("got new auth asymid  and full struct cahce. max res is", MaxRes);
-
-  }, [MaxRes])
+  // useEffect(() => {
+  // }, [MaxRes])
 
   const rangeChangeHandler = (event: any) => {
     let _: number[] = event.target.value;
@@ -530,6 +527,9 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
   }, [residueRange])
 
   useEffect(() => {
+    console.log("got new auth asymid  and full struct cahce.")
+    console.log("vispage structure:", full_structure_cache)
+    
     if (full_structure_cache && auth_asym_id) {
       // pluck the chain off the full structure
       const pickFullChain = [...full_structure_cache.proteins, ...(() => {
@@ -540,6 +540,7 @@ export const ChainHighlightSlider = ({ auth_asym_id, full_structure_cache, redux
           return full_structure_cache.rnas
         }
       })()].filter(c => c.auth_asym_id === auth_asym_id)
+
       if (pickFullChain.length < 1) {
         console.log("Haven't found chain with this asym_id on the full structure. Something went terribly wrong.");
       } else {

@@ -3,13 +3,13 @@ import Axios from "axios";
 import qs from 'qs'
 import { ProteinClass, RNAClass } from "../RibosomeTypes";
 
-const BACKEND: any   = process.env.REACT_APP_DJANGO_URL;
-type  DjangoAPIs     = "neo4j" | "static_files" | "utils"
-type  UtilsEndpoints = number_of_structures;
+const BACKEND: any = process.env.REACT_APP_DJANGO_URL;
+type DjangoAPIs = "neo4j" | "static_files" | "utils"  | "v0"
+type UtilsEndpoints = number_of_structures;
 
-interface number_of_structures{
+interface number_of_structures {
   endpoint: "number_of_structures",
-  params  : null
+  params: null
 };
 
 type StaticFilesEndpoints =
@@ -17,30 +17,27 @@ type StaticFilesEndpoints =
   | cif_chain_by_class
   | ligand_prediction
   | downloadCifChain
-  | download_ligand_nbhd 
+  | download_ligand_nbhd
   | download_structure
 
-interface ligand_prediction{
-    endpoint:"ligand_prediction",
-    params:{
-      src_struct   : string,
-      tgt_struct   : string,
-      ligandlike_id: string,
-      is_polymer   : boolean,
-    }
+interface ligand_prediction {
+  endpoint: "ligand_prediction",
+  params: {
+    src_struct: string,
+    tgt_struct: string,
+    ligandlike_id: string,
+    is_polymer: boolean,
+  }
 }
 
 interface ranged_align {
   endpoint: "ranged_align",
   params: {
-    r1start       : number,
-    r1end         : number,
-    r2start       : number,
-    r2end         : number,
-    struct1       : string,
-    struct2       : string,
-    auth_asym_id1 : string,
-    auth_asym_id2 : string
+    res_range       : [number, number]
+    src_rcsb_id     : string
+    tgt_rcsb_id     : string
+    src_auth_asym_id: string,
+    tgt_auth_asym_id: string,
   }
 }
 
@@ -51,17 +48,17 @@ interface download_structure {
   }
 }
 
-interface get_full_structure{
-  endpoint:"get_full_struct",
-  params:{
-    pdbid:string
+interface get_full_structure {
+  endpoint: "get_full_struct",
+  params: {
+    rcsb_id: string
   }
 }
 
-interface get_RibosomeStructure{
-  endpoint:"get_RibosomeStructure",
-  params:{
-    pdbid:string
+interface get_RibosomeStructure {
+  endpoint: "get_RibosomeStructure",
+  params: {
+    rcsb_id: string
   }
 }
 
@@ -69,7 +66,7 @@ interface cif_chain_by_class {
   endpoint: "cif_chain_by_class",
   params: {
     classid: string,
-    struct : string
+    struct: string
   }
 }
 
@@ -77,14 +74,14 @@ interface downloadCifChain {
   endpoint: "cif_chain",
   params: {
     structid: string,
-    chainid : string
+    chainid: string
   }
 }
 interface download_ligand_nbhd {
   endpoint: "download_ligand_nbhd",
   params: {
     structid: string,
-    chemid  : string;
+    chemid: string;
   }
 }
 
@@ -161,7 +158,7 @@ interface TEMP_classification_sample {
 interface get_surface_ratios {
   endpoint: 'get_surface_ratios',
   params: {
-    pdbid: string
+    rcsb_id: string
   }
 }
 
@@ -192,7 +189,7 @@ interface get_rna_class {
 interface getStructure {
   endpoint: "get_struct";
   params: {
-    pdbid: string;
+    rcsb_id: string;
   };
 }
 interface getHomologs {
@@ -208,7 +205,7 @@ interface customCypher {
   };
 }
 interface getAllStructures {
-  endpoint: "get_all_structs";
+  endpoint: "get_all_structures";
   params: null;
 }
 interface listAvailableRPs {
@@ -222,28 +219,27 @@ interface gmoNomClass {
   };
 }
 
-
 interface get_all_ligandlike {
   endpoint: "get_all_ligandlike",
   params: null
 }
 interface getAllLigands {
   endpoint: 'get_all_ligands',
-  params  : null
+  params: null
 }
 
 interface get_ligand_nbhd {
   endpoint: "get_ligand_nbhd";
   params: {
-    src_struct   : string;
+    src_struct: string;
     ligandlike_id: string;
-    is_polymer   : boolean,
+    is_polymer: boolean,
   };
 }
 
 export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {
-  const URI = encodeURI(`${BACKEND}/${api}/${ep.endpoint}/`);
-  console.log("geneo4jdata: ",URI);
+  const URI = encodeURI(`${BACKEND}/v0/${ep.endpoint}`);
+  console.log("REQUESTING ALINGMENT : ", URI, ep.params);
   let intercept = ep.params != null ? Axios.get(URI, {
     params: ep.params, paramsSerializer: params => qs.stringify(params,
       {
@@ -252,7 +248,6 @@ export const getNeo4jData = (api: DjangoAPIs, ep: DjangoEndpoinds) => {
     )
   }) : Axios.get(URI);
 
-  // console.log("intercept: ",intercept);
   return intercept
 };
 

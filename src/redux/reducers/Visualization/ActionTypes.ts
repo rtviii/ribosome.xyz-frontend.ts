@@ -145,11 +145,11 @@ export const cache_full_struct = (
 			// getNeo4jData('neo4j', { endpoint: 'get_full_struct', params: { pdbid: struct_id_to_cache } })
 			getNeo4jData("neo4j", {
 				endpoint: "get_RibosomeStructure",
-				params: { pdbid: struct_id_to_cache }
+				params: { rcsb_id: struct_id_to_cache }
 			}).then(
 				response => {
 					console.log("fetched fullstruct successfully. response:", response)
-					dispatch(fullstructCache_change(response.data[0], cache_slot_number));
+					dispatch(fullstructCache_change(response.data, cache_slot_number));
 				},
 				error => {
 					console.log("couldnt fetch with error: ", error);

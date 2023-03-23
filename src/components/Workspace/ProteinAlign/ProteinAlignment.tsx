@@ -105,15 +105,14 @@ export default function ProteinAlignment() {
       landscape:true,
 
     }
-
     var viewerContainer = document.getElementById('molstar-viewer');
     viewerInstance.render(viewerContainer, options);
-
   }, [])
 
   const structs = useSelector((state: AppState) => state.structures.derived_filtered)
 
   useEffect(()=>{
+
     if (rcsb_id_param !== undefined) {
       var filtered = structs.filter(s => s.struct.rcsb_id === rcsb_id_param.toUpperCase())
       if (filtered.length > 0) {
@@ -142,7 +141,7 @@ export default function ProteinAlignment() {
 
   const debounedRangeChange2__redux = debounce((redux_range: number[]) => {
     dispatch(superimpose_slot_change(2, { chain_range: redux_range }))
-  }, 300)
+  }, 301)
 
 
   // | ------------------------------------------ NEW STATE ----------------------------------|
@@ -161,11 +160,19 @@ export default function ProteinAlignment() {
 
 
   // | ------------------------------------------ OLD STATE ----------------------------------|
-  const [chains2, setChains2] = useState<PolymerMinimal[]>([])
-  const [chains1, setChains1] = useState<PolymerMinimal[]>([])
+  const [chains2, setChains2] = useState<PolymerMinimal[]>([])                              
+  const [chains1, setChains1] = useState<PolymerMinimal[]>([])                             
   // | ------------------------------------------ OLD STATE ----------------------------------|
   const minDistance = 10;
 
+  useEffect(() => {
+
+    console.log("Alignment page got cache struct 1 ", struct_cache_1)
+    console.log("Alignment page got cache struct 2 ", struct_cache_2)
+  }, [
+    struct_cache_1,
+    struct_cache_2
+  ])
 
   const downloadRangedAlignment = () => {
 
@@ -177,17 +184,14 @@ export default function ProteinAlignment() {
     console.log(`Struct 2: ${slot_2.struct?.struct.rcsb_id}, chain ${slot_2.chain?.auth_asym_id} [${range_slot_2[0]}, ${range_slot_2[1]}]`)
     console.log("-----------------")
     if ([slot_1.chain, slot_1.struct, slot_2.chain, slot_2.struct].includes(null)) { alert("Please select a chain in both structures to align and a residue range.") }
-    getNeo4jData('static_files', {
+    getNeo4jData('v0', {
       endpoint: 'ranged_align',
       params: {
-        r1start: range_slot_1![0],
-        r1end: range_slot_1![1],
-        r2start: range_slot_2![0],
-        r2end: range_slot_2![1],
-        struct1: slot_1.struct?.struct.rcsb_id as string,
-        struct2: slot_2.struct?.struct.rcsb_id as string,
-        auth_asym_id1: slot_1.chain?.auth_asym_id as string,
-        auth_asym_id2: slot_2.chain?.auth_asym_id as string,
+        res_range       : [range_slot_1![0], range_slot_1![1]],
+        src_rcsb_id     : slot_1.struct?.struct.rcsb_id as string,
+        tgt_rcsb_id     : slot_2.struct?.struct.rcsb_id as string,
+        src_auth_asym_id: slot_1.chain?.auth_asym_id as string,
+        tgt_auth_asym_id: slot_2.chain?.auth_asym_id as string,
       }
     }).then(response => {
       console.log("got alignment file:", response.data);
@@ -216,16 +220,14 @@ export default function ProteinAlignment() {
       viewerInstance.visual.update({
         customData: {
           url:
-            `${process.env.REACT_APP_DJANGO_URL}/static_files/ranged_align/?` +
-            `r1start=${range_slot_1![0]}` +
-            `&r1end=${range_slot_1![1]}` +
-            `&r2start=${range_slot_2![0]}` +
-            `&r2end=${range_slot_2![1]}` +
-            `&struct1=${slot_1.struct?.struct.rcsb_id}` +
-            `&struct2=${slot_2.struct?.struct.rcsb_id}` +
-            `&auth_asym_id1=${slot_1.chain?.auth_asym_id}` +
-            `&auth_asym_id2=${slot_2.chain?.auth_asym_id}`,
-          format: "pdb",
+            `${process.env.REACT_APP_DJANGO_URL}/v0/ranged_align?` +
+            `range_start=${range_slot_1![0]}` +
+            `&range_end=${range_slot_1![1]}` +
+            `&src_rcsb_id=${slot_1.struct?.struct.rcsb_id}` +
+            `&tgt_rcsb_id=${slot_2.struct?.struct.rcsb_id}` +
+            `&src_auth_asym_id=${slot_1.chain?.auth_asym_id}` +
+            `&tgt_auth_asym_id=${slot_2.chain?.auth_asym_id}`,
+          format: "cif",
           binary: false,
         },
       })

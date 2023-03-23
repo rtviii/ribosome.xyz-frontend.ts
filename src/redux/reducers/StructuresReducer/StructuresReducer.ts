@@ -281,15 +281,12 @@ export const requestAllStructuresDjango =  () => {
     
 
     console.log("Requesting all structures.");
-    let promise = getNeo4jData("neo4j", { endpoint: "get_all_structs", params: null }).then(
+    let promise = getNeo4jData("neo4j", { endpoint: "get_all_structures", params: null }).then(
       response => {
-        console.log("Got all structures.")
-        console.log("resp data", response.data)
         dispatch({
           type   : actions.REQUEST_STRUCTS_SUCCESS,
           payload: flattenDeep( response.data ) as any,
         });
-            console.log("Succeed with all structures.")
       },
       error => {
         dispatch({

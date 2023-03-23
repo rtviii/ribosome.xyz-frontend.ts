@@ -75,6 +75,7 @@ const init: VisualizationReducerState = {
 }
 
 export const coerce_full_structure_to_neostruct = (_: RibosomeStructure | null): NeoStruct | null => {
+
 	const coerced = _ === null ? null : {
 		ligands: _.ligands !== null ? _.ligands.map(l => l.chemicalId) : [],
 		rnas: _.rnas !== null ? _.rnas.map(r => {
@@ -110,15 +111,16 @@ export const VisualizationReducer = (
 		
 
 		case "SUPERIMPOSE_SLOT_CHANGE":
+
 			const structn_to_change = action.slot === 1 ? "struct_1" : "struct_2";
-			const structn_to_leave = action.slot === 1  ? "struct_2" : "struct_1";
+			const structn_to_leave  = action.slot === 1  ? "struct_2" : "struct_1";
 
 			var in_place_change			= Object.assign({},state.superimpose[structn_to_change])
 			var in_place_leave			= Object.assign({},state.superimpose[structn_to_leave])
 
 			in_place_change = {...in_place_change, ...action.payload}
 
-			return {...state,superimpose:{
+			return {...state, superimpose:{
 				struct_1: action.slot ===1 ? in_place_change : in_place_leave,
 				struct_2: action.slot ===2 ? in_place_change : in_place_leave,
 			}} 

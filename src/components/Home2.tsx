@@ -274,10 +274,11 @@ const MainContent = () => {
 	const [protn, setsprotn] = useState<number>(0)
 	const history = useHistory()
 	useEffect(() => {
-		getNeo4jData('neo4j', { endpoint: 'proteins_number', params: null }).then(r => setsprotn(r.data[0]))
+		getNeo4jData('neo4j', { endpoint: 'proteins_number', params: null }).then(r => setsprotn(r.data))
 		return () => {
 		}
 	}, [])
+
 	const rnan = useSelector((state: AppState) => Object.values(state.rna.rna_classes_derived).reduce((a, b) => { return a + b.length }, 0))
 	const mainstyles = (makeStyles((theme: Theme) =>
 		createStyles({

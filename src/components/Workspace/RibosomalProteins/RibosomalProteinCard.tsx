@@ -94,7 +94,7 @@ export const ChainParentPill = ({ strand_id, parent_id }: { strand_id: string, p
 
     getNeo4jData("neo4j", {
       endpoint: "get_struct",
-      params: { pdbid: parent_id },
+      params: { rcsb_id: parent_id },
     }).then(
       resp => {
         const respdat: any = flattenDeep(

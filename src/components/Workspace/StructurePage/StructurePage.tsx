@@ -147,7 +147,7 @@ export const StructHeroCard = ({ rcsb_id, nomedia }: {
 
     getNeo4jData("neo4j", {
       endpoint: "get_struct", params: {
-        pdbid: rcsb_id
+        rcsb_id: rcsb_id
       }
     }).then(r => {
       console.log("Got data:", r.data);
@@ -328,7 +328,7 @@ const StructurePage = () => {
   useEffect(() => {
     getNeo4jData("neo4j", {
       endpoint: "get_struct",
-      params: { pdbid: pdbid },
+      params: { rcsb_id: pdbid },
     }).then(
       resp => {
 
